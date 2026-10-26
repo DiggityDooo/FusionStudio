@@ -1,0 +1,102 @@
+﻿{
+    "checkedAtUtc":  "2026-10-23T20:37:23.5329835Z",
+    "recordedFiles":  34837,
+    "currentFiles":  34847,
+    "metadataChanged":  [
+
+                        ],
+    "added":  [
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to 3ds Max\\Daz to 3ds Max.dsx",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to Maya\\Daz to Maya.dsx",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to Maya\\Daz to Maya.pdf",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dsp_fluent_ds4.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dsp_fluent_ds6.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dsp_RenderAssistant.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzmayabridge.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\RenderAssistant.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\resources\\images\\icons\\bridges\\Daz to 3ds Max.png",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\scripts\\support\\DAZ\\Daz to 3ds Max.dsa"
+              ],
+    "missing":  [
+
+                ],
+    "boundedSha256Checks":  [
+                                {
+                                    "path":  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\DAZStudio.exe",
+                                    "matches":  true,
+                                    "sha256":  "6ab22d5c4c27834960166ee3b64e85df16609ea3b2ea4bb7fb335d17cef4465b"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\resources\\fileiopresets.dsx",
+                                    "matches":  true,
+                                    "sha256":  "9afd35774e7b8fec73c60a586d0043ac34cb221eca33a8a03d9354bdaaf29c1b"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzblenderbridge.dll",
+                                    "matches":  true,
+                                    "sha256":  "ea51e750d2a29c242337b10aa4fe83a556425418bb01ad6f72937ef7c95d20da"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzfbxexporter.dll",
+                                    "matches":  true,
+                                    "sha256":  "3b677927ff000458ecb841be76a3bcfc505e4eeab47e59ff57fef52a1d1c1fb4"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzfbximporter.dll",
+                                    "matches":  true,
+                                    "sha256":  "042357e379c768580d1bbe4620800703c6120de44d39e8227f3beb5d9a57e683"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to Blender\\Daz to Blender.dsx",
+                                    "matches":  true,
+                                    "sha256":  "e5d251a560aac6619cc684564b500a08cadb375f97c39799373f4ec73ef2d7c8"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Marvelous Designer Enterprise Network Offline\\MarvelousDesigner_Enterprise_Offline.exe",
+                                    "matches":  true,
+                                    "sha256":  "b7e3bb1c40a32ff90ce6c42f0e95ef2c6f3093c9cea926d6a66de70c12b31dc7"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Marvelous Designer Enterprise Network Offline\\python311.dll",
+                                    "matches":  true,
+                                    "sha256":  "2835e0f24fb13ef019608b13817f3acf8735fbc5f786d00501c4a151226bdff1"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\CharacterCreator.exe",
+                                    "matches":  true,
+                                    "sha256":  "8b15680258bb749945ff4760c94fc747ac096054fc62ced5e778482e438fc153"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\RLPy.py",
+                                    "matches":  true,
+                                    "sha256":  "644f83a03e6c1de0e76a08fe6f97de7bf8a583b448fd9fe8caed10f69de34a86"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\main.py",
+                                    "matches":  true,
+                                    "sha256":  "59553b25163ea5017456a70c272ac25871a7c9d088333940fdf0ef9aec4691b1"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\btp\\exporter.py",
+                                    "matches":  true,
+                                    "sha256":  "166e52b36558a3fcf582b1e26f0230dc0d64e39b3c57ab2896b99ab151cde903"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\btp\\importer.py",
+                                    "matches":  true,
+                                    "sha256":  "eb3b9b60104421fab7b1e253075f059b7988489f81bfddac1da66e90323600c9"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\btp\\vars.py",
+                                    "matches":  true,
+                                    "sha256":  "acc20fca9bdb30df34d27d79e3bc06f645f238686947c87f42eb670fd68e90d3"
+                                },
+                                {
+                                    "path":  "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+                                    "matches":  true,
+                                    "sha256":  "e27fbfea8564aa645d4463cb0949695fd85562b9de6df9561b06859a1074adf7"
+                                }
+                            ],
+    "passed":  false,
+    "limitation":  "Whole-installation comparison covers size, path, and modification time. SHA-256 coverage is limited to the listed evidence files and Blender executable."
+}

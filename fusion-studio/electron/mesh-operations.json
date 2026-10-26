@@ -1,0 +1,356 @@
+{
+  "subdivide": {
+    "label": "Subdivision",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "levels",
+        "label": "Levels",
+        "default": 1,
+        "min": 1,
+        "max": 3,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "bevel": {
+    "label": "Bevel",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "amount",
+        "label": "Width (m)",
+        "default": 0.025,
+        "min": 0.0001,
+        "max": 1,
+        "step": 0.001,
+        "type": "number"
+      },
+      {
+        "key": "segments",
+        "label": "Segments",
+        "default": 3,
+        "min": 1,
+        "max": 8,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "decimate": {
+    "label": "Decimate",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "ratio",
+        "label": "Remaining fraction",
+        "default": 0.5,
+        "min": 0.01,
+        "max": 0.99,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "solidify": {
+    "label": "Solidify",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "amount",
+        "label": "Thickness (m)",
+        "default": 0.02,
+        "min": 0.0001,
+        "max": 1,
+        "step": 0.001,
+        "type": "number"
+      },
+      {
+        "key": "offset",
+        "label": "Offset",
+        "default": -1,
+        "min": -1,
+        "max": 1,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "mirror": {
+    "label": "Mirror",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "X",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      }
+    ]
+  },
+  "remesh": {
+    "label": "Voxel Remesh",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "voxel",
+        "label": "Voxel size (m)",
+        "default": 0.04,
+        "min": 0.005,
+        "max": 0.2,
+        "step": 0.005,
+        "type": "number"
+      }
+    ]
+  },
+  "array": {
+    "label": "Array",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "count",
+        "label": "Copies",
+        "default": 3,
+        "min": 2,
+        "max": 32,
+        "step": 1,
+        "type": "number"
+      },
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "offset",
+        "label": "Relative spacing",
+        "default": 1.1,
+        "min": -10,
+        "max": 10,
+        "step": 0.1,
+        "type": "number"
+      }
+    ]
+  },
+  "wireframe": {
+    "label": "Wireframe",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "amount",
+        "label": "Thickness (m)",
+        "default": 0.02,
+        "min": 0.0001,
+        "max": 1,
+        "step": 0.001,
+        "type": "number"
+      }
+    ]
+  },
+  "weld": {
+    "label": "Weld",
+    "category": "Cleanup",
+    "fields": [
+      {
+        "key": "distance",
+        "label": "Merge distance (m)",
+        "default": 0.0001,
+        "min": 1e-06,
+        "max": 0.1,
+        "step": 0.0001,
+        "type": "number"
+      }
+    ]
+  },
+  "triangulate": {
+    "label": "Triangulate",
+    "category": "Cleanup",
+    "fields": []
+  },
+  "smooth": {
+    "label": "Smooth",
+    "category": "Deform",
+    "fields": [
+      {
+        "key": "factor",
+        "label": "Factor",
+        "default": 0.5,
+        "min": -1,
+        "max": 1,
+        "step": 0.01,
+        "type": "number"
+      },
+      {
+        "key": "iterations",
+        "label": "Iterations",
+        "default": 5,
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "twist": {
+    "label": "Twist",
+    "category": "Deform",
+    "fields": [
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "angle",
+        "label": "Angle (degrees)",
+        "default": 90,
+        "min": -720,
+        "max": 720,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "bend": {
+    "label": "Bend",
+    "category": "Deform",
+    "fields": [
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "angle",
+        "label": "Angle (degrees)",
+        "default": 45,
+        "min": -360,
+        "max": 360,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "taper": {
+    "label": "Taper",
+    "category": "Deform",
+    "fields": [
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "factor",
+        "label": "Factor",
+        "default": 0.5,
+        "min": -0.95,
+        "max": 5,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "stretch": {
+    "label": "Stretch",
+    "category": "Deform",
+    "fields": [
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "factor",
+        "label": "Factor",
+        "default": 0.5,
+        "min": -0.95,
+        "max": 5,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "recalculate": {
+    "label": "Recalculate Normals",
+    "category": "Cleanup",
+    "fields": []
+  },
+  "uv": {
+    "label": "Smart UV Project",
+    "category": "UV",
+    "fields": [
+      {
+        "key": "angle",
+        "label": "Angle limit (degrees)",
+        "default": 66,
+        "min": 1,
+        "max": 89,
+        "step": 1,
+        "type": "number"
+      },
+      {
+        "key": "margin",
+        "label": "Island margin",
+        "default": 0.02,
+        "min": 0,
+        "max": 0.25,
+        "step": 0.001,
+        "type": "number"
+      }
+    ]
+  },
+  "boolean": {
+    "label": "Boolean",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "operation",
+        "label": "Operation",
+        "default": "DIFFERENCE",
+        "values": [
+          "DIFFERENCE",
+          "UNION",
+          "INTERSECT"
+        ],
+        "type": "enum"
+      }
+    ]
+  }
+}

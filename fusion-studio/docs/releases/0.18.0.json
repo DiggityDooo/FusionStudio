@@ -1,0 +1,280 @@
+{
+  "version": "0.18.0",
+  "status": "verified local release",
+  "verifiedAtUtc": "2026-10-16T07:20:57.795Z",
+  "sourceCodeCommit": "b892c859dd550810464b73d3a76ef679ef221133",
+  "archive": {
+    "relativePath": "release-v0.18.0/win-unpacked/resources/app.asar",
+    "sha256": "3107b9b20efef6d779fa45cff5a1747e14f2033e8163433ef4ea05498cb13b69",
+    "entries": 4728,
+    "pathAuditForbiddenMatches": 0
+  },
+  "fidelity": "Inspired fitted panel drafting and surface-metric grading; Compatible Genesis base interchange; fixture-specific Exact preserved BMW rendering",
+  "unitTests": 151,
+  "native": {
+    "changed": false,
+    "baselineRelease": "0.17.0",
+    "baselineRustTests": 11,
+    "components": [
+      {
+        "file": "electron/geometry-worker.cjs",
+        "sha256": "6706af97c0c3d9949a97d7667960b4b540a3c8c98f636a08db2f069b7a4dcb28"
+      },
+      {
+        "file": "scripts/blender_worker.py",
+        "sha256": "0e8e4d6ee052b44eef116110d68d0bf6b1be0121cbfdc328c98685233ce40bdf"
+      },
+      {
+        "file": "scripts/dson_importer.py",
+        "sha256": "f5cc53f7d8f8e159adb90a1ff179888ccf135a9036332d7f063cd2fe75623c63"
+      },
+      {
+        "file": "scripts/native_scene.py",
+        "sha256": "37f8a158019efb98e1d44d5956f6f2747a6bac5db65399dd22e47315af33baf9"
+      },
+      {
+        "file": "scripts/surface_panels.py",
+        "sha256": "921b5ba048e3ba81270d56b19e6544eff96ef7d90f32e19c0748b37fe0c29b4d"
+      },
+      {
+        "file": "native/fusion_geometry.node",
+        "sha256": "67099ab5aa4d2a545374acbd466f6980238b6a2f21e95645a1e7c3d10ad082e1"
+      }
+    ]
+  },
+  "fitted": {
+    "sourceTriangles": 50312,
+    "reloadMaximumError": 0,
+    "states": {
+      "initial": {
+        "metrics": {
+          "bodyFaceIntersections": 0,
+          "bodyInsideVertices": 0,
+          "collisionExcludedPairs": 14900,
+          "contacts": 1565956,
+          "directionalFabric": true,
+          "faceContacts": 42,
+          "maxStrain": 0.2868807697202702,
+          "meanStrain": 0.020619127803344645,
+          "milliseconds": 27629.900700000002,
+          "pinDrift": 0,
+          "placementAdjustments": 71,
+          "proxyPenetrations": 0,
+          "seamGapAfter": 0.000012501757417480714,
+          "seamGapBefore": 0.000018138046367943784,
+          "seamTopology": true,
+          "solidContact": true,
+          "triangleClearanceViolations": 0,
+          "triangleContact": true,
+          "triangleSelfCollision": true,
+          "triangles": 4246,
+          "vertices": 2368
+        },
+        "quality": {
+          "triangles": 4246,
+          "vertices": 2368,
+          "minAngleDegrees": 25.97742364566488,
+          "targetMinAngleDegrees": 20,
+          "qualityTargetMet": true,
+          "maxEdge": 0.02346292081980343,
+          "particleDistance": 0.025,
+          "warnings": []
+        }
+      },
+      "shaped": {
+        "metrics": {
+          "bodyFaceIntersections": 0,
+          "bodyInsideVertices": 0,
+          "collisionExcludedPairs": 15566,
+          "contacts": 1672720,
+          "directionalFabric": true,
+          "faceContacts": 38,
+          "maxStrain": 0.2811304738169673,
+          "meanStrain": 0.0205441477588967,
+          "milliseconds": 47125.8597,
+          "pinDrift": 0,
+          "placementAdjustments": 67,
+          "proxyPenetrations": 0,
+          "seamGapAfter": 0.000011767166366967924,
+          "seamGapBefore": 0.00001876670045199771,
+          "seamTopology": true,
+          "solidContact": true,
+          "triangleClearanceViolations": 0,
+          "triangleContact": true,
+          "triangleSelfCollision": true,
+          "triangles": 4462,
+          "vertices": 2477
+        }
+      },
+      "posed": {
+        "metrics": {
+          "bodyFaceIntersections": 0,
+          "bodyInsideVertices": 0,
+          "collisionExcludedPairs": 15566,
+          "contacts": 1744398,
+          "directionalFabric": true,
+          "faceContacts": 38,
+          "maxStrain": 0.2888928722882744,
+          "meanStrain": 0.021831401826878902,
+          "milliseconds": 38419.2157,
+          "pinDrift": 0,
+          "placementAdjustments": 68,
+          "proxyPenetrations": 0,
+          "seamGapAfter": 0.000011609224629024103,
+          "seamGapBefore": 0.000018729572387822744,
+          "seamTopology": true,
+          "solidContact": true,
+          "triangleClearanceViolations": 0,
+          "triangleContact": true,
+          "triangleSelfCollision": true,
+          "triangles": 4462,
+          "vertices": 2477
+        }
+      },
+      "edited": {
+        "metrics": {
+          "bodyFaceIntersections": 0,
+          "bodyInsideVertices": 0,
+          "collisionExcludedPairs": 11639,
+          "contacts": 1201404,
+          "directionalFabric": true,
+          "faceContacts": 1782,
+          "maxStrain": 0.3629707133548026,
+          "meanStrain": 0.019414799613151987,
+          "milliseconds": 24288.2782,
+          "pinDrift": 0,
+          "placementAdjustments": 50,
+          "proxyPenetrations": 0,
+          "seamGapAfter": 0.000012943102482566825,
+          "seamGapBefore": 0.000030336960393022717,
+          "seamTopology": true,
+          "solidContact": true,
+          "triangleClearanceViolations": 0,
+          "triangleContact": true,
+          "triangleSelfCollision": true,
+          "triangles": 3186,
+          "vertices": 1817
+        },
+        "quality": {
+          "triangles": 3186,
+          "vertices": 1817,
+          "minAngleDegrees": 22.168257334073143,
+          "targetMinAngleDegrees": 20,
+          "qualityTargetMet": true,
+          "maxEdge": 0.028587323250799733,
+          "particleDistance": 0.03,
+          "warnings": []
+        }
+      }
+    },
+    "checks": [
+      "visible review and cancel",
+      "source-owned detailed six-panel draft",
+      "numeric preview fit gates",
+      "one-step undo/redo",
+      "physical pattern controls and guarded placement",
+      "save/reopen and deterministic refit",
+      "body morph and pose update",
+      "boundary edit, remesh and authored color",
+      "malformed attachment rollback",
+      "cancel between stages",
+      "stale reply rejection and rollback",
+      "independent flat working copy",
+      "exchange strips body reference",
+      "accessory retained-source stack and toggle",
+      "combined project reopen",
+      "same-scene Cycles render",
+      "original paid source unchanged",
+      "edited panels persist in a separately reopened project",
+      "960×720 front/rear Cycles renders"
+    ]
+  },
+  "performance": [
+    {
+      "particleDistance": 0.04,
+      "triangles": 1730,
+      "preparationMilliseconds": 855.5296000000001,
+      "totalMilliseconds": 14799.2654,
+      "maxStrain": 0.2703756257034142,
+      "previewQualityPass": true
+    },
+    {
+      "particleDistance": 0.03,
+      "triangles": 3030,
+      "preparationMilliseconds": 891.8755000000001,
+      "totalMilliseconds": 23628.8661,
+      "maxStrain": 0.3424676329067291,
+      "previewQualityPass": true
+    },
+    {
+      "particleDistance": 0.025,
+      "triangles": 4246,
+      "preparationMilliseconds": 1021.1540000000023,
+      "totalMilliseconds": 31566.380800000006,
+      "maxStrain": 0.2868807697202702,
+      "previewQualityPass": true
+    },
+    {
+      "particleDistance": 0.02,
+      "triangles": 6410,
+      "preparationMilliseconds": 1584.3732000000018,
+      "totalMilliseconds": 45814.4212,
+      "maxStrain": 0.4956838814351787,
+      "previewQualityPass": true
+    }
+  ],
+  "bmw": [
+    {
+      "originalUnchanged": true,
+      "backend": "CPU",
+      "comparison": {
+        "meanAbsoluteByteDifference": 0.000041956018518518515,
+        "maxByteDifference": 1,
+        "pixels": 230400
+      }
+    },
+    {
+      "originalUnchanged": true,
+      "backend": "OPTIX",
+      "comparison": {
+        "meanAbsoluteByteDifference": 0.00004484953703703704,
+        "maxByteDifference": 1,
+        "pixels": 230400
+      }
+    }
+  ],
+  "preservation": {
+    "recordedFiles": 34837,
+    "currentFiles": 34837,
+    "sampledShaChecks": 15,
+    "previousReleases": [
+      {
+        "version": "0.15.0",
+        "sha256": "7b0f54bf339ba7d6d8e9720f1c0e011e0f34c380c93d7dbae7bf79b18ab04201",
+        "nativeSha256": "4931375dc1555af29b7ab22766bbe9a2efd3a6c7d4a5a43a67c3bf0addd3a1ed",
+        "helperSha256": "5530a39e0fd645ae18c70c1cce915db6300101a493898e26da933203cb2e4261"
+      },
+      {
+        "version": "0.16.0",
+        "sha256": "be22d576efef9c7e1c2473fe6210ecbf9b04051f5f1d042a1de703f84f160a82",
+        "nativeSha256": "4931375dc1555af29b7ab22766bbe9a2efd3a6c7d4a5a43a67c3bf0addd3a1ed",
+        "helperSha256": "5530a39e0fd645ae18c70c1cce915db6300101a493898e26da933203cb2e4261"
+      },
+      {
+        "version": "0.17.0",
+        "sha256": "8061d045db2a0883113f7f5b2f034cf9ec8cd87f82c2ec4e232dc6f2013d6563",
+        "nativeSha256": "67099ab5aa4d2a545374acbd466f6980238b6a2f21e95645a1e7c3d10ad082e1",
+        "helperSha256": "6706af97c0c3d9949a97d7667960b4b540a3c8c98f636a08db2f069b7a4dcb28"
+      }
+    ]
+  },
+  "limits": {
+    "offlineDrapeSeconds": 120,
+    "preparationSeconds": 20,
+    "clothTriangles": 15000,
+    "calibratedMaterial": false,
+    "productionClothComplete": false,
+    "fullGoalComplete": false
+  },
+  "publication": false
+}

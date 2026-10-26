@@ -1,0 +1,6 @@
+.modal.fabric-dialog{display:flex;flex-direction:column;width:min(760px,95vw);overflow:hidden}
+.fabric-dialog>header,.fabric-dialog>footer{flex-shrink:0}
+.fabric-dialog>.modal-body{min-height:0;overflow-y:auto;overflow-x:hidden}
+.fabric-dialog #fabric-study-canvas{display:block;width:100%;height:auto}
+.fabric-dialog #fabric-error{color:#edb496;margin:12px 0 0}
+.fabric-dialog #fabric-error:empty{display:none}

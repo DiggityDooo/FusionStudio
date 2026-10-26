@@ -1,0 +1,23 @@
+# Local reference assets, downloaded tool sources, and Windows launchers.
+/BMW27_2.blend.zip
+/BMW27_2.blend/
+/ghidra-master/
+/claudecodeX-reverse-engineering-skill-main/
+/*.lnk
+
+# Private decompiler artifacts and analysis databases are not Fusion source.
+/CursorWork/backups/
+/CursorWork/bin/
+/CursorWork/tools/
+/CursorWork/samples/
+/CursorWork/output/
+/CursorWork/output-v2/*
+!/CursorWork/output-v2/CODEX_INDEX.json
+/CursorWork/projects/
+/CursorWork/projects-v2/
+
+# Local generated Python/analysis files.
+**/__pycache__/
+**/.pytest_cache/
+*.pyc
+*.log

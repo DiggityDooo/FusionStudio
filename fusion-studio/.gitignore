@@ -1,0 +1,18 @@
+# Character binaries are regenerated locally, not committed:
+# scripts/fetch-character-foundation.py -> assets/, then
+# scripts/compile-character-foundation.py + prepare-character-skins.py -> public/
+assets/
+public/
+node_modules/
+dist/
+release/
+release-v2/
+release-v*/
+runtime/
+runtime-v2/
+__pycache__/
+test-output/
+*.log
+toolchains/
+native/target/
+native/*.node

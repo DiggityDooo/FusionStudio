@@ -1,0 +1,47 @@
+(function(){
+    var args=App.scriptArgs;
+    var configFile=new DzFile(String(args[0]));
+    if(!configFile.open(DzFile.ReadOnly)){App.delayedExit(1);return;}
+    var spec=JSON.parse(String(configFile.read()));configFile.close();
+    function writeReport(report){var file=new DzFile(spec.result);if(file.open(DzFile.WriteOnly)){file.write(JSON.stringify(report));file.close();}}
+    try{
+        var content=App.getContentMgr();
+        for(var i=0;i<spec.contentRoots.length;i++)content.addContentDirectory(spec.contentRoots[i],false);
+        var opened=content.openFile(spec.source,false);
+        if(opened===false)throw Error('DAZ could not load this native asset.');
+        processEvents();
+        var properties=[];
+        function collect(owner,nodeName){
+            var list=owner.getPropertyList();
+            for(var p=0;p<list.length;p++){
+                var property=list[p];
+                if(typeof property.getValue!=='function'||typeof property.getMin!=='function'||typeof property.setValue!=='function')continue;
+                var key=nodeName+'::'+String(property.getName()),value=property.getValue();
+                if(typeof value!=='number')continue;
+                if(spec.morphs&&typeof spec.morphs[key]==='number')property.setValue(spec.morphs[key]);
+                if(properties.length<1200)properties.push({key:key,name:String(property.name),label:String(property.getLabel()),min:property.getMin(),max:property.getMax(),value:property.getValue()});
+            }
+        }
+        var nodes=Scene.getNodeList();
+        for(var n=0;n<nodes.length;n++){
+            var node=nodes[n];collect(node,String(node.getName()));
+            var object=node.getObject();
+            if(object){for(var m=0;m<object.getNumModifiers();m++)collect(object.getModifier(m),String(node.getName()));}
+        }
+        processEvents();
+        var exporter=App.getExportMgr().findExporterByClassName('DzFbxExporter');
+        if(!exporter)throw Error('FBX exporter is unavailable in this runtime.');
+        var settings=new DzFileIOSettings();
+        exporter.getOptions(settings,false,'');
+        settings.setIntValue('RunSilent',1);
+        settings.setBoolValue('doFigures',true);settings.setBoolValue('doProps',true);
+        settings.setBoolValue('doSelected',false);settings.setBoolValue('doVisible',true);
+        settings.setBoolValue('doMorphs',false);settings.setBoolValue('doAnimations',false);
+        settings.setBoolValue('doCopyTextures',true);settings.setBoolValue('doEmbed',false);
+        settings.setStringValue('format','FBX 2012 -- Binary');
+        var result=exporter.writeFile(spec.output,settings);
+        if(result!==0)throw Error('FBX exporter failed: '+result);
+        writeReport({ok:true,version:String(App.versionString),source:spec.source,properties:properties,nodes:nodes.length,output:spec.output});
+        App.delayedExit(0);
+    }catch(error){writeReport({ok:false,error:String(error)});App.delayedExit(1);}
+})();

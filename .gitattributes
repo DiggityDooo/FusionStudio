@@ -1,0 +1,2 @@
+# Preserve copied dependency notices and their audited byte hashes.
+/fusion-studio/docs/native-dependencies/** -text

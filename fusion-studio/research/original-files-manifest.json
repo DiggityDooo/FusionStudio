@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "captured_utc": "2026-10-13T06:28:57.9192704Z",
+  "coverage": "Bounded selected executable and integration evidence files. Not a whole-installation audit.",
+  "execution": "No listed application executed during this inspection.",
+  "files": [
+    {
+      "path": "C:\\Program Files\\DAZ 3D\\DAZStudio4\\DAZStudio.exe",
+      "bytes": 796160,
+      "modified_utc": "2025-12-22T19:33:46.0000000Z",
+      "sha256": "6ab22d5c4c27834960166ee3b64e85df16609ea3b2ea4bb7fb335d17cef4465b"
+    },
+    {
+      "path": "C:\\Program Files\\DAZ 3D\\DAZStudio4\\resources\\fileiopresets.dsx",
+      "bytes": 32846,
+      "modified_utc": "2025-12-22T18:02:36.0000000Z",
+      "sha256": "9afd35774e7b8fec73c60a586d0043ac34cb221eca33a8a03d9354bdaaf29c1b"
+    },
+    {
+      "path": "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzblenderbridge.dll",
+      "bytes": 10301440,
+      "modified_utc": "2024-11-26T00:51:46.0000000Z",
+      "sha256": "ea51e750d2a29c242337b10aa4fe83a556425418bb01ad6f72937ef7c95d20da"
+    },
+    {
+      "path": "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzfbxexporter.dll",
+      "bytes": 630272,
+      "modified_utc": "2025-12-22T19:48:44.0000000Z",
+      "sha256": "3b677927ff000458ecb841be76a3bcfc505e4eeab47e59ff57fef52a1d1c1fb4"
+    },
+    {
+      "path": "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzfbximporter.dll",
+      "bytes": 282112,
+      "modified_utc": "2025-12-22T19:48:24.0000000Z",
+      "sha256": "042357e379c768580d1bbe4620800703c6120de44d39e8227f3beb5d9a57e683"
+    },
+    {
+      "path": "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to Blender\\Daz to Blender.dsx",
+      "bytes": 316,
+      "modified_utc": "2021-04-12T23:02:58.0000000Z",
+      "sha256": "e5d251a560aac6619cc684564b500a08cadb375f97c39799373f4ec73ef2d7c8"
+    },
+    {
+      "path": "C:\\Program Files\\Marvelous Designer Enterprise Network Offline\\MarvelousDesigner_Enterprise_Offline.exe",
+      "bytes": 194124096,
+      "modified_utc": "2026-07-02T01:05:44.0000000Z",
+      "sha256": "b7e3bb1c40a32ff90ce6c42f0e95ef2c6f3093c9cea926d6a66de70c12b31dc7"
+    },
+    {
+      "path": "C:\\Program Files\\Marvelous Designer Enterprise Network Offline\\python311.dll",
+      "bytes": 5789464,
+      "modified_utc": "2026-07-02T00:49:48.0000000Z",
+      "sha256": "2835e0f24fb13ef019608b13817f3acf8735fbc5f786d00501c4a151226bdff1"
+    },
+    {
+      "path": "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\CharacterCreator.exe",
+      "bytes": 103417824,
+      "modified_utc": "2026-04-27T08:05:18.0000000Z",
+      "sha256": "8b15680258bb749945ff4760c94fc747ac096054fc62ced5e778482e438fc153"
+    },
+    {
+      "path": "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\RLPy.py",
+      "bytes": 546446,
+      "modified_utc": "2026-04-24T04:17:08.0000000Z",
+      "sha256": "644f83a03e6c1de0e76a08fe6f97de7bf8a583b448fd9fe8caed10f69de34a86"
+    },
+    {
+      "path": "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\main.py",
+      "bytes": 9723,
+      "modified_utc": "2026-02-23T18:05:22.0000000Z",
+      "sha256": "59553b25163ea5017456a70c272ac25871a7c9d088333940fdf0ef9aec4691b1"
+    },
+    {
+      "path": "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\btp\\exporter.py",
+      "bytes": 61366,
+      "modified_utc": "2026-02-15T00:04:34.0000000Z",
+      "sha256": "166e52b36558a3fcf582b1e26f0230dc0d64e39b3c57ab2896b99ab151cde903"
+    },
+    {
+      "path": "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\btp\\importer.py",
+      "bytes": 37273,
+      "modified_utc": "2026-02-15T00:04:34.0000000Z",
+      "sha256": "eb3b9b60104421fab7b1e253075f059b7988489f81bfddac1da66e90323600c9"
+    },
+    {
+      "path": "C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\OpenPlugin\\Blender Pipeline Plugin\\btp\\vars.py",
+      "bytes": 3339,
+      "modified_utc": "2026-02-15T00:04:34.0000000Z",
+      "sha256": "acc20fca9bdb30df34d27d79e3bc06f645f238686947c87f42eb670fd68e90d3"
+    }
+  ]
+}

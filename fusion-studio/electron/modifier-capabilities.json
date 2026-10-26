@@ -1,0 +1,18 @@
+{
+  "subdivide":{"topology":"changes","uv":"interpolates","materials":"preserves","mapping":"interpolated"},
+  "bevel":{"topology":"changes","uv":"interpolates","materials":"preserves","mapping":"interpolated"},
+  "decimate":{"topology":"changes","uv":"approximate","materials":"approximate","mapping":"approximate"},
+  "solidify":{"topology":"changes","uv":"interpolates","materials":"preserves","mapping":"interpolated"},
+  "mirror":{"topology":"changes","uv":"interpolates","materials":"preserves","mapping":"interpolated"},
+  "remesh":{"topology":"changes","uv":"drops","materials":"approximate","mapping":"unavailable"},
+  "boolean":{"topology":"changes","uv":"approximate","materials":"approximate","mapping":"approximate"},
+  "array":{"topology":"changes","uv":"preserves","materials":"preserves","mapping":"duplicates"},
+  "wireframe":{"topology":"changes","uv":"approximate","materials":"preserves","mapping":"approximate"},
+  "weld":{"topology":"changes","uv":"approximate","materials":"preserves","mapping":"approximate"},
+  "triangulate":{"topology":"changes","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "smooth":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "twist":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "bend":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "taper":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "stretch":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"}
+}

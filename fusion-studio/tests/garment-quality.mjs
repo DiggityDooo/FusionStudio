@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {liveTshirtPattern,drapeRequest} from '../src/hybrid.js';
+import {migratePattern} from '../src/patterns.js';
+const require=createRequire(import.meta.url),{GeometryEngine}=require('../electron/geometry.cjs');
+const file=JSON.parse(fs.readFileSync('test-output/dson-integration-results.json')),bytes=fs.readFileSync(file.output),{scene:character}=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');character.userData.fusion_id=character.uuid;
+const doc=migratePattern(liveTshirtPattern());doc.particleDistance=.04;const {request,data}=drapeRequest(doc,character,{steps:160,iterations:10});request.solidContact=true;request.initializeOutside=true;
+const engine=new GeometryEngine();try{const start=performance.now(),result=await engine.run('drapeGarment',request);assert.ok(result.positions.flat().every(Number.isFinite));assert.ok(data.quality.minAngleDegrees>=20);assert.equal(result.metrics.solidContact,true);assert.equal(result.metrics.pinDrift,0);assert.equal(result.metrics.bodyInsideVertices,0);assert.equal(result.metrics.bodyFaceIntersections,0);assert.deepEqual(fs.readFileSync(file.output),bytes);const m=result.metrics,fitMetricsPass=!m.bodyInsideVertices&&!m.bodyFaceIntersections&&!m.triangleClearanceViolations&&m.maxStrain<=.5&&m.seamGapAfter<=.005;const report={passedExecution:true,fitMetricsPass,productionFit:'requires numeric gates and visual acceptance',sourceTriangles:50312,quality:data.quality,metrics:m,totalMilliseconds:performance.now()-start,scope:'Detailed owned Genesis garment fixture. Execution is not production-fit acceptance; all diagnostics and the rendered image must also pass.'};fs.writeFileSync('test-output/garment-quality-results.json',JSON.stringify(report,null,2));fs.writeFileSync('test-output/garment-quality-mesh.json',JSON.stringify({data,request,result}));console.log(JSON.stringify(report,null,2));}finally{engine.close();}

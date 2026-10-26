@@ -1,0 +1,65 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {capturePosePreset,inspectPosePreset,applyPosePreset,validatePosePreset,validatePoseLibrary} from '../src/pose-library.js';
+import {setJointLimit,jointLocalAngles} from '../src/joint-limits.js';
+import {createIK} from '../src/ik.js';
+import {evaluateCharacter,initializeDeformation,evaluatedCharacterTriangles,addPoseCorrective} from '../src/deformation.js';
+import {deformationTransaction} from '../src/deformation-ui.js';
+import {Editor} from '../src/editor.js';
+import {createCharacter,applyPose} from '../src/character.js';
+const radians=THREE.MathUtils.degToRad;
+function snapshot(root){root.updateMatrixWorld(true);return structuredClone(root.toJSON());}
+function equivalent(a,b,path=''){if(typeof a==='number'&&typeof b==='number'){assert.ok(Math.abs(a-b)<1e-12,`${path}: ${a} / ${b}`);return;}if(a&&b&&typeof a==='object'&&typeof b==='object'){assert.deepEqual(Object.keys(a),Object.keys(b),path);for(const key of Object.keys(a))equivalent(a[key],b[key],path+'/'+key);}else assert.equal(a,b,path);}
+function rig(){const root=new THREE.Group(),bones=[];for(let i=0;i<4;i++){const b=new THREE.Bone();b.name='Joint_'+i;if(i){b.position.x=1;bones[i-1].add(b);}else root.add(b);bones.push(b);}root.updateMatrixWorld(true);return {root,bones};}
+function editor(root){const e=Object.create(Editor.prototype);e.root=new THREE.Group();e.root.add(root);e.scene=new THREE.Scene();e.scene.add(e.root);e.selected=root;e.history=[];e.change=()=>{};e.meshTools={setMode(){}};e.timeline={playing:false,frame:1,reset(){}};e.select=function(n){this.selected=n;};e.wire=()=>{};e.ensureHistory();return e;}
+test('pose capture is rotation-only, bounded, non-executable and snapshots rotations before hashing',async()=>{
+ const {root,bones}=rig();bones[1].rotation.z=.6;root.position.set(1,2,3);root.userData.privateAssetPath='C:/Private/Character.duf';
+ const pending=capturePosePreset(root,{name:'Saved pose'});bones[1].rotation.z=.9;const preset=await pending;assert.equal(preset.bones.length,4);assert.ok(new THREE.Quaternion().fromArray(preset.bones.find(b=>b.name==='Joint_1').quaternion).angleTo(new THREE.Quaternion().setFromEuler(new THREE.Euler(0,0,.6)))<1e-7);assert.ok(!JSON.stringify(preset).includes('Private'));
+ assert.deepEqual(validatePosePreset(JSON.stringify(preset)),preset);assert.throws(()=>validatePosePreset({...preset,code:'run()'}),/unsupported fields/);const bad=structuredClone(preset);bad.bones[0].quaternion=[0,0,0,0];assert.throws(()=>validatePosePreset(bad),/unit quaternion/);bad.bones[0]=bad.bones[1];assert.throws(()=>validatePosePreset(bad),/unique/);assert.throws(()=>validatePosePreset(' '.repeat(2*1024*1024+1)),/2 MiB/);
+ const duplicate=new THREE.Bone();duplicate.name='Joint_0';root.add(duplicate);await assert.rejects(capturePosePreset(root),/ambiguous/);
+});
+test('hierarchy and rest-axis matching survives containers, serialization and quaternion sign',async()=>{
+ const {root,bones}=rig();bones[1].userData.fusion_source_quaternion=new THREE.Quaternion().setFromEuler(new THREE.Euler(.1,.2,.3)).toArray();bones[2].rotation.y=.7;const preset=await capturePosePreset(root);
+ const restored=await new THREE.ObjectLoader().parseAsync(root.toJSON()),container=new THREE.Group(),first=restored.getObjectByName('Joint_0');restored.remove(first);container.add(first);restored.add(container);const b=restored.getObjectByName('Joint_1');b.userData.fusion_source_quaternion=b.userData.fusion_source_quaternion.map(v=>-v);
+ assert.equal((await inspectPosePreset(restored,preset)).compatible,true);restored.getObjectByName('Joint_2').rotation.y=0;await applyPosePreset(restored,preset);assert.ok(Math.abs(restored.getObjectByName('Joint_2').rotation.y-.7)<1e-7);
+ b.name='Different';const before=JSON.stringify(restored.toJSON());assert.equal((await inspectPosePreset(restored,preset)).compatible,false);await assert.rejects(applyPosePreset(restored,preset),/hierarchy/);assert.equal(JSON.stringify(restored.toJSON()),before);b.name='Joint_1';b.userData.fusion_source_quaternion=[0,0,0,1];assert.equal((await inspectPosePreset(restored,preset)).compatible,false);
+});
+test('pose review requires explicit IK release and acceptance of authored limit clamps',async()=>{
+ const {root,bones}=rig();bones[1].rotation.z=radians(70);const preset=await capturePosePreset(root);bones[1].rotation.z=0;const control=createIK(root,bones[2]);root.userData.fusion_ik=[control];
+ setJointLimit(root,bones[1],{bounds:{x:{enabled:false,min:-180,max:180},y:{enabled:false,min:-89.9,max:89.9},z:{enabled:true,min:0,max:20}}});const report=await inspectPosePreset(root,preset);assert.equal(report.activeIK,1);assert.equal(report.clamped.length,1);assert.ok(Math.abs(report.clamped[0].requested.z-70)<1e-6);assert.equal(report.clamped[0].applied.z,20);
+ const before=JSON.stringify(root.toJSON());await assert.rejects(applyPosePreset(root,preset),/release enabled IK/);assert.equal(JSON.stringify(root.toJSON()),before);await assert.rejects(applyPosePreset(root,preset,{releaseIK:true}),/joint-limit clamping/);assert.equal(control.enabled,true);
+ await applyPosePreset(root,preset,{releaseIK:true,acceptClamped:true});assert.equal(control.enabled,false);assert.ok(Math.abs(jointLocalAngles(root,bones[1]).z-20)<1e-6);assert.equal(root.userData.fusion_ik.length,1,'IK targets are retained for later reuse');
+});
+test('cancelled, changed-rig and failed formula evaluations restore pose, controls and morph influences',async()=>{
+ const {root,bones}=rig();bones[1].rotation.z=.4;const preset=await capturePosePreset(root);bones[1].rotation.z=.1;
+ const state={version:1,channels:[{id:'a',value:.2},{id:'b',value:0}],morphs:[{id:'a',targetName:'A'}],formulas:[{output:'a',operations:[{op:'push',url:'b'}]},{output:'b',operations:[{op:'push',url:'a'}]}],correctives:[],errors:[]};root.userData.fusion_deformation=state;const mesh=new THREE.Mesh(new THREE.PlaneGeometry(),new THREE.MeshBasicMaterial());mesh.morphTargetDictionary={A:0};mesh.morphTargetInfluences=[.2];root.add(mesh);
+ const before=snapshot(root);await assert.rejects(applyPosePreset(root,preset),/dependenc(?:y|ies) failed/);equivalent(snapshot(root),before);assert.deepEqual(mesh.morphTargetInfluences,[.2]);
+ const controller=new AbortController();controller.abort();await assert.rejects(applyPosePreset(root,preset,{signal:controller.signal}),/cancelled/);equivalent(snapshot(root),before);
+ const pending=applyPosePreset(root,preset);bones[1].name='Changed';await assert.rejects(pending,/changed during pose/);bones[1].name='Joint_1';equivalent(snapshot(root),before);
+});
+test('pose and dependent garment edits share undo and failure/cancellation restore the scene',async()=>{
+ const {root,bones}=rig();bones[1].rotation.z=.5;const preset=await capturePosePreset(root);bones[1].rotation.z=0;const e=editor(root),targetId=root.uuid,garment=new THREE.Mesh(new THREE.PlaneGeometry(),new THREE.MeshBasicMaterial());garment.name='Linked cloth';e.root.add(garment);e.commit();const garmentId=garment.uuid,history=e.journal.cursor;
+ await deformationTransaction(e,targetId,r=>applyPosePreset(r,preset),{afterChange:async()=>{await Promise.resolve();garment.position.y=.3;}});assert.equal(e.journal.cursor,history+1);await e._undo();assert.ok(Math.abs(e.root.getObjectByProperty('uuid',targetId).getObjectByName('Joint_1').rotation.z)<1e-7);assert.equal(e.root.getObjectByProperty('uuid',garmentId).position.y,0);await e._redo();assert.ok(Math.abs(e.root.getObjectByProperty('uuid',targetId).getObjectByName('Joint_1').rotation.z-.5)<1e-7);assert.equal(e.root.getObjectByProperty('uuid',garmentId).position.y,.3);
+ const before=structuredClone(e.serialize()),cursor=e.journal.cursor;await assert.rejects(deformationTransaction(e,targetId,r=>applyPosePreset(r,preset),{afterChange:async()=>{e.root.getObjectByProperty('uuid',garmentId).position.y=10;throw Error('Cloth failed');}}),/Cloth failed/);equivalent(e.serialize(),before);assert.equal(e.journal.cursor,cursor);
+ const controller=new AbortController();await assert.rejects(deformationTransaction(e,targetId,r=>applyPosePreset(r,preset),{afterChange:async()=>{controller.abort();},signal:controller.signal}),/cancelled/);equivalent(e.serialize(),before);assert.equal(e.journal.cursor,cursor);
+});
+test('a stale dependent pose update cannot restore its old snapshot over a newly opened project',async()=>{
+ const {root,bones}=rig();bones[1].rotation.z=.5;const preset=await capturePosePreset(root),e=editor(root),cursor=e.journal.cursor,newProject=new THREE.Group();newProject.name='Another project';const marker=new THREE.Group();marker.name='Must survive';newProject.add(marker);
+ await assert.rejects(deformationTransaction(e,root.uuid,r=>applyPosePreset(r,preset),{afterChange:async()=>{e.root=newProject;}}),/Scene changed/);assert.equal(e.root,newProject);assert.equal(e.root.children[0],marker);assert.equal(e.journal.cursor,cursor);assert.equal(e.batching,false);
+});
+test('malformed incoming pose libraries are rejected before replacing the current project',async()=>{
+ const {root}=rig(),preset=await capturePosePreset(root),e=editor(new THREE.Group()),current=e.root;root.userData.fusion_pose_presets=[{id:'same',preset},{id:'same',preset}];assert.throws(()=>validatePoseLibrary(root),/unique/);await assert.rejects(e.restore(root.toJSON()),/unique/);assert.equal(e.root,current);
+ root.userData.fusion_pose_presets=[{id:'valid',preset:{...preset,bones:[]}}];await assert.rejects(e.restore(root.toJSON()),/malformed/);assert.equal(e.root,current);root.userData.fusion_pose_presets={};await assert.rejects(e.restore(root.toJSON()),/32 saved poses/);assert.equal(e.root,current);
+});
+test('procedural rebuilding retains limits, actual bounded pose metadata and reusable poses',async()=>{
+ const root=createCharacter(),e=editor(root),bone=root.getObjectByName('Forearm_L');setJointLimit(root,bone,{bounds:{x:{enabled:false,min:-180,max:180},y:{enabled:false,min:-89.9,max:89.9},z:{enabled:true,min:0,max:20}}});applyPose(root,{Forearm_L:[0,0,80]});assert.ok(Math.abs(root.userData.pose.Forearm_L[2]-20)<1e-6);const preset=await capturePosePreset(root);root.userData.fusion_pose_presets=[{id:'retained-pose',preset}];const next=e.rebuildCharacter({height:2.1});assert.equal(next.uuid,root.uuid);assert.equal(next.userData.fusion_joint_limits.length,1);assert.equal(next.userData.fusion_pose_presets[0].id,'retained-pose');assert.equal((await inspectPosePreset(next,preset)).compatible,true);await applyPosePreset(next,preset);assert.ok(Math.abs(jointLocalAngles(next,next.getObjectByName('Forearm_L')).z-20)<1e-6);
+});
+test('real Genesis pose reuse matches joint rotations and skinned triangles with corrective evaluation',async t=>{
+ const fixture=JSON.parse(fs.readFileSync('test-output/dson-integration-results.json')),bytes=fs.readFileSync(fixture.output),gltf=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),''),root=gltf.scene;root.traverse(n=>{if(n.isBone)n.userData.fusion_source_quaternion=n.quaternion.toArray();});
+ const bone=root.getObjectByName('l_forearm'),state=initializeDeformation(root),channel=state.channels.find(c=>c.id==='body_bs_Navel_HD3');assert.ok(channel);channel.value=.25;evaluateCharacter(root);addPoseCorrective(root,{channel:channel.id,boneId:bone.uuid,axis:'z',start:0,end:45,strength:.2});const reference=bone.quaternion.clone();bone.quaternion.copy(reference).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0,0,radians(30))));evaluateCharacter(root);const expected=evaluatedCharacterTriangles(root),weights=[];root.traverse(n=>{if(n.isSkinnedMesh)weights.push(Array.from(n.geometry.attributes.skinWeight.array));});
+ const start=performance.now(),preset=await capturePosePreset(root,{name:'Genesis detailed pose'});bone.quaternion.copy(reference);evaluateCharacter(root);await applyPosePreset(root,preset);const applied=evaluatedCharacterTriangles(root);assert.equal(applied.triangles.length/3,50312);assert.equal(preset.bones.length,138);assert.equal(channel.value,.25,'Authored body shape is preserved');let error=0;for(let i=0;i<expected.positions.length;i++)error=Math.max(error,Math.abs(applied.positions[i]-expected.positions[i]));assert.ok(error<1e-6,`Position error ${error}`);const afterWeights=[];root.traverse(n=>{if(n.isSkinnedMesh)afterWeights.push(Array.from(n.geometry.attributes.skinWeight.array));});assert.deepEqual(afterWeights,weights);
+ const restored=await new THREE.ObjectLoader().parseAsync(root.toJSON());assert.equal((await inspectPosePreset(restored,preset)).compatible,true);await applyPosePreset(restored,preset);assert.deepEqual(fs.readFileSync(fixture.output),bytes);t.diagnostic(`Genesis: ${preset.bones.length} joints / ${applied.triangles.length/3} triangles; capture/apply/collision ${(performance.now()-start).toFixed(1)} ms; maximum skinned position error ${error} m.`);
+});

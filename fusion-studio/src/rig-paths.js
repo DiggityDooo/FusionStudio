@@ -1,0 +1,3 @@
+export function nodePath(root,node){const path=[];while(node&&node!==root){if(!node.parent)throw Error('Joint is outside this character.');path.unshift(node.parent.children.indexOf(node));node=node.parent;}if(node!==root)throw Error('Joint is outside this character.');return path;}
+export function pathNode(root,path){let node=root;if(!Array.isArray(path)||path.length>128)return null;for(const index of path){if(!Number.isInteger(index)||index<0)return null;node=node?.children[index];}return node||null;}
+export function bonesOf(root){const bones=[];root?.traverse(n=>{if(n.isBone)bones.push(n);});return bones;}

@@ -1,0 +1,44 @@
+{
+  "purpose": "Focused CursorWork v2 exports for Codex; static pseudocode only; vendor apps not executed",
+  "finished": "2026-10-14T21:39:02.6202166-07:00",
+  "prompt": "C:\\Users\\Sean\\Documents\\ChatGPT\\Ultimate 3D software\\CursorWork\\prompts\\binary_analysis_agent.md",
+  "results": [
+    {
+      "name": "DAZ4-DzCore",
+      "binary": "C:\\Program Files\\DAZ 3D\\DAZStudio4\\DzCore.dll",
+      "status": "complete",
+      "output": "C:\\Users\\Sean\\Documents\\ChatGPT\\Ultimate 3D software\\CursorWork\\output-v2\\DzCore.dll-cfe5eab6b1b7-76ebd74ba43b",
+      "seconds": 1908.7,
+      "error": null
+    },
+    {
+      "name": "CC5-CharacterCreator",
+      "status": "complete",
+      "output": "C:\\Users\\Sean\\Documents\\ChatGPT\\Ultimate 3D software\\CursorWork\\output-v2\\CharacterCreator.exe-8b15680258bb-ea366f425a3d",
+      "seconds": 3243,
+      "error": null
+    },
+    {
+      "name": "MD-Marvelous",
+      "binary": "C:\\Program Files\\Marvelous Designer Enterprise Network Offline\\MarvelousDesigner_Enterprise_Offline.exe",
+      "status": "complete",
+      "output": "C:\\Users\\Sean\\Documents\\ChatGPT\\Ultimate 3D software\\CursorWork\\output-v2\\MarvelousDesigner_Enterprise_Offline.exe-b7e3bb1c40a3-aff4e4b480ba",
+      "seconds": 8435,
+      "error": null
+    },
+    {
+      "name": "Blender52",
+      "binary": "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+      "status": "complete",
+      "output": "C:\\Users\\Sean\\Documents\\ChatGPT\\Ultimate 3D software\\CursorWork\\output-v2\\blender.exe-e27fbfea8564-c6cba33bc56b",
+      "seconds": 6719.7,
+      "error": null
+    }
+  ],
+  "notes": [
+    "COMPLETE.json means bounded selected subset only, not whole-program decompilation",
+    "Do not copy vendor pseudocode into Fusion distributable source",
+    "Do not carry addresses across DAZ4 vs DAZ6 or Blender 5.1 vs 5.2"
+  ],
+  "allComplete": true
+}

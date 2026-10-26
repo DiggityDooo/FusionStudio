@@ -1,0 +1,14 @@
+.modal.pattern-modal{width:min(1240px,96vw);max-width:96vw}.pattern-designer{display:grid;grid-template-columns:190px minmax(360px,540px) 220px;gap:16px}.pattern-designer aside{display:flex;flex-direction:column;gap:8px}.pattern-designer label{display:block;color:#c2c7ce;font-size:12px}.pattern-designer input:not([type=checkbox]),.pattern-designer select{width:100%;box-sizing:border-box;margin-top:3px}.pattern-designer canvas{width:100%;height:auto;touch-action:none;border:1px solid #555;border-radius:4px}.pattern-buttons{display:flex;gap:4px;flex-wrap:wrap}.pattern-designer button{padding:6px 9px;background:#41464e;color:#eee;border:1px solid #5b626b;border-radius:3px;cursor:pointer}.pattern-designer p{font-size:11px;line-height:1.5;color:#acb3bf}#pattern-points{display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:125px;overflow:auto}#pattern-points label{display:flex;align-items:center;gap:4px}#pattern-points input{min-width:0;width:40%}.seam-row{display:flex;justify-content:space-between;gap:5px;align-items:center;margin:7px 0;font-size:11px}#seam-list{max-height:200px;overflow:auto}#pattern-message{font-size:12px;color:#d6bf8e}#pattern-message.error{color:#ff9696}#pattern-pins{display:grid;grid-template-columns:1fr 1fr;max-height:150px;overflow:auto}
+.modal.pattern-modal{display:flex;flex-direction:column;max-height:92vh;overflow:hidden}.pattern-modal>.modal-body{overflow:auto;min-height:0;padding:16px 22px}.pattern-modal>header,.pattern-modal>footer{flex-shrink:0}.pattern-designer aside{gap:6px}.pattern-designer aside input:not([type=checkbox]),.pattern-designer aside select{padding:6px}.pattern-designer aside p{margin:3px 0}.pattern-modal #pattern-message{margin:8px 0}.pattern-modal .microcopy{margin:5px 0}
+/* Keep the authored canvas visible while the independent tool columns scroll. */
+.pattern-designer{grid-template-columns:minmax(190px,1fr) minmax(360px,540px) minmax(200px,1fr);height:min(620px,calc(92vh - 220px));min-height:340px}
+.pattern-designer>aside,.pattern-designer>div{min-width:0;overflow:auto;scrollbar-gutter:stable}
+.pattern-designer>aside{padding-right:6px}
+.pattern-advanced{display:flex;flex-direction:column;gap:6px}
+.pattern-advanced #pattern-v2:not([hidden]){display:flex;flex-direction:column;gap:7px}
+.pattern-designer .range-pair{display:flex;gap:5px}
+.pattern-designer .range-pair input{min-width:0;width:50%}
+.pattern-detail-points{max-height:190px;overflow:auto;border-left:2px solid #56636d;padding-left:7px}
+.pattern-modal>.modal-body{overflow:hidden}
+@media(max-width:1000px){.pattern-designer{grid-template-columns:180px minmax(280px,1fr) 180px;gap:10px}}
+@media(max-height:650px){.pattern-modal>.modal-body{overflow:auto}.pattern-designer{min-height:300px}}

@@ -1,0 +1,3 @@
+.weight-stroking .left-panel,.weight-stroking .right-panel,.weight-stroking .topbar,.weight-stroking .contextbar,.weight-stroking .timeline,.weight-stroking .activity-bar,.weight-stroking .transform-tools,.weight-stroking .viewport-header{pointer-events:none;opacity:.6}
+#skin-weights input[type=number]{width:100%;margin:5px 0 8px}
+#skin-weights details>summary{cursor:pointer}

@@ -1,0 +1,12 @@
+const fs=require('node:fs'),path=require('node:path');
+function detailedGltf(size=96){
+ const p=[],normal=[],uv=[],indices=[];for(let y=0;y<=size;y++)for(let x=0;x<=size;x++){p.push(x/size,y/size,0);normal.push(0,0,1);uv.push(x/size,y/size);}
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){const a=y*(size+1)+x;indices.push(a,a+1,a+size+2,a,a+size+2,a+size+1);}
+ const arrays=[new Float32Array(p),new Float32Array(normal),new Float32Array(uv),new Uint32Array(indices)],parts=arrays.map(a=>Buffer.from(a.buffer)),bin=Buffer.concat(parts);let offset=0;
+ const bufferViews=parts.map((part,i)=>{const view={buffer:0,byteOffset:offset,byteLength:part.length,target:i===3?34963:34962};offset+=part.length;return view;});
+ const json={asset:{version:'2.0',generator:'Fusion original detailed validation fixture'},scene:0,scenes:[{nodes:[0]}],nodes:[{mesh:0}],meshes:[{primitives:[{attributes:{POSITION:0,NORMAL:1,TEXCOORD_0:2},indices:3,material:0}]}],materials:[{pbrMetallicRoughness:{baseColorFactor:[.8,.3,.1,1],metallicFactor:0,roughnessFactor:.7}}],buffers:[{byteLength:bin.length}],bufferViews,accessors:[{bufferView:0,componentType:5126,count:p.length/3,type:'VEC3',min:[0,0,0],max:[1,1,0]},{bufferView:1,componentType:5126,count:normal.length/3,type:'VEC3'},{bufferView:2,componentType:5126,count:uv.length/2,type:'VEC2'},{bufferView:3,componentType:5125,count:indices.length,type:'SCALAR'}]};
+ return {json,bin,triangles:indices.length/3};
+}
+function glb(json,bin){const data=Buffer.from(JSON.stringify(json)),j=Buffer.alloc(Math.ceil(data.length/4)*4,32);data.copy(j);const b=Buffer.alloc(Math.ceil(bin.length/4)*4);bin.copy(b);const output=Buffer.alloc(12+8+j.length+8+b.length);output.writeUInt32LE(0x46546c67,0);output.writeUInt32LE(2,4);output.writeUInt32LE(output.length,8);output.writeUInt32LE(j.length,12);output.writeUInt32LE(0x4e4f534a,16);j.copy(output,20);output.writeUInt32LE(b.length,20+j.length);output.writeUInt32LE(0x004e4942,24+j.length);b.copy(output,28+j.length);return output;}
+function externalFixture(directory,size=96){const {json,bin}=detailedGltf(size);json.buffers[0].uri='buffers/detailed%20mesh.bin';fs.mkdirSync(path.join(directory,'buffers'),{recursive:true});const resource=path.join(directory,'buffers/detailed mesh.bin'),file=path.join(directory,'detailed.gltf');fs.writeFileSync(resource,bin);fs.writeFileSync(file,JSON.stringify(json));return {file,resource,json,bin};}
+module.exports={detailedGltf,glb,externalFixture};

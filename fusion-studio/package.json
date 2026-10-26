@@ -1,0 +1,101 @@
+{
+  "name": "fusion-studio",
+  "version": "0.0.0",
+  "description": "An integrated modeling, character, clothing, animation and rendering workspace",
+  "author": "Fusion Studio",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "build:native": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-native.ps1",
+    "test:hybrid": "node --test tests/hybrid.test.mjs && node tests/hybrid-ui.cjs",
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "start": "electron .",
+    "test": "node --expose-gc --test tests/gltf-validation.test.cjs tests/derived-tangents.test.mjs tests/core.test.cjs tests/mesh.test.mjs tests/serialization.test.mjs tests/process-boundary.test.cjs tests/foundation.test.mjs tests/worker-protocol.test.cjs tests/geometry-process.test.cjs tests/hybrid.test.mjs tests/drape-preparation.test.mjs tests/patterns.test.mjs tests/patterns-v2.test.mjs tests/pattern-quality.test.mjs tests/pattern-recovery.test.mjs tests/garment-contact.test.mjs tests/garment-finishing.test.mjs tests/garment-refinement.test.mjs tests/surface-audit.test.mjs tests/material.test.mjs tests/physical-contact.test.mjs tests/cloth-contacts.test.mjs tests/body-measurements.test.mjs tests/garment-placement.test.mjs tests/surface-panels.test.cjs tests/surface-boundaries.test.mjs tests/surface-patterns.test.mjs tests/surface-drafting.test.mjs tests/surface-protocol.test.mjs tests/seam-diagnostics.test.mjs tests/deformation.test.mjs tests/morph-presets.test.mjs tests/modifier-capabilities.test.mjs tests/integrated-core.test.mjs tests/ik.test.mjs tests/joint-limits.test.mjs tests/pose-library.test.mjs tests/skin-weights.test.mjs tests/formulas.test.mjs tests/native-scene.test.mjs",
+    "test:integration": "node tests/integration.cjs && node tests/integration-v2.cjs && node tests/pattern-engine.cjs",
+    "test:ui": "node tests/ui-v2.cjs && node tests/foundation-ui.cjs && node tests/modeling-ui.cjs && node tests/pattern-ui.cjs && node tests/ik-ui.cjs && node tests/native-scene-ui.cjs",
+    "test:unified": "node tests/integration-v2.cjs",
+    "test:perf": "node tests/audit-performance.cjs",
+    "package": "npm run build:native && npm run build && electron-builder --win dir",
+    "test:modeling": "node tests/engine-modeling.cjs && node tests/modeling-ui.cjs",
+    "test:patterns": "node tests/pattern-engine.cjs && node tests/pattern-ui.cjs",
+    "test:ik": "node --test tests/ik.test.mjs && node tests/ik-ui.cjs",
+    "test:render-fixtures": "node tests/bmw-render.cjs",
+    "test:upgrade": "node tests/engine-modeling.cjs && node tests/deformation-ui.cjs && node tests/pattern-v2-ui.cjs && node tests/integrated-ui.cjs && node tests/pro-workflow.cjs",
+    "test:evidence-features": "node tests/modifier-source-ui.cjs && node tests/boolean-stack-ui.cjs && node tests/morph-presets-ui.cjs && node tests/pattern-v2-ui.cjs",
+    "test:character": "node --test tests/deformation.test.mjs tests/morph-presets.test.mjs tests/ik.test.mjs tests/joint-limits.test.mjs tests/pose-library.test.mjs tests/skin-weights.test.mjs tests/formulas.test.mjs && node tests/joint-limits-ui.cjs && node tests/pose-library-ui.cjs && node tests/skin-weights-ui.cjs && node tests/formulas-ui.cjs",
+    "test:geometry-process": "node --test tests/geometry-process.test.cjs && node tests/geometry-process-ui.cjs",
+    "test:garment-quality": "node --test tests/patterns-v2.test.mjs tests/garment-contact.test.mjs && node tests/pattern-v2-ui.cjs && node tests/garment-quality.mjs && node tests/garment-performance.mjs",
+    "test:formulas": "node --test tests/formulas.test.mjs && node tests/formula-reference.cjs && node tests/formulas-ui.cjs && node tests/formulas-performance.mjs",
+    "test:surface-panels": "node --test tests/surface-panels.test.cjs tests/surface-boundaries.test.mjs tests/surface-patterns.test.mjs && node tests/surface-panels-engine.cjs",
+    "test:surface-drafting": "node --test tests/surface-drafting.test.mjs && node tests/surface-drafting-ui.cjs",
+    "test:materials": "node --test tests/material.test.mjs tests/physical-contact.test.mjs && node tests/fabric-ui.cjs",
+    "test:physical-spine": "node tests/fabric-ui.cjs && node tests/physical-spine-ui.cjs",
+    "test:physical-performance": "node tests/physical-performance.cjs",
+    "test:cloth-contacts": "node --test tests/cloth-contacts.test.mjs && node tests/cloth-contact-ui.cjs",
+    "test:rounded-neckline": "node --test tests/pattern-quality.test.mjs tests/surface-drafting.test.mjs && node tests/rounded-neckline-ui.cjs && node tests/rounded-neckline-inspection-ui.cjs",
+    "test:pattern-apply": "node --test tests/surface-protocol.test.mjs tests/pattern-recovery.test.mjs && node tests/pattern-apply-ui.cjs && node tests/pattern-ui.cjs",
+    "test:pattern-apply-performance": "node tests/pattern-apply-performance.cjs",
+    "test:drape-preparation": "node --test tests/drape-preparation.test.mjs tests/garment-placement.test.mjs && node tests/drape-preparation-ui.cjs",
+    "test:garment-finishing": "node --test tests/garment-finishing.test.mjs && node tests/garment-finishing-ui.cjs && node tests/garment-finishing-inspection-ui.cjs && node tests/garment-finishing-shape-ui.cjs",
+    "test:garment-finishing-performance": "node tests/garment-finishing-performance.mjs",
+    "test:garment-refinement": "node --test tests/garment-refinement.test.mjs tests/surface-audit.test.mjs && node tests/garment-refinement-ui.cjs",
+    "test:interchange": "npm run build && node --test tests/gltf-validation.test.cjs tests/derived-tangents.test.mjs && node tests/gltf-validation-ui.cjs && node tests/derived-tangents-ui.cjs && node tests/gltf-packaging.cjs",
+    "test:interchange-performance": "node tests/gltf-validation-performance.cjs",
+    "test:creator-core": "node --test tests/character-creator.test.mjs tests/creator-hair.test.mjs tests/history-images.test.mjs",
+    "test:creator": "npm run build && npm run test:creator-core && node tests/character-creator-ui.cjs && node tests/character-creator-recovery.cjs && node tests/character-private.cjs && node tests/creator-garment-ui.cjs",
+    "test:creator-performance": "node tests/creator-performance.mjs && node tests/creator-interactive-performance.cjs"
+  },
+  "dependencies": {
+    "gltf-validator": "2.0.0-dev.3.10",
+    "lucide": "1.56.0",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "electron": "44.7.0",
+    "electron-builder": "26.15.3",
+    "playwright": "1.61.1",
+    "vite": "8.3.4"
+  },
+  "build": {
+    "appId": "local.fusion.studio",
+    "productName": "Fusion Studio",
+    "directories": {
+      "output": "release-v0.0"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "!electron/daz.cjs",
+      "scripts/blender_worker.py",
+      "scripts/character_materials.py",
+      "scripts/dson_importer.py",
+      "package.json",
+      "LICENSE",
+      "docs/DEPENDENCIES.md",
+      "docs/dependency-evaluations/**",
+      "docs/dependency-licenses.json",
+      "scripts/native_scene.py",
+      "native/fusion_geometry.node",
+      "docs/native-dependencies/**",
+      "scripts/surface_panels.py"
+    ],
+    "asarUnpack": [
+      "electron/gltf-*.cjs",
+      "node_modules/gltf-validator/**",
+      "electron/geometry-worker.cjs",
+      "scripts/blender_worker.py",
+      "scripts/character_materials.py",
+      "scripts/dson_importer.py",
+      "scripts/native_scene.py",
+      "native/fusion_geometry.node",
+      "scripts/surface_panels.py"
+    ],
+    "win": {
+      "target": "dir",
+      "signAndEditExecutable": false
+    }
+  },
+  "license": "MIT"
+}

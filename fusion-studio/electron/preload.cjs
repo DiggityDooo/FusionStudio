@@ -1,0 +1,28 @@
+const {contextBridge,ipcRenderer}=require('electron');
+contextBridge.exposeInMainWorld('fusion',{
+  info:()=>ipcRenderer.invoke('info'),
+  assets:()=>ipcRenderer.invoke('assets'),
+  addLibrary:()=>ipcRenderer.invoke('add-library'),
+  assetPreview:id=>ipcRenderer.invoke('asset-preview',id),
+  inspectAsset:id=>ipcRenderer.invoke('inspect-asset',id),
+  inspectFile:source=>ipcRenderer.invoke('inspect-file',source),
+  validateGltf:(data,context)=>ipcRenderer.invoke('validate-gltf',data,context),
+  exportGltf:spec=>ipcRenderer.invoke('export-gltf',spec),
+  loadAsset:(id,morphs,options)=>ipcRenderer.invoke('load-asset',id,morphs,options),
+  applyNative:(source,morphs)=>ipcRenderer.invoke('apply-native',source,morphs),
+  save:doc=>ipcRenderer.invoke('save',doc),
+  open:()=>ipcRenderer.invoke('open'),
+  saveMorphPreset:preset=>ipcRenderer.invoke('save-morph-preset',preset),
+  openMorphPreset:()=>ipcRenderer.invoke('open-morph-preset'),
+  savePosePreset:preset=>ipcRenderer.invoke('save-pose-preset',preset),
+  openPosePreset:()=>ipcRenderer.invoke('open-pose-preset'),
+  recent:()=>ipcRenderer.invoke('recent'),
+  loadRecent:file=>ipcRenderer.invoke('load-recent',file),
+  chooseImport:()=>ipcRenderer.invoke('choose-import'),
+  job:spec=>ipcRenderer.invoke('job',spec),
+  geometry:(method,request)=>ipcRenderer.invoke('geometry',method,request),
+  cancel:()=>ipcRenderer.invoke('cancel'),
+  reveal:file=>ipcRenderer.invoke('reveal',file),
+  image:file=>ipcRenderer.invoke('image',file),
+  onJob:fn=>{const handler=(_,job)=>fn(job);ipcRenderer.on('job-update',handler);return ()=>ipcRenderer.removeListener('job-update',handler);}
+});
