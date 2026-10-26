@@ -57,16 +57,36 @@ fs.mkdirSync(frames, {recursive: true});
     await page.waitForTimeout(200);
     await page.screenshot({path: path.join(out, '02-sculpting.png')});
 
+    // Character: create a real female character from the bundled CC0 foundation.
+    await page.evaluate(() => fusionEditor.template('blank'));
     await page.locator('[data-workspace="Character"]').click();
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(400);
+    await page.locator('[data-creator-create="female"]').click();
+    await page.waitForFunction(() => {
+      const e = window.fusionEditor;
+      return e.selected && (e.selected.userData.fusion_creator || e.creatorShapeSession) && e.root.children.length > 0;
+    }, {timeout: 60000}).catch(() => {});
+    await page.waitForTimeout(2500);
+    await page.evaluate(() => { try { fusionEditor.frame(); } catch {} });
+    await page.waitForTimeout(800);
     await page.screenshot({path: path.join(out, '03-character.png')});
 
+    // Clothing: draft a real sewn pattern (tunic panels) and frame it.
     await page.locator('[data-workspace="Clothing"]').click();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(400);
+    if (await page.locator('#create-pattern').count()) {
+      await page.locator('#create-pattern').click();
+      await page.waitForTimeout(1500);
+      await page.evaluate(() => { try { fusionEditor.frame(); } catch {} });
+      await page.waitForTimeout(600);
+    }
     await page.screenshot({path: path.join(out, '04-clothing.png')});
 
+    // Shading: apply a real material preset to the selected object.
     await page.locator('[data-workspace="Shading"]').click();
     await page.waitForTimeout(400);
+    const terracotta = page.locator('[data-material="#cb8752"]');
+    if (await terracotta.count()) { await terracotta.click(); await page.waitForTimeout(500); }
     await page.screenshot({path: path.join(out, '05-shading.png')});
     console.log('Showcase screenshots written to', out);
   } finally {

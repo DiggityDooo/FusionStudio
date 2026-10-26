@@ -4,7 +4,7 @@
 
 Fusion Studio combines a Blender-style editor, a character creator, pattern-based clothing design with cloth simulation, animation and Blender-backed rendering in a single Windows desktop app. It reads supported DAZ DSON content directly, validates glTF before import, and keeps every workflow in one scene with one undo history.
 
-![Sculpting in Fusion Studio](fusion-studio/docs/showcase/02-sculpting.png)
+![Character Creator in Fusion Studio](fusion-studio/docs/showcase/03-character.png)
 
 ## Demo
 
@@ -16,11 +16,13 @@ Regenerate this media any time with `npm run showcase` inside `fusion-studio/` (
 
 ## Showcase
 
-| Layout & modeling | Character |
-| --- | --- |
-| ![Layout workspace](fusion-studio/docs/showcase/01-layout.png) | ![Character workspace](fusion-studio/docs/showcase/03-character.png) |
+All screenshots below are captured from the running app by `npm run showcase` — real scenes, no mockups.
 
-| Clothing & patterns | Shading |
+| Layout & modeling | Sculpting (17 brushes) |
+| --- | --- |
+| ![Layout workspace](fusion-studio/docs/showcase/01-layout.png) | ![Sculpting workspace](fusion-studio/docs/showcase/02-sculpting.png) |
+
+| Clothing: pattern skirt on the created character | Shading: Terracotta preset applied to the skirt |
 | --- | --- |
 | ![Clothing workspace](fusion-studio/docs/showcase/04-clothing.png) | ![Shading workspace](fusion-studio/docs/showcase/05-shading.png) |
 
