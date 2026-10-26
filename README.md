@@ -6,7 +6,30 @@ Fusion Studio combines a Blender-style editor, a character creator, pattern-base
 
 ![Character Creator in Fusion Studio](fusion-studio/docs/showcase/03-character.png)
 
-## Demo
+## Demo: character → clothing workflow
+
+The whole pipeline in six steps, captured from the running app (`npm run showcase`):
+
+![Character to clothing workflow](fusion-studio/docs/showcase/demo-workflow.gif)
+
+1. **Create & shape** — Create female, then height 1.72 m, muscularity and body-fat shaping with 229 detail controls.
+2. **Face** — face-tab morph controls.
+3. **Skin & hair** — skin-tone preset, long hairstyle with fitted strand preview (portrait framing shown below).
+4. **Pose** — contrapposto preset from the Pose tab (standing restored before fitting).
+5. **Make clothing** — Clothing → *Fit T-shirt to target character*: retained panels are graded to her body and draped with the Rust XPBD solver. The panel reports live diagnostics (here: 1,344 vertices, 5.9 mm mean seam gap, flagged "Needs refinement" — Fusion shows its fit limits instead of hiding them).
+6. **Inspect fit** — *Show strain colors* heatmap: blue 0% → red ≥25% local edge strain, hot at the right shoulder.
+
+| 1 · Body | 2 · Face |
+| --- | --- |
+| ![Body shaping](fusion-studio/docs/showcase/w1-body.png) | ![Face controls](fusion-studio/docs/showcase/w2-face.png) |
+
+| 3 · Skin & hair | 4 · Pose |
+| --- | --- |
+| ![Skin and hair](fusion-studio/docs/showcase/w3-skin-hair.png) | ![Pose preset](fusion-studio/docs/showcase/w4-pose.png) |
+
+| 5 · Draped T-shirt | 6 · Strain inspection |
+| --- | --- |
+| ![Draped T-shirt](fusion-studio/docs/showcase/w5-garment.png) | ![Strain heatmap](fusion-studio/docs/showcase/w6-strain.png) |
 
 Live sculpting with the brush panel — Draw brush strokes on a sphere, straight from the real app:
 

@@ -19,6 +19,17 @@ def main():
     images[0].save(OUT, save_all=True, append_images=images[1:], duration=140, loop=0, optimize=True)
     print(f'Wrote {OUT} from {len(images)} frames')
 
+    steps = sorted((ROOT / 'docs' / 'showcase').glob('w*.png'))
+    if len(steps) >= 4:
+        workflow = []
+        for file in steps:
+            image = Image.open(file).convert('RGB')
+            image.thumbnail((1000, 1000))
+            workflow.append(image)
+        target = ROOT / 'docs' / 'showcase' / 'demo-workflow.gif'
+        workflow[0].save(target, save_all=True, append_images=workflow[1:], duration=1200, loop=0, optimize=True)
+        print(f'Wrote {target} from {len(workflow)} workflow steps')
+
 
 if __name__ == '__main__':
     main()
