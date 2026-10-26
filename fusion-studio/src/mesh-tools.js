@@ -34,32 +34,84 @@ export function deleteRegion(source,faceIndex){
   const {faces}=coplanarFaces(source,faceIndex),set=new Set(faces);const geo=source.clone();const idx=Array.from(source.index?.array||Array.from({length:source.attributes.position.count},(_,i)=>i));const next=[];
   for(let f=0;f<idx.length/3;f++)if(!set.has(f))next.push(...idx.slice(f*3,f*3+3));geo.clearGroups();geo.setIndex(next);geo.computeVertexNormals();geo.computeBoundingSphere();return geo;
 }
-export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate',invert=false){
+export const SCULPT_BRUSHES=[
+  {id:'draw',label:'Draw',icon:'brush'},{id:'draw-sharp',label:'Draw Sharp',icon:'pen-line'},
+  {id:'inflate',label:'Inflate',icon:'expand'},{id:'blob',label:'Blob',icon:'circle'},
+  {id:'clay',label:'Clay',icon:'layers'},{id:'crease',label:'Crease',icon:'fold-vertical'},
+  {id:'smooth',label:'Smooth',icon:'waves'},{id:'flatten',label:'Flatten',icon:'align-horizontal-justify-center'},
+  {id:'fill',label:'Fill',icon:'arrow-up-from-line'},{id:'scrape',label:'Scrape',icon:'slice'},
+  {id:'pinch',label:'Pinch',icon:'shrink'},{id:'nudge',label:'Nudge',icon:'move'},
+  {id:'thumb',label:'Thumb',icon:'hand'},{id:'snake-hook',label:'Snake Hook',icon:'hook'},
+  {id:'grab',label:'Grab',icon:'grab'},{id:'rotate',label:'Rotate',icon:'rotate-3d'},
+  {id:'slide-relax',label:'Slide / Relax',icon:'shuffle'},
+];
+export const FALLOFFS=['smooth','sphere','root','sharp','linear','constant'];
+export function falloffValue(kind,t){ // t = distance/radius in [0,1]
+  const u=Math.max(0,1-t);
+  switch(kind){case 'sphere':return Math.sqrt(Math.max(0,1-t*t));case 'root':return Math.sqrt(u);case 'sharp':return u*u*u;case 'linear':return u;case 'constant':return 1;default:return u*u*(3-2*u);}
+}
+let adjacencyCache={geometry:null,count:-1,adjacency:null};
+function adjacencyFor(geo){
+  if(adjacencyCache.geometry===geo&&adjacencyCache.count===geo.attributes.position.count)return adjacencyCache.adjacency;
+  const p=geo.attributes.position,adjacency=Array.from({length:p.count},()=>new Set());const indices=geo.index?.array||Array.from({length:p.count},(_,i)=>i);
+  for(let i=0;i<indices.length;i+=3){const tri=[indices[i],indices[i+1],indices[i+2]];for(const a of tri)for(const b of tri)if(a!==b)adjacency[a].add(b);}
+  adjacencyCache={geometry:geo,count:p.count,adjacency};return adjacency;
+}
+const DRAG_MODES=new Set(['nudge','thumb','snake-hook','grab']);
+export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate',invert=false,opts={}){
   const geo=mesh.geometry,p=geo.attributes.position,n=geo.attributes.normal;mesh.updateWorldMatrix(true,false);
-  const world=new THREE.Vector3(),delta=new THREE.Vector3(),inverse=mesh.matrixWorld.clone().invert();const move=point.clone().applyMatrix4(inverse);
-  const saved=new Float32Array(p.array),affected=[];const normalMatrix=new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld);
+  const falloffKind=opts.falloff||'smooth',dir=invert?-1:1;
+  const inverse=mesh.matrixWorld.clone().invert(),normalMatrix=new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld);
+  const brushNormal=(opts.normal?opts.normal.clone():new THREE.Vector3(0,0,1)).normalize();
+  const drag=opts.delta?opts.delta.clone():new THREE.Vector3();
+  const saved=new Float32Array(p.array),affected=[],world=new THREE.Vector3(),vNormal=new THREE.Vector3(),tmp=new THREE.Vector3();
   for(let i=0;i<p.count;i++){
     world.fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld);const distance=world.distanceTo(point);if(distance>radius)continue;
-    const falloff=(1-distance/radius)**2;affected.push(i);
-    if(mode==='smooth')continue;
-    delta.fromBufferAttribute(n,i).applyMatrix3(normalMatrix).normalize().multiplyScalar(strength*falloff*(invert?-1:1));world.add(delta).applyMatrix4(inverse);p.setXYZ(i,world.x,world.y,world.z);
+    const f=falloffValue(falloffKind,distance/radius);affected.push(i);
+    if(mode==='smooth'||mode==='slide-relax')continue;
+    vNormal.fromBufferAttribute(n,i).applyMatrix3(normalMatrix).normalize();
+    const height=tmp.copy(world).sub(point).dot(brushNormal); // signed height above brush plane
+    switch(mode){
+      case 'draw': world.addScaledVector(brushNormal,strength*f*dir); break;
+      case 'draw-sharp': world.addScaledVector(brushNormal,strength*falloffValue('sharp',distance/radius)*dir); break;
+      case 'inflate': world.addScaledVector(vNormal,strength*f*dir); break;
+      case 'blob': world.addScaledVector(vNormal,strength*falloffValue('sphere',distance/radius)*dir); break;
+      case 'clay': { const target=strength*8*dir; const step=THREE.MathUtils.clamp(target-height,-Math.abs(strength)*f*4,Math.abs(strength)*f*4); world.addScaledVector(brushNormal,step); break; }
+      case 'crease': world.addScaledVector(brushNormal,-strength*f*dir*.7).add(tmp.copy(point).sub(world).multiplyScalar(f*.18)); break;
+      case 'flatten': world.addScaledVector(brushNormal,-height*Math.min(1,Math.abs(strength)*22)*f); break;
+      case 'fill': if(height*dir<0)world.addScaledVector(brushNormal,-height*Math.min(1,Math.abs(strength)*22)*f); break;
+      case 'scrape': world.addScaledVector(brushNormal,-height*Math.min(1,Math.abs(strength)*26)*f).add(tmp.copy(point).sub(world).multiplyScalar(f*.08)); break;
+      case 'pinch': { tmp.copy(world).sub(point); tmp.addScaledVector(brushNormal,-tmp.dot(brushNormal)); world.addScaledVector(tmp,-Math.min(.6,Math.abs(strength)*14)*f); break; }
+      case 'nudge': world.addScaledVector(drag,f); break;
+      case 'thumb': world.addScaledVector(drag,f*.8).addScaledVector(brushNormal,-height*Math.min(1,Math.abs(strength)*10)*f); break;
+      case 'snake-hook': world.addScaledVector(drag,f*f*1.6); break;
+      case 'grab': world.addScaledVector(drag,f); break;
+      case 'rotate': { const angle=strength*14*f*dir; tmp.copy(world).sub(point).applyAxisAngle(brushNormal,angle); world.copy(point).add(tmp); break; }
+      default: world.addScaledVector(vNormal,strength*f*dir);
+    }
+    world.applyMatrix4(inverse);p.setXYZ(i,world.x,world.y,world.z);
   }
-  if(mode==='smooth'){
-    const adjacency=Array.from({length:p.count},()=>new Set());const indices=geo.index?.array||Array.from({length:p.count},(_,i)=>i);
-    for(let i=0;i<indices.length;i+=3){const tri=[indices[i],indices[i+1],indices[i+2]];for(const a of tri)for(const b of tri)if(a!==b)adjacency[a].add(b);}
-    for(const i of affected){const neighbors=adjacency[i];if(!neighbors.size)continue;const avg=new THREE.Vector3();for(const j of neighbors)avg.add(new THREE.Vector3(saved[j*3],saved[j*3+1],saved[j*3+2]));avg.divideScalar(neighbors.size);const prior=new THREE.Vector3(saved[i*3],saved[i*3+1],saved[i*3+2]);const f=Math.min(.55,Math.abs(strength)*15)*(1-prior.distanceTo(move)/Math.max(radius,.001));prior.lerp(avg,Math.max(0,f));p.setXYZ(i,prior.x,prior.y,prior.z);}
+  if(mode==='smooth'||mode==='slide-relax'||(opts.autosmooth>0&&affected.length)){
+    const targets=mode==='smooth'||mode==='slide-relax'?affected:[...affected];
+    const amount=mode==='smooth'||mode==='slide-relax'?Math.min(.6,Math.abs(strength)*16):Math.min(.5,opts.autosmooth);
+    const adjacency=adjacencyFor(geo),prior=new THREE.Vector3(),avg=new THREE.Vector3(),tan=new THREE.Vector3();
+    for(const i of targets){const neighbors=adjacency[i];if(!neighbors||!neighbors.size)continue;avg.set(0,0,0);for(const j of neighbors)avg.add(tan.set(saved[j*3],saved[j*3+1],saved[j*3+2]));avg.divideScalar(neighbors.size);prior.set(saved[i*3],saved[i*3+1],saved[i*3+2]);
+      if(mode==='slide-relax'){ // relax along the surface: keep brush-plane height, move tangentially toward neighbour average
+        tan.copy(avg).sub(prior);vNormal.fromBufferAttribute(n,i);tan.addScaledVector(vNormal,-tan.dot(vNormal));prior.addScaledVector(tan,amount*.5);
+      } else prior.lerp(avg,amount);
+      p.setXYZ(i,prior.x,prior.y,prior.z);}
   }
   p.needsUpdate=true;geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();return affected.length;
 }
 
 export class MeshTools{
   constructor(editor){
-    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'inflate'};this.activeMesh=null;this.faceIndex=null;this.stroke=false;
+    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false}};this.activeMesh=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
     this.faceHighlight=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:'#ff9b33',transparent:true,opacity:.4,side:THREE.DoubleSide,depthTest:false}));this.faceHighlight.visible=false;this.faceHighlight.renderOrder=10;editor.scene.add(this.faceHighlight);
     const canvas=editor.renderer.domElement;
-    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this.applyBrush(hit,e.shiftKey);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
+    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this.lastPoint=hit.point.clone();this.applyBrush(hit,e.shiftKey);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
     canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey);e.stopImmediatePropagation();}},true);
-    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.editor.commit();}};
+    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.editor.commit();}};
     canvas.addEventListener('pointerup',end,true);canvas.addEventListener('pointercancel',end,true);
   }
   hit(event){const e=this.editor,r=e.renderer.domElement.getBoundingClientRect();e.pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);e.ray.setFromCamera(e.pointer,e.camera);return e.ray.intersectObject(e.selected||e.root,true).find(h=>h.object.isMesh&&!h.object.isSkinnedMesh);}
@@ -71,5 +123,16 @@ export class MeshTools{
   extrude(distance){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.editor.selected?.userData.modifierStack)throw Error('Use Component Editing on the retained source cage to keep the modifier stack evaluated.');return this.editor.operators?this.editor.operators.run('mesh.extrude_region',{distance}):this._extrude(distance);}
   _extrude(distance){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face in Edit Mode first.');const mesh=this.activeMesh,result=extrudeRegion(mesh.geometry,this.faceIndex,distance);mesh.geometry.dispose();mesh.geometry=result;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];mesh.userData={...mesh.userData,fusion_kind:'mesh'};this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
   deleteFace(){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.editor.selected?.userData.modifierStack)throw Error('Use Component Editing on the retained source cage to keep the modifier stack evaluated.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face first.');const mesh=this.activeMesh;const geo=deleteRegion(mesh.geometry,this.faceIndex);mesh.geometry.dispose();mesh.geometry=geo;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
-  applyBrush(hit,invert){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;sculptGeometry(hit.object,hit.point,this.brush.radius,this.brush.strength,this.brush.type,invert);this.editor.change('sculpt-stroke');}
+  applyBrush(hit,invert){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
+    const mesh=hit.object,delta=this.lastPoint?hit.point.clone().sub(this.lastPoint):new THREE.Vector3();
+    const normal=hit.face?hit.face.normal.clone().transformDirection(mesh.matrixWorld):new THREE.Vector3(0,0,1);
+    const opts={falloff:this.brush.falloff,autosmooth:this.brush.autosmooth,delta,normal};
+    const points=[hit.point];
+    const sym=this.brush.symmetry;if(sym&&(sym.x||sym.y||sym.z)){ // mirror the stroke across mesh-local axes
+      mesh.updateWorldMatrix(true,false);const inv=mesh.matrixWorld.clone().invert(),local=hit.point.clone().applyMatrix4(inv),combos=new Set(['0,0,0']);
+      for(const cx of (sym.x?[0,1]:[0]))for(const cy of (sym.y?[0,1]:[0]))for(const cz of (sym.z?[0,1]:[0]))combos.add(cx+','+cy+','+cz);
+      for(const key of combos){if(key==='0,0,0')continue;const [cx,cy,cz]=key.split(',').map(Number);const m=local.clone();if(cx)m.x*=-1;if(cy)m.y*=-1;if(cz)m.z*=-1;points.push(m.applyMatrix4(mesh.matrixWorld));}
+    }
+    for(const point of points)sculptGeometry(mesh,point,this.brush.radius,this.brush.strength,this.brush.type,invert,point===hit.point?opts:{...opts,delta:delta.clone()});
+    this.lastPoint=hit.point.clone();this.editor.change('sculpt-stroke');}
 }

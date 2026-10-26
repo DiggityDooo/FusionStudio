@@ -1,3 +1,4 @@
+docs/showcase/frames/
 # Character binaries are regenerated locally, not committed:
 # scripts/fetch-character-foundation.py -> assets/, then
 # scripts/compile-character-foundation.py + prepare-character-skins.py -> public/
