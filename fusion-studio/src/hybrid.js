@@ -38,6 +38,33 @@ export function captureDrapeInputs(base,character,settings={}){
   if(capture)triangleCollider.positions=canonicalPlacementPositions(triangleCollider.positions);
   return {imported,capture,body,world:world.toArray(),triangleCollider,colliders:imported?[]:characterColliders(character)};
 }
+// Re-drape initialization: carry the previous drape with the body's own skinning.
+// Each cloth vertex follows the delta of its nearest body vertex (bind -> current pose),
+// so posing or reshaping starts the solver from cloth already on the body instead of
+// the neutral arms-down wrap, which posed colliders otherwise tear apart.
+export function poseInitialPositions(prior,character,requestPositions){
+  const mesh=prior?.children?.[0],priorPos=mesh?.geometry?.attributes?.position;
+  if(!priorPos||!Array.isArray(requestPositions)||!requestPositions.length)return null;
+  let skin=null;character.traverse(n=>{if(n.isSkinnedMesh&&!skin)skin=n;});
+  if(!skin?.skeleton||typeof skin.getVertexPosition!=='function')return null;
+  character.updateWorldMatrix(true,true);mesh.updateWorldMatrix(true,true);
+  const neutral=skin.geometry.attributes.position,tmp=new THREE.Vector3(),pw=new THREE.Vector3();
+  const priorWorld=[];for(let i=0;i<priorPos.count;i++)priorWorld.push(new THREE.Vector3().fromBufferAttribute(priorPos,i).applyMatrix4(mesh.matrixWorld));
+  let binding=prior.userData.liveGarment?.poseBinding;
+  if(!Array.isArray(binding)||binding.length!==priorPos.count){
+    const neutralWorld=[];for(let j=0;j<neutral.count;j++)neutralWorld.push(new THREE.Vector3().fromBufferAttribute(neutral,j).applyMatrix4(skin.matrixWorld));
+    binding=new Array(priorPos.count);
+    for(let i=0;i<priorPos.count;i++){let best=0,bd=Infinity;for(let j=0;j<neutralWorld.length;j++){const d=priorWorld[i].distanceToSquared(neutralWorld[j]);if(d<bd){bd=d;best=j;}}binding[i]=best;}
+  }
+  const posed=new Map(),bind=new Map();
+  for(const j of new Set(binding)){bind.set(j,new THREE.Vector3().fromBufferAttribute(neutral,j).applyMatrix4(skin.matrixWorld));skin.getVertexPosition(j,tmp);posed.set(j,tmp.clone().applyMatrix4(skin.matrixWorld));}
+  const deltas=priorWorld.map((p,i)=>{const j=binding[i];return tmp.copy(posed.get(j)).sub(bind.get(j)).clone();});
+  const positions=requestPositions.map(r=>{
+    let best=0,bd=Infinity;for(let i=0;i<priorWorld.length;i++){const d=(r[0]-priorWorld[i].x)**2+(r[1]-priorWorld[i].y)**2+(r[2]-priorWorld[i].z)**2;if(d<bd){bd=d;best=i;}}
+    const delta=deltas[best];return [r[0]+delta.x,r[1]+delta.y,r[2]+delta.z];
+  });
+  return {positions,binding};
+}
 // Synchronous reference entry point for numeric/process tests. UI jobs use the worker.
 export function drapeRequest(base,character,settings={}){return buildDrapeInput(base,captureDrapeInputs(base,character,settings),settings);}
 export async function generateGarment(api,base,character,prior=null,evaluation=null,external={}){
@@ -47,13 +74,14 @@ export async function generateGarment(api,base,character,prior=null,evaluation=n
     if(signal?.aborted)throw Error('Garment update cancelled.');
     const input=surface?await prepareFittedDrape(api,base,character,surface,{context,signal,response:settings.fabricResponse,preview:settings}):await (external.prepare||prepareSurfaceJob)('drapeInput',{base,captured,settings},{context,signal,label:'Garment preparation'}),{placement,request}=input;
     const prepared=placement?await evaluateSourcePlacement(api,placement,prior?.userData.liveGarment?.placement,{context,signal}):null;
-    if(signal?.aborted)throw Error('Garment update cancelled.');const solve=()=>api.geometry('drapeGarment',{...request,...(prepared?{positions:prepared.positions}: {}),context});const result=(surface||settings.fabricResponse)?await runSurfaceStage(api,signal,solve):await solve();
+    const transferred=!prepared&&!surface&&prior?.userData?.liveGarment?poseInitialPositions(prior,character,request.positions):null;
+    if(signal?.aborted)throw Error('Garment update cancelled.');const solve=()=>api.geometry('drapeGarment',{...request,...(prepared?{positions:prepared.positions}:transferred?{positions:transferred.positions}: {}),context});const result=(surface||settings.fabricResponse)?await runSurfaceStage(api,signal,solve):await solve();
     if(signal?.aborted)throw Error('Garment update cancelled.');
     if(!Array.isArray(result.positions)||result.positions.length!==input.data.positions.length/3||result.positions.some(p=>!Array.isArray(p)||p.length!==3||p.some(v=>!Number.isFinite(v))))throw Error('The geometry core returned an invalid drape.');
     let finished=null;if(finishing?.enabled){const raw={positions:Array.from(new Float32Array(result.positions.flat())),uvs:Array.from(new Float32Array(input.data.uvs)),faces:input.data.faces,sewing:input.data.sewing,groups:[]};finished=await (external.prepare||prepareSurfaceJob)('garmentFinish',{doc:input.doc,source:raw,settings:finishing},{context,signal,label:'Garment finishing'});}
-    return {result,prepared,input,finished};
+    return {result,prepared,input,finished,transferred};
   };
-  const {result,prepared,input,finished}=evaluation?await evaluation.run(character,surface?{base,settings,finishing,surface,body:sourcePlacementBody(character)}:{base,settings,finishing,captured},compute):await compute(external.context);
+  const {result,prepared,input,finished,transferred}=evaluation?await evaluation.run(character,surface?{base,settings,finishing,surface,body:sourcePlacementBody(character)}:{base,settings,finishing,captured},compute):await compute(external.context);
   const {doc,data,body,placement,request}=input;
 
   const group=createPatternObject(doc,data),mesh=group.children[0];
@@ -73,6 +101,7 @@ export async function generateGarment(api,base,character,prior=null,evaluation=n
   if(!result.metrics.physicalFabric)issues.push(...clothContactIssues(result.metrics.clothContact));
   group.name=prior?.name||'Live T-shirt';group.userData.liveGarment={version:1,characterId:character.userData.fusion_id,basePattern:structuredClone(base),settings:{steps:request.steps,iterations:request.iterations,...(placement?{placement:'surface'}: {}),...(surface?{executionBudget:'offline'}:{}),...(settings.fabricResponse?{fabricResponse:fabricResponse(settings.fabricResponse)}:{})},body:structuredClone(body),quality:data.quality||null,metrics:result.metrics,solver:result.solver,...(prepared?{placement:prepared.cache,placementDiagnostics:prepared.diagnostics}: {})};
   if(surface){group.userData.liveGarment.fittedSurface=structuredClone(surface);group.userData.liveGarment.fittedDiagnostics=input.fittedDiagnostics;}
+  if(transferred)group.userData.liveGarment.poseBinding=transferred.binding;
   group.userData.liveGarment.diagnostics={converged:issues.length===0,issues};
   group.userData.simulationApplied=true;group.userData.source='Fusion live garment';
   if(prior?.uuid){group.uuid=prior.uuid;group.userData.fusion_id=prior.userData.fusion_id;group.visible=prior.visible;}

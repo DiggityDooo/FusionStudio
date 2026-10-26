@@ -13,23 +13,28 @@ The whole pipeline in six steps, captured from the running app (`npm run showcas
 ![Character to clothing workflow](fusion-studio/docs/showcase/demo-workflow.gif)
 
 1. **Create & shape** — Create female, then height 1.72 m, muscularity and body-fat shaping with 229 detail controls.
-2. **Face** — face-tab morph controls.
-3. **Skin & hair** — skin-tone preset, long hairstyle with fitted strand preview (portrait framing shown below).
-4. **Pose** — contrapposto preset from the Pose tab (standing restored before fitting).
-5. **Make clothing** — Clothing → *Fit T-shirt to target character*: retained panels are graded to her body and draped with the Rust XPBD solver. The panel reports live diagnostics (here: 1,344 vertices, 5.9 mm mean seam gap, flagged "Needs refinement" — Fusion shows its fit limits instead of hiding them).
-6. **Inspect fit** — *Show strain colors* heatmap: blue 0% → red ≥25% local edge strain, hot at the right shoulder.
+2. **Face** — face morphs (cheek bones here), with *Frame portrait* for a real close-up — now available on every Creator tab.
+3. **Skin & hair** — skin-tone preset and long hairstyle with fitted strand preview, portrait-framed.
+4. **Make clothing** — Clothing → *Fit T-shirt to target character*: retained panels are graded to her body and draped with the Rust XPBD solver (offline budget; the panel reports live seam/strain diagnostics).
+5. **Pose with clothing** — apply the contrapposto preset: the linked garment re-drapes onto the posed body, initialized from the previous drape carried by the body's own skinning instead of the neutral wrap.
+6. **Change the body** — height raised to 1.78 m; the garment re-grades and re-drapes itself, and reports the new strain honestly (max local strain 97.9% — refinement still needed, and Fusion says so).
+7. **Inspect fit** — *Show strain colors* heatmap on the posed, re-fitted shirt: blue 0% → red ≥25% local edge strain.
 
-| 1 · Body | 2 · Face |
+| 1 · Body | 2 · Face portrait |
 | --- | --- |
-| ![Body shaping](fusion-studio/docs/showcase/w1-body.png) | ![Face controls](fusion-studio/docs/showcase/w2-face.png) |
+| ![Body shaping](fusion-studio/docs/showcase/w1-body.png) | ![Face portrait](fusion-studio/docs/showcase/w2-face.png) |
 
-| 3 · Skin & hair | 4 · Pose |
+| 3 · Skin & hair | 4 · Draped T-shirt |
 | --- | --- |
-| ![Skin and hair](fusion-studio/docs/showcase/w3-skin-hair.png) | ![Pose preset](fusion-studio/docs/showcase/w4-pose.png) |
+| ![Skin and hair](fusion-studio/docs/showcase/w3-skin-hair.png) | ![Draped T-shirt](fusion-studio/docs/showcase/w4-garment.png) |
 
-| 5 · Draped T-shirt | 6 · Strain inspection |
+| 5 · Posed clothing | 6 · Body change re-fit |
 | --- | --- |
-| ![Draped T-shirt](fusion-studio/docs/showcase/w5-garment.png) | ![Strain heatmap](fusion-studio/docs/showcase/w6-strain.png) |
+| ![Posed clothing](fusion-studio/docs/showcase/w5-posed-clothing.png) | ![Re-fit after body change](fusion-studio/docs/showcase/w6-refit.png) |
+
+| 7 · Strain inspection | |
+| --- | --- |
+| ![Strain heatmap](fusion-studio/docs/showcase/w7-strain.png) | |
 
 Live sculpting with the brush panel — Draw brush strokes on a sphere, straight from the real app:
 
@@ -86,7 +91,7 @@ Requires Node 20+, Python 3 with Pillow/NumPy for the asset scripts, and (for re
 ## Tests
 
 ```powershell
-npm test                  # 222 core tests
+npm test                  # 224 core tests
 npm run test:sculpt       # sculpt brush engine
 npm run test:creator      # Character Creator (builds first)
 npm run test:interchange  # glTF validation + tangents

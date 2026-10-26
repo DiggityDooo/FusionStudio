@@ -35,12 +35,16 @@ const waitIdle = page => page.waitForFunction(() => !window.fusionOperators?.run
     await page.waitForTimeout(600);
     await page.screenshot({path: path.join(out, 'w1-body.png')});
 
-    // 2) Face tab: adjust the first face control.
+    // 2) Face tab: adjust the first face control, then frame a real portrait.
     await page.locator('[data-creator-tab="Face"]').click();
     await page.waitForTimeout(500);
     const face = page.locator('input[data-creator-number]').first();
     if (await face.count()) { await face.fill('0.35'); await face.press('Tab'); await waitIdle(page); await page.waitForTimeout(700); }
+    await page.locator('#creator-portrait').click();
+    await page.waitForTimeout(700);
     await page.screenshot({path: path.join(out, 'w2-face.png')});
+    await page.locator('#creator-fullbody').click();
+    await page.waitForTimeout(500);
 
     // 3) Skin tone, then long hair.
     await page.locator('[data-creator-tab="Skin"]').click();
@@ -52,23 +56,13 @@ const waitIdle = page => page.waitForFunction(() => !window.fusionOperators?.run
     await page.locator('#creator-hair-style').selectOption('long');
     await waitIdle(page);
     await page.waitForTimeout(1800);
-    await page.evaluate(() => document.querySelector('#creator-portrait')?.click());
+    await page.locator('#creator-portrait').click();
     await page.waitForTimeout(700);
     await page.screenshot({path: path.join(out, 'w3-skin-hair.png')});
-
-    // 4) Artistic pose, then back to standing for a clean garment fit.
-    await page.locator('[data-creator-tab="Pose"]').click();
-    await page.waitForTimeout(400);
-    await page.locator('[data-creator-pose="contrapposto"]').click();
-    await waitIdle(page);
-    await page.waitForTimeout(800);
-    await page.evaluate(() => fusionEditor.frame());
+    await page.locator('#creator-fullbody').click();
     await page.waitForTimeout(500);
-    await page.screenshot({path: path.join(out, 'w4-pose.png')});
-    await page.locator('[data-creator-pose="standing"]').click();
-    await waitIdle(page);
 
-    // 5) Clothing: fit a live T-shirt to this character and drape it.
+    // 4) Clothing FIRST in the neutral pose: fit a live T-shirt and drape it.
     await page.locator('[data-workspace="Clothing"]').click();
     await page.waitForTimeout(600);
     await page.locator('#hybrid-link').click();
@@ -80,12 +74,47 @@ const waitIdle = page => page.waitForFunction(() => !window.fusionOperators?.run
     await page.waitForTimeout(1200);
     await page.evaluate(() => fusionEditor.frame());
     await page.waitForTimeout(600);
-    await page.screenshot({path: path.join(out, 'w5-garment.png')});
+    await page.screenshot({path: path.join(out, 'w4-garment.png')});
 
-    // 6) Inspect the fit with strain colors.
+    // 5) THEN pose: the linked garment re-drapes itself onto the posed body.
+    await page.locator('[data-workspace="Character"]').click();
+    await page.waitForTimeout(500);
+    await page.evaluate(() => { const c = fusionEditor.root.children.find(o => o.userData.fusion_creator); if (c) fusionEditor.select(c); });
+    await page.waitForTimeout(500);
+    await page.locator('[data-creator-tab="Pose"]').click();
+    await page.waitForTimeout(400);
+    await page.locator('[data-creator-pose="contrapposto"]').click();
+    await waitIdle(page);
+    await page.waitForTimeout(1500);
+    await page.evaluate(() => fusionEditor.frame());
+    await page.waitForTimeout(600);
+    await page.screenshot({path: path.join(out, 'w5-posed-clothing.png')});
+
+    // 6) Change the body and let the linked garment re-grade/re-drape itself.
+    // (The garment is selected after fitting, so pick the character in the Outliner first.)
+    await page.locator('[data-workspace="Character"]').click();
+    await page.waitForTimeout(500);
+    await page.evaluate(() => { const c = fusionEditor.root.children.find(o => o.userData.fusion_creator); if (c) fusionEditor.select(c); });
+    await page.waitForTimeout(600);
+    await page.locator('[data-creator-tab="Body"]').click();
+    await page.waitForTimeout(400);
+    const height = page.locator('input[data-creator-number="height"]');
+    await height.fill('1.78');
+    await height.press('Tab');
+    await waitIdle(page);
+    await page.waitForTimeout(1500);
+    await page.locator('[data-workspace="Clothing"]').click();
+    await page.waitForTimeout(800);
+    await page.evaluate(() => fusionEditor.frame());
+    await page.waitForTimeout(600);
+    await page.screenshot({path: path.join(out, 'w6-refit.png')});
+
+    // 7) Inspect the fit with strain colors (select the garment first).
+    await page.evaluate(() => { const g = fusionEditor.root.children.find(o => o.userData.liveGarment); if (g) fusionEditor.select(g); });
+    await page.waitForTimeout(700);
     const strain = page.locator('#hybrid-strain');
     if (await strain.count()) { await strain.click(); await page.waitForTimeout(900); }
-    await page.screenshot({path: path.join(out, 'w6-strain.png')});
+    await page.screenshot({path: path.join(out, 'w7-strain.png')});
     console.log('Workflow showcase written to', out);
   } finally {
     await app.close();
