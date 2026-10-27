@@ -1,0 +1,9 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:08.070
+01 / Native scene preservation
+Read-only .blend source · compatibility review · evaluated viewport with native render attachment
+
+00:00:08.070 --> 00:00:22.870
+02 / Render the retained Blender scene
+Cycles OptiX · original camera, lighting and materials · render computed in Fusion

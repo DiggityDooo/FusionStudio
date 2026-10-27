@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-26",
+  "appVersion": "0.1.0",
+  "capture": "Real Electron UI; 1920\u00d7960 source, chapter titles outside UI; output 1920\u00d71080 H.264 at 30 fps. No generated UI or synthetic render replacements.",
+  "sources": [
+    "Original procedural optical instrument and stoneware fixtures",
+    "Verified CC0 MakeHuman/MPFB starter assets; no private Genesis or paid library content"
+  ],
+  "workflows": [
+    {
+      "id": "native",
+      "video": "native-workflow.mp4",
+      "bytes": 730452,
+      "chapters": [
+        {
+          "name": "native-01",
+          "title": "01 / Native scene preservation",
+          "subtitle": "Read-only .blend source \u00b7 compatibility review \u00b7 evaluated viewport with native render attachment",
+          "frames": 124,
+          "wallSeconds": 7.28,
+          "bytes": 323423,
+          "startSeconds": 0.0,
+          "endSeconds": 8.07
+        },
+        {
+          "name": "native-02",
+          "title": "02 / Render the retained Blender scene",
+          "subtitle": "Cycles OptiX \u00b7 original camera, lighting and materials \u00b7 render computed in Fusion",
+          "frames": 227,
+          "wallSeconds": 14.65,
+          "bytes": 406951,
+          "startSeconds": 8.07,
+          "endSeconds": 22.87
+        }
+      ],
+      "checks": [
+        "preserved native attachment present",
+        "Cycles render completes through Fusion",
+        "original source SHA-256 unchanged"
+      ],
+      "sourceSha256": "f0658b660b15451ab32b7c1dd8877caab03fdd9c7a5de3c7b1cc51f06f440450",
+      "render": {
+        "backend": "OPTIX",
+        "nativeScene": "Scene.001"
+      },
+      "limitations": [
+        "native rendering is demonstrated; arbitrary lossless native editing is not claimed"
+      ],
+      "containerChapters": true,
+      "captions": "native-workflow.vtt"
+    },
+    {
+      "id": "character",
+      "video": "character-workflow.mp4",
+      "bytes": 2770700,
+      "chapters": [
+        {
+          "name": "character-01",
+          "title": "01 / Character design",
+          "subtitle": "Adult CC0 foundation \u00b7 measured height and independent body controls",
+          "frames": 108,
+          "wallSeconds": 8.47,
+          "bytes": 425773,
+          "startSeconds": 0.0,
+          "endSeconds": 9.2
+        },
+        {
+          "name": "character-02",
+          "title": "02 / Portrait proportions",
+          "subtitle": "Searchable face morphs \u00b7 stable source topology \u00b7 one completed edit per history step",
+          "frames": 60,
+          "wallSeconds": 4.52,
+          "bytes": 216014,
+          "startSeconds": 9.2,
+          "endSeconds": 14.8
+        },
+        {
+          "name": "character-03",
+          "title": "03 / Skin appearance",
+          "subtitle": "24 tone presets \u00b7 texture detail retained \u00b7 preview subsurface shading is approximate",
+          "frames": 106,
+          "wallSeconds": 7.62,
+          "bytes": 393989,
+          "startSeconds": 14.8,
+          "endSeconds": 23.33
+        },
+        {
+          "name": "character-04",
+          "title": "04 / Fitted hair and roots",
+          "subtitle": "Scalp-bound strand preview \u00b7 greying controls \u00b7 no long-hair collision claim",
+          "frames": 78,
+          "wallSeconds": 5.68,
+          "bytes": 1127264,
+          "startSeconds": 23.33,
+          "endSeconds": 29.93
+        },
+        {
+          "name": "character-05",
+          "title": "05 / Pose and retain the recipe",
+          "subtitle": "Contrapposto preset \u00b7 fitted coverage preview \u00b7 save and reopen in Fusion",
+          "frames": 54,
+          "wallSeconds": 4.65,
+          "bytes": 230546,
+          "startSeconds": 29.93,
+          "endSeconds": 35.9
+        },
+        {
+          "name": "character-06",
+          "title": "06 / Author a custom shape key",
+          "subtitle": "Isolated neutral cage \u00b7 topology-preserving cheek sculpt \u00b7 pose and controls retained",
+          "frames": 96,
+          "wallSeconds": 4.99,
+          "bytes": 141211,
+          "startSeconds": 35.9,
+          "endSeconds": 42.27
+        },
+        {
+          "name": "character-07",
+          "title": "07 / Mix and save the authored shape",
+          "subtitle": "Custom influence 0.65 \u00b7 character keyframe \u00b7 editable recipe verified after reopen",
+          "frames": 67,
+          "wallSeconds": 5.67,
+          "bytes": 239516,
+          "startSeconds": 42.27,
+          "endSeconds": 49.2
+        }
+      ],
+      "checks": [
+        "actual body/face/skin/hair/pose UI edits",
+        "public full-body captures use clothing coverage",
+        "neutral-space shape stroke changes positions and retains sparse deltas",
+        "custom shape mixing and character keyframe",
+        "recipe equality after project reopen"
+      ],
+      "shapeDeltaEntries": 338,
+      "triangles": 432934,
+      "controls": 229,
+      "containerChapters": true,
+      "captions": "character-workflow.vtt"
+    },
+    {
+      "id": "sculpt",
+      "video": "sculpt-workflow.mp4",
+      "bytes": 1019121,
+      "chapters": [
+        {
+          "name": "sculpt-01",
+          "title": "01 / Detailed surface sculpting",
+          "subtitle": "Stoneware study \u00b7 real Draw Sharp strokes on a dense editable mesh",
+          "frames": 128,
+          "wallSeconds": 7.04,
+          "bytes": 164530,
+          "startSeconds": 0.0,
+          "endSeconds": 7.97
+        },
+        {
+          "name": "sculpt-02",
+          "title": "02 / One gesture, one undo",
+          "subtitle": "Undo restores the source vertex positions; redo restores the edited positions",
+          "frames": 109,
+          "wallSeconds": 6.08,
+          "bytes": 175364,
+          "startSeconds": 7.97,
+          "endSeconds": 15.17
+        },
+        {
+          "name": "sculpt-03",
+          "title": "03 / Refine and inspect",
+          "subtitle": "Smooth brush \u00b7 six falloff profiles \u00b7 viewport orbit on the same detailed mesh",
+          "frames": 135,
+          "wallSeconds": 6.96,
+          "bytes": 679913,
+          "startSeconds": 15.17,
+          "endSeconds": 24.24
+        }
+      ],
+      "triangles": 156672,
+      "checks": [
+        "real pointer-driven deformation changes position SHA-256",
+        "undo matches baseline numeric positions",
+        "redo matches edited numeric positions",
+        "Smooth kernel selection and actual surface deformation verified"
+      ],
+      "comparison": "SHA-256 over Float32 positions with signed zero canonicalized; JSON projects do not preserve the sign bit of zero.",
+      "limitations": [
+        "demonstrates Draw Sharp and Smooth; does not certify every brush or topology path"
+      ],
+      "containerChapters": true,
+      "captions": "sculpt-workflow.vtt"
+    }
+  ]
+}

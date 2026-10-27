@@ -1,6 +1,6 @@
 # Required feature coverage
 
-Current build label: **v0.0** (application/package **0.0.0**), reset by the user on October 26, 2026 from the former 0.19.0 development designation. This is a version-label change; the dated acceptance results and remaining limitations below still apply. No new binary package was created by the rename.
+Current package/source snapshot: **0.1.0**, following the October 26 Muse implementation and packaged-executable checkpoint. The earlier **v0.0** user-defined baseline remains preserved. Read the [current implementation ledger](docs/muse-implementation-status.md) for later sculpt, source-capsule, performance and packaging evidence; dated results below describe their historical checkpoints. The [app overview](../README.md) and [workflow gallery](docs/WORKFLOW-GALLERY.md) separate demonstrated behavior from remaining acceptance gates.
 
 The standing brief is `../CODEX-UNIFIED-EXCELLENCE-PROMPT.md`: one original workspace that excels at the character → garment → accessory → render pipeline. The aim is capability quality and integration, rather than recreating every vendor feature. **The unified excellence goal remains in progress.**
 

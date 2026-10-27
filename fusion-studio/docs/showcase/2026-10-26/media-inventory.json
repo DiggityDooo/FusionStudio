@@ -1,0 +1,150 @@
+{
+  "date": "2026-10-26",
+  "purpose": "Documentation media validation, not a full product regression certification",
+  "media": [
+    {
+      "file": "character-body.png",
+      "bytes": 295439,
+      "sha256": "8f21cfa0098fd045b96f243a0969fe24d9e83de7e798ddb53ebd0617516c817f",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "character-portrait.png",
+      "bytes": 470553,
+      "sha256": "e7fefd722b8ce0efad109a90f94d489472dbc423fdf3511dcd9f9809ca2cc4cb",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "character-pose.png",
+      "bytes": 286423,
+      "sha256": "1e9a8e77f322ed69f68e9b3c5d2b0ec43db1e180604f192c1b4e82ada0347561",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "character-shape-authoring.png",
+      "bytes": 258415,
+      "sha256": "f7ac4c1e478b6ebed73671874785b58f2ef8660317ea45c8744a5146787b68d3",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "character-shape-mixing.png",
+      "bytes": 412693,
+      "sha256": "597716de8e0fe6d9bd52416d67794d07b8b44eb7900bc4e45814b685227266c8",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "character-skin.png",
+      "bytes": 410077,
+      "sha256": "5eca6506697559b4032c763d2b90ac783eb3edc89f3db338e8affd65fac8032e",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "character-workflow.mp4",
+      "bytes": 2770700,
+      "sha256": "fb30ba2e3dd24e9a068ad1a5a431113083e7ce452e77f7f81c2f4e6f775c9c2b",
+      "width": 1920,
+      "height": 1080,
+      "codec": "H.264",
+      "fps": 30,
+      "seconds": 49.2,
+      "decodedAllFrames": true
+    },
+    {
+      "file": "character-workflow.vtt",
+      "bytes": 1023,
+      "sha256": "45933b6ae9da4ae30770ddcb19cdd767c97de7bd02fdbe7d6fbadef7fe494d2d"
+    },
+    {
+      "file": "native-import-review.png",
+      "bytes": 215304,
+      "sha256": "c1859bbaf035d9ad707548051b2591ba0ea17c5f26658434c055b90e83313dc8",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "native-render.png",
+      "bytes": 330931,
+      "sha256": "d3c20e0c433943d06714dbbd7e66d15b553902425b587b5567e838dddb56bd1e",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "native-workflow.mp4",
+      "bytes": 730452,
+      "sha256": "841990526997f8addc7c2883ae919e71a7da3c928578db777f36f3c7da95c2d5",
+      "width": 1920,
+      "height": 1080,
+      "codec": "H.264",
+      "fps": 30,
+      "seconds": 22.87,
+      "decodedAllFrames": true
+    },
+    {
+      "file": "native-workflow.vtt",
+      "bytes": 333,
+      "sha256": "996863cf2fa568d0d3a7974f0a0124613c129db8396c3228f0c78971727e4875"
+    },
+    {
+      "file": "native-workspace.png",
+      "bytes": 326555,
+      "sha256": "c47dca7c3117ac721e2f26f0c076cf999e8e64ad01b20d6236ec340e407811a5",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "optical-instrument-render.png",
+      "bytes": 2280307,
+      "sha256": "e132a521778f78bf9af00b1afbe44548f8ca2a2df4eecb407eda370e5e4fa7c3",
+      "width": 1920,
+      "height": 1080,
+      "frames": 1
+    },
+    {
+      "file": "sculpt-detail.png",
+      "bytes": 303374,
+      "sha256": "382c2641a424ea93ad33f3d350c64bf263dae70f588efcd1b13580a8fc0d3452",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "sculpt-workflow.mp4",
+      "bytes": 1019121,
+      "sha256": "073a6f5a17221d703294e4cf9e63d43ff52a035e535b7255bbb2619b8ca97597",
+      "width": 1920,
+      "height": 1080,
+      "codec": "H.264",
+      "fps": 30,
+      "seconds": 24.24,
+      "decodedAllFrames": true
+    },
+    {
+      "file": "sculpt-workflow.vtt",
+      "bytes": 423,
+      "sha256": "f83c4d167c699adca4ac1487be2a2f9783b86a478c8d8da8a7497190d07439d5"
+    },
+    {
+      "file": "workflow-reel.gif",
+      "bytes": 1827811,
+      "sha256": "052cc9f70cd892f38203e14fb0b6cddeb7adcf57b26b6eaf6a8b437a12e825f0",
+      "width": 960,
+      "height": 540,
+      "frames": 136
+    }
+  ]
+}

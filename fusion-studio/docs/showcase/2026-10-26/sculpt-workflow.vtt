@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:07.970
+01 / Detailed surface sculpting
+Stoneware study · real Draw Sharp strokes on a dense editable mesh
+
+00:00:07.970 --> 00:00:15.170
+02 / One gesture, one undo
+Undo restores the source vertex positions; redo restores the edited positions
+
+00:00:15.170 --> 00:00:24.240
+03 / Refine and inspect
+Smooth brush · six falloff profiles · viewport orbit on the same detailed mesh

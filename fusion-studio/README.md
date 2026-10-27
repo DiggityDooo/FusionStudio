@@ -1,6 +1,8 @@
-# Fusion Studio v0.0
+# Fusion Studio
 
-The user reset the current build's release label to **v0.0** on October 26, 2026. Its package/application version is **0.0.0** and future packages target `release-v0.0`. This names the current development snapshot, previously 0.19.0; it does not certify the remaining character, garment or performance gates. No new Windows package was created by this version change. Earlier packaged releases remain preserved.
+Current package/source snapshot: **0.1.0**. The later Muse implementation checkpoint produced and smoke-tested `release-v0.1.0/win-unpacked/Fusion Studio.exe`; it remains a development build with open fidelity, character, garment and performance gates. The earlier user-defined v0.0 baseline and archived releases remain preserved. Document schema remains 2. See the [current implementation ledger](docs/muse-implementation-status.md).
+
+Start with the [full app overview](../README.md) for the file-preservation purpose, detailed current capabilities, format support, setup and architecture. The [workflow gallery](docs/WORKFLOW-GALLERY.md) contains new full-resolution screenshots, captioned 1080p MP4 recordings and evidence from the running application. Version-specific paragraphs below are historical checkpoints; references to “current v0.0” describe that earlier snapshot.
 
 An integrated Windows 3D editor with a Blender-style layout. Modeling, sculpting, character shaping/posing, clothing design/simulation, animation and rendering share one scene and interface. Supported workflows require no application switching. Blender runs fixed background processing jobs; supported DAZ DUF/DSF data is read directly by a new importer.
 
