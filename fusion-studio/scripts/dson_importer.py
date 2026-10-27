@@ -776,6 +776,31 @@ def import_dson(source_path, content_roots, options=None, on_preflight=None):
                 subdivision = obj.modifiers.new('Preview Subdivision', 'SUBSURF')
                 subdivision.levels = 1
                 subdivision.render_levels = 1
+        pose_values = options.get('pose_values') or {}
+        if pose_values:
+            # Pose channel: extra local rotations (degrees) on top of the DSON
+            # rest pose, baked in as the new rest pose so skinning follows.
+            from mathutils import Euler
+            applied_pose, missing_pose = {}, []
+            for arm_name in dict.fromkeys(created_rigs):
+                arm = bpy.data.objects[arm_name]
+                for bone_id, angles in pose_values.items():
+                    pb = arm.pose.bones.get(bone_id)
+                    if pb is None:
+                        if bone_id not in missing_pose: missing_pose.append(bone_id)
+                        continue
+                    pb.matrix_basis = pb.matrix_basis @ Euler([math.radians(float(a)) for a in angles], 'XYZ').to_matrix().to_4x4()
+                    applied_pose[bone_id] = [float(a) for a in angles]
+                bpy.context.view_layer.objects.active = arm
+                arm.select_set(True)
+                bpy.context.view_layer.update()
+                bpy.ops.object.mode_set(mode='POSE')
+                bpy.ops.pose.armature_apply(selected=False)
+                bpy.ops.object.mode_set(mode='OBJECT')
+                arm.select_set(False)
+            report['pose'] = applied_pose
+            if missing_pose:
+                report.setdefault('pose_missing', missing_pose)
         bpy.context.view_layer.update()
     except Exception:
         if bpy.context.object and bpy.context.object.mode != 'OBJECT':

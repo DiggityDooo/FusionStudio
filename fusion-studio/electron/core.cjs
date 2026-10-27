@@ -125,6 +125,7 @@ class Engine {
     if(params.camera&&Array.isArray(params.camera.position)&&Array.isArray(params.camera.target)&&[...params.camera.position,...params.camera.target].every(Number.isFinite))safeParams.camera=params.camera;
     if(Array.isArray(params.contentRoots))safeParams.contentRoots=params.contentRoots.filter(p=>typeof p==='string'&&path.isAbsolute(p)&&fs.existsSync(p));
     if(params.morphValues&&typeof params.morphValues==='object')safeParams.morphValues=Object.fromEntries(Object.entries(params.morphValues).filter(([k,v])=>k.length<1000&&Number.isFinite(v)).slice(0,1200));
+    if(params.poseValues&&typeof params.poseValues==='object')safeParams.poseValues=Object.fromEntries(Object.entries(params.poseValues).filter(([k,v])=>k.length<200&&Array.isArray(v)&&v.length===3&&v.every(a=>Number.isFinite(a)&&Math.abs(a)<=360)).slice(0,512));
     const spec={action,input,output,scale,params:safeParams,ratio:Math.min(.95,Math.max(.05,Number(ratio)||.5)),directory:dir};
     const needsGltfReview=action==='convert'&&['.glb','.gltf'].includes(path.extname(source).toLowerCase());
     const specPath=writeNew(this.root,path.join(dir,needsGltfReview?'unvalidated-job.json':'job.json'),JSON.stringify(spec));

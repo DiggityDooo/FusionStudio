@@ -24,7 +24,7 @@ def import_model(file, options=None):
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from dson_importer import import_dson
         options=options or {}
-        return import_dson(str(file),options.get('contentRoots',[]),{'morph_values':options.get('morphValues',{}),'import_rig':True})
+        return import_dson(str(file),options.get('contentRoots',[]),{'morph_values':options.get('morphValues',{}),'pose_values':options.get('poseValues',{}),'import_rig':True})
     if ext == '.blend':
         # Append data only; never open or run the source blend's scripts.
         with bpy.data.libraries.load(str(file), link=False) as (src, dst):
