@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -270,6 +270,22 @@ test('mask survives the editor serialization path (buffer-view toJSON roundtrip)
   const back = new THREE.BufferGeometryLoader().parse(buffer.toJSON());
   assert.ok(back.attributes.mask, 'mask attribute must survive save/reopen');
   assert.equal(back.attributes.mask.array[10], 0.75);
+});
+
+test('mask transfers to a topology-changed working copy by nearest vertex', () => {
+  const source = sphere(2);
+  const sm = maskAttribute(source.geometry);
+  const sp = source.geometry.attributes.position;
+  for (let i = 0; i < sp.count; i++) sm.array[i] = sp.getY(i) > 0.3 ? 1 : 0;
+  const target = new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 16), new THREE.MeshStandardMaterial());
+  assert.equal(transferMask(source.geometry, target.geometry), true);
+  const tm = target.geometry.attributes.mask, tp = target.geometry.attributes.position;
+  assert.equal(tm.count, tp.count);
+  let correct = 0, total = 0;
+  for (let i = 0; i < tp.count; i++) { if (Math.abs(tp.getY(i)) > 0.35) { total++; if ((tp.getY(i) > 0) === (tm.array[i] > 0.5)) correct++; } }
+  assert.ok(total > 0 && correct / total > 0.9, `transferred mask must track the source region (${correct}/${total})`);
+  const bare = new THREE.SphereGeometry(0.5, 8, 6);
+  assert.equal(transferMask(bare, target.geometry), false, 'no source mask must stay a no-op');
 });
 
 test('grab follows the drag delta', () => {

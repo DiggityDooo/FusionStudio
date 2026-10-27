@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {hybridTransaction} from './hybrid.js';
+import {transferMask} from './mesh-tools.js';
 import {modifierCapability} from './modifier-capabilities.js';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const stackActions=new Set(['subdivide','bevel','decimate','solidify','mirror','remesh','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch']);
@@ -30,6 +31,10 @@ export async function evaluateStack(editor,api,target,entries,{source:sourceOver
  group.userData={...target.userData};delete group.userData.modifierStack;
  const stack={version:2,source,entries:structuredClone(entries),diagnostics:result.metadata?.stack||[],evaluatedTriangles:result.metadata?.polygons??null,editSource:!!target.userData.modifierStack?.editSource};
  let displayed=group;
+ if(!stack.editSource){ // evaluated GLB roundtrips can drop the sculpt mask; restore it by nearest-vertex transfer
+   const sourceMeshes=[],resultMeshes=[];base.traverse(n=>{if(n.isMesh)sourceMeshes.push(n);});group.traverse(n=>{if(n.isMesh)resultMeshes.push(n);});
+   for(let i=0;i<Math.min(sourceMeshes.length,resultMeshes.length);i++)transferMask(sourceMeshes[i].geometry,resultMeshes[i].geometry);
+ }
  if(stack.editSource){stack.evaluated=stackSnapshot(group);displayed=identity(await new THREE.ObjectLoader().parseAsync(source),target);}
  displayed.userData={...target.userData,modifierStack:stack,source:'Fusion modifier stack'};
  displayed.traverse(n=>{if(n.isMesh){n.castShadow=true;n.receiveShadow=true;}});return replace(editor,target,displayed);

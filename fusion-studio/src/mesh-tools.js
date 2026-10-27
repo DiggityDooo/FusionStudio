@@ -104,6 +104,18 @@ export function applyMeshFilter(geo,kind,amount=.5){
   p.needsUpdate=true;geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();return touched;
 }
 export function clearMask(geo){const attr=geo.attributes.mask;if(attr){attr.array.fill(0);attr.needsUpdate=true;} }
+// M6 working-copy transfer: topology-changing results (remesh/decimate/stack GLB
+// roundtrips) must not silently lose the sculpt mask. Nearest-vertex transfer in
+// local space; material slots and UVs keep their own explicit contracts.
+export function transferMask(sourceGeo,targetGeo){
+  const source=sourceGeo?.attributes?.mask;if(!source)return false;
+  const sp=sourceGeo.attributes.position,tp=targetGeo.attributes.position;
+  const target=maskAttribute(targetGeo),sv=new THREE.Vector3(),tv=new THREE.Vector3();
+  for(let i=0;i<tp.count;i++){tv.fromBufferAttribute(tp,i);let best=0,bd=Infinity;
+    for(let j=0;j<sp.count;j++){sv.fromBufferAttribute(sp,j);const d=tv.distanceToSquared(sv);if(d<bd){bd=d;best=j;}}
+    target.array[i]=source.array[best];}
+  target.needsUpdate=true;return true;
+}
 export function invertMask(geo){const attr=maskAttribute(geo);for(let i=0;i<attr.count;i++)attr.array[i]=1-attr.array[i];attr.needsUpdate=true;}
 export const FALLOFFS=['smooth','sphere','root','sharp','linear','constant'];
 export function falloffValue(kind,t){ // t = distance/radius in [0,1]
