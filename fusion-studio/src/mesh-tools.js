@@ -50,7 +50,7 @@ export const SCULPT_BRUSHES=[
   {id:'rotate',label:'Rotate',icon:'rotate-3d'},{id:'slide-relax',label:'Slide / Relax',icon:'shuffle'},
   {id:'mask',label:'Mask',icon:'shield'},{id:'multi-plane-scrape',label:'Multi-plane Scrape',icon:'triangle-right'},
   {id:'elastic-deform',label:'Elastic Deform',icon:'spline'},{id:'cloth',label:'Cloth',icon:'waves-2'},
-  {id:'pose',label:'Pose',icon:'bone'},
+  {id:'pose',label:'Pose',icon:'bone'},{id:'annotate',label:'Annotate',icon:'message-square'},
 ];
 // Paired tools: holding invert (Shift) switches to the defined counterpart instead of a sign flip that may do nothing.
 export const INVERT_PAIRS={pinch:'magnify',magnify:'pinch',fill:'deepen',deepen:'fill',scrape:'peaks',peaks:'scrape',flatten:'contrast',contrast:'flatten'};
@@ -104,6 +104,28 @@ export function applyMeshFilter(geo,kind,amount=.5){
   p.needsUpdate=true;geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();return touched;
 }
 export function clearMask(geo){const attr=geo.attributes.mask;if(attr){attr.array.fill(0);attr.needsUpdate=true;} }
+// Annotations are scene data on the object, never geometry (plan 8.3). Points are
+// stored in mesh-local space so markers follow the object transform.
+export function addAnnotation(object, localPoint, text) {
+  const list = object.userData.fusion_annotations ||= [];
+  const entry = {id: `note-${list.length + 1}-${Math.round(localPoint.x * 1e4)}-${Math.round(localPoint.y * 1e4)}`, point: [localPoint.x, localPoint.y, localPoint.z], text: String(text || 'Note')};
+  list.push(entry);
+  return entry;
+}
+export function removeAnnotation(object, id) {
+  const list = object.userData.fusion_annotations || [];
+  const next = list.filter(a => a.id !== id);
+  object.userData.fusion_annotations = next;
+  return next.length !== list.length;
+}
+export function annotationMarkers(object) {
+  const list = object?.userData.fusion_annotations || [];
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(list.flatMap(a => a.point), 3));
+  const points = new THREE.Points(geometry, new THREE.PointsMaterial({color: 0xf5a623, size: 0.02, sizeAttenuation: true}));
+  points.name = 'Annotation markers';
+  return points;
+}
 // M6 working-copy transfer: topology-changing results (remesh/decimate/stack GLB
 // roundtrips) must not silently lose the sculpt mask. Nearest-vertex transfer in
 // local space; material slots and UVs keep their own explicit contracts.
@@ -140,6 +162,7 @@ function adjacencyFor(geo){
 const DRAG_MODES=new Set(['nudge','thumb','snake-hook','grab']);
 export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate',invert=false,opts={}){
   const geo=mesh.geometry,p=geo.attributes.position,n=geo.attributes.normal;mesh.updateWorldMatrix(true,false);
+  if(mode==='annotate')return 0; // annotations are scene data, handled by MeshTools
   if(invert&&INVERT_PAIRS[mode]){mode=INVERT_PAIRS[mode];invert=false;}
   const falloffKind=opts.falloff||'smooth',dir=invert?-1:1;
   const inverse=mesh.matrixWorld.clone().invert(),normalMatrix=new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld);
@@ -235,7 +258,7 @@ export class MeshTools{
     this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false}};this.activeMesh=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
     this.faceHighlight=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:'#ff9b33',transparent:true,opacity:.4,side:THREE.DoubleSide,depthTest:false}));this.faceHighlight.visible=false;this.faceHighlight.renderOrder=10;editor.scene.add(this.faceHighlight);
     const canvas=editor.renderer.domElement;
-    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this.lastPoint=hit.point.clone();this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
+    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
     canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey);e.stopImmediatePropagation();}},true);
     const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.editor.commit();}};
     canvas.addEventListener('pointerup',end,true);canvas.addEventListener('pointercancel',end,true);
@@ -249,7 +272,15 @@ export class MeshTools{
   extrude(distance){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.editor.selected?.userData.modifierStack)throw Error('Use Component Editing on the retained source cage to keep the modifier stack evaluated.');return this.editor.operators?this.editor.operators.run('mesh.extrude_region',{distance}):this._extrude(distance);}
   _extrude(distance){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face in Edit Mode first.');const mesh=this.activeMesh,result=extrudeRegion(mesh.geometry,this.faceIndex,distance);mesh.geometry.dispose();mesh.geometry=result;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];mesh.userData={...mesh.userData,fusion_kind:'mesh'};this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
   deleteFace(){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.editor.selected?.userData.modifierStack)throw Error('Use Component Editing on the retained source cage to keep the modifier stack evaluated.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face first.');const mesh=this.activeMesh;const geo=deleteRegion(mesh.geometry,this.faceIndex);mesh.geometry.dispose();mesh.geometry=geo;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
+  refreshAnnotations(object){
+    if(this.annotationOverlay){this.editor.scene.remove(this.annotationOverlay);this.annotationOverlay.geometry.dispose();this.annotationOverlay=null;}
+    if(!object?.userData.fusion_annotations?.length)return;
+    const markers=annotationMarkers(object);object.updateWorldMatrix(true,false);
+    markers.position.setFromMatrixPosition(object.matrixWorld);markers.quaternion.setFromRotationMatrix(object.matrixWorld);markers.scale.setFromMatrixScale(object.matrixWorld);
+    this.annotationOverlay=markers;this.editor.scene.add(markers);
+  }
   applyBrush(hit,invert){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
+    if(this.brush.type==='annotate'){if(!this._annotateArmed)return;this._annotateArmed=false;const local=hit.object.worldToLocal(hit.point.clone());addAnnotation(hit.object,local,this.annotationText||'Note');this.refreshAnnotations(hit.object);this.editor.change('annotation');return;}
     const mesh=hit.object,delta=this.lastPoint?hit.point.clone().sub(this.lastPoint):new THREE.Vector3();
     const normal=hit.face?hit.face.normal.clone().transformDirection(mesh.matrixWorld):new THREE.Vector3(0,0,1);
     const opts={falloff:this.brush.falloff,autosmooth:this.brush.autosmooth,delta,normal,layerBase:this.layerBase&&this.layerBase.uuid===mesh.geometry.uuid?this.layerBase.base:null};

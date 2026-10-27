@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -46,6 +46,7 @@ test('every brush moves geometry and respects radius', () => {
     const before = new Float32Array(mesh.geometry.attributes.position.array);
     const delta = new THREE.Vector3(0.05, 0.02, 0);
     const hit = sculptGeometry(mesh, planeFamily ? center.clone() : top.clone(), planeFamily ? 0.45 : 0.3, 0.03, brush.id, false, {normal: planeFamily ? zNormal : frontNormal, delta, falloff: 'smooth', layerBase: before});
+    if (brush.id === 'annotate') { assert.equal(hit, 0, 'annotate must never touch geometry'); assert.equal(displacement(mesh, before), 0); continue; }
     assert.ok(hit > 0, `${brush.id} affected no vertices`);
     if (brush.id === 'mask') assert.ok(Math.max(...mesh.geometry.attributes.mask.array) > 0, 'mask must paint its channel');
     else assert.ok(displacement(mesh, before) > 0, `${brush.id} did not move geometry`);
@@ -286,6 +287,21 @@ test('mask transfers to a topology-changed working copy by nearest vertex', () =
   assert.ok(total > 0 && correct / total > 0.9, `transferred mask must track the source region (${correct}/${total})`);
   const bare = new THREE.SphereGeometry(0.5, 8, 6);
   assert.equal(transferMask(bare, target.geometry), false, 'no source mask must stay a no-op');
+});
+
+test('annotations are scene data with markers and removal', () => {
+  const mesh = sphere();
+  const before = new Float32Array(mesh.geometry.attributes.position.array);
+  const entry = addAnnotation(mesh, new THREE.Vector3(0.1, 0.4, 0.2), 'Check this ridge');
+  assert.equal(mesh.userData.fusion_annotations.length, 1);
+  assert.equal(entry.text, 'Check this ridge');
+  assert.deepEqual(entry.point, [0.1, 0.4, 0.2]);
+  const markers = annotationMarkers(mesh);
+  assert.equal(markers.geometry.attributes.position.count, 1);
+  assert.equal(removeAnnotation(mesh, entry.id), true);
+  assert.equal(mesh.userData.fusion_annotations.length, 0);
+  assert.equal(removeAnnotation(mesh, entry.id), false);
+  assert.deepEqual(new Float32Array(mesh.geometry.attributes.position.array), before, 'annotations must never modify geometry');
 });
 
 test('grab follows the drag delta', () => {
