@@ -18,7 +18,12 @@
    ]
   },
   "A1 Shading modes: wireframe, solid, textured, X-ray, matcap, material preview, rendered": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/viewport-aids-ui.cjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Wireframe, solid/textured and X-ray; matcap, material preview and rendered viewport missing."
   },
   "A1 Real-time viewport PBR, ambient occlusion, SSR, shadows and HDRI lighting": {
    "status": "open"
@@ -42,10 +47,19 @@
    "status": "open"
   },
   "A1 Reference image planes, background images and blueprints": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/viewport-aids-ui.cjs"
+   ],
+   "note": "View-facing image planes; saved with the project, excluded from export and render."
   },
   "A1 Measurement tools, rulers and annotations": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/viewport-aids-ui.cjs",
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Two-point surface ruler; sculpt annotations are scene data."
   },
   "A1 Scene units and scale management": {
    "status": "open"
@@ -2623,7 +2637,11 @@
    ]
   },
   "B6 X-ray": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/viewport-aids-ui.cjs"
+   ],
+   "note": "Alt+X (3ds Max) / Alt+Z (Blender, Fusion)."
   },
   "B6 Maximize viewport": {
    "status": "done",
