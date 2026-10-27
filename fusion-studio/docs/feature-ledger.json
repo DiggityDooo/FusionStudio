@@ -87,31 +87,73 @@
    ]
   },
   "A2 Primitive creation: cube, sphere, cylinder, cone, torus, plane, capsule": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/viewport-aids-ui.cjs",
+    "tests/foundation-ui.cjs",
+    "tests/ui.cjs"
+   ],
+   "note": "Cube, sphere, cylinder, cone, torus, plane, capsule."
   },
   "A2 Vertex, edge and face editing modes": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/integrated-core.test.mjs",
+    "tests/modifier-source-ui.cjs",
+    "tests/keymap-ui.cjs"
+   ]
   },
   "A2 Extrude (face/edge/vertex/along path), inset, bevel and chamfer": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/integrated-core.test.mjs",
+    "tests/mesh-desktop.cjs",
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Face-region extrude and Bevel modifier; inset, chamfer tool and extrude along path missing."
   },
   "A2 Loop cut, edge slide, offset edge loops and multi-cut/knife": {
    "status": "open"
   },
   "A2 Bridge edge loops, fill hole, and merge/weld/collapse": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/integrated-core.test.mjs",
+    "tests/engine-modeling.cjs",
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Merge by distance, Weld modifier, Dyntopo collapse; bridge and fill hole missing."
   },
   "A2 Dissolve, delete and clean up edges and vertices": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/integrated-core.test.mjs"
+   ],
+   "note": "Vertex dissolve and face delete; edge cleanup tools missing."
   },
   "A2 Bisect/slice, cut with plane, and boolean (union/difference/intersect)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/boolean-stack-ui.cjs"
+   ],
+   "note": "Boolean union/difference/intersect (live stack cutter); bisect/plane cut missing."
   },
   "A2 Mirror and symmetry (object, topology, radial)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Mirror modifier and sculpt axial symmetry; topology/radial symmetry missing."
   },
   "A2 Array, radial array and path array": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/modeling-ui.cjs"
+   ],
+   "note": "Linear array on X/Y/Z; radial and path arrays missing."
   },
   "A2 Spin, lathe and revolve": {
    "status": "open"
@@ -120,31 +162,66 @@
    "status": "open"
   },
   "A2 Solidify and shell/thicken": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ]
   },
   "A2 Triangulate, quadrangulate and tris-to-quads": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Triangulate only."
   },
   "A2 Flip and recalculate normals; custom/split normals; smooth/hard edge tagging": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/mesh.test.mjs"
+   ],
+   "note": "Recalculate normals and smooth/flat shading; custom split normals and edge tagging missing."
   },
   "A2 Edge crease and bevel weight": {
    "status": "open"
   },
   "A2 Subdivision surface (Catmull-Clark, OpenSubdiv) with multi-level preview": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/integrated-ui.cjs",
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Subdivision modifier and Loop multires; Catmull-Clark multi-level preview missing."
   },
   "A2 Smooth, relax, flatten and straighten": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Smooth modifier, smooth/relax mesh filters, flatten brush; straighten missing."
   },
   "A2 Vertex/edge/face merging by distance": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/integrated-core.test.mjs",
+    "tests/engine-modeling.cjs"
+   ]
   },
   "A2 Inflate, shrink/fatten and push/pull": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Inflate/deflate brushes; shrink/fatten and push/pull operators missing."
   },
   "A2 Lattice, cage and bend/twist/taper/skew deformers": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Bend, twist, taper, stretch deformers; lattice/cage/skew missing."
   },
   "A2 Proportional/soft editing": {
    "status": "open"
@@ -153,10 +230,20 @@
    "status": "open"
   },
   "A2 Mesh decimation and optimization": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Decimate modifier and local Dyntopo simplify."
   },
   "A2 Remesh (voxel, quad, Dynamesh-style)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/remesh-preflight.test.cjs"
+   ],
+   "note": "Voxel remesh with grid budget; quad remesh missing."
   },
   "A2 Convert between mesh, curve, NURBS and subdivision representations": {
    "status": "open"
@@ -231,7 +318,13 @@
    "status": "open"
   },
   "A4 Modifier stack (non-destructive)": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/modifier-source-ui.cjs",
+    "tests/integrated-ui.cjs",
+    "tests/boolean-stack-ui.cjs",
+    "tests/modifier-capabilities.test.mjs"
+   ]
   },
   "A4 Attribute systems and custom data layers": {
    "status": "open"
@@ -279,25 +372,48 @@
    "status": "open"
   },
   "A5 Brush set: clay, clay buildup, move, grab, smooth, pinch, crease, inflate, flatten, polish, layer, snake hook, nudge, draw, mask, dam standard, trim, hPolish, slash": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "32 brushes incl. clay, grab, smooth, pinch, crease, inflate, flatten, layer, snake hook, nudge, draw, mask; brush catalog test lists the full set."
   },
   "A5 Brush falloff, alpha/stencil textures, stroke types, lazy mouse and spacing": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Falloff curves and dab spacing; alphas/stencils, stroke types and lazy mouse missing."
   },
   "A5 Dynamic topology and adaptive tessellation": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ]
   },
   "A5 Multi-resolution sculpting; subdivision levels with detail preservation": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Loop multires levels from retained source; detail reprojection between levels missing."
   },
   "A5 Voxel remesh and dynamesh-style remeshing": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/engine-modeling.cjs",
+    "tests/remesh-preflight.test.cjs"
+   ]
   },
   "A5 ZRemesher/quad remesh with guides and density painting": {
    "status": "open"
   },
   "A5 Masking (by brush, cavity, curvature, topology, face sets, polygroups)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Brush mask with invert/clear/grow/shrink/blur; cavity/curvature/face-set masks missing."
   },
   "A5 Polygroups/face sets and partitioning": {
    "status": "open"
@@ -306,13 +422,22 @@
    "status": "open"
   },
   "A5 Symmetry (axial, radial, topological)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Axial X/Y/Z only."
   },
   "A5 Sculpt layers with strength sliders": {
    "status": "open"
   },
   "A5 Morph targets and morph-target storing/switching": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/character-creator.test.mjs",
+    "tests/character-creator-ui.cjs"
+   ],
+   "note": "Sculpted shape keys on creator bodies; general morph-target store/switch for any mesh missing."
   },
   "A5 Insert multi-mesh (IMM) and kitbash brushes": {
    "status": "open"
@@ -336,19 +461,31 @@
    "status": "open"
   },
   "A5 Posing tools: transpose, gizmo, mask-based posing, puppet/pose-based deformation": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs",
+    "tests/ik-ui.cjs"
+   ],
+   "note": "Pose brush and rig/IK gizmo posing; transpose/mask-based posing missing."
   },
   "A5 Project detail (projection/reprojection) and bake between levels": {
    "status": "open"
   },
   "A5 Sculpt-ready decimation": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ]
   },
   "A5 Millions-of-polygons performance and GPU sculpting": {
    "status": "open"
   },
   "A5 Tablet pressure and tilt support": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Pressure scales strength; tilt missing."
   },
   "A5 Stencil and tiling alpha creation": {
    "status": "open"
@@ -393,7 +530,11 @@
    "status": "open"
   },
   "A7 Automatic unwrap, smart UV project, cube/cylinder/sphere/planar projection": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Smart UV Project via Blender; projection types missing."
   },
   "A7 Seam marking and cutting; seam stitching": {
    "status": "open"
@@ -696,13 +837,28 @@
    "status": "open"
   },
   "A12 Unbiased path tracing, biased/hybrid rendering and real-time ray tracing": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/native-scene-ui.cjs",
+    "tests/bmw-render.cjs"
+   ],
+   "note": "Cycles path tracing; real-time ray tracing missing."
   },
   "A12 CPU, GPU and hybrid rendering (CUDA, OptiX, Metal, HIP, Vulkan)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/native-scene-ui.cjs",
+    "tests/bmw-render.cjs"
+   ],
+   "note": "Cycles CPU/CUDA/OptiX."
   },
   "A12 Rasterization and real-time rendering (EEVEE/Unreal-style)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/foundation-ui.cjs"
+   ],
+   "note": "three.js PBR viewport."
   },
   "A12 Progressive/interactive rendering (IPR/live render)": {
    "status": "open"
@@ -747,7 +903,11 @@
    "status": "open"
   },
   "A12 Subsurface and SSS rendering modes": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/character-creator-ui.cjs"
+   ],
+   "note": "Cycles skin portrait sidecar materials."
   },
   "A12 Render time estimators and sampling controls": {
    "status": "open"
@@ -768,7 +928,12 @@
    "status": "open"
   },
   "A12 Render-engine plugins (Cycles, Arnold, V-Ray, Redshift, Octane, RenderMan, Corona, Karma, Eevee, Lumen, Twinmotion, D5)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/native-scene-ui.cjs"
+   ],
+   "note": "Cycles via installed Blender."
   },
   "A12 Interactive viewport denoising": {
    "status": "open"
@@ -783,22 +948,43 @@
    "status": "open"
   },
   "A13 Forward kinematics (FK) and inverse kinematics (IK)": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/ik.test.mjs",
+    "tests/ik-ui.cjs",
+    "tests/joint-limits.test.mjs"
+   ]
   },
   "A13 IK solvers: single-chain, spline, rotate-plane, spring, multi-chain, HIK": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/ik.test.mjs",
+    "tests/joint-limits.test.mjs"
+   ],
+   "note": "Two-bone (rotate-plane with pole) and long-chain solvers; spline/spring/HIK missing."
   },
   "A13 FK/IK switching and blending": {
    "status": "open"
   },
   "A13 Constraints: parent, point, orient, aim/track-to, scale, pole vector, copy transforms, limit, child-of, follow path, spring": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/joint-limits.test.mjs",
+    "tests/ik.test.mjs"
+   ],
+   "note": "Pole vector and rotation limit constraints; others missing."
   },
   "A13 Control curves/controllers and custom control shapes": {
    "status": "open"
   },
   "A13 Set Driven Key/drivers and driver expressions": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/formulas.test.mjs",
+    "tests/formulas-ui.cjs",
+    "tests/deformation.test.mjs"
+   ],
+   "note": "Imported DSON drivers evaluate; user-authored drivers/expressions missing."
   },
   "A13 Custom attributes and rig UI panels": {
    "status": "open"
@@ -852,10 +1038,21 @@
    "status": "open"
   },
   "A13 Pose libraries and pose mirroring": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/pose-library.test.mjs",
+    "tests/pose-library-ui.cjs"
+   ],
+   "note": "Pose library with rig checks; mirroring missing."
   },
   "A13 Rig bake/export for game engines (FBX, glTF, USD)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/ik-ui.cjs",
+    "tests/gltf-validation.test.cjs",
+    "tests/skin-weights-ui.cjs"
+   ],
+   "note": "Baked IK/driver animation to validated GLB; FBX via Blender; USD missing."
   },
   "A13 Rig proxies and low-res rig versions": {
    "status": "open"
@@ -870,16 +1067,29 @@
    "status": "open"
   },
   "A13 Corrective blendshapes and pose-space deformation (PSD)": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/deformation.test.mjs",
+    "tests/deformation-ui.cjs"
+   ]
   },
   "A14 Smooth bind and rigid bind": {
    "status": "open"
   },
   "A14 Linear blend skinning, dual quaternion skinning": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/skin-weights.test.mjs"
+   ],
+   "note": "Linear blend skinning; dual quaternion missing."
   },
   "A14 Weight painting with brush modes (add, replace, smooth, scale)": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/skin-weights.test.mjs",
+    "tests/skin-weights-ui.cjs"
+   ],
+   "note": "Replace/Add/Subtract/Smooth."
   },
   "A14 Weight mirroring, copying and transferring between meshes": {
    "status": "open"
@@ -888,13 +1098,21 @@
    "status": "open"
   },
   "A14 Weight normalization, pruning, limits per vertex": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/skin-weights.test.mjs",
+    "tests/skin-weights-ui.cjs"
+   ]
   },
   "A14 Weight hammer/smoothing tools": {
    "status": "open"
   },
   "A14 Component editor for weights": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/skin-weights-ui.cjs"
+   ],
+   "note": "Numeric per-vertex assignment and inspection."
   },
   "A14 Skin cluster and skin layers": {
    "status": "open"
@@ -918,7 +1136,11 @@
    "status": "open"
   },
   "A14 Pose-space and corrective shapes": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/deformation.test.mjs",
+    "tests/formulas.test.mjs"
+   ]
   },
   "A14 Blendshape/morph target tools: creation, combination, in-between, inversion, splitting": {
    "status": "open"
@@ -930,19 +1152,40 @@
    "status": "open"
   },
   "A14 Fit and weight transfer for clothing to a character": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/hybrid-ui.cjs",
+    "tests/garment-placement-ui.cjs",
+    "tests/surface-drafting-ui.cjs"
+   ],
+   "note": "Garments follow body morphs/poses via surface binding and re-drape; skin-weight transfer missing."
   },
   "A14 Proxy-based weight transfer for clothes": {
    "status": "open"
   },
   "A14 Bone-based and shape-key-based deformation mixing": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/deformation.test.mjs",
+    "tests/pose-library.test.mjs"
+   ]
   },
   "A15 Keyframe animation with timeline, dope sheet and graph editor": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/mesh.test.mjs",
+    "tests/ui-v2.cjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Timeline keys with scrub/step; dope sheet and graph editor missing."
   },
   "A15 Interpolation: linear, constant, Bezier, spline, stepped, custom": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/ui-v2.cjs",
+    "tests/mesh.test.mjs"
+   ],
+   "note": "Keyed interpolation; per-key interpolation modes missing."
   },
   "A15 F-curves, tangents, handle editing and curve filters": {
    "status": "open"
@@ -963,16 +1206,29 @@
    "status": "open"
   },
   "A15 Animation baking and keyframe reduction/simplification": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/ik.test.mjs",
+    "tests/formulas.test.mjs"
+   ],
+   "note": "IK/driver baking to sampled clips; key reduction missing."
   },
   "A15 Looping and cycles (walk/run cycle, ping-pong)": {
    "status": "open"
   },
   "A15 Pose libraries and animation libraries": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/pose-library-ui.cjs"
+   ],
+   "note": "Pose library only."
   },
   "A15 Blend shapes/shape keys animation": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/deformation.test.mjs",
+    "tests/character-creator.test.mjs"
+   ]
   },
   "A15 Path animation and follow path": {
    "status": "open"
@@ -1011,7 +1267,12 @@
    "status": "open"
   },
   "A15 Constraint-based animation and baking constraints": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/ik.test.mjs",
+    "tests/joint-limits.test.mjs"
+   ],
+   "note": "IK and limit constraints baked per frame."
   },
   "A15 Animation retiming across shots": {
    "status": "open"
@@ -1029,7 +1290,10 @@
    "status": "open"
   },
   "A15 Morph-target-based animation": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/deformation.test.mjs"
+   ]
   },
   "A15 Mesh cache and Alembic/USD point-cache playback": {
    "status": "open"
@@ -1044,19 +1308,37 @@
    "status": "open"
   },
   "A16 Parametric character creators (body, face, age, ethnicity, proportion sliders)": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/character-creator.test.mjs",
+    "tests/character-creator-ui.cjs"
+   ],
+   "note": "229 body/face controls on CC0 adult bases."
   },
   "A16 Morph-based customization": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/deformation-ui.cjs",
+    "tests/morph-presets.test.mjs"
+   ]
   },
   "A16 Base-mesh libraries": {
    "status": "open"
   },
   "A16 Clothing, shoe and accessory fitting and auto-resizing": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/creator-garment-ui.cjs",
+    "tests/hybrid-ui.cjs"
+   ],
+   "note": "Shirt drafting and garment refit to body changes; shoes/accessories missing."
   },
   "A16 Skin tone, makeup, tattoos, scars, pores, wrinkles, freckles layering": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/character-creator-ui.cjs"
+   ],
+   "note": "24 skin tones; makeup/tattoo/scar/freckle layers missing."
   },
   "A16 Facial expression presets and facial pose libraries": {
    "status": "open"
@@ -1065,10 +1347,19 @@
    "status": "open"
   },
   "A16 Hair/beard/eyebrow libraries and groom assets": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/creator-hair.test.mjs",
+    "tests/character-creator-ui.cjs"
+   ],
+   "note": "Fitted scalp hairstyle presets; beard/eyebrow libraries missing."
   },
   "A16 Body-shape morphs and fat/muscle sliders": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/character-creator.test.mjs",
+    "tests/deformation-ui.cjs"
+   ]
   },
   "A16 Bone-scale and proportion adjustments with retargeting": {
    "status": "open"
@@ -1098,16 +1389,32 @@
    "status": "open"
   },
   "A16 Character import/export between platforms (e.g., Genesis → Maya/Blender)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/dson-integration.cjs",
+    "tests/gltf-validation-ui.cjs"
+   ],
+   "note": "Genesis DSON import and validated GLB/FBX/OBJ export."
   },
   "A16 Figure/morph asset systems and ERC-style morph linking": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/deformation.test.mjs",
+    "tests/formulas.test.mjs",
+    "tests/dson-integration.cjs"
+   ],
+   "note": "Sparse DSON morphs and formula subset; full ERC coverage missing."
   },
   "A16 Wardrobe and body-conforming asset systems": {
    "status": "open"
   },
   "A17 Strand-based hair/fur systems and hair cards": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/creator-hair.test.mjs",
+    "tests/character-creator-ui.cjs"
+   ],
+   "note": "Fitted strand/ribbon hair previews; cards and fur missing."
   },
   "A17 Guide-curve grooming": {
    "status": "open"
@@ -1161,31 +1468,69 @@
    "status": "open"
   },
   "A18 2D pattern-based garment design": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/pattern-ui.cjs",
+    "tests/pattern-v2-ui.cjs",
+    "tests/patterns-v2.test.mjs"
+   ]
   },
   "A18 Pattern drawing, editing, seam creation, and sewing/stitching": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/pattern-ui.cjs",
+    "tests/pattern-v2-ui.cjs",
+    "tests/seam-diagnostics.test.mjs"
+   ]
   },
   "A18 Pattern grading and sizing": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/hybrid-ui.cjs",
+    "tests/surface-drafting-ui.cjs"
+   ],
+   "note": "Height regrade and surface-metric grading; grading rule editor missing."
   },
   "A18 Fabric presets (cotton, silk, leather, denim, wool, etc.) and custom physical properties": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/fabric-ui.cjs",
+    "tests/material.test.mjs"
+   ]
   },
   "A18 Cloth simulation (stretch, shear, bend, density, friction, damping)": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/material.test.mjs",
+    "tests/fabric-ui.cjs",
+    "tests/physical-contact.test.mjs"
+   ]
   },
   "A18 Collision against animated characters; self-collision and layered garments": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/garment-contact.test.mjs",
+    "tests/cloth-contact-ui.cjs"
+   ],
+   "note": "Static body/self contact and two-layer audit; animated collision missing."
   },
   "A18 Pins, pressure, tension and wind": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/pattern-ui.cjs",
+    "tests/material.test.mjs"
+   ],
+   "note": "Pins and prescribed traction; pressure and wind missing."
   },
   "A18 Cloth tearing and cutting": {
    "status": "open"
   },
   "A18 Pleats, folds, gathers, elastic, stitches and topstitching": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/patterns-v2.test.mjs"
+   ],
+   "note": "Darts and internal lines; pleats/gathers/topstitch missing."
   },
   "A18 Buttons, zippers, trims and hardware": {
    "status": "open"
@@ -1194,7 +1539,12 @@
    "status": "open"
   },
   "A18 Garment fitting and auto-resizing to avatars": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/hybrid-ui.cjs",
+    "tests/surface-drafting-ui.cjs",
+    "tests/creator-garment-ui.cjs"
+   ]
   },
   "A18 Animated-garment simulation (cloth cache)": {
    "status": "open"
@@ -1635,10 +1985,21 @@
    "status": "open"
   },
   "A26 Native formats and scene packaging": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/core.test.cjs",
+    "tests/serialization.test.mjs",
+    "tests/source-capsule.test.mjs"
+   ]
   },
   "A26 FBX, OBJ, glTF/GLB, Alembic (ABC), USD/USDZ, STL, PLY, DAE (Collada), 3DS, BVH, VDB, MaterialX": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/gltf-validation.test.cjs",
+    "tests/gltf-validation-ui.cjs",
+    "tests/ui.cjs"
+   ],
+   "note": "GLB/glTF validated, FBX/OBJ via Blender; ABC/USD/STL/PLY/DAE/3DS/BVH/VDB/MaterialX missing."
   },
   "A26 STEP, IGES, SAT, JT and Parasolid (CAD)": {
    "status": "open"
@@ -1665,10 +2026,20 @@
    "status": "open"
   },
   "A26 Auto-backup and recovery": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/character-creator-recovery.cjs",
+    "tests/core.test.cjs"
+   ],
+   "note": "Versioned saves; autosave recovery resume not covered by a test."
   },
   "A26 Live link/bridge plugins (Maya–Unreal, Blender–Unity, Daz-to-Maya, etc.)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/native-scene-ui.cjs",
+    "tests/dson-integration.cjs"
+   ],
+   "note": "Embedded Blender scene and direct DAZ DSON reading; live links missing."
   },
   "A26 Scene optimization and cleanup tools": {
    "status": "open"
@@ -1680,7 +2051,11 @@
    "status": "open"
   },
   "A26 Metadata/custom properties": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/source-capsule.test.mjs"
+   ],
+   "note": "Source capsules and userData; user-editable properties missing."
   },
   "A26 Sub-asset packaging and texture path relinking": {
    "status": "open"
@@ -1710,10 +2085,19 @@
    "status": "open"
   },
   "A27 Event handlers and callbacks": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/foundation.test.mjs"
+   ],
+   "note": "Operator registry events; no user scripting API."
   },
   "A27 Custom shelf buttons, hotkeys, marking menus and workspaces": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/keymap-ui.cjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Custom hotkeys and menus; shelves/workspace authoring missing."
   },
   "A27 Render automation and farm submission scripts": {
    "status": "open"
@@ -1728,7 +2112,11 @@
    "status": "open"
   },
   "A27 Web/Electron-based and browser-based 3D tool frameworks": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/packaged-smoke.cjs",
+    "tests/foundation-ui.cjs"
+   ]
   },
   "A28 Customizable workspaces/layouts and dockable panels": {
    "status": "partial",
@@ -1761,19 +2149,32 @@
    "note": "F3 search covers operators and every keymap action."
   },
   "A28 Properties/attribute/inspector panels": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/ui-v2.cjs"
+   ]
   },
   "A28 Node editors (shader, geometry, compositing, rig, animation)": {
    "status": "open"
   },
   "A28 Timeline, dope sheet and graph editor": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/ui-v2.cjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Timeline only."
   },
   "A28 Asset browsers with thumbnails and tagging": {
    "status": "open"
   },
   "A28 Tablet/pen/touch support": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/sculpt.test.mjs"
+   ],
+   "note": "Pen pressure; touch unverified."
   },
   "A28 Dark/light themes and scaling": {
    "status": "open"
@@ -1782,13 +2183,27 @@
    "status": "open"
   },
   "A28 Tooltips, built-in tutorials and in-app help": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Tooltips and controls help listing active bindings; tutorials missing."
   },
   "A28 Auto-save and incremental save": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/core.test.cjs",
+    "tests/character-creator-recovery.cjs"
+   ],
+   "note": "Incremental versioned saves; autosave not covered by a test."
   },
   "A28 Project/workspace management": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/core.test.cjs",
+    "tests/foundation-ui.cjs"
+   ],
+   "note": "Versioned projects and persisted layouts; workspace authoring missing."
   },
   "A28 Real-time collaboration and cloud sync": {
    "status": "open"

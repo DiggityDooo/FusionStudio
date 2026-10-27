@@ -25,7 +25,7 @@ export function registerFoundationOperators(registry,editor,render){
     if(!['position','rotation','scale'].includes(p.kind)||!['x','y','z'].includes(p.axis)||!Number.isFinite(p.value))throw Error('Invalid transform properties');return p;
   },execute:(_,p)=>editor._transformField(p.kind,p.axis,p.value)});
   registry.register({id:'object.transform_gesture',label:'Transform object',undo:'delta',poll:()=>!!editor.selected,execute:(_,p)=>editor.finishTransform(p)});
-  for(const type of ['cube','sphere','cylinder','torus','plane','cone'])registry.register({id:'mesh.add_'+type,label:'Add '+type,undo:'delta',execute:()=>editor._primitive(type)});
+  for(const type of ['cube','sphere','cylinder','torus','plane','cone','capsule'])registry.register({id:'mesh.add_'+type,label:'Add '+type,undo:'delta',execute:()=>editor._primitive(type)});
   registry.register({id:'mesh.extrude_region',label:'Extrude face region',undo:'snapshot',compatibility:'extrude',poll:()=>!!editor.meshTools.activeMesh&&editor.meshTools.faceIndex!==null,unavailable:'Click a face in Edit Mode first.',validate:p=>{if(!Number.isFinite(p.distance)||Math.abs(p.distance)>1000)throw Error('Extrusion distance must be finite and within 1000 meters');return p;},execute:(_,p)=>editor.extrudeOperator(p.distance,p.workingCopy)});
   registry.register({id:'history.undo',label:'Undo',undo:'none',poll:()=>!!editor.journal?.canUndo,execute:()=>editor._undo()});
   registry.register({id:'history.redo',label:'Redo',undo:'none',poll:()=>!!editor.journal?.canRedo,execute:()=>editor._redo()});

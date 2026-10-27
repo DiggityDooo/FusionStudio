@@ -67,7 +67,7 @@ export class Editor {
   }
   primitive(type){return this.operators?this.operators.run('mesh.add_'+type):this._primitive(type);}
   _primitive(type){
-    const geometry={cube:()=>new THREE.BoxGeometry(1,1,1,1,1,1),sphere:()=>new THREE.SphereGeometry(.6,48,32),cylinder:()=>new THREE.CylinderGeometry(.5,.5,1.2,48),torus:()=>new THREE.TorusGeometry(.6,.18,24,64),plane:()=>new THREE.BoxGeometry(2,.06,2),cone:()=>new THREE.ConeGeometry(.65,1.4,48)}[type];
+    const geometry={cube:()=>new THREE.BoxGeometry(1,1,1,1,1,1),sphere:()=>new THREE.SphereGeometry(.6,48,32),cylinder:()=>new THREE.CylinderGeometry(.5,.5,1.2,48),torus:()=>new THREE.TorusGeometry(.6,.18,24,64),plane:()=>new THREE.BoxGeometry(2,.06,2),cone:()=>new THREE.ConeGeometry(.65,1.4,48),capsule:()=>new THREE.CapsuleGeometry(.4,.8,12,32)}[type];
     if(!geometry)return;this.ensureHistory();const obj=this.mesh(type[0].toUpperCase()+type.slice(1),geometry(),colors.clay,[0,.7,0]);obj.updateMatrix();this.root.add(obj);this.select(obj);this.journal.insert(obj.toJSON(),'Add '+type);this.change('scene');return obj;
   }
   template(name){

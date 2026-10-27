@@ -51,7 +51,7 @@ let operators,areas,keyboard,modalDismiss=null;const operatorEvents=[];
 let editor,workspace='Layout',projectName='Fusion character study',initializing=true,busy=false,dirty=false,jobList=[],info={apps:[]},catalog={assets:[],roots:[]},assetFilter='',autosaveTimer;
 let renderSettings={samples:32,width:1200,height:1000,device:'CPU',cameraMode:'source'},clothSettings={frames:45,stiffness:12,mass:.25,thickness:.002},nativeFilter='',activeJoint='';
 const modifiers=Object.keys(meshOperations);const meshSettings={};
-const shapeList=[['cube','box'],['sphere','circle'],['cylinder','cylinder'],['torus','circle-dot'],['plane','square'],['cone','triangle']];
+const shapeList=[['cube','box'],['sphere','circle'],['cylinder','cylinder'],['torus','circle-dot'],['plane','square'],['cone','triangle'],['capsule','pill']];
 
 $('#app').innerHTML=`<header class="topbar blender-top"><div class="brand">${icon('boxes')}<strong>FUSION</strong><span>${appVersion}</span></div><div class="main-menus"><button id="file-menu">File</button><button id="edit-menu">Edit</button><button id="render-menu">Render</button><button id="help">Help</button></div><div class="workspace-tabs">${spaces.map(s=>`<button data-workspace="${s}" class="${s===workspace?'active':''}">${s}</button>`).join('')}</div><div class="project-header"><input id="project-name" aria-label="Project name" value="${projectName}"></div>${btn('save','Save version (Ctrl+S)','save')}</header>
 <div class="contextbar"><span id="context-title">Layout</span><span class="separator"></span><span id="context-description">Model, pose and dress in one scene</span><span id="engine-label" class="engine-indicator">Checking local engine</span><button id="coverage-button" class="text-button">Feature coverage</button></div>
