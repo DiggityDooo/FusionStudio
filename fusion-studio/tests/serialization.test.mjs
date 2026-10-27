@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {Editor} from '../src/editor.js';
-import {sculptGeometry} from '../src/mesh-tools.js';
+import {sculptGeometry, subdivideGeometry, maskAttribute} from '../src/mesh-tools.js';
 import {compactPrimitive} from '../src/geometry-interchange.js';
 import {ProjectLoader} from '../src/project-loader.js';
 
@@ -32,6 +32,30 @@ test('source capsule and original path survive a project save/reopen roundtrip',
  const restored=copy.children.find(c=>c.name==='Genesis 9');assert.ok(restored,'imported group must survive the roundtrip');
  assert.deepEqual(restored.userData.sourceCapsule,capsule,'capsule in a saved project must reopen intact');
  assert.equal(restored.userData.sourceOriginalPath,'C:/lib/Genesis 9.duf');
+});
+test('sculpt stroke on detailed imported-style geometry survives undo/redo and project reopen',async()=>{
+ const {e}=fixture();
+ // Detailed fixture (47k tris) with UVs and a painted mask region, standing in for an imported mesh.
+ const geo=subdivideGeometry(new THREE.SphereGeometry(0.5,48,32),2);
+ const mask=maskAttribute(geo);for(let i=0;i<mask.count;i+=7)mask.array[i]=0.8;
+ const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial());mesh.name='Imported detail';e.root.add(mesh);mesh.updateMatrixWorld(true);
+ e.commit();
+ const baseline=new Float32Array(geo.attributes.position.array);
+ const touched=sculptGeometry(mesh,new THREE.Vector3(0,0.5,0),0.25,0.02,'draw',false,{normal:new THREE.Vector3(0,1,0)});
+ assert.ok(touched>1000,`stroke on detailed geometry should affect thousands of vertices, got ${touched}`);
+ const stroked=new Float32Array(geo.attributes.position.array);
+ assert.ok(valuesEqual(stroked,baseline)===false,'stroke must displace detailed geometry');
+ e.commit();
+ await e.undo();assert.ok(valuesEqual(new Float32Array(e.root.children.at(-1).geometry.attributes.position.array),baseline),'undo must restore the detailed baseline exactly');
+ await e.redo();const redone=e.root.children.at(-1);assert.ok(valuesEqual(new Float32Array(redone.geometry.attributes.position.array),stroked),'redo must restore the stroke exactly');
+ const saved=JSON.parse(JSON.stringify(e.serialize()));
+ const copy=await new ProjectLoader().parseAsync(saved);
+ const restored=copy.children.find(c=>c.name==='Imported detail');assert.ok(restored,'detailed mesh must survive reopen');
+ assert.ok(valuesEqual(new Float32Array(restored.geometry.attributes.position.array),stroked),'reopened geometry must keep the sculpted positions');
+ assert.ok(restored.geometry.attributes.mask,'mask channel must survive reopen');
+ assert.equal(restored.geometry.attributes.uv.count,restored.geometry.attributes.position.count,'UVs must survive reopen');
+ let maskKept=0;for(let i=0;i<restored.geometry.attributes.mask.count;i+=7)if(Math.abs(restored.geometry.attributes.mask.array[i]-0.8)<1e-6)maskKept++;
+ assert.ok(maskKept>1000,'painted mask values must survive reopen');
 });
 const valuesEqual=(actual,expected)=>actual.length===expected.length&&actual.every((n,i)=>n===expected[i]);
 test('snapshot captures numeric transforms immediately, before a render',async()=>{
