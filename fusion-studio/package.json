@@ -47,6 +47,7 @@
     "test:creator": "npm run build && npm run test:creator-core && node tests/character-creator-ui.cjs && node tests/character-creator-recovery.cjs && node tests/character-private.cjs && node tests/creator-garment-ui.cjs",
     "test:creator-performance": "node tests/creator-performance.mjs && node tests/creator-interactive-performance.cjs",
     "test:sculpt": "node --test tests/sculpt.test.mjs",
+    "test:dson": "node tests/dson-integration.cjs",
     "showcase": "node tests/showcase.cjs && node tests/workflow-showcase.cjs && python scripts/make-showcase-gif.py"
   },
   "dependencies": {
