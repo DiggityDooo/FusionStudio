@@ -616,7 +616,7 @@ export class MeshTools{
     g.setIndex(snap.index?Array.from(snap.index):null);g.computeBoundingSphere();g.computeBoundingBox();
     this.stroke=false;this.strokeSnapshot=null;this.lastPoint=null;this.lastDabPoint=null;this.editor.orbit.enabled=true;this.editor.change('sculpt-cancelled');
   }
-  hit(event){const e=this.editor;e.pointer.copy(e.ndc(event));e.ray.setFromCamera(e.pointer,e.camera);return e.ray.intersectObject(e.selected||e.root,true).find(h=>h.object.isMesh&&!h.object.isSkinnedMesh);}
+  hit(event){const e=this.editor;e.pointer.copy(e.ndc(event));e.ray.setFromCamera(e.pointer,e.camera);return e.ray.intersectObject(e.selected||e.root,true).find(h=>h.object.isMesh&&!h.object.isSkinnedMesh&&e.unclipped(h));}
   setMode(mode){this.mode=mode;this.faceHighlight.visible=false;this.faceIndex=null;this.activeMesh=null;this.editor.transform.detach();if(mode==='object'&&this.editor.selected)this.editor.transform.attach(this.editor.selected);this.editor.change('mode');}
   showFace(){if(!this.activeMesh||this.faceIndex===null)return;const mesh=this.activeMesh;const geo=mesh.geometry,idx=geo.index?.array||Array.from({length:geo.attributes.position.count},(_,i)=>i),pos=[];const {faces}=coplanarFaces(geo,this.faceIndex);
     for(const f of faces)for(let j=0;j<3;j++)pos.push(...new THREE.Vector3().fromBufferAttribute(geo.attributes.position,idx[f*3+j]).toArray());

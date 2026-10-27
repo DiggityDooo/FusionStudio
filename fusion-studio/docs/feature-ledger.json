@@ -54,13 +54,23 @@
    "status": "open"
   },
   "A1 Viewport clipping and cutaway": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/viewport-tools-ui.cjs"
+   ],
+   "note": "Single axis-aligned section plane with flip; viewport-only."
   },
   "A1 Bookmarks and saved views": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/viewport-tools-ui.cjs"
+   ]
   },
   "A1 Turntable preview": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/viewport-tools-ui.cjs"
+   ]
   },
   "A2 Primitive creation: cube, sphere, cylinder, cone, torus, plane, capsule": {
    "status": "open"
@@ -1730,12 +1740,11 @@
   "A28 Context-sensitive menus and search-based command lookup": {
    "status": "done",
    "evidence": [
-    "tests/radial-menu.test.mjs",
+    "tests/viewport-tools-ui.cjs",
     "tests/radial-menu-ui.cjs",
-    "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs",
     "tests/foundation-ui.cjs"
-   ]
+   ],
+   "note": "F3 search covers operators and every keymap action."
   },
   "A28 Properties/attribute/inspector panels": {
    "status": "open"
@@ -1780,7 +1789,12 @@
    "status": "open"
   },
   "A29 Section planes, cutaways and elevation views": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/viewport-tools-ui.cjs",
+    "tests/quad-view-ui.cjs"
+   ],
+   "note": "Axis section plane and orthographic elevation views; no arbitrary planes or section fills."
   },
   "A29 Material libraries for architectural finishes": {
    "status": "open"
