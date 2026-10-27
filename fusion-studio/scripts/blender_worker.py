@@ -90,7 +90,8 @@ def import_model(file, options=None):
     }
     if ext not in ops:
         raise ValueError('Unsupported model: ' + ext)
-    checked(ops[ext](filepath=str(file)), 'Import')
+    # STL carries no units; read it as millimetres, matching Fusion's STL export and slicer convention.
+    checked(ops[ext](filepath=str(file), **({'global_scale': .001} if ext == '.stl' else {})), 'Import')
 
 
 def bounds(meshes):
@@ -438,6 +439,16 @@ def main(specfile=None):
         checked(bpy.ops.wm.obj_export(filepath=str(output),export_materials=True),'OBJ export')
     elif action=='fbx':
         checked(bpy.ops.export_scene.fbx(filepath=str(output),add_leaf_bones=False,path_mode='COPY',embed_textures=True),'FBX export')
+    elif action=='stl':
+        # Slicers read STL units as millimetres.
+        checked(bpy.ops.wm.stl_export(filepath=str(output),ascii_format=False,global_scale=1000,apply_modifiers=True),'STL export')
+    elif action=='ply':
+        checked(bpy.ops.wm.ply_export(filepath=str(output),ascii_format=False,apply_modifiers=True),'PLY export')
+    elif action in ('usd','usdz'):
+        checked(bpy.ops.wm.usd_export(filepath=str(output),export_materials=True,export_animation=False),'USD export')
+    elif action=='abc':
+        frame=bpy.context.scene.frame_current
+        checked(bpy.ops.wm.alembic_export(filepath=str(output),start=frame,end=frame,as_background_job=False),'Alembic export')
     else:
         use_selection=action not in ('glb','convert')
         if use_selection:

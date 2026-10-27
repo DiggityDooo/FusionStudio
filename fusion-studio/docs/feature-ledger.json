@@ -90,8 +90,7 @@
    "status": "done",
    "evidence": [
     "tests/viewport-aids-ui.cjs",
-    "tests/foundation-ui.cjs",
-    "tests/ui.cjs"
+    "tests/foundation-ui.cjs"
    ],
    "note": "Cube, sphere, cylinder, cone, torus, plane, capsule."
   },
@@ -1568,7 +1567,11 @@
    "status": "open"
   },
   "A18 Cloth-sim caching and export (Alembic, FBX, USD)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/export-formats.cjs"
+   ],
+   "note": "Current-frame drape exports to Alembic/FBX/USD; no simulation cache."
   },
   "A18 Cloth painting and weight maps for stiffness": {
    "status": "open"
@@ -1934,7 +1937,11 @@
    "status": "open"
   },
   "A24 Model scaling to real-world units": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/export-formats.cjs"
+   ],
+   "note": "STL written and read in millimetres; no print-scale tool."
   },
   "A24 Multi-material and multi-color print setup": {
    "status": "open"
@@ -1949,7 +1956,11 @@
    "status": "open"
   },
   "A24 STL, 3MF and OBJ export": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/export-formats.cjs"
+   ],
+   "note": "Binary STL (mm) and OBJ; 3MF missing."
   },
   "A24 CNC toolpath generation (CAM)": {
    "status": "open"
@@ -2010,11 +2021,11 @@
   "A26 FBX, OBJ, glTF/GLB, Alembic (ABC), USD/USDZ, STL, PLY, DAE (Collada), 3DS, BVH, VDB, MaterialX": {
    "status": "partial",
    "evidence": [
+    "tests/export-formats.cjs",
     "tests/gltf-validation.test.cjs",
-    "tests/gltf-validation-ui.cjs",
-    "tests/ui.cjs"
+    "tests/gltf-validation-ui.cjs"
    ],
-   "note": "GLB/glTF validated, FBX/OBJ via Blender; ABC/USD/STL/PLY/DAE/3DS/BVH/VDB/MaterialX missing."
+   "note": "glTF/GLB, FBX, OBJ, USD/USDZ, Alembic, STL, PLY export and import verified by round trip; DAE, 3DS, BVH, VDB and MaterialX missing."
   },
   "A26 STEP, IGES, SAT, JT and Parasolid (CAD)": {
    "status": "open"
@@ -2063,7 +2074,11 @@
    "status": "open"
   },
   "A26 Scene units and axis conversion (Y-up/Z-up)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/export-formats.cjs"
+   ],
+   "note": "Y-up/Z-up and metric size verified across seven formats; STL in millimetres; no unit preferences UI."
   },
   "A26 Metadata/custom properties": {
    "status": "partial",
@@ -2274,7 +2289,12 @@
    "status": "open"
   },
   "A29 AR export (USDZ/glTF) and web 3D viewers": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/export-formats.cjs",
+    "tests/gltf-validation-ui.cjs"
+   ],
+   "note": "USDZ and validated GLB export; web viewer missing."
   },
   "A30 Cloner/instance arrays and effectors": {
    "status": "open"

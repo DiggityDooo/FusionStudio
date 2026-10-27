@@ -27,7 +27,9 @@ const APPS = [
   {id:'marvelous',name:'Marvelous Designer',role:'Patterns · cloth simulation',path:'C:\\Program Files\\Marvelous Designer Enterprise Network Offline\\MarvelousDesigner_Enterprise_Offline.exe',color:'#cfbaf6',formats:'OBJ / FBX / Alembic',integration:'File handoff'},
   {id:'cc',name:'Character Creator 5',role:'Character design · rigging',path:'C:\\Program Files\\Reallusion\\Character Creator 5\\Bin64\\CharacterCreator.exe',color:'#dbe888',formats:'FBX + JSON + textures',integration:'File handoff'},
 ];
-const FORMATS = new Set(['flattenPanels','stack',...Object.keys(meshOperations),'blend','glb','fbx','obj','render','subdivide','bevel','decimate','convert','solidify','mirror','remesh','recalculate','uv','boolean','cloth']);
+// Export action -> output extension (STL is written in millimetres for slicers).
+const EXPORTS={render:'png',blend:'blend',fbx:'fbx',obj:'obj',stl:'stl',ply:'ply',usd:'usdc',usdz:'usdz',abc:'abc'};
+const FORMATS = new Set(['flattenPanels','stack',...Object.keys(meshOperations),...Object.keys(EXPORTS),'glb','subdivide','bevel','decimate','convert','solidify','mirror','remesh','recalculate','uv','boolean','cloth']);
 const IMPORTS = new Set(['.duf','.glb','.gltf','.obj','.fbx','.stl','.ply','.blend','.abc','.usd','.usda','.usdc','.usdz']);
 function inside(root, file) {
   const rel=path.relative(path.resolve(root),path.resolve(file));
@@ -114,7 +116,7 @@ class Engine {
     if(params.device!==undefined&&!['CPU','CUDA','OPTIX'].includes(params.device))throw Error('Unsupported render device.');
     const dir=uniqueDir(path.join(this.root,'jobs'),action);
     const id=path.basename(dir);const input=surfacePanels?writeNew(this.root,path.join(dir,'surface-input.json'),JSON.stringify(surfacePanels)):action==='convert'?source:writeNew(this.root,path.join(dir,'input.glb'),Buffer.from(data||'','base64'));
-    const ext=surfacePanels?'json':['render','blend','fbx','obj'].includes(action)?(action==='render'?'png':action):'glb';
+    const ext=surfacePanels?'json':EXPORTS[action]||'glb';
     const output=path.join(dir,slug(name)+'.'+ext);
     const safeParams={...validated};if(params.characterMaterials){safeParams.characterMaterials=characterMaterials(params.characterMaterials);writeNew(this.root,path.join(dir,'character-materials.json'),JSON.stringify(safeParams.characterMaterials,null,2));}if(context)safeParams.context=context;if(stack)safeParams.stack=stack;for(const key of ['frames','thickness','stiffness','mass','samples','width','height'])if(Number.isFinite(params[key]))safeParams[key]=params[key];
     if(patternCloth)safeParams.patternCloth=patternCloth;
