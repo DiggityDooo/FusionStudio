@@ -1,5 +1,11 @@
 """Preserved Blender scenes and explicit render devices. All writes are job-local."""
-import bpy, math, time
+import bpy, hashlib, math, struct, time
+
+def _points_digest(points):
+    digest=hashlib.sha256()
+    for point in points:
+        digest.update(struct.pack('<3f',round(point.co.x,6),round(point.co.y,6),round(point.co.z,6)))
+    return digest.hexdigest()
 from pathlib import Path
 from mathutils import Matrix, Vector
 
@@ -30,6 +36,9 @@ def scene_inventory(scene):
         keys=mesh.shape_keys.key_blocks if mesh.shape_keys else []
         mesh_details[mesh.name]={'uv_layers':[uv.name for uv in mesh.uv_layers],
                                  'shape_keys':[k.name for k in keys],
+                                 'vertices':len(mesh.vertices),
+                                 'basis_digest':_points_digest(mesh.vertices),
+                                 'shape_key_digests':{k.name:_points_digest(k.data) for k in keys if k.name!='Basis'},
                                  'attributes':sorted(a.name for a in mesh.attributes if not a.name.startswith('.'))}
     for entry in objects:
         obj=scene.objects[entry['name']]

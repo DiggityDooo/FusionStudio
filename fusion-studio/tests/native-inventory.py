@@ -70,6 +70,62 @@ def build(work):
     print(json.dumps({'built': True, 'snapshot': result['snapshot'], 'warnings': result.get('warnings', [])}))
 
 
+def editbuild(work):
+    import shutil
+    fixture = work / 'fixture.blend'
+    build_fixture(fixture)
+    before = native_scene.scene_inventory(bpy.context.scene)
+    (work / 'before.json').write_text(json.dumps(before))
+    shutil.copy(fixture, work / 'editcopy.blend')
+    print(json.dumps({'built': True, 'edit': True}))
+
+
+def editapply(work):
+    # Authored shape-key edit on the COPY only: topology-preserving by construction.
+    bpy.ops.wm.open_mainfile(filepath=str(work / 'editcopy.blend'))
+    mesh = bpy.data.meshes['HeroCubeMesh']
+    smile = mesh.shape_keys.key_blocks['Smile']
+    before = native_scene._points_digest(smile.data)
+    for point in smile.data:
+        if point.co.z > 0:
+            point.co.z += 0.1
+    after = native_scene._points_digest(smile.data)
+    if before == after:
+        raise SystemExit('shape-key edit changed nothing')
+    (work / 'edit-expect.json').write_text(json.dumps({'smile_after': after}))
+    bpy.ops.wm.save_mainfile()
+    print(json.dumps({'edited': True, 'smile_changed': True}))
+
+
+def editcheck(work):
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    before = json.loads((work / 'before.json').read_text())
+    expect = json.loads((work / 'edit-expect.json').read_text())
+    with bpy.data.libraries.load(str(work / 'editcopy.blend'), link=False) as (src, dst):
+        dst.scenes = [s for s in src.scenes if s == 'CageFixture']
+    scene = next(s for s in dst.scenes if s)
+    after = native_scene.scene_inventory(scene)
+    problems = []
+    for key in ('objects', 'collections', 'materials', 'scene', 'armatures', 'cameras', 'lights'):
+        if before[key] != after[key]:
+            problems.append(f"unrelated data changed: {key}")
+    bmesh = before['mesh_details']['HeroCubeMesh']
+    amesh = after['mesh_details']['HeroCubeMesh']
+    for key in ('uv_layers', 'shape_keys', 'attributes', 'vertices', 'basis_digest'):
+        if bmesh[key] != amesh[key]:
+            problems.append(f"HeroCubeMesh.{key} changed by a shape-key-only edit")
+    if amesh['shape_key_digests'].get('Smile') == bmesh['shape_key_digests'].get('Smile'):
+        problems.append('Smile digest did not change: edit was lost on save/reopen')
+    if amesh['shape_key_digests'].get('Smile') != expect['smile_after']:
+        problems.append('Smile digest does not match the applied edit')
+    for name in before['mesh_details']:
+        if name != 'HeroCubeMesh' and before['mesh_details'][name] != after['mesh_details'][name]:
+            problems.append(f"unrelated mesh changed: {name}")
+    print(json.dumps({'ok': not problems, 'problems': problems, 'edit': True}))
+    if problems:
+        raise SystemExit(1)
+
+
 def check(work):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     before = json.loads((work / 'before.json').read_text())
@@ -93,6 +149,12 @@ def main():
     work.mkdir(parents=True, exist_ok=True)
     if mode == 'build':
         build(work)
+    elif mode == 'editbuild':
+        editbuild(work)
+    elif mode == 'editapply':
+        editapply(work)
+    elif mode == 'editcheck':
+        editcheck(work)
     else:
         check(work)
 
