@@ -564,6 +564,20 @@ test('Escape/pointer-cancel restores the exact pre-stroke geometry without commi
   assert.ok(mesh.geometry.attributes.position.array.every((v, i) => v === before[i]));
 });
 
+test('multires level change refuses to silently discard sculpting on the copy', () => {
+  const source = sphere();
+  const copy = createMultiresCopy(source, 1);
+  setMultiresLevel(copy, 2); // clean copy: allowed
+  assert.equal(copy.userData.multires.level, 2);
+  sculptGeometry(copy, top.clone(), 0.3, 0.05, 'draw', false, {normal: frontNormal});
+  const edited = new Float32Array(copy.geometry.attributes.position.array);
+  assert.throws(() => setMultiresLevel(copy, 1), /would discard/);
+  assert.ok(copy.geometry.attributes.position.array.every((v, i) => v === edited[i]), 'refused level change must not touch the edited copy');
+  const topo = createMultiresCopy(source, 1);
+  dyntopoRefine(topo.geometry, [0, 0.5, 0], 0.3, 0.02);
+  assert.throws(() => setMultiresLevel(topo, 0), /would discard/, 'topology changes also block silent rebuilds');
+});
+
 test('grab follows the drag delta', () => {
   const mesh = sphere();
   const before = new Float32Array(mesh.geometry.attributes.position.array);

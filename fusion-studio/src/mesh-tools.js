@@ -354,22 +354,34 @@ export function geometryDataJSON(geo) { // data-form JSON even for parametric pr
   for (const key of ['index', 'attributes', 'morphAttributes', 'morphTargetsRelative', 'groups', 'boundingSphere', 'userData']) buffer[key] = geo[key];
   const json = buffer.toJSON(); delete json.metadata; return json;
 }
+function geometryStateHash(geo) { // divergence guard: any sculpt/topology edit changes this
+  const p = geo.attributes.position, bits = new Uint32Array(p.array.buffer, p.array.byteOffset, p.array.length);
+  let hash = 2166136261 >>> 0;
+  const mix = v => { hash ^= v; hash = Math.imul(hash, 16777619); };
+  mix(p.count); mix(geo.index ? geo.index.count : 0);
+  for (let i = 0; i < bits.length; i += 7) mix(bits[i]);
+  if (geo.index) { const idx = geo.index.array; mix(idx[0]); mix(idx[idx.length - 1]); }
+  return (hash >>> 0).toString(16);
+}
 export function createMultiresCopy(object, level = 1) {
   if (!object?.isMesh) throw Error('Select a mesh for a multires working copy.');
   const copy = object.clone(true);
   copy.name = object.name + ' (Multires)';
-  copy.userData = {...object.userData, multires: {version: 1, sourceName: object.name, level}, multiresSourceGeometry: geometryDataJSON(object.geometry)};
-  delete copy.userData.modifierStack;
   copy.geometry = subdivideGeometry(object.geometry.clone(), level);
+  copy.userData = {...object.userData, multires: {version: 1, sourceName: object.name, level, cleanHash: geometryStateHash(copy.geometry)}, multiresSourceGeometry: geometryDataJSON(object.geometry)};
+  delete copy.userData.modifierStack;
   return copy;
 }
 export function setMultiresLevel(object, level) {
   const source = object?.userData.multiresSourceGeometry;
   if (!source) throw Error('This object has no retained multires source.');
+  const clean = object.userData.multires?.cleanHash;
+  if (clean && geometryStateHash(object.geometry) !== clean)
+    throw Error('This multires copy has sculpting or topology changes that a level change would discard (it rebuilds from the retained source). Duplicate the copy to keep the work, or undo back to the clean level state first.');
   const base = new THREE.BufferGeometryLoader().parse(source);
   object.geometry.dispose?.();
   object.geometry = subdivideGeometry(base, level);
-  object.userData.multires = {...object.userData.multires, level};
+  object.userData.multires = {...object.userData.multires, level, cleanHash: geometryStateHash(object.geometry)};
   return object;
 }
 // Annotations are scene data on the object, never geometry (plan 8.3). Points are
