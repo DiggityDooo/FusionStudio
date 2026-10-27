@@ -108,7 +108,7 @@ class Engine {
     const surfacePanels=action==='flattenPanels'?validateSurfacePanels(params.surfacePanels):null;
     let context;if(params.context!==undefined){const c=params.context;if(!c||!['projectId','objectId'].every(k=>typeof c[k]==='string'&&/^[a-zA-Z0-9_-]{1,100}$/.test(c[k]))||!Number.isSafeInteger(c.revision)||c.revision<0||!Number.isSafeInteger(c.requestId)||c.requestId<1||!/^[a-f0-9]{64}$/.test(c.inputHash||''))throw Error('Invalid scene evaluation context.');context={projectId:c.projectId,objectId:c.objectId,revision:c.revision,requestId:c.requestId,inputHash:c.inputHash};}
     if(patternCloth&&!params.targetId)throw Error('Select a pattern garment before simulation.');
-    for(const key of ['targetId','cutterId'])if(params[key]!==undefined&&(typeof params[key]!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(params[key])))throw Error('Invalid mesh identifier.');
+    for(const key of ['targetId','cutterId','sceneCamera'])if(params[key]!==undefined&&(typeof params[key]!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(params[key])))throw Error('Invalid mesh identifier.');
     if(action==='boolean'&&(!params.targetId||!params.cutterId||params.targetId===params.cutterId))throw Error('Boolean requires a separate target and operand.');
     const nativeBytes=params.nativeScene?validateNativeScene(params.nativeScene):null;
     if(nativeBytes&&action!=='render')throw Error('Preserved scenes are currently supported by Render only.');
@@ -123,7 +123,7 @@ class Engine {
     if(params.device)safeParams.device=params.device;
     if(params.blendMode)safeParams.blendMode=params.blendMode;
     if(nativeBytes){const snapshot=writeNew(this.root,path.join(dir,'native-input.blend'),nativeBytes);safeParams.nativeScene={snapshot,matrix:params.nativeScene.matrix,ordinary:!!params.nativeScene.ordinary};safeParams.cameraMode=params.cameraMode==='viewport'?'viewport':'source';}
-    for(const key of ['targetId','cutterId'])if(typeof params[key]==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(params[key]))safeParams[key]=params[key];
+    for(const key of ['targetId','cutterId','sceneCamera'])if(typeof params[key]==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(params[key]))safeParams[key]=params[key];
     if(params.camera&&Array.isArray(params.camera.position)&&Array.isArray(params.camera.target)&&[...params.camera.position,...params.camera.target].every(Number.isFinite))safeParams.camera=params.camera;
     if(Array.isArray(params.contentRoots))safeParams.contentRoots=params.contentRoots.filter(p=>typeof p==='string'&&path.isAbsolute(p)&&fs.existsSync(p));
     if(params.morphValues&&typeof params.morphValues==='object')safeParams.morphValues=Object.fromEntries(Object.entries(params.morphValues).filter(([k,v])=>k.length<1000&&Number.isFinite(v)).slice(0,1200));

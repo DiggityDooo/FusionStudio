@@ -125,9 +125,16 @@ def studio(meshes, options=None):
         if setting.get('orthoHeight'):
             camera.data.type='ORTHO';camera.data.ortho_scale=max(.001,float(setting['orthoHeight']))
     scene.camera=camera
-    for name,offset,power,size in [
+    if options.get('sceneCamera'):
+        chosen=[o for o in scene.objects if o.type=='CAMERA' and has_id(o,options['sceneCamera'])]
+        if not chosen:raise ValueError('The active scene camera is not in the rendered scene. Make it visible or choose another camera.')
+        scene_camera(chosen[0]);scene.camera=chosen[0]
+    scene_lights=[o for o in scene.objects if o.type=='LIGHT' and not o.get('fusion_studio_helper')]
+    for lamp in scene_lights:scene_light(lamp)
+    # Authored scene lights replace the default studio rig.
+    for name,offset,power,size in ([] if scene_lights else [
         ('Key',(1,-1.8,2.8),220,2),('Fill',(-2,-.5,1),100,3),('Rim',(0,2,2),300,2)
-    ]:
+    ]):
         bpy.ops.object.light_add(type='AREA',location=target+Vector(offset)*radius)
         lamp=bpy.context.object;lamp.name=name
         lamp['fusion_studio_helper']=True
@@ -150,6 +157,35 @@ def studio(meshes, options=None):
     scene.render.resolution_x=max(128,min(4096,int(options.get('width',1200))));scene.render.resolution_y=max(128,min(4096,int(options.get('height',1000))));scene.render.resolution_percentage=100
     scene.render.image_settings.file_format='PNG'
     scene.view_settings.view_transform='AgX'
+
+
+def scene_light(lamp):
+    """Apply Fusion light extras: viewport-matched power, soft-shadow radius and true area lights (exported as glTF spots)."""
+    kind = lamp.get('fusion_light')
+    if lamp.get('fusion_soft') is not None and hasattr(lamp.data, 'shadow_soft_size'):
+        lamp.data.shadow_soft_size = max(0.0, float(lamp['fusion_soft']))
+    if kind == 'area':
+        lamp.data.type = 'AREA'
+        lamp.data.shape = 'SQUARE'
+        lamp.data.size = max(.01, float(lamp.get('fusion_area', 1)))
+    # The viewport treats intensity as display-referred candela/lux; Cycles' photometric import would be ~683x darker.
+    if kind and lamp.get('fusion_intensity') is not None:
+        intensity = max(0.0, float(lamp['fusion_intensity']))
+        lamp.data.energy = intensity if kind == 'sun' else intensity * (math.pi if kind == 'area' else 4 * math.pi)
+    if lamp.get('fusion_light') == 'sun' and lamp.get('fusion_soft') is not None:
+        lamp.data.angle = min(math.pi, float(lamp['fusion_soft']))
+
+
+def scene_camera(camera):
+    """Use the authored vertical field of view and depth of field from Fusion camera extras."""
+    if camera.get('fusion_vfov') is not None:
+        camera.data.sensor_fit = 'VERTICAL'
+        camera.data.sensor_height = 24
+        camera.data.lens = 24 / (2 * math.tan(math.radians(float(camera['fusion_vfov'])) / 2))
+    camera.data.dof.use_dof = bool(camera.get('fusion_dof', False))
+    if camera.data.dof.use_dof:
+        camera.data.dof.aperture_fstop = max(.5, float(camera.get('fusion_fstop', 2.8)))
+        camera.data.dof.focus_distance = max(.01, float(camera.get('fusion_focus', 5)))
 
 
 def has_id(obj, target):
@@ -458,7 +494,11 @@ def main(specfile=None):
     report={'blender':bpy.app.version_string,'action':action,'output':str(output),'mesh_count':len(meshes),'vertices':sum(len(o.data.vertices) for o in meshes),'polygons':sum(len(o.data.polygons) for o in meshes)}
     if action=='stack':report['stack']=stack_report
     if native is not None:report['nativeBlend']=native
-    if action=='render':report.update(device_report)
+    if action=='render':
+        report.update(device_report)
+        report['lights']=[{'name':o.name,'type':o.data.type,'energy':o.data.energy,'size':getattr(o.data,'size',None),'studio':bool(o.get('fusion_studio_helper'))} for o in bpy.context.scene.objects if o.type=='LIGHT']
+        cam=bpy.context.scene.camera
+        if cam:report['camera']={'name':cam.name,'lens':cam.data.lens,'sensorFit':cam.data.sensor_fit,'dof':cam.data.dof.use_dof,'fstop':cam.data.dof.aperture_fstop,'focus':cam.data.dof.focus_distance}
     if dson is not None:report['dson']=dson
     if cloth_movement is not None:report['cloth_max_displacement']=cloth_movement
     if sewing_report is not None:report['sewing']=sewing_report

@@ -746,7 +746,13 @@
    "status": "open"
   },
   "A10 Point, spot, directional/sun, area (rect, disk, sphere, tube), mesh/emissive lights": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs",
+    "tests/scene-lights-render.cjs",
+    "tests/scene-objects.test.mjs"
+   ],
+   "note": "Point, spot, sun and square area lights (viewport approximates area as a wide spot); disk/sphere/tube and mesh lights missing."
   },
   "A10 IES profile lights": {
    "status": "open"
@@ -761,13 +767,30 @@
    "status": "open"
   },
   "A10 Light intensity in physical units (lumens, nits, EV)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs",
+    "tests/scene-lights-render.cjs",
+    "tests/scene-objects.test.mjs"
+   ],
+   "note": "Candela (point/spot/area) and lux (sun), mapped to Cycles power; lumens/nits/EV missing."
   },
   "A10 Color temperature (Kelvin)": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs",
+    "tests/scene-lights-render.cjs",
+    "tests/scene-objects.test.mjs"
+   ]
   },
   "A10 Soft shadows, shadow catchers and contact shadows": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs",
+    "tests/scene-lights-render.cjs",
+    "tests/scene-objects.test.mjs"
+   ],
+   "note": "Soft shadow radius / sun angle in Cycles; shadow catchers and contact shadows missing."
   },
   "A10 Gobos/cookies and barn doors": {
    "status": "open"
@@ -785,7 +808,12 @@
    "status": "open"
   },
   "A10 Global illumination: path tracing, irradiance cache, light cache, photon mapping, ray-traced GI, Lumen-style dynamic GI": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/scene-lights-render.cjs"
+   ],
+   "note": "Cycles path-traced GI; caches/photon mapping missing."
   },
   "A10 Caustics": {
    "status": "open"
@@ -797,19 +825,45 @@
    "status": "open"
   },
   "A10 Lighting rigs and presets (three-point, studio, HDRI studio)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/scene-lights-render.cjs"
+   ],
+   "note": "Automatic three-light studio rig when no lights are authored; selectable presets missing."
   },
   "A10 Light painting and interactive placement": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs"
+   ],
+   "note": "Lights placed and aimed at the view target, moved with the gizmo; light painting missing."
   },
   "A11 Perspective and orthographic cameras": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ],
+   "note": "Scene cameras plus perspective/orthographic viewport rendering."
   },
   "A11 Focal length, sensor size, FOV and aspect ratio": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs",
+    "tests/scene-lights-render.cjs",
+    "tests/scene-objects.test.mjs"
+   ],
+   "note": "Focal length, sensor width, vertical FOV preserved into Cycles; aspect from render size."
   },
   "A11 Depth of field with aperture/f-stop and focus distance (plus bokeh shape)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs",
+    "tests/scene-lights-render.cjs",
+    "tests/scene-objects.test.mjs"
+   ],
+   "note": "F-stop and focus distance in Cycles; bokeh shape missing."
   },
   "A11 Motion blur (camera and object, shutter angle)": {
    "status": "open"
@@ -836,13 +890,22 @@
    "status": "open"
   },
   "A11 Multiple cameras and camera switching": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs"
+   ],
+   "note": "Any number of cameras; active camera, Numpad 0 look-through, render from active camera."
   },
   "A11 Exposure, ISO, white balance and tone mapping": {
    "status": "open"
   },
   "A11 Camera culling and clipping planes": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/scene-objects.test.mjs",
+    "tests/lights-cameras-ui.cjs"
+   ],
+   "note": "Clip start/end per camera."
   },
   "A11 Cinematic camera presets": {
    "status": "open"
@@ -3306,7 +3369,11 @@
    "status": "open"
   },
   "B9 Camera view": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/lights-cameras-ui.cjs"
+   ],
+   "note": "Numpad 0 (Blender/Fusion), C (3ds Max)."
   },
   "B9 Material editor": {
    "status": "open"
