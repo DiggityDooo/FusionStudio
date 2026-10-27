@@ -171,6 +171,102 @@ export function dyntopoRefine(geo, center, radius, detailSize, passes = 3) {
   }
   return totalSplit;
 }
+// M6 Multires: Loop subdivision for a retained-source working copy. The level is
+// a document property (userData.multires); the source geometry JSON is stored on
+// the copy so levels can be re-evaluated without touching the original object.
+export function subdivideGeometry(geo, levels = 1) {
+  if (!geo.index) throw Error('Multires subdivision needs an indexed mesh.');
+  if (Object.keys(geo.morphAttributes || {}).length) throw Error('Multires cannot preserve shape keys. Use a static working copy first.');
+  if ((geo.groups || []).length > 1) throw Error('Multires cannot preserve multiple material groups. Use a single-material working copy.');
+  let current = geo;
+  for (let level = 0; level < levels; level++) {
+    const p = current.attributes.position, idx = Array.from(current.index.array);
+    const adjacency = adjacencyFor(current);
+    const edgeKey = (i, j) => i < j ? i + '_' + j : j + '_' + i;
+    const edgeOpposites = new Map();
+    for (let t = 0; t < idx.length; t += 3) {
+      const tri = [idx[t], idx[t + 1], idx[t + 2]];
+      for (let e = 0; e < 3; e++) {
+        const key = edgeKey(tri[e], tri[(e + 1) % 3]);
+        if (!edgeOpposites.has(key)) edgeOpposites.set(key, []);
+        edgeOpposites.get(key).push(tri[(e + 2) % 3]);
+      }
+    }
+    const positions = [], uvs = current.attributes.uv ? [] : null, masks = current.attributes.mask ? [] : null;
+    const v = new THREE.Vector3(), avg = new THREE.Vector3();
+    for (let i = 0; i < p.count; i++) { // Loop vertex rule
+      v.fromBufferAttribute(p, i);
+      const neighbors = [...(adjacency[i] || [])];
+      if (neighbors.length >= 3) {
+        avg.set(0, 0, 0);
+        for (const j of neighbors) avg.add(new THREE.Vector3().fromBufferAttribute(p, j));
+        avg.divideScalar(neighbors.length);
+        const beta = neighbors.length === 3 ? 3 / 16 : 3 / (8 * neighbors.length);
+        v.multiplyScalar(1 - beta * neighbors.length * (neighbors.length === 3 ? 1 : 1)).lerp(avg, beta * neighbors.length);
+      }
+      positions.push(v.x, v.y, v.z);
+      if (uvs) uvs.push(current.attributes.uv.getX(i), current.attributes.uv.getY(i));
+      if (masks) masks.push(current.attributes.mask.array[i]);
+    }
+    const edgeIndex = new Map();
+    const edgePoint = (i, j) => {
+      const key = edgeKey(i, j);
+      if (edgeIndex.has(key)) return edgeIndex.get(key);
+      const a = new THREE.Vector3().fromBufferAttribute(p, i), b = new THREE.Vector3().fromBufferAttribute(p, j);
+      const opposites = edgeOpposites.get(key) || [];
+      let point;
+      if (opposites.length === 2) {
+        const o1 = new THREE.Vector3().fromBufferAttribute(p, opposites[0]), o2 = new THREE.Vector3().fromBufferAttribute(p, opposites[1]);
+        point = a.multiplyScalar(3 / 8).add(b.multiplyScalar(3 / 8)).add(o1.multiplyScalar(1 / 8)).add(o2.multiplyScalar(1 / 8));
+      } else point = a.add(b).divideScalar(2);
+      const index = positions.length / 3;
+      positions.push(point.x, point.y, point.z);
+      if (uvs) uvs.push((current.attributes.uv.getX(i) + current.attributes.uv.getX(j)) / 2, (current.attributes.uv.getY(i) + current.attributes.uv.getY(j)) / 2);
+      if (masks) masks.push((current.attributes.mask.array[i] + current.attributes.mask.array[j]) / 2);
+      edgeIndex.set(key, index);
+      return index;
+    };
+    const out = [];
+    for (let t = 0; t < idx.length; t += 3) {
+      const [i0, i1, i2] = [idx[t], idx[t + 1], idx[t + 2]];
+      const m01 = edgePoint(i0, i1), m12 = edgePoint(i1, i2), m20 = edgePoint(i2, i0);
+      out.push(i0, m01, m20, m01, i1, m12, m20, m12, i2, m01, m12, m20);
+    }
+    const next = new THREE.BufferGeometry();
+    next.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    if (uvs) next.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    if (masks) { const attr = new THREE.BufferAttribute(new Float32Array(masks), 1); attr.name = 'mask'; next.setAttribute('mask', attr); }
+    next.setIndex(out);
+    next.computeVertexNormals();
+    next.computeBoundingSphere(); next.computeBoundingBox();
+    current = next;
+  }
+  return current;
+}
+export function geometryDataJSON(geo) { // data-form JSON even for parametric primitives (mirrors the editor's save path)
+  const buffer = new THREE.BufferGeometry();
+  buffer.uuid = geo.uuid; buffer.name = geo.name;
+  for (const key of ['index', 'attributes', 'morphAttributes', 'morphTargetsRelative', 'groups', 'boundingSphere', 'userData']) buffer[key] = geo[key];
+  const json = buffer.toJSON(); delete json.metadata; return json;
+}
+export function createMultiresCopy(object, level = 1) {
+  if (!object?.isMesh) throw Error('Select a mesh for a multires working copy.');
+  const copy = object.clone(true);
+  copy.name = object.name + ' (Multires)';
+  copy.userData = {...object.userData, multires: {version: 1, sourceName: object.name, level}, multiresSourceGeometry: geometryDataJSON(object.geometry)};
+  delete copy.userData.modifierStack;
+  copy.geometry = subdivideGeometry(object.geometry.clone(), level);
+  return copy;
+}
+export function setMultiresLevel(object, level) {
+  const source = object?.userData.multiresSourceGeometry;
+  if (!source) throw Error('This object has no retained multires source.');
+  const base = new THREE.BufferGeometryLoader().parse(source);
+  object.geometry.dispose?.();
+  object.geometry = subdivideGeometry(base, level);
+  object.userData.multires = {...object.userData.multires, level};
+  return object;
+}
 // Annotations are scene data on the object, never geometry (plan 8.3). Points are
 // stored in mesh-local space so markers follow the object transform.
 export function addAnnotation(object, localPoint, text) {

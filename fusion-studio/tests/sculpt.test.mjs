@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine, subdivideGeometry, createMultiresCopy, setMultiresLevel} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -326,6 +326,25 @@ test('dyntopo refines only near the brush, stays conforming, and rejects shape k
   const countBefore = morphGeo.attributes.position.count;
   assert.throws(() => dyntopoRefine(morphGeo, [0, 0.5, 0], 0.25, 0.05), /shape keys/);
   assert.equal(morphGeo.attributes.position.count, countBefore, 'rejection must happen before any mutation');
+});
+
+test('multires: Loop subdivision grows topology, level is re-evaluable from the retained source', () => {
+  const source = sphere();
+  const sourceCount = source.geometry.attributes.position.count;
+  const copy = createMultiresCopy(source, 1);
+  assert.equal(source.geometry.attributes.position.count, sourceCount, 'source object must be untouched');
+  assert.equal(copy.userData.multires.level, 1);
+  assert.ok(copy.geometry.attributes.position.count > sourceCount, 'level 1 must add vertices');
+  assert.ok(copy.geometry.index.count > source.geometry.index.count, 'level 1 must add triangles');
+  const level1Count = copy.geometry.attributes.position.count;
+  setMultiresLevel(copy, 2);
+  assert.ok(copy.geometry.attributes.position.count > level1Count, 'level 2 must be denser than level 1');
+  setMultiresLevel(copy, 0);
+  assert.equal(copy.geometry.attributes.position.count, sourceCount, 'level 0 must reproduce the retained source');
+  assert.equal(copy.userData.multires.level, 0);
+  const direct = subdivideGeometry(new THREE.SphereGeometry(0.5, 12, 8), 1);
+  assert.ok(direct.index.count > new THREE.SphereGeometry(0.5, 12, 8).index.count);
+  assert.throws(() => setMultiresLevel(source, 1), /no retained multires source/);
 });
 
 test('grab follows the drag delta', () => {
