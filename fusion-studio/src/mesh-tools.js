@@ -48,7 +48,9 @@ export const SCULPT_BRUSHES=[
   {id:'nudge',label:'Nudge',icon:'move'},{id:'thumb',label:'Thumb',icon:'hand'},
   {id:'snake-hook',label:'Snake Hook',icon:'hook'},{id:'grab',label:'Grab',icon:'grab'},
   {id:'rotate',label:'Rotate',icon:'rotate-3d'},{id:'slide-relax',label:'Slide / Relax',icon:'shuffle'},
-  {id:'mask',label:'Mask',icon:'shield'},
+  {id:'mask',label:'Mask',icon:'shield'},{id:'multi-plane-scrape',label:'Multi-plane Scrape',icon:'triangle-right'},
+  {id:'elastic-deform',label:'Elastic Deform',icon:'spline'},{id:'cloth',label:'Cloth',icon:'waves-2'},
+  {id:'pose',label:'Pose',icon:'bone'},
 ];
 // Paired tools: holding invert (Shift) switches to the defined counterpart instead of a sign flip that may do nothing.
 export const INVERT_PAIRS={pinch:'magnify',magnify:'pinch',fill:'deepen',deepen:'fill',scrape:'peaks',peaks:'scrape',flatten:'contrast',contrast:'flatten'};
@@ -99,9 +101,10 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
   const tangent=new THREE.Vector3(1,0,0);if(drag.lengthSq()>1e-12)tangent.copy(drag).addScaledVector(brushNormal,-drag.dot(brushNormal));
   if(tangent.lengthSq()<1e-9)tangent.set(1,0,0).addScaledVector(brushNormal,-brushNormal.x);tangent.normalize();
   const binormal=new THREE.Vector3().crossVectors(brushNormal,tangent).normalize();
+  const reach=mode==='elastic-deform'?radius*3:radius; // Elastic Deform's gaussian field extends past the brush circle
   for(let i=0;i<p.count;i++){
-    world.fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld);const distance=world.distanceTo(point);if(distance>radius)continue;
-    const f0=falloffValue(falloffKind,distance/radius),f=f0*(1-protection(i));if(f<=0&&mode!=='smooth')continue;
+    world.fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld);const distance=world.distanceTo(point);if(distance>reach)continue;
+    const f0=falloffValue(falloffKind,distance/radius),f=f0*(1-protection(i));if(f<=0&&mode!=='smooth'&&mode!=='elastic-deform')continue;
     affected.push(i);
     if(mode==='smooth'||mode==='slide-relax'||mode==='crease-polish')continue;
     vNormal.fromBufferAttribute(n,i).applyMatrix3(normalMatrix).normalize();
@@ -135,6 +138,21 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
       case 'snake-hook': world.addScaledVector(drag,f*f*1.6); break;
       case 'grab': world.addScaledVector(drag,f); break;
       case 'rotate': { const angle=strength*14*f*dir; tmp.copy(world).sub(point).applyAxisAngle(brushNormal,angle); world.copy(point).add(tmp); break; }
+      case 'multi-plane-scrape': { // two planes meeting at a crease along the binormal through the brush center
+        const angle=(opts.planeAngle??Math.PI/3),n2=tmp2.copy(brushNormal).applyAxisAngle(binormal,angle).normalize();
+        tmp.copy(world).sub(point);const u=tmp.dot(tangent);
+        const useSecond=u>0,planeNormal=useSecond?n2:brushNormal,h=tmp.dot(planeNormal);
+        world.addScaledVector(planeNormal,-h*Math.min(1,Math.abs(strength)*24)*f); break; }
+      case 'cloth': { // artistic wrinkle deformation (NOT a simulation): folds across the stroke direction
+        tmp.copy(world).sub(point);const u=tmp.dot(tangent),wavelength=Math.max(radius/2.5,1e-4);
+        const wave=Math.sin(u/wavelength*Math.PI*2)*Math.abs(strength)*2.2*f*dir;
+        world.addScaledVector(brushNormal,wave).addScaledVector(tangent,Math.cos(u/wavelength*Math.PI*2)*Math.abs(strength)*.5*f*dir); break; }
+      case 'pose': { // bend the region beyond the brush center around the binormal pivot axis
+        tmp.copy(world).sub(point);const u=tmp.dot(tangent);
+        if(u>0){const bend=strength*14*dir*Math.min(1,u/radius)*(0.3+0.7*f0);tmp.applyAxisAngle(binormal,bend);world.copy(point).add(tmp);} break; }
+      case 'elastic-deform': { // gaussian field reaching beyond the brush radius, unlike Grab's bounded falloff
+        const sigma=radius*1.35,g=Math.exp(-(distance*distance)/(2*sigma*sigma))*(1-protection(i));
+        world.addScaledVector(drag,g); break; }
       default: world.addScaledVector(vNormal,strength*f*dir);
     }
     world.applyMatrix4(inverse);p.setXYZ(i,world.x,world.y,world.z);

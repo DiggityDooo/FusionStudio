@@ -20,7 +20,7 @@ Started 2026-10-26. This index records the truthful baseline and per-milestone s
 | M2 | Not started | Needs preserved `.blend` source-cage slice + DSON unknown-field checks. |
 | M3 | Blocked (host/fixture) | Preservation-only `.zpr`/`.ztl`; `.zprj` kept as a separate Marvelous format. Exact missing capability: ZBrush installation/SDK + user-owned ZPR fixture. |
 | M4 | Mostly done | Foundation fixes: topology-keyed adjacency cache, autosmooth reads post-brush positions, Smooth respects falloff + mask, paired invert semantics (Pinch/Magnify, Fill/Deepen, Scrape/Peaks, Flatten/Contrast), persistent Mask channel respected by all brushes (Clear/Invert in the panel). 27 brushes live. Tests assert side predicates, mask exactness, Layer cap, pinch/magnify opposition, topology rewiring — no tautologies (the `|| true` assertion was removed). Remaining: mask survival across project save/reopen needs verification; worker-side kernel + BVH queries are M8 performance work. |
-| M5 | Not started | Elastic Deform, Pose, Cloth, Multi-plane Scrape, annotations, filters. Do not add buttons before kernels exist. |
+| M5 | In progress | Kernels shipped with distinct tests: Multi-plane Scrape (two-plane crease fit), Elastic Deform (gaussian field beyond the brush radius — a falloff-guard bug that silently skipped it was found by its test and fixed), Cloth (artistic sine folds, explicitly not simulation), Pose (bend around a pivot axis, pinned behind the pivot). Remaining: annotations, mesh filters as operators, indexed-geometry/hot-path correctness passes. |
 | M6 | Not started | Dyntopo/remesh working-copy contracts. |
 | M7 | Not started | Fixture-led adapters only. |
 | M8 | Not started | No package until gates pass; earlier releases preserved. |

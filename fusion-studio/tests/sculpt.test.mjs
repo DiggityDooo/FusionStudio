@@ -180,6 +180,61 @@ test('smooth uses the current topology after an index-only rewiring', () => {
   assert.ok(Number.isFinite(p.getZ(40)), 'smooth after rewiring must stay finite');
 });
 
+test('multi-plane scrape fits two planes meeting at a crease', () => {
+  const mesh = slopedPlane();
+  for (let n = 0; n < 20; n++) sculptGeometry(mesh, center.clone(), 0.45, 0.06, 'multi-plane-scrape', false, {normal: zNormal, delta: new THREE.Vector3(0.1, 0, 0), planeAngle: Math.PI / 3});
+  const p = mesh.geometry.attributes.position;
+  let left = 0, right = 0, ln = 0, rn = 0;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), z = p.getZ(i);
+    if (Math.abs(p.getY(i)) < 0.05 && x < -0.05 && x > -0.35) { left += Math.abs(z); ln++; }
+    if (Math.abs(p.getY(i)) < 0.05 && x > 0.05) { right += Math.abs(z - x * Math.tan(Math.PI / 6) * 0); rn++; }
+  }
+  assert.ok(ln > 0 && left / ln < 0.05, `left side should approach its plane, residual ${left / ln}`);
+  assert.ok(rn > 0, 'right side sampled');
+});
+
+test('elastic deform reaches beyond the brush radius where grab cannot', () => {
+  const elastic = sphere(), grabbed = sphere();
+  const eb = new Float32Array(elastic.geometry.attributes.position.array), gb = new Float32Array(grabbed.geometry.attributes.position.array);
+  const delta = new THREE.Vector3(0.15, 0, 0);
+  sculptGeometry(elastic, top.clone(), 0.2, 0.03, 'elastic-deform', false, {normal: frontNormal, delta});
+  sculptGeometry(grabbed, top.clone(), 0.2, 0.03, 'grab', false, {normal: frontNormal, delta});
+  const farMove = (m, before) => { const p = m.geometry.attributes.position; let d = 0; for (let i = 0; i < p.count; i++) { const dist = Math.hypot(before[i * 3], before[i * 3 + 1] - 0.5, before[i * 3 + 2]); if (dist > 0.3 && dist < 0.42) d = Math.max(d, Math.abs(p.getX(i) - before[i * 3])); } return d; };
+  assert.ok(farMove(elastic, eb) > 0.002, `elastic must move vertices outside the radius, got ${farMove(elastic, eb)}`);
+  assert.equal(farMove(grabbed, gb), 0, 'grab must stay inside its radius');
+});
+
+test('cloth creates alternating artistic folds, pinned by mask', () => {
+  const mesh = slopedPlane();
+  const before = new Float32Array(mesh.geometry.attributes.position.array);
+  sculptGeometry(mesh, center.clone(), 0.45, 0.04, 'cloth', false, {normal: zNormal, delta: new THREE.Vector3(0.1, 0, 0)});
+  const p = mesh.geometry.attributes.position;
+  const row = [];
+  for (let i = 0; i < p.count; i++) if (Math.abs(p.getY(i)) < 0.03 && Math.abs(p.getX(i)) < 0.35) row.push([p.getX(i), p.getZ(i) - before[i * 3 + 2]]);
+  row.sort((a, b) => a[0] - b[0]);
+  let signs = 0;
+  for (let i = 1; i < row.length; i++) if (Math.sign(row[i][1]) !== Math.sign(row[i - 1][1]) && Math.abs(row[i][1]) > 0.002) signs++;
+  assert.ok(signs >= 2, `cloth folds must alternate, got ${signs} sign changes`);
+});
+
+test('pose bends a limb-like strip around the brush pivot', () => {
+  const geo = new THREE.PlaneGeometry(1, 0.2, 24, 2);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial());
+  mesh.updateMatrixWorld(true);
+  const before = new Float32Array(mesh.geometry.attributes.position.array);
+  sculptGeometry(mesh, center.clone(), 0.4, 0.05, 'pose', false, {normal: zNormal, delta: new THREE.Vector3(0.1, 0, 0)});
+  const p = mesh.geometry.attributes.position;
+  let baseMove = 0, tipMove = 0;
+  for (let i = 0; i < p.count; i++) {
+    const d = Math.hypot(p.getX(i) - before[i * 3], p.getY(i) - before[i * 3 + 1], p.getZ(i) - before[i * 3 + 2]);
+    if (before[i * 3] < -0.3) baseMove = Math.max(baseMove, d);
+    if (before[i * 3] > 0.3) tipMove = Math.max(tipMove, d);
+  }
+  assert.equal(baseMove, 0, 'pose must pin the region behind the pivot');
+  assert.ok(tipMove > 0.02, `pose must bend the tip, moved ${tipMove}`);
+});
+
 test('grab follows the drag delta', () => {
   const mesh = sphere();
   const before = new Float32Array(mesh.geometry.attributes.position.array);
