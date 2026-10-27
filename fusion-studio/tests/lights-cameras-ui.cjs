@@ -35,7 +35,7 @@ const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output');
   const gltf=await page.evaluate(async()=>{const bin=atob(await fusionEditor.glb()),b=Uint8Array.from(bin,c=>c.charCodeAt(0)),len=new DataView(b.buffer).getUint32(12,true);return JSON.parse(new TextDecoder().decode(b.subarray(20,20+len)));});
   assert.ok(gltf.extensionsUsed.includes('KHR_lights_punctual'));assert.equal(gltf.extensions.KHR_lights_punctual.lights.length,3);assert.equal(gltf.cameras.length,1);
   // Full render from the UI with the active scene camera.
-  await page.locator('[data-workspace="Rendering"]').click();await page.locator('#render-camera').selectOption('scene');await page.locator('#render-samples').selectOption('16');
+  await page.locator('[data-workspace="Rendering"]').click();await page.locator('#render-camera').selectOption('scene');await page.locator('#render-samples').fill('16');await page.locator('#render-samples').press('Tab');
   await page.locator('#render-panel').click();await page.getByRole('dialog',{name:'Render Result'}).waitFor({timeout:180000});
   const jobs=path.join(runtime,'jobs'),job=fs.readdirSync(jobs).filter(d=>d.startsWith('render-')).sort().at(-1),result=JSON.parse(fs.readFileSync(path.join(jobs,job,'result.json'),'utf8'));
   assert.equal(result.camera.name,'Camera');assert.equal(result.camera.dof,true);assert.ok(Math.abs(result.camera.fstop-2)<1e-6);assert.deepEqual(result.lights.filter(l=>!l.studio).map(l=>l.type).sort(),['AREA','POINT','SPOT']);

@@ -21,12 +21,18 @@
    "status": "partial",
    "evidence": [
     "tests/viewport-aids-ui.cjs",
-    "tests/radial-menu-ui.cjs"
+    "tests/radial-menu-ui.cjs",
+    "tests/render-settings-ui.cjs"
    ],
-   "note": "Wireframe, solid/textured and X-ray; matcap, material preview and rendered viewport missing."
+   "note": "Wireframe, solid/textured, X-ray and HDRI material preview; matcap and rendered viewport missing."
   },
   "A1 Real-time viewport PBR, ambient occlusion, SSR, shadows and HDRI lighting": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/render-settings-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ],
+   "note": "PBR viewport with shadows and HDRI lighting; AO and SSR missing."
   },
   "A1 Grid, snapping (vertex/edge/face/grid/surface/increment), and custom pivots": {
    "status": "open"
@@ -758,7 +764,13 @@
    "status": "open"
   },
   "A10 HDRI and image-based lighting": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "HDR/EXR world with strength and rotation in Cycles; PMREM viewport preview (orientation approximate)."
   },
   "A10 Physical sun/sky systems with time-of-day/location": {
    "status": "open"
@@ -786,11 +798,12 @@
   "A10 Soft shadows, shadow catchers and contact shadows": {
    "status": "partial",
    "evidence": [
-    "tests/lights-cameras-ui.cjs",
-    "tests/scene-lights-render.cjs",
-    "tests/scene-objects.test.mjs"
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs",
+    "tests/scene-lights-render.cjs"
    ],
-   "note": "Soft shadow radius / sun angle in Cycles; shadow catchers and contact shadows missing."
+   "note": "Soft radius / sun angle and shadow-catcher floor; contact shadows missing."
   },
   "A10 Gobos/cookies and barn doors": {
    "status": "open"
@@ -897,7 +910,13 @@
    "note": "Any number of cameras; active camera, Numpad 0 look-through, render from active camera."
   },
   "A11 Exposure, ISO, white balance and tone mapping": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "Exposure (EV) and view transform; ISO and white balance missing."
   },
   "A11 Camera culling and clipping planes": {
    "status": "done",
@@ -941,16 +960,39 @@
    "status": "open"
   },
   "A12 Denoising (OptiX, OIDN, AI-based) and adaptive sampling": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "OpenImageDenoise toggle and adaptive noise threshold."
   },
   "A12 Render passes/AOVs: beauty, diffuse, glossy, AO, depth, normal, position, cryptomatte, motion vector, shadow, emission, light groups, material ID, object ID, UV, wireframe": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "Depth, normal, position, AO, mist, UV, diffuse, glossy, emission, vector, object/material index, cryptomatte, shadow catcher; light groups and wireframe pass missing."
   },
   "A12 Cryptomatte for compositing": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ]
   },
   "A12 Multi-layer EXR output with 16/32-bit float and ACES/OCIO color management": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "16/32-bit multilayer EXR with AgX/Filmic/Standard/PBR Neutral view transforms; OCIO/ACES config selection missing."
   },
   "A12 Render regions and render tiles/buckets": {
    "status": "open"
@@ -962,10 +1004,21 @@
    "status": "open"
   },
   "A12 Render presets and quality profiles": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "Draft/Preview/Final presets plus custom samples; settings saved in the project."
   },
   "A12 Image-based environment rendering": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ]
   },
   "A12 Out-of-core rendering for large scenes": {
    "status": "open"
@@ -987,13 +1040,25 @@
    "note": "Cycles skin portrait sidecar materials."
   },
   "A12 Render time estimators and sampling controls": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "Samples, adaptive threshold and time limit; time estimate missing."
   },
   "A12 Light cache and irradiance map caching": {
    "status": "open"
   },
   "A12 Shadow catcher and holdout/matte objects for compositing": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "Shadow-catcher floor with transparent film; holdout objects missing."
   },
   "A12 Turntable and animation rendering": {
    "status": "open"
@@ -1820,7 +1885,13 @@
    "status": "open"
   },
   "A21 Color management (OCIO, ACES, sRGB, Rec.709, Rec.2020, linear workflows)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/render-options.cjs",
+    "tests/render-settings-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "AgX, Filmic, Standard, Khronos PBR Neutral view transforms; OCIO configs and ACES missing."
   },
   "A21 Glare, bloom, lens effects and film grain": {
    "status": "open"

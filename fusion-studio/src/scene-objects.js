@@ -41,7 +41,7 @@ export class SceneObjectHelpers {
       const owner=this.owner(o),shown=o.visible&&owner?.visible!==false&&(!editor.localView||editor.localView.has(owner?.uuid));
       h.group.visible=shown;h.group.matrix.copy(o.matrixWorld);if(h.frustum){h.frustum.visible=shown&&o!==editor.camera;o.updateProjectionMatrix();h.frustum.update();}});
     // Authored lights replace the studio key and rim, as they do in Cycles; the dim ambient stands in for the render world.
-    const {ambient,key,rim}=editor.studioLights;key.visible=rim.visible=!authored;ambient.intensity=authored?.6:2.3;
+    const {ambient,key,rim}=editor.studioLights,lit=authored||!!editor.environment;key.visible=rim.visible=!lit;ambient.intensity=editor.environment?0:authored?.6:2.3;
     for(const [o,h] of this.helpers)if(!live.has(o)){h.group.removeFromParent();h.frustum?.removeFromParent();h.frustum?.dispose();h.proxy.geometry.dispose();this.helpers.delete(o);}
   }
   pickables(){return [...this.helpers.values()].filter(h=>h.group.visible).map(h=>h.proxy);}

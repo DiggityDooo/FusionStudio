@@ -25,5 +25,7 @@ contextBridge.exposeInMainWorld('fusion',{
   reveal:file=>ipcRenderer.invoke('reveal',file),
   exportOriginal:source=>ipcRenderer.invoke('export-original',source),
   image:file=>ipcRenderer.invoke('image',file),
+  chooseEnvironment:()=>ipcRenderer.invoke('choose-environment'),
+  environment:file=>ipcRenderer.invoke('environment',file),
   onJob:fn=>{const handler=(_,job)=>fn(job);ipcRenderer.on('job-update',handler);return ()=>ipcRenderer.removeListener('job-update',handler);}
 });

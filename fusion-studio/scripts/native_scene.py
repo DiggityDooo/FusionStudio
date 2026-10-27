@@ -81,22 +81,69 @@ def configure_device(scene, backend):
     scene.cycles.device = 'GPU'
     return {'backend':backend,'devices':[{'name':d.name,'type':d.type} for d in devices]}
 
+# Render pass id -> (owner, property). Owner 'layer' is the view layer, 'cycles' its Cycles settings.
+PASSES = {
+    'z': [('layer', 'use_pass_z')], 'normal': [('layer', 'use_pass_normal')], 'position': [('layer', 'use_pass_position')],
+    'ao': [('layer', 'use_pass_ambient_occlusion')], 'mist': [('layer', 'use_pass_mist')], 'uv': [('layer', 'use_pass_uv')],
+    'diffuse': [('layer', 'use_pass_diffuse_direct'), ('layer', 'use_pass_diffuse_indirect'), ('layer', 'use_pass_diffuse_color')],
+    'glossy': [('layer', 'use_pass_glossy_direct'), ('layer', 'use_pass_glossy_indirect'), ('layer', 'use_pass_glossy_color')],
+    'emission': [('layer', 'use_pass_emit')], 'vector': [('layer', 'use_pass_vector')],
+    'object_index': [('layer', 'use_pass_object_index')], 'material_index': [('layer', 'use_pass_material_index')],
+    'crypto_object': [('layer', 'use_pass_cryptomatte_object')], 'crypto_material': [('layer', 'use_pass_cryptomatte_material')],
+    'shadow_catcher': [('cycles', 'use_pass_shadow_catcher')],
+}
+
+
 def settings(scene, options):
     scene.render.engine = 'CYCLES'
     device = configure_device(scene, options.get('device','CPU'))
-    scene.cycles.samples = max(8,min(256,int(options.get('samples',32))))
-    scene.cycles.use_denoising = True
+    quality = options.get('render') or {}
+    scene.cycles.samples = max(1,min(4096,int(options.get('samples',32))))
+    scene.cycles.use_denoising = quality.get('denoise', True)
+    scene.cycles.use_adaptive_sampling = float(quality.get('adaptive', 0)) > 0
+    if scene.cycles.use_adaptive_sampling: scene.cycles.adaptive_threshold = float(quality['adaptive'])
+    scene.cycles.time_limit = float(quality.get('timeLimit', 0))
+    scene.render.film_transparent = bool(quality.get('transparent', False))
+    if quality.get('viewTransform'): scene.view_settings.view_transform = quality['viewTransform']
+    if quality.get('exposure') is not None: scene.view_settings.exposure = float(quality['exposure'])
+    layer = scene.view_layers[0]
+    for name in quality.get('passes', []):
+        for owner, prop in PASSES[name]:
+            setattr(layer.cycles if owner == 'cycles' else layer, prop, True)
     scene.render.resolution_x = max(128,min(4096,int(options.get('width',1200))))
     scene.render.resolution_y = max(128,min(4096,int(options.get('height',1000))))
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = 'PNG'
+    scene.render.image_settings.color_mode = 'RGBA' if scene.render.film_transparent else 'RGB'
     # Compositor file-output nodes must never write to paths stored in an imported file.
     muted = 0
     tree=getattr(scene,'compositing_node_group',None) or getattr(scene,'node_tree',None)
     if tree:
         for node in tree.nodes:
             if node.bl_idname == 'CompositorNodeOutputFile': node.mute=True;muted+=1
-    return {**device,'muted_file_outputs':muted}
+    return {**device,'muted_file_outputs':muted,'samples':scene.cycles.samples,'denoise':scene.cycles.use_denoising,'adaptive':scene.cycles.use_adaptive_sampling,'transparent':scene.render.film_transparent,'passes':list(quality.get('passes',[])),'view_transform':scene.view_settings.view_transform,'exposure':scene.view_settings.exposure}
+
+def write_render(scene, output, options):
+    """Render the still PNG and, when requested, a multilayer EXR with every enabled pass beside it."""
+    scene.render.filepath = str(output)
+    result = bpy.ops.render.render(write_still=True)
+    if 'FINISHED' not in result: raise RuntimeError('Render did not finish: ' + str(result))
+    report = {}
+    exr = (options.get('render') or {}).get('exr')
+    if exr:
+        settings_ = scene.render.image_settings
+        # Blender 5 selects multilayer output with media_type; earlier versions had a separate file format.
+        multilayer = 'media_type' in settings_.bl_rna.properties
+        if multilayer: settings_.media_type = 'MULTI_LAYER_IMAGE'
+        settings_.file_format = 'OPEN_EXR_MULTILAYER'
+        settings_.color_depth = exr; settings_.exr_codec = 'ZIP'
+        path = Path(output).with_suffix('.exr')
+        bpy.data.images['Render Result'].save_render(filepath=str(path), scene=scene)
+        if multilayer: settings_.media_type = 'IMAGE'
+        settings_.file_format = 'PNG'
+        report['exr'] = str(path)
+    return report
+
 
 def capture(file, directory, scale):
     scene = load_scene(file)
@@ -180,7 +227,6 @@ def render_native(snapshot, ordinary_input, output, options, import_model):
         scene.camera=camera
     if not scene.camera: raise ValueError('This preserved scene has no camera. Choose viewport camera.')
     report=settings(scene,options)
-    scene.render.filepath=str(output)
     start=time.perf_counter()
-    bpy.ops.render.render(write_still=True)
+    report.update(write_render(scene,output,options))
     return {**report,'native_scene':scene.name,'transform_max_error':transform_error,'frozen_constraints':frozen_constraints,'render_seconds':time.perf_counter()-start,'camera_mode':options.get('cameraMode','source'),'additional_meshes':sum(o.type=='MESH' and 'fusion_native_object' not in o for o in scene.objects)}

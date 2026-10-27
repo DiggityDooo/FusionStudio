@@ -8,7 +8,7 @@ from pathlib import Path
 import bpy
 import bmesh
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from native_scene import capture as capture_native, render_native, settings as render_settings
+from native_scene import capture as capture_native, render_native, settings as render_settings, write_render
 from character_materials import apply_character_materials
 from mathutils import Matrix, Vector
 
@@ -140,23 +140,43 @@ def studio(meshes, options=None):
         lamp['fusion_studio_helper']=True
         lamp.data.energy=power*max(radius*radius,.1);lamp.data.shape='DISK';lamp.data.size=size*radius
         lamp.rotation_euler=(target-lamp.location).to_track_quat('-Z','Y').to_euler()
-    bpy.ops.mesh.primitive_plane_add(size=radius*200,location=(target.x,target.y,low.z-.02*radius))
-    plane=bpy.context.object;plane.name='Fusion studio floor'
-    plane['fusion_studio_helper']=True
-    mat=bpy.data.materials.new('Studio charcoal');mat.diffuse_color=(.055,.06,.07,1);mat.use_nodes=True
-    mat.node_tree.nodes.get('Principled BSDF').inputs['Base Color'].default_value=(.055,.06,.07,1)
-    mat.node_tree.nodes.get('Principled BSDF').inputs['Roughness'].default_value=.85
-    plane.data.materials.append(mat)
-    scene.world.use_nodes=True
-    background=scene.world.node_tree.nodes.get('Background')
-    background.inputs['Color'].default_value=(.18,.2,.24,1)
-    background.inputs['Strength'].default_value=.35
+    quality=options.get('render') or {}
+    floor=quality.get('floor','studio')
+    if floor!='none':
+        bpy.ops.mesh.primitive_plane_add(size=radius*200,location=(target.x,target.y,low.z-.02*radius))
+        plane=bpy.context.object;plane.name='Fusion studio floor'
+        plane['fusion_studio_helper']=True
+        mat=bpy.data.materials.new('Studio charcoal');mat.diffuse_color=(.055,.06,.07,1);mat.use_nodes=True
+        mat.node_tree.nodes.get('Principled BSDF').inputs['Base Color'].default_value=(.055,.06,.07,1)
+        mat.node_tree.nodes.get('Principled BSDF').inputs['Roughness'].default_value=.85
+        plane.data.materials.append(mat)
+        # A shadow catcher keeps only the shadows the scene casts on it, for compositing over plates.
+        plane.is_shadow_catcher=floor=='shadow_catcher'
+    world_settings(scene,quality.get('world') or {})
     scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=24
     scene.cycles.samples=max(8,min(256,int(options.get('samples',32))))
     scene.cycles.use_denoising=True
     scene.render.resolution_x=max(128,min(4096,int(options.get('width',1200))));scene.render.resolution_y=max(128,min(4096,int(options.get('height',1000))));scene.render.resolution_percentage=100
     scene.render.image_settings.file_format='PNG'
     scene.view_settings.view_transform='AgX'
+
+
+def world_settings(scene, world):
+    """World background: a flat colour, or an equirectangular HDRI rotated about the up axis."""
+    scene.world.use_nodes = True
+    nodes, links = scene.world.node_tree.nodes, scene.world.node_tree.links
+    background = next(n for n in nodes if n.type == 'BACKGROUND')
+    background.inputs['Color'].default_value = (*world.get('color', (.18, .2, .24)), 1)
+    background.inputs['Strength'].default_value = float(world.get('strength', .35))
+    if world.get('hdri'):
+        texture = nodes.new('ShaderNodeTexEnvironment')
+        texture.image = bpy.data.images.load(world['hdri'], check_existing=True)
+        mapping = nodes.new('ShaderNodeMapping')
+        coordinates = nodes.new('ShaderNodeTexCoord')
+        mapping.inputs['Rotation'].default_value[2] = math.radians(float(world.get('rotation', 0)))
+        links.new(coordinates.outputs['Generated'], mapping.inputs['Vector'])
+        links.new(mapping.outputs['Vector'], texture.inputs['Vector'])
+        links.new(texture.outputs['Color'], background.inputs['Color'])
 
 
 def scene_light(lamp):
@@ -465,8 +485,7 @@ def main(specfile=None):
         studio(meshes,options)
     if action=='render':
         device_report=render_settings(scene,options)
-        scene.render.filepath=str(output)
-        checked(bpy.ops.render.render(write_still=True),'Render')
+        device_report.update(write_render(scene,output,options))
     elif action=='blend':
         # Pack dependencies into this new project, leaving the source files alone.
         bpy.ops.file.pack_all()
@@ -497,6 +516,9 @@ def main(specfile=None):
     if action=='render':
         report.update(device_report)
         report['lights']=[{'name':o.name,'type':o.data.type,'energy':o.data.energy,'size':getattr(o.data,'size',None),'studio':bool(o.get('fusion_studio_helper'))} for o in bpy.context.scene.objects if o.type=='LIGHT']
+        world_nodes=bpy.context.scene.world.node_tree.nodes
+        report['world']={'hdri':next((n.image.filepath for n in world_nodes if n.type=='TEX_ENVIRONMENT' and n.image),None),'strength':next(n.inputs['Strength'].default_value for n in world_nodes if n.type=='BACKGROUND')}
+        report['shadow_catchers']=[o.name for o in bpy.context.scene.objects if o.type=='MESH' and o.is_shadow_catcher]
         cam=bpy.context.scene.camera
         if cam:report['camera']={'name':cam.name,'lens':cam.data.lens,'sensorFit':cam.data.sensor_fit,'dof':cam.data.dof.use_dof,'fstop':cam.data.dof.aperture_fstop,'focus':cam.data.dof.focus_distance}
     if dson is not None:report['dson']=dson

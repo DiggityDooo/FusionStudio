@@ -13,6 +13,25 @@ const meshOperations=require('./mesh-operations.json');
 const {validateNativeScene}=require('./native-scene.cjs');
 const {validatePatternPayload}=require('./pattern-payload.cjs');
 const {validateSurfacePanels,validateSurfacePanelResult}=require('./surface-panels.cjs');
+const RENDER_PASSES=['z','normal','position','ao','mist','uv','diffuse','glossy','emission','vector','object_index','material_index','crypto_object','crypto_material','shadow_catcher'];
+const VIEW_TRANSFORMS=['AgX','Filmic','Standard','Khronos PBR Neutral'];
+// Cycles quality, passes, colour management and world settings; rejects anything unexpected before Blender runs.
+function renderQuality(o){
+  if(o===undefined)return undefined;if(!o||typeof o!=='object'||Array.isArray(o))throw Error('Invalid render settings.');
+  const out={},num=(key,min,max)=>{if(o[key]===undefined)return;if(!Number.isFinite(o[key])||o[key]<min||o[key]>max)throw Error(`Render ${key} must be between ${min} and ${max}.`);out[key]=o[key];};
+  for(const key of ['denoise','transparent'])if(o[key]!==undefined){if(typeof o[key]!=='boolean')throw Error('Invalid render '+key+'.');out[key]=o[key];}
+  num('adaptive',0,.5);num('timeLimit',0,86400);num('exposure',-10,10);
+  if(o.viewTransform!==undefined){if(!VIEW_TRANSFORMS.includes(o.viewTransform))throw Error('Unsupported view transform.');out.viewTransform=o.viewTransform;}
+  if(o.floor!==undefined){if(!['studio','shadow_catcher','none'].includes(o.floor))throw Error('Unsupported floor mode.');out.floor=o.floor;}
+  if(o.passes!==undefined){if(!Array.isArray(o.passes)||o.passes.some(p=>!RENDER_PASSES.includes(p)))throw Error('Unsupported render pass.');out.passes=[...new Set(o.passes)];}
+  if(o.exr!==undefined){if(!['16','32',false].includes(o.exr))throw Error('EXR depth must be 16 or 32.');if(o.exr)out.exr=o.exr;}
+  if(o.world!==undefined){const w=o.world,world={};if(!w||typeof w!=='object')throw Error('Invalid world settings.');
+    if(w.color!==undefined){if(!Array.isArray(w.color)||w.color.length!==3||w.color.some(v=>!Number.isFinite(v)||v<0||v>1))throw Error('World colour must be three values from 0 to 1.');world.color=w.color;}
+    for(const [key,min,max] of [['strength',0,1000],['rotation',-360,360]])if(w[key]!==undefined){if(!Number.isFinite(w[key])||w[key]<min||w[key]>max)throw Error(`World ${key} is out of range.`);world[key]=w[key];}
+    if(w.hdri!==undefined){if(typeof w.hdri!=='string'||!path.isAbsolute(w.hdri)||!['.hdr','.exr'].includes(path.extname(w.hdri).toLowerCase())||!fs.existsSync(w.hdri)||!fs.statSync(w.hdri).isFile())throw Error('Environment image must be an existing .hdr or .exr file.');world.hdri=w.hdri;}
+    out.world=world;}
+  return out;
+}
 function meshParams(action,params){
   const out={};for(const f of meshOperations[action]?.fields||[]){
     const v=params[f.key]??f.default;
@@ -114,6 +133,7 @@ class Engine {
     if(nativeBytes&&action!=='render')throw Error('Preserved scenes are currently supported by Render only.');
     if(params.blendMode!==undefined&&!['preserved','interchange'].includes(params.blendMode))throw Error('Unsupported Blender import mode.');
     if(params.device!==undefined&&!['CPU','CUDA','OPTIX'].includes(params.device))throw Error('Unsupported render device.');
+    const quality=renderQuality(params.render);
     const dir=uniqueDir(path.join(this.root,'jobs'),action);
     const id=path.basename(dir);const input=surfacePanels?writeNew(this.root,path.join(dir,'surface-input.json'),JSON.stringify(surfacePanels)):action==='convert'?source:writeNew(this.root,path.join(dir,'input.glb'),Buffer.from(data||'','base64'));
     const ext=surfacePanels?'json':EXPORTS[action]||'glb';
@@ -121,6 +141,7 @@ class Engine {
     const safeParams={...validated};if(params.characterMaterials){safeParams.characterMaterials=characterMaterials(params.characterMaterials);writeNew(this.root,path.join(dir,'character-materials.json'),JSON.stringify(safeParams.characterMaterials,null,2));}if(context)safeParams.context=context;if(stack)safeParams.stack=stack;for(const key of ['frames','thickness','stiffness','mass','samples','width','height'])if(Number.isFinite(params[key]))safeParams[key]=params[key];
     if(patternCloth)safeParams.patternCloth=patternCloth;
     if(params.device)safeParams.device=params.device;
+    if(quality)safeParams.render=quality;
     if(params.blendMode)safeParams.blendMode=params.blendMode;
     if(nativeBytes){const snapshot=writeNew(this.root,path.join(dir,'native-input.blend'),nativeBytes);safeParams.nativeScene={snapshot,matrix:params.nativeScene.matrix,ordinary:!!params.nativeScene.ordinary};safeParams.cameraMode=params.cameraMode==='viewport'?'viewport':'source';}
     for(const key of ['targetId','cutterId','sceneCamera'])if(typeof params[key]==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(params[key]))safeParams[key]=params[key];
@@ -171,6 +192,6 @@ class Engine {
   cancel(){const validating=!!this.validation.active;this.validation.close();if(this.active){this.active.job.cancelled=true;this.active.stop();return true;}return validating;}
   close(){this.cancel();this.transport.stop('Fusion closed.');}
 }
-module.exports={meshParams,APPS,IMPORTS,Engine,inside,slug,writeNew,saveProject,validateProject,migrateProject,listProjects,isolatedEnv,uniqueDir};
+module.exports={meshParams,renderQuality,RENDER_PASSES,APPS,IMPORTS,Engine,inside,slug,writeNew,saveProject,validateProject,migrateProject,listProjects,isolatedEnv,uniqueDir};
 
 function validateStack(stack){if(!Array.isArray(stack)||stack.length>32)throw Error("Modifier stack must contain at most 32 entries.");const ids=new Set();return stack.map(s=>{if(!s||!meshOperations[s.action]||["uv","recalculate"].includes(s.action)||typeof s.enabled!=="boolean")throw Error("Invalid stack entry.");if(typeof s.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(s.id)||ids.has(s.id))throw Error('Modifier IDs must be unique stable identifiers.');ids.add(s.id);const params=meshParams(s.action,s.params||{});if(s.action==="boolean"){if(!/^[a-zA-Z0-9_-]{1,80}$/.test(s.params?.cutterId||""))throw Error("Invalid Boolean operand");params.cutterId=s.params.cutterId;}return {id:s.id,action:s.action,enabled:s.enabled,params};});}
