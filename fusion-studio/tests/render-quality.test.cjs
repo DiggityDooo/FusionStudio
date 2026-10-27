@@ -1,5 +1,10 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
-const {renderQuality,RENDER_PASSES}=require('../electron/core.cjs');
+const {renderQuality,renderAnimation,RENDER_PASSES}=require('../electron/core.cjs');
+
+test('animation settings are bounded frame ranges with known modes and outputs',()=>{
+  const ok={start:1,end:120,fps:24,mode:'turntable',output:'mp4'};assert.deepEqual(renderAnimation({...ok,extra:1}),ok);assert.equal(renderAnimation(undefined),undefined);
+  for(const bad of [{...ok,end:0},{...ok,end:2001},{...ok,start:1.5},{...ok,fps:0},{...ok,mode:'physics'},{...ok,output:'gif'},null])assert.throws(()=>renderAnimation(bad),/Animation|animation/,JSON.stringify(bad));
+});
 
 test('render settings accept documented values and drop nothing silently',()=>{
   const hdri=path.join(fs.mkdtempSync(path.join(os.tmpdir(),'fusion-hdri-')),'sky.hdr');fs.writeFileSync(hdri,'#?RADIANCE\n');

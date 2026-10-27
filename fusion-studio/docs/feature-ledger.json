@@ -1061,7 +1061,13 @@
    "note": "Shadow-catcher floor with transparent film; holdout objects missing."
   },
   "A12 Turntable and animation rendering": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/animation-render.cjs",
+    "tests/animation-render-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "Timeline animation and one-turn camera turntable over a frame range."
   },
   "A12 Stereo/VR/360° rendering": {
    "status": "open"
@@ -1081,10 +1087,23 @@
    "status": "open"
   },
   "A12 Sequence output (PNG, EXR, TIFF, JPEG, video)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/animation-render.cjs",
+    "tests/animation-render-ui.cjs",
+    "tests/render-quality.test.cjs",
+    "tests/render-options.cjs"
+   ],
+   "note": "PNG sequences, PNG stills and multilayer EXR stills; EXR/TIFF/JPEG sequences missing."
   },
   "A12 Video encoding (H.264, ProRes, etc.)": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/animation-render.cjs",
+    "tests/animation-render-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "H.264 MP4 via Blender FFmpeg; ProRes/MOV missing."
   },
   "A13 Skeleton/armature/joint creation and orientation": {
    "status": "open"
@@ -1933,7 +1952,13 @@
    "status": "open"
   },
   "A21 Output to video/sequence formats": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/animation-render.cjs",
+    "tests/animation-render-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "PNG sequence and H.264 MP4."
   },
   "A22 Live link to game engines": {
    "status": "open"
@@ -2405,7 +2430,14 @@
    "status": "open"
   },
   "A29 Studio lighting presets and turntable setups": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/animation-render.cjs",
+    "tests/animation-render-ui.cjs",
+    "tests/render-quality.test.cjs",
+    "tests/scene-lights-render.cjs"
+   ],
+   "note": "Turntable animation and automatic studio rig; selectable lighting presets missing."
   },
   "A29 Camera matching to photographs": {
    "status": "open"
@@ -3428,7 +3460,13 @@
    ]
   },
   "B9 Render animation": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/animation-render.cjs",
+    "tests/animation-render-ui.cjs",
+    "tests/render-quality.test.cjs"
+   ],
+   "note": "Ctrl+F12 (Blender/Fusion) and Render animation button."
   },
   "B9 View render": {
    "status": "open"

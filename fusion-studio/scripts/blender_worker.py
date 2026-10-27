@@ -2,6 +2,7 @@
 import json
 import math
 import os
+import shutil
 import sys
 import traceback
 from pathlib import Path
@@ -159,6 +160,57 @@ def studio(meshes, options=None):
     scene.render.resolution_x=max(128,min(4096,int(options.get('width',1200))));scene.render.resolution_y=max(128,min(4096,int(options.get('height',1000))));scene.render.resolution_percentage=100
     scene.render.image_settings.file_format='PNG'
     scene.view_settings.view_transform='AgX'
+
+
+def write_animation(scene, output, options, meshes):
+    """Render a frame range as a PNG sequence or an H.264 MP4; a turntable orbits the camera once around the scene."""
+    animation = options['animation']
+    scene.frame_start, scene.frame_end = int(animation['start']), int(animation['end'])
+    if animation['mode'] == 'turntable':
+        low, high = bounds(meshes)
+        pivot = bpy.data.objects.new('Fusion turntable pivot', None)
+        scene.collection.objects.link(pivot)
+        pivot.location = (low + high) / 2
+        camera = scene.camera
+        world = camera.matrix_world.copy()
+        camera.parent = pivot
+        camera.matrix_world = world
+        # One full turn over the range; the end key sits one frame past the last so the loop does not repeat a frame.
+        for frame, angle in ((scene.frame_start, 0.0), (scene.frame_end + 1, 2 * math.pi)):
+            pivot.rotation_euler = (0, 0, angle)
+            pivot.keyframe_insert('rotation_euler', index=2, frame=frame)
+        for curve in action_fcurves(pivot):
+            for key in curve.keyframe_points: key.interpolation = 'LINEAR'
+    settings_ = scene.render.image_settings
+    video = animation['output'] == 'mp4'
+    if video:
+        if 'media_type' in settings_.bl_rna.properties: settings_.media_type = 'VIDEO'
+        settings_.file_format = 'FFMPEG'
+        scene.render.ffmpeg.format = 'MPEG4'
+        scene.render.ffmpeg.codec = 'H264'
+        scene.render.ffmpeg.constant_rate_factor = 'HIGH'
+        scene.render.filepath = str(Path(output).with_suffix(''))
+    else:
+        scene.render.filepath = str(Path(output).with_suffix('')) + '_'
+    checked(bpy.ops.render.render(animation=True), 'Animation render')
+    folder, stem = Path(output).parent, Path(output).stem
+    if video:
+        # Blender appends the frame range to video names; deliver the file at the requested output path.
+        produced = [p for p in folder.glob(stem + '*.mp4') if p != Path(output)]
+        if not produced: raise RuntimeError('The video encoder produced no file.')
+        produced[0].replace(output)
+        return {'video': str(output), 'frames': scene.frame_end - scene.frame_start + 1, 'fps': scene.render.fps, 'mode': animation['mode']}
+    frames = sorted(str(p) for p in folder.glob(stem + '_*.png'))
+    if not frames: raise RuntimeError('The animation render produced no frames.')
+    shutil.copyfile(frames[0], output)
+    return {'frames': frames, 'fps': scene.render.fps, 'mode': animation['mode']}
+
+
+def action_fcurves(obj):
+    """F-curves of an object's action across Blender's legacy and layered (5.x) action APIs."""
+    action = obj.animation_data.action
+    if hasattr(action, 'fcurves') and len(action.fcurves): return list(action.fcurves)
+    return [c for layer in getattr(action, 'layers', []) for strip in layer.strips for bag in strip.channelbags for c in bag.fcurves]
 
 
 def world_settings(scene, world):
@@ -351,6 +403,8 @@ def main(specfile=None):
         (directory/'result.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
         return
     native=None
+    # glTF keyframe times become frames at the scene rate, so set it before importing animated scenes.
+    if options.get('animation'):bpy.context.scene.render.fps=int(options['animation']['fps'])
     if spec['action']=='convert' and Path(spec['input']).suffix.lower()=='.blend' and options.get('blendMode','preserved')=='preserved':
         native=capture_native(Path(spec['input']),directory,spec.get('scale',1))
         dson=None
@@ -485,7 +539,7 @@ def main(specfile=None):
         studio(meshes,options)
     if action=='render':
         device_report=render_settings(scene,options)
-        device_report.update(write_render(scene,output,options))
+        device_report.update(write_animation(scene,output,options,meshes) if options.get('animation') else write_render(scene,output,options))
     elif action=='blend':
         # Pack dependencies into this new project, leaving the source files alone.
         bpy.ops.file.pack_all()

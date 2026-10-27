@@ -32,6 +32,15 @@ function renderQuality(o){
     out.world=world;}
   return out;
 }
+// Frame-range rendering: the timeline or a one-turn camera orbit, as a PNG sequence or H.264 MP4 (at most 2,000 frames).
+function renderAnimation(o){
+  if(o===undefined)return undefined;if(!o||typeof o!=='object')throw Error('Invalid animation settings.');
+  const {start,end,fps,mode,output}=o;
+  if(![start,end].every(Number.isSafeInteger)||start<0||end<start||end-start>=2000)throw Error('Animation frames must be a range of 1 to 2,000 frames.');
+  if(!Number.isSafeInteger(fps)||fps<1||fps>240)throw Error('Animation frame rate must be 1–240 fps.');
+  if(!['timeline','turntable'].includes(mode))throw Error('Unsupported animation mode.');if(!['png','mp4'].includes(output))throw Error('Animation output must be a PNG sequence or MP4.');
+  return {start,end,fps,mode,output};
+}
 function meshParams(action,params){
   const out={};for(const f of meshOperations[action]?.fields||[]){
     const v=params[f.key]??f.default;
@@ -130,18 +139,17 @@ class Engine {
     for(const key of ['targetId','cutterId','sceneCamera'])if(params[key]!==undefined&&(typeof params[key]!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(params[key])))throw Error('Invalid mesh identifier.');
     if(action==='boolean'&&(!params.targetId||!params.cutterId||params.targetId===params.cutterId))throw Error('Boolean requires a separate target and operand.');
     const nativeBytes=params.nativeScene?validateNativeScene(params.nativeScene):null;
-    if(nativeBytes&&action!=='render')throw Error('Preserved scenes are currently supported by Render only.');
-    if(params.blendMode!==undefined&&!['preserved','interchange'].includes(params.blendMode))throw Error('Unsupported Blender import mode.');
+    if(nativeBytes&&action!=='render')throw Error('Preserved scenes are currently supported by Render only.');    if(params.blendMode!==undefined&&!['preserved','interchange'].includes(params.blendMode))throw Error('Unsupported Blender import mode.');
     if(params.device!==undefined&&!['CPU','CUDA','OPTIX'].includes(params.device))throw Error('Unsupported render device.');
-    const quality=renderQuality(params.render);
+    const quality=renderQuality(params.render),animation=renderAnimation(params.animation);if(animation&&action!=='render')throw Error('Animation settings apply to rendering only.');if(nativeBytes&&animation)throw Error('Animation rendering of preserved Blender scenes is not supported; render a converted copy.');
     const dir=uniqueDir(path.join(this.root,'jobs'),action);
     const id=path.basename(dir);const input=surfacePanels?writeNew(this.root,path.join(dir,'surface-input.json'),JSON.stringify(surfacePanels)):action==='convert'?source:writeNew(this.root,path.join(dir,'input.glb'),Buffer.from(data||'','base64'));
-    const ext=surfacePanels?'json':EXPORTS[action]||'glb';
+    const ext=surfacePanels?'json':animation?.output==='mp4'?'mp4':EXPORTS[action]||'glb';
     const output=path.join(dir,slug(name)+'.'+ext);
     const safeParams={...validated};if(params.characterMaterials){safeParams.characterMaterials=characterMaterials(params.characterMaterials);writeNew(this.root,path.join(dir,'character-materials.json'),JSON.stringify(safeParams.characterMaterials,null,2));}if(context)safeParams.context=context;if(stack)safeParams.stack=stack;for(const key of ['frames','thickness','stiffness','mass','samples','width','height'])if(Number.isFinite(params[key]))safeParams[key]=params[key];
     if(patternCloth)safeParams.patternCloth=patternCloth;
     if(params.device)safeParams.device=params.device;
-    if(quality)safeParams.render=quality;
+    if(quality)safeParams.render=quality;if(animation)safeParams.animation=animation;
     if(params.blendMode)safeParams.blendMode=params.blendMode;
     if(nativeBytes){const snapshot=writeNew(this.root,path.join(dir,'native-input.blend'),nativeBytes);safeParams.nativeScene={snapshot,matrix:params.nativeScene.matrix,ordinary:!!params.nativeScene.ordinary};safeParams.cameraMode=params.cameraMode==='viewport'?'viewport':'source';}
     for(const key of ['targetId','cutterId','sceneCamera'])if(typeof params[key]==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(params[key]))safeParams[key]=params[key];
@@ -192,6 +200,6 @@ class Engine {
   cancel(){const validating=!!this.validation.active;this.validation.close();if(this.active){this.active.job.cancelled=true;this.active.stop();return true;}return validating;}
   close(){this.cancel();this.transport.stop('Fusion closed.');}
 }
-module.exports={meshParams,renderQuality,RENDER_PASSES,APPS,IMPORTS,Engine,inside,slug,writeNew,saveProject,validateProject,migrateProject,listProjects,isolatedEnv,uniqueDir};
+module.exports={meshParams,renderQuality,renderAnimation,RENDER_PASSES,APPS,IMPORTS,Engine,inside,slug,writeNew,saveProject,validateProject,migrateProject,listProjects,isolatedEnv,uniqueDir};
 
 function validateStack(stack){if(!Array.isArray(stack)||stack.length>32)throw Error("Modifier stack must contain at most 32 entries.");const ids=new Set();return stack.map(s=>{if(!s||!meshOperations[s.action]||["uv","recalculate"].includes(s.action)||typeof s.enabled!=="boolean")throw Error("Invalid stack entry.");if(typeof s.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(s.id)||ids.has(s.id))throw Error('Modifier IDs must be unique stable identifiers.');ids.add(s.id);const params=meshParams(s.action,s.params||{});if(s.action==="boolean"){if(!/^[a-zA-Z0-9_-]{1,80}$/.test(s.params?.cutterId||""))throw Error("Invalid Boolean operand");params.cutterId=s.params.cutterId;}return {id:s.id,action:s.action,enabled:s.enabled,params};});}

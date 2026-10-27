@@ -4,7 +4,8 @@ export const PASSES={z:'Depth',normal:'Normal',position:'Position',ao:'Ambient o
 export const QUALITY={draft:{label:'Draft',samples:16,adaptive:.1,denoise:true},preview:{label:'Preview',samples:64,adaptive:.05,denoise:true},final:{label:'Final',samples:512,adaptive:.01,denoise:true}};
 export const VIEW_TRANSFORMS=['AgX','Filmic','Standard','Khronos PBR Neutral'];
 export const SIZES=[[1200,1000],[1920,1080],[3840,2160],[2048,2048],[1080,1920]];
-export const defaultRenderSettings=()=>({samples:32,width:1200,height:1000,device:'CPU',cameraMode:'source',render:{denoise:true,adaptive:0,timeLimit:0,transparent:false,floor:'studio',viewTransform:'AgX',exposure:0,passes:[],exr:false,world:{color:[.18,.2,.24],strength:.35,rotation:0}}});
+// `sequence` holds animation-render settings; it is sent as `animation` only by Render Animation.
+export const defaultRenderSettings=()=>({samples:32,width:1200,height:1000,device:'CPU',cameraMode:'source',sequence:{mode:'turntable',start:1,end:120,fps:24,output:'mp4'},render:{denoise:true,adaptive:0,timeLimit:0,transparent:false,floor:'studio',viewTransform:'AgX',exposure:0,passes:[],exr:false,world:{color:[.18,.2,.24],strength:.35,rotation:0}}});
 export const qualityPreset=s=>Object.entries(QUALITY).find(([,q])=>q.samples===s.samples&&q.adaptive===s.render.adaptive&&q.denoise===s.render.denoise)?.[0]||'custom';
 
 // Saved project render settings: known keys only, with the same bounds the engine enforces.
@@ -20,6 +21,7 @@ export function normalizeRenderSettings(saved){
   if(r.passes!==undefined)s.render.passes=Array.isArray(r.passes)&&r.passes.every(p=>PASSES[p])?[...r.passes]:bad();if(r.exr!==undefined)s.render.exr=pick(r.exr,[false,'16','32']);
   if(w.color!==undefined)s.render.world.color=Array.isArray(w.color)&&w.color.length===3?w.color.map(v=>num(v,0,1)):bad();
   if(w.strength!==undefined)s.render.world.strength=num(w.strength,0,1000);if(w.rotation!==undefined)s.render.world.rotation=num(w.rotation,-360,360);
+  const q=saved.sequence;if(q!==undefined){if(!q||typeof q!=='object')bad();s.sequence={mode:pick(q.mode,['timeline','turntable']),output:pick(q.output,['png','mp4']),start:num(q.start,0,1e6),end:num(q.end,q.start,q.start+1999),fps:num(q.fps,1,240)};if(![s.sequence.start,s.sequence.end,s.sequence.fps].every(Number.isInteger))bad();}
   if(saved.previewEnvironment!==undefined)s.previewEnvironment=saved.previewEnvironment===true;
   if(w.hdri!==undefined)s.render.world.hdri=typeof w.hdri==='string'&&/\.(hdr|exr)$/i.test(w.hdri)?w.hdri:bad();
   return s;
@@ -43,10 +45,17 @@ export function renderPanel(s,esc){
   <p class="microcopy" id="world-hdri-name">${w.hdri?'Environment: '+esc(w.hdri.split(/[\\/]/).pop()):'No environment image'}</p><div class="shade-buttons"><button id="world-hdri">Choose HDRI…</button><button id="world-hdri-clear" ${w.hdri?'':'disabled'}>Clear</button></div>
   ${num('world-rotation','Environment rotation (°)',w.rotation,'min="-360" max="360" step="1"')}<label class="check-row"><input id="world-preview" type="checkbox" ${s.previewEnvironment?'checked':''} ${w.hdri?'':'disabled'}> Preview environment in viewport</label>
   <div class="section-heading">PASSES</div><div class="pass-grid">${Object.entries(PASSES).map(([k,label])=>`<label class="check-row"><input type="checkbox" data-pass="${k}" ${r.passes.includes(k)?'checked':''}> ${label}</label>`).join('')}</div>
-  <label class="field-label" for="render-exr">Multilayer EXR</label><select id="render-exr">${opt('false','Off (PNG only)',String(r.exr))}${opt('16','Half float (16-bit)',r.exr)}${opt('32','Full float (32-bit)',r.exr)}</select>`;
+  <label class="field-label" for="render-exr">Multilayer EXR</label><select id="render-exr">${opt('false','Off (PNG only)',String(r.exr))}${opt('16','Half float (16-bit)',r.exr)}${opt('32','Full float (32-bit)',r.exr)}</select>
+  <div class="section-heading">ANIMATION</div><label class="field-label" for="anim-mode">Motion</label><select id="anim-mode">${opt('turntable','Turntable (camera orbits once)',s.sequence.mode)}${opt('timeline','Timeline animation',s.sequence.mode)}</select>
+  <div class="rig-coordinates">${num('anim-start','Start',s.sequence.start,'min="0" step="1"')}${num('anim-end','End',s.sequence.end,'min="0" step="1"')}${num('anim-fps','FPS',s.sequence.fps,'min="1" max="240" step="1"')}</div><button id="anim-timeline" class="text-button">Use timeline range</button>
+  <label class="field-label" for="anim-output">Output</label><select id="anim-output">${opt('mp4','MP4 video (H.264)',s.sequence.output)}${opt('png','PNG image sequence',s.sequence.output)}</select>`;
 }
 // Wires the panel; `changed(redraw)` persists the shared settings object and optionally re-renders the panel.
-export function wireRenderPanel(s,{$,changed,chooseEnvironment,previewEnvironment}){
+export function wireRenderPanel(s,{$,changed,chooseEnvironment,previewEnvironment,timeline}){
+  const q=s.sequence,frame=(id,key,min,max)=>$('#'+id)?.addEventListener('change',e=>{const v=Number(e.target.value);if(!Number.isInteger(v)||v<min||v>max){e.target.value=q[key];return;}q[key]=v;q.end=Math.min(Math.max(q.end,q.start),q.start+1999);changed(true);});
+  frame('anim-start','start',0,1e6);frame('anim-end','end',0,1e6);frame('anim-fps','fps',1,240);
+  $('#anim-mode')?.addEventListener('change',e=>{q.mode=e.target.value;changed(false);});$('#anim-output')?.addEventListener('change',e=>{q.output=e.target.value;changed(false);});
+  $('#anim-timeline')?.addEventListener('click',()=>{const t=timeline();Object.assign(q,{start:t.start,end:Math.min(t.end,t.start+1999),fps:t.fps});changed(true);});
   const r=s.render,w=r.world,on=(id,ev,fn)=>$('#'+id)?.addEventListener(ev,fn),bounded=(e,min,max,apply)=>{const v=Number(e.target.value);if(!Number.isFinite(v)||v<min||v>max){e.target.value=e.target.defaultValue;return;}apply(v);changed(false);};
   on('render-device','change',e=>{s.device=e.target.value;changed(false);});on('render-camera','change',e=>{s.cameraMode=e.target.value;changed(false);});
   on('render-quality','change',e=>{const q=QUALITY[e.target.value];if(q){s.samples=q.samples;r.adaptive=q.adaptive;r.denoise=q.denoise;}changed(true);});
