@@ -42,6 +42,10 @@ def build_fixture(path):
     scene.camera = cam
     light = bpy.data.objects.new('KeyLight', bpy.data.lights.new('KeyData', 'AREA'))
     scene.collection.objects.link(light)
+    instance = bpy.data.objects.new('PropsInstance', None)
+    instance.instance_type = 'COLLECTION'
+    instance.instance_collection = props
+    scene.collection.objects.link(instance)
     bpy.ops.wm.save_as_mainfile(filepath=str(path))
 
 
@@ -52,7 +56,7 @@ def build(work):
     (work / 'before.json').write_text(json.dumps(before))
     bpy.ops.wm.read_factory_settings(use_empty=True)  # capture loads the file as a library; it cannot be the current file
     result = native_scene.capture(fixture, work, 1.0)
-    print(json.dumps({'built': True, 'snapshot': result['snapshot']}))
+    print(json.dumps({'built': True, 'snapshot': result['snapshot'], 'warnings': result.get('warnings', [])}))
 
 
 def check(work):

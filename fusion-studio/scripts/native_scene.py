@@ -77,7 +77,13 @@ def capture(file, directory, scale):
         p=scene.camera.matrix_world.translation
         t=p+scene.camera.matrix_world.to_quaternion()@Vector((0,0,-1))
         camera={'position':[p.x*scale,p.z*scale,-p.y*scale],'target':[t.x*scale,t.z*scale,-t.y*scale],'fov':math.degrees(scene.camera.data.angle_y)}
-    original={'scene':scene.name,'frame':scene.frame_current,'camera':camera,'snapshot':str(snapshot),'scale':scale,'objects':len(scene.objects),'view_transform':scene.view_settings.view_transform}
+    warnings=[]
+    for obj in scene.objects:
+        if obj.instance_type!='NONE':
+            warnings.append(f"Prototype instance '{obj.name}' ({obj.instance_type}) is expanded only by the preserved Blender render. The Fusion viewport lists source objects once; prototype transforms are render-only here, not editable rigs.")
+        if obj.library:
+            warnings.append(f"Linked object '{obj.name}' is preserved from library '{obj.library.filepath}'. It is not converted; edit the source library in Blender.")
+    original={'scene':scene.name,'frame':scene.frame_current,'camera':camera,'snapshot':str(snapshot),'scale':scale,'objects':len(scene.objects),'view_transform':scene.view_settings.view_transform,'warnings':warnings[:20]}
     depsgraph=bpy.context.evaluated_depsgraph_get()
     proxies=[]
     for obj in list(scene.objects):

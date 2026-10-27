@@ -17,6 +17,10 @@ test('preserved .blend source cage reopens with identical ordered hierarchy', {s
   const work = fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-cage-'));
   const build = runBlender(work, 'build');
   assert.equal(build.status, 0, (build.stdout || '').slice(-1500) + (build.stderr || '').slice(-1000));
+  const builtLine = (build.stdout || '').split(/\r?\n/).find(l => l.startsWith('{"built"'));
+  assert.ok(builtLine, 'build produced no verdict');
+  const warnings = JSON.parse(builtLine).warnings || [];
+  assert.ok(warnings.some(w => w.includes('Prototype instance') && w.includes('PropsInstance')), `prototype instances must warn as render-only, got: ${JSON.stringify(warnings)}`);
   const check = runBlender(work, 'check');
   const line = (check.stdout || '').split(/\r?\n/).find(l => l.startsWith('{"ok"'));
   assert.ok(line, `inventory check produced no verdict.\n${(check.stdout || '').slice(-2000)}\n${(check.stderr || '').slice(-1000)}`);
