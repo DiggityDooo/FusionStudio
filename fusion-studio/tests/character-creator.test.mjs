@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 import * as THREE from 'three';
-import {createDetailedCharacter,changeCreator,creatorShape,makeShapeEditingCopy,finishShapeEditingCopy,creatorPositions,validateCreatorDefinition,creatorRenderMaterials,compactCreatorDerivedGeometry} from '../src/character-creator.js';
+import {createDetailedCharacter,changeCreator,creatorShape,makeShapeEditingCopy,finishShapeEditingCopy,creatorPositions,validateCreatorDefinition,creatorRenderMaterials,compactCreatorDerivedGeometry,updateCreatorAppearance} from '../src/character-creator.js';
 import {computeCreator,creatorInputs,defaultRecipe,validateRecipe,seededRandomize,mirrorShape,SKIN_TONES} from '../src/creator-data.js';
 import {ProjectLoader} from '../src/project-loader.js';
 import {Timeline} from '../src/timeline.js';
@@ -24,6 +24,26 @@ test('adult presets evaluate detailed immutable CC0 geometry, exact height, norm
  const before=sourceHash(),body=[];
  for(const sex of ['female','male']){const root=createDetailedCharacter(definition,{sex}),positions=creatorPositions(root),ids=definition.source.cornerSource,y=ids.map(i=>positions[i*3+1]);assert.ok(root.getObjectByName('Body').geometry.index.count/3>=26000);assert.ok(Math.abs(Math.max(...y)-Math.min(...y)-root.userData.fusion_creator.recipe.controls.height)<1e-6);body.push(Array.from(positions));assert.ok(root.getObjectByName('Cornea 0'));assert.equal(root.getObjectByName('Body').skeleton.bones.length,definition.source.bones.length);}
  assert.notDeepEqual(body[0],body[1]);assert.equal(sourceHash(),before);assert.equal(SKIN_TONES.length,24);
+});
+test('warm creator slider evaluation stays inside the plan 14.4 100 ms target',()=>{
+ const root=createDetailedCharacter(definition,{sex:'female'}),id=definition.controls[0].id;
+ const evaluate=v=>{const recipe=structuredClone(root.userData.fusion_creator.recipe);recipe.controls[id]=v;const start=performance.now();changeCreator(root,recipe);return performance.now()-start;};
+ evaluate(.1);evaluate(-.1); // warm caches (sparse validation, skeleton, appearance)
+ const times=[evaluate(.2),evaluate(-.2),evaluate(.3),evaluate(-.3),evaluate(0)].sort((a,b)=>a-b);
+ assert.ok(times[2]<100,`warm creator evaluation median ${times[2].toFixed(1)} ms exceeds the 100 ms target`);
+});
+test('gesture previews defer attachment rebuilds until the settled update',()=>{
+ const root=createDetailedCharacter(definition,{sex:'female'});
+ const attachments=root.getObjectByName('Creator attachments');assert.ok(attachments,'character starts with attachments');
+ const body=root.getObjectByName('Body'),before=body.geometry.attributes.position.array.slice();
+ const recipe=structuredClone(root.userData.fusion_creator.recipe);recipe.controls[definition.controls[0].id]=.5;
+ changeCreator(root,recipe,{deferAttachments:true});
+ assert.equal(root.getObjectByName('Creator attachments'),attachments,'deferred preview must not rebuild attachments');
+ assert.equal(root.userData.fusion_creator.attachmentsStale,true);
+ assert.ok(body.geometry.attributes.position.array.some((v,i)=>v!==before[i]),'deferred preview still updates the body');
+ updateCreatorAppearance(root);
+ assert.notEqual(root.getObjectByName('Creator attachments'),attachments,'settled update rebuilds attachments once');
+ assert.equal(root.userData.fusion_creator.attachmentsStale,false);
 });
 test('sparse evaluator follows reference arithmetic and rejects duplicate/non-finite data',()=>{
  const input={positions:[0,0,0,0,2,0,1,1,0],bodyIds:[0,1,2],height:2,targets:[{data:[2,.1,0,.2],value:.5}]},r=computeCreator(input);assert.ok(Math.abs(r.positions[6]-1.05)<1e-6);assert.ok(Math.abs(r.positions[8]-.1)<1e-6);assert.deepEqual(input.positions,[0,0,0,0,2,0,1,1,0]);assert.throws(()=>computeCreator({...input,targets:[{data:[2,.1,0,.2,2,0,0,0],value:1}]}),/duplicate/);assert.throws(()=>computeCreator({...input,targets:[{data:[9,0,0,0],value:1}]}),/invalid/);assert.throws(()=>computeCreator({...input,height:NaN}),/Invalid/);
