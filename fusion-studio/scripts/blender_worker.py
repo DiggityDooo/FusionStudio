@@ -309,7 +309,12 @@ def main(specfile=None):
                 elif action=='mirror':
                     modifier=obj.modifiers.new('Fusion mirror','MIRROR');modifier.use_axis=tuple(a==local_axis for a in 'XYZ');modifier.use_clip=True
                 elif action=='remesh':
-                    modifier=obj.modifiers.new('Fusion remesh','REMESH');modifier.mode='VOXEL';modifier.voxel_size=max(.005,min(.2,float(options.get('voxel',.04))))
+                    voxel=max(.005,min(.2,float(options.get('voxel',.04))))
+                    dims=obj.dimensions
+                    cells=max(1,round(dims.x/voxel))*max(1,round(dims.y/voxel))*max(1,round(dims.z/voxel))
+                    stage['estimate']={'voxelSize':voxel,'gridCells':cells}
+                    if cells>8000000: raise ValueError(f"Voxel remesh estimate: {cells:,} grid cells at {voxel} m voxel size exceeds the 8,000,000-cell budget. Increase the voxel size or shrink the mesh.")
+                    modifier=obj.modifiers.new('Fusion remesh','REMESH');modifier.mode='VOXEL';modifier.voxel_size=voxel
                 elif action=='boolean':
                     modifier=obj.modifiers.new('Fusion difference','BOOLEAN');modifier.operation=options.get('operation','DIFFERENCE');modifier.object=cutter;modifier.solver='EXACT'
                 elif action=='array':
