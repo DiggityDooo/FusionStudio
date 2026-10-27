@@ -167,7 +167,7 @@
         "key": "distance",
         "label": "Merge distance (m)",
         "default": 0.0001,
-        "min": 1e-06,
+        "min": 0.000001,
         "max": 0.1,
         "step": 0.0001,
         "type": "number"
@@ -350,6 +350,255 @@
           "INTERSECT"
         ],
         "type": "enum"
+      }
+    ]
+  },
+  "screw": {
+    "label": "Spin / Lathe",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "angle",
+        "label": "Angle (degrees)",
+        "default": 360,
+        "min": 1,
+        "max": 360,
+        "step": 1,
+        "type": "number"
+      },
+      {
+        "key": "steps",
+        "label": "Steps",
+        "default": 32,
+        "min": 3,
+        "max": 256,
+        "step": 1,
+        "type": "number"
+      },
+      {
+        "key": "offset",
+        "label": "Screw offset (m)",
+        "default": 0,
+        "min": -10,
+        "max": 10,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "radial_array": {
+    "label": "Radial Array",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "count",
+        "label": "Copies",
+        "default": 8,
+        "min": 2,
+        "max": 64,
+        "step": 1,
+        "type": "number"
+      },
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "radius",
+        "label": "Radius (m)",
+        "default": 0,
+        "min": 0,
+        "max": 100,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "inset": {
+    "label": "Inset Faces",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "thickness",
+        "label": "Thickness (m)",
+        "default": 0.02,
+        "min": 0.0001,
+        "max": 1,
+        "step": 0.001,
+        "type": "number"
+      },
+      {
+        "key": "depth",
+        "label": "Depth (m)",
+        "default": 0,
+        "min": -1,
+        "max": 1,
+        "step": 0.001,
+        "type": "number"
+      }
+    ]
+  },
+  "bisect": {
+    "label": "Bisect",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "axis",
+        "label": "Local axis",
+        "default": "Y",
+        "values": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "offset",
+        "label": "Offset from centre (m)",
+        "default": 0,
+        "min": -100,
+        "max": 100,
+        "step": 0.01,
+        "type": "number"
+      },
+      {
+        "key": "keep",
+        "label": "Keep",
+        "default": "Both",
+        "values": [
+          "Both",
+          "Positive",
+          "Negative"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "fill",
+        "label": "Fill cut",
+        "default": "No",
+        "values": [
+          "No",
+          "Yes"
+        ],
+        "type": "enum"
+      }
+    ]
+  },
+  "quad_remesh": {
+    "label": "Quad Remesh (octree)",
+    "category": "Generate",
+    "fields": [
+      {
+        "key": "depth",
+        "label": "Octree depth",
+        "default": 5,
+        "min": 2,
+        "max": 8,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "quads": {
+    "label": "Tris to Quads",
+    "category": "Cleanup",
+    "fields": [
+      {
+        "key": "angle",
+        "label": "Max angle (degrees)",
+        "default": 40,
+        "min": 0,
+        "max": 180,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "fill_holes": {
+    "label": "Fill Holes",
+    "category": "Cleanup",
+    "fields": [
+      {
+        "key": "sides",
+        "label": "Max sides (0 = any)",
+        "default": 0,
+        "min": 0,
+        "max": 512,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "edge_split": {
+    "label": "Edge Split",
+    "category": "Cleanup",
+    "fields": [
+      {
+        "key": "angle",
+        "label": "Split angle (degrees)",
+        "default": 30,
+        "min": 0,
+        "max": 180,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "displace": {
+    "label": "Displace (noise)",
+    "category": "Deform",
+    "fields": [
+      {
+        "key": "strength",
+        "label": "Strength (m)",
+        "default": 0.05,
+        "min": -1,
+        "max": 1,
+        "step": 0.001,
+        "type": "number"
+      },
+      {
+        "key": "scale",
+        "label": "Noise size",
+        "default": 0.25,
+        "min": 0.01,
+        "max": 10,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "cast": {
+    "label": "Cast to Sphere",
+    "category": "Deform",
+    "fields": [
+      {
+        "key": "factor",
+        "label": "Factor",
+        "default": 0.5,
+        "min": -2,
+        "max": 2,
+        "step": 0.01,
+        "type": "number"
       }
     ]
   }

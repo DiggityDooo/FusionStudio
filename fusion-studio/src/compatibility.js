@@ -1,4 +1,6 @@
 import {modifierCapability} from './modifier-capabilities.js';
+import meshOperations from '../electron/mesh-operations.json' with {type:'json'};
+const MESH_OPERATIONS=Object.keys(meshOperations);
 export function inspectObject(object){
   const result={nativeBlend:0,ik:0,jointLimits:0,formulas:0,creators:0,meshes:0,triangles:0,skinned:0,morphs:0,animations:0,materials:0,textures:0,nonUniform:false,mirrored:false,procedural:false,garment:false};
   object?.traverse?.(n=>{
@@ -17,7 +19,7 @@ export function inspectObject(object){
 export function checkCompatibility(action,stats,context={}){
   const issues=[];
   const add=(severity,title,detail)=>issues.push({severity,title,detail});
-  const topology=['subdivide','bevel','decimate','remesh','solidify','mirror','boolean','extrude','delete-face','sculpt','cloth','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch','uv','recalculate'];
+  const topology=[...MESH_OPERATIONS,'extrude','delete-face','sculpt','cloth'];
   if(action==='detach-native')add('warning','Native shader and scene data will be detached','A converted copy uses Fusion viewport geometry and generic materials. Original Blender shader graphs, lights, world and camera effects stay with the preserved source.');
   if(stats.nativeBlend&&(topology.includes(action)||['sculpt','extrude','delete-face','glb','fbx','obj','blend'].includes(action)))add('warning','Preserved Blender render data will not follow mesh conversion','Keep the preserved source. The converted working mesh uses approximate viewport materials; native shader graphs and scene presentation are not carried by generic interchange.');
   if(topology.includes(action)){
@@ -25,13 +27,13 @@ export function checkCompatibility(action,stats,context={}){
     if(stats.animations)add('warning','Animated mesh','Applying this operation can invalidate animation bindings. Save a version and work on a copy.');
     if(context.keyed)add('warning','Keyframe bindings will be detached','This processing step returns a static geometry snapshot at the current frame. Use a working copy to keep the original object and its transform or pose keys.');
     if(stats.procedural&&action!=='cloth')add('warning','Parametric controls will be detached','The result becomes a regular mesh. Character or pattern sliders will no longer rebuild this result. A duplicate keeps the original controls available.');
-    if(stats.nonUniform&&['bevel','solidify','cloth','wireframe','weld','remesh'].includes(action))add('warning','Uneven object scale','Thickness and simulation distances depend on the scale. The engine will apply scale to a working copy before processing.');
+    if(stats.nonUniform&&['bevel','solidify','cloth','wireframe','weld','remesh','inset','bisect','screw','radial_array','displace'].includes(action))add('warning','Uneven object scale','Thickness and simulation distances depend on the scale. The engine will apply scale to a working copy before processing.');
     if(stats.mirrored)add('warning','Negative scale','Mirrored transforms can flip winding and normals. Inspect the result before continuing.');
     if(stats.materials>stats.meshes&&['extrude','delete-face','remesh'].includes(action))add('warning','Multiple material regions','This operation may collapse material regions or UV seams. Use a duplicate if those regions matter.');
   }
   if(action==='subdivide'&&stats.triangles*4**(context.levels||1)>1000000)add('block','Mesh is too dense','These subdivision settings exceed one million estimated output triangles. Lower levels or reduce the mesh first.');
   if(['sculpt','extrude','delete-face'].includes(action)&&stats.triangles>300000)add('block','Interactive editing limit','This mesh exceeds 300,000 triangles. Reduce it or isolate a smaller part before editing.');
-  if(['subdivide','bevel','decimate','solidify','mirror','remesh','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch','uv','recalculate'].includes(action))add('warning',context.editableStack?'Editable modifier working copy':'Baked mesh working copy',context.editableStack?'Fusion retains the original source geometry and this modifier’s parameters. The evaluated viewport passes through glTF; attribute changes are reported per stack entry. The source remains available for component edits.':'This operation returns an applied mesh through glTF. Native modifier stacks and controller metadata are not carried by this exchange. Keep the original object for editing.');
+  if(MESH_OPERATIONS.includes(action))add('warning',context.editableStack?'Editable modifier working copy':'Baked mesh working copy',context.editableStack?'Fusion retains the original source geometry and this modifier’s parameters. The evaluated viewport passes through glTF; attribute changes are reported per stack entry. The source remains available for component edits.':'This operation returns an applied mesh through glTF. Native modifier stacks and controller metadata are not carried by this exchange. Keep the original object for editing.');
   if(action==='array'&&stats.triangles*(context.count||3)>1000000)add('block','Array output is too dense','Lower the copy count or simplify the mesh to stay below one million estimated output triangles.');
   if(action==='remesh'&&stats.textures)add('warning','Voxel remesh removes texture coordinates','Rebuild UVs and rebake textures on the result. Original texture placement cannot be preserved.');
   if(action==='cloth'){

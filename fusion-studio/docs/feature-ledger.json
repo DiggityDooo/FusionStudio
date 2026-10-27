@@ -110,7 +110,7 @@
     "tests/mesh-desktop.cjs",
     "tests/engine-modeling.cjs"
    ],
-   "note": "Face-region extrude and Bevel modifier; inset, chamfer tool and extrude along path missing."
+   "note": "Face-region extrude, Bevel modifier and whole-object Inset; selection inset, chamfer tool and extrude along path missing."
   },
   "A2 Loop cut, edge slide, offset edge loops and multi-cut/knife": {
    "status": "open"
@@ -122,7 +122,7 @@
     "tests/engine-modeling.cjs",
     "tests/sculpt.test.mjs"
    ],
-   "note": "Merge by distance, Weld modifier, Dyntopo collapse; bridge and fill hole missing."
+   "note": "Fill holes (seam-aware), merge by distance, Weld, Dyntopo collapse; bridge edge loops missing."
   },
   "A2 Dissolve, delete and clean up edges and vertices": {
    "status": "partial",
@@ -132,12 +132,12 @@
    "note": "Vertex dissolve and face delete; edge cleanup tools missing."
   },
   "A2 Bisect/slice, cut with plane, and boolean (union/difference/intersect)": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/engine-modeling.cjs",
     "tests/boolean-stack-ui.cjs"
    ],
-   "note": "Boolean union/difference/intersect (live stack cutter); bisect/plane cut missing."
+   "note": "Bisect with keep side and cap fill; Boolean union/difference/intersect."
   },
   "A2 Mirror and symmetry (object, topology, radial)": {
    "status": "partial",
@@ -153,10 +153,14 @@
     "tests/engine-modeling.cjs",
     "tests/modeling-ui.cjs"
    ],
-   "note": "Linear array on X/Y/Z; radial and path arrays missing."
+   "note": "Linear and radial arrays; path array missing."
   },
   "A2 Spin, lathe and revolve": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Screw modifier: angle, steps, screw offset."
   },
   "A2 Loft and sweep": {
    "status": "open"
@@ -168,11 +172,10 @@
    ]
   },
   "A2 Triangulate, quadrangulate and tris-to-quads": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/engine-modeling.cjs"
-   ],
-   "note": "Triangulate only."
+   ]
   },
   "A2 Flip and recalculate normals; custom/split normals; smooth/hard edge tagging": {
    "status": "partial",
@@ -180,7 +183,7 @@
     "tests/engine-modeling.cjs",
     "tests/mesh.test.mjs"
    ],
-   "note": "Recalculate normals and smooth/flat shading; custom split normals and edge tagging missing."
+   "note": "Recalculate normals, Edge Split by angle, smooth/flat shading; custom split normals and manual edge tagging missing."
   },
   "A2 Edge crease and bevel weight": {
    "status": "open"
@@ -238,12 +241,12 @@
    "note": "Decimate modifier and local Dyntopo simplify."
   },
   "A2 Remesh (voxel, quad, Dynamesh-style)": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/engine-modeling.cjs",
     "tests/remesh-preflight.test.cjs"
    ],
-   "note": "Voxel remesh with grid budget; quad remesh missing."
+   "note": "Voxel remesh with budget and octree quad remesh."
   },
   "A2 Convert between mesh, curve, NURBS and subdivision representations": {
    "status": "open"
@@ -336,7 +339,11 @@
    "status": "open"
   },
   "A4 Procedural noise, fractal and Voronoi patterns": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Clouds-noise Displace; fractal/Voronoi patterns missing."
   },
   "A4 Curve-to-mesh and mesh-to-curve": {
    "status": "open"
@@ -406,7 +413,11 @@
    ]
   },
   "A5 ZRemesher/quad remesh with guides and density painting": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Octree quad remesh; guides and density painting missing."
   },
   "A5 Masking (by brush, cavity, curvature, topology, face sets, polygroups)": {
    "status": "partial",
@@ -443,7 +454,11 @@
    "status": "open"
   },
   "A5 Surface noise and procedural detail": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Whole-object noise Displace; masked/brush surface noise missing."
   },
   "A5 Stamp and alpha-based detailing": {
    "status": "open"
@@ -2888,7 +2903,11 @@
    ]
   },
   "B6 Inset faces": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/engine-modeling.cjs"
+   ],
+   "note": "Whole-object inset; no I-key interactive inset on a selection."
   },
   "B6 Bevel": {
    "status": "open"

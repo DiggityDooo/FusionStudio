@@ -10,12 +10,59 @@ import bmesh
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from native_scene import capture as capture_native, render_native, settings as render_settings
 from character_materials import apply_character_materials
-from mathutils import Vector
+from mathutils import Matrix, Vector
+
+# Must list every operation in electron/mesh-operations.json (the worker cannot read the packaged archive).
+MESH_ACTIONS = {'subdivide','bevel','decimate','solidify','mirror','remesh','recalculate','uv','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch',
+    'screw','radial_array','inset','bisect','quad_remesh','quads','fill_holes','edge_split','displace','cast'}
 
 
 def checked(result, label):
     if 'FINISHED' not in result:
         raise RuntimeError(label + ' did not finish: ' + str(result))
+
+
+def ui_axis(name):
+    """Fusion's Y-up axis as a Blender-local direction (glTF import maps +Z to -Y)."""
+    return {'X': Vector((1, 0, 0)), 'Y': Vector((0, 0, 1)), 'Z': Vector((0, -1, 0))}[name]
+
+
+def edit_bmesh(obj, operation):
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(obj.data)
+        operation(bm)
+        bm.to_mesh(obj.data)
+    finally:
+        bm.free()
+    obj.data.update()
+
+
+def bisect(bm, obj, options):
+    normal = ui_axis(options.get('axis', 'Y'))
+    centre = sum((Vector(c) for c in obj.bound_box), Vector()) / 8
+    keep = options.get('keep', 'Both')
+    cut = bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=centre + normal * float(options.get('offset', 0)), plane_no=normal,
+                                 clear_inner=keep == 'Positive', clear_outer=keep == 'Negative')
+    if options.get('fill') == 'Yes':
+        # Imported meshes split vertices at UV/normal seams; join the cut outline so it closes into one loop.
+        bmesh.ops.remove_doubles(bm, verts=[v for v in cut['geom_cut'] if isinstance(v, bmesh.types.BMVert) and v.is_valid], dist=1e-6)
+        plane = centre + normal * float(options.get('offset', 0))
+        bmesh.ops.holes_fill(bm, edges=[e for e in bm.edges if e.is_boundary and all(abs(normal.dot(v.co - plane)) < 1e-5 for v in e.verts)], sides=0)
+
+
+def fill_holes(bm, obj, options):
+    # glTF splits vertices along UV/normal seams; rejoin coincident boundary vertices so only real holes stay open.
+    bmesh.ops.remove_doubles(bm, verts=list({v for e in bm.edges if e.is_boundary for v in e.verts}), dist=1e-6)
+    bmesh.ops.holes_fill(bm, edges=[e for e in bm.edges if e.is_boundary], sides=int(options['sides']))
+
+
+BMESH_OPERATIONS = {
+    'inset': lambda bm, obj, o: bmesh.ops.inset_individual(bm, faces=bm.faces[:], thickness=float(o['thickness']), depth=float(o['depth']), use_even_offset=True),
+    'bisect': bisect,
+    'quads': lambda bm, obj, o: bmesh.ops.join_triangles(bm, faces=bm.faces[:], angle_face_threshold=math.radians(float(o['angle'])), angle_shape_threshold=math.radians(float(o['angle']))),
+    'fill_holes': fill_holes,
+}
 
 
 def import_model(file, options=None):
@@ -282,7 +329,7 @@ def main(specfile=None):
         if not stage['enabled']:
             stage['after']=before;stack_report.append(stage);continue
         action=entry['action'];options={**original_options,**entry.get('params',{})}
-        if action in ('subdivide','bevel','decimate','solidify','mirror','remesh','recalculate','uv','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch'):
+        if action in MESH_ACTIONS:
             cutter=None
             if action=='boolean':
                 cutters=[o for o in meshes if has_id(o,options.get('cutterId'))]
@@ -295,7 +342,7 @@ def main(specfile=None):
             for obj in selected:
                 bpy.context.view_layer.objects.active=obj
                 bpy.ops.object.select_all(action='DESELECT');obj.select_set(True)
-                if action in ('bevel','solidify','remesh','wireframe','weld'):apply_world_scale(obj)
+                if action in ('bevel','solidify','remesh','wireframe','weld','inset','bisect','screw','radial_array','displace'):apply_world_scale(obj)
                 # UI axes are Y-up; Blender's glTF conversion uses Z-up.
                 local_axis={'X':'X','Y':'Z','Z':'Y'}[options.get('axis','Y')]
                 if action=='subdivide':
@@ -337,6 +384,31 @@ def main(specfile=None):
                     modifier=obj.modifiers.new('Fusion '+action,'SIMPLE_DEFORM');modifier.deform_method=action.upper();modifier.deform_axis=local_axis
                     if action in ('twist','bend'):modifier.angle=math.radians(float(options.get('angle',45)))*(-1 if options.get('axis')=='Z' else 1)
                     else:modifier.factor=float(options.get('factor',.5))
+                elif action=='screw':
+                    modifier=obj.modifiers.new('Fusion screw','SCREW');modifier.axis=local_axis;modifier.angle=math.radians(float(options['angle']));modifier.steps=modifier.render_steps=int(options['steps'])
+                    modifier.screw_offset=float(options['offset'])*(-1 if options.get('axis')=='Z' else 1);modifier.use_merge_vertices=True;modifier.use_normal_calculate=True
+                elif action=='radial_array':
+                    count=int(options['count'])
+                    if len(obj.data.polygons)*count>1000000:raise ValueError('Radial array exceeds one million output faces. Reduce copies or simplify the input.')
+                    radius=float(options['radius'])
+                    if radius:obj.data.transform(Matrix.Translation(ui_axis(options.get('axis')=='X' and 'Y' or 'X')*radius))
+                    pivot=bpy.data.objects.new('Fusion radial pivot',None);bpy.context.scene.collection.objects.link(pivot)
+                    pivot.matrix_world=obj.matrix_world@Matrix.Rotation(2*math.pi/count,4,local_axis)
+                    modifier=obj.modifiers.new('Fusion radial array','ARRAY');modifier.count=count;modifier.use_relative_offset=False;modifier.use_object_offset=True;modifier.offset_object=pivot
+                    try:checked(bpy.ops.object.modifier_apply(modifier=modifier.name),'Modifier')
+                    finally:bpy.data.objects.remove(pivot)
+                    continue
+                elif action in ('inset','bisect','quads','fill_holes'):
+                    edit_bmesh(obj,lambda bm:BMESH_OPERATIONS[action](bm,obj,options));continue
+                elif action=='quad_remesh':
+                    modifier=obj.modifiers.new('Fusion quad remesh','REMESH');modifier.mode='SHARP';modifier.octree_depth=int(options['depth']);modifier.use_remove_disconnected=False
+                elif action=='edge_split':
+                    modifier=obj.modifiers.new('Fusion edge split','EDGE_SPLIT');modifier.split_angle=math.radians(float(options['angle']))
+                elif action=='displace':
+                    texture=bpy.data.textures.new('Fusion noise','CLOUDS');texture.noise_scale=float(options['scale'])
+                    modifier=obj.modifiers.new('Fusion displace','DISPLACE');modifier.texture=texture;modifier.texture_coords='LOCAL';modifier.strength=float(options['strength'])
+                elif action=='cast':
+                    modifier=obj.modifiers.new('Fusion cast','CAST');modifier.cast_type='SPHERE';modifier.factor=float(options['factor'])
                 elif action in ('uv','recalculate'):
                     checked(bpy.ops.object.mode_set(mode='EDIT'),'Edit mode');bpy.ops.mesh.select_all(action='SELECT')
                     if action=='uv':checked(bpy.ops.uv.smart_project(angle_limit=math.radians(float(options.get('angle',66))),island_margin=float(options.get('margin',.02))),'UV projection')

@@ -25,6 +25,22 @@ global.FileReader=class{readAsArrayBuffer(blob){blob.arrayBuffer().then(r=>{this
    if(action==='weld')assert.ok(r.metadata.vertices<base.metadata.vertices,'weld removes split vertices');
    if(['smooth','twist','bend','taper','stretch'].includes(action))assert.notDeepEqual(positions(r),positions(base),action+' deforms geometry');
   }
+  // Spin, radial array, inset, bisect/fill, tris-to-quads, quad remesh, edge split, displace and cast.
+  const height=r=>bounds(r)[0].max[1]-bounds(r)[0].min[1],width=r=>bounds(r)[0].max[0]-bounds(r)[0].min[0];
+  assert.ok((await run('screw',{axis:'Y',angle:360,steps:16,offset:0})).metadata.polygons>base.metadata.polygons,'spin sweeps the profile');
+  const radial=await run('radial_array',{count:4,axis:'Y',radius:2});assert.equal(radial.metadata.polygons,base.metadata.polygons*4);assert.ok(width(radial)>4,'radial copies surround the axis');
+  // glTF delivers the fixture as triangles: inset turns each into an inner face plus three ring faces.
+  assert.equal((await run('inset',{thickness:.01,depth:0})).metadata.polygons,base.metadata.polygons*4,'each triangle gains an inset ring');
+  // The cut sits between vertex rows so no sliver faces are created.
+  const half=await run('bisect',{axis:'Y',offset:.06,keep:'Positive',fill:'No'}),capped=await run('bisect',{axis:'Y',offset:.06,keep:'Positive',fill:'Yes'});
+  assert.ok(Math.abs(height(half)-(height(base)/2-.06))<1e-4,'bisect keeps the part above the plane');assert.ok(half.metadata.polygons<base.metadata.polygons);assert.equal(capped.metadata.polygons,half.metadata.polygons+1,'fill caps the cut on a seam-split import');
+  const welded=await run('weld'),open=await run('bisect',{axis:'Y',offset:.06,keep:'Positive',fill:'No'},welded.data);
+  // Compare against the re-imported (glTF-triangulated) input, and only the real hole may be filled, not UV/normal seams.
+  assert.equal((await run('fill_holes',{sides:0},open.data)).metadata.polygons,(await run('glb',{},open.data)).metadata.polygons+1,'fill holes closes only the open boundary');
+  assert.equal((await run('quads',{angle:40})).metadata.polygons,base.metadata.polygons/2,'tris to quads rejoins the box quads');
+  const quadRemesh=await run('quad_remesh',{depth:4});assert.ok(quadRemesh.metadata.polygons>0&&quadRemesh.metadata.polygons!==base.metadata.polygons);
+  assert.ok((await run('edge_split',{angle:30},welded.data)).metadata.vertices>welded.metadata.vertices,'edge split separates hard edges');
+  for(const action of ['displace','cast'])assert.notDeepEqual(positions(await run(action)),positions(base),action+' deforms geometry');
   const cutter=new THREE.Mesh(new THREE.BoxGeometry(.8,3,.8),mesh.material);cutter.position.set(.6,1,0);cutter.userData.fusion_id='cutter';scene.add(cutter);
   const booleanData=await exportData(),booleanResults=[];
   for(const operation of ['DIFFERENCE','UNION','INTERSECT'])booleanResults.push(await run('boolean',{operation,cutterId:'cutter'},booleanData));

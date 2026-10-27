@@ -5,7 +5,7 @@ import {hybridTransaction} from './hybrid.js';
 import {transferMask} from './mesh-tools.js';
 import {modifierCapability} from './modifier-capabilities.js';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export const stackActions=new Set(['subdivide','bevel','decimate','solidify','mirror','remesh','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch']);
+export const stackActions=new Set(['subdivide','bevel','decimate','solidify','mirror','remesh','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch','screw','radial_array','inset','bisect','quad_remesh','quads','fill_holes','edge_split','displace','cast']);
 export function stackSnapshot(object){const copy=object.clone(true);copy.traverse(n=>{delete n.userData.modifierStack;if(n.geometry){const g=n.geometry,b=new THREE.BufferGeometry();b.copy(g);delete b.parameters;n.geometry=b;}});return copy.toJSON();}
 function replace(editor,target,next){const index=editor.root.children.indexOf(target);editor.root.remove(target);editor.root.add(next);if(index>=0){editor.root.children.splice(editor.root.children.indexOf(next),1);editor.root.children.splice(index,0,next);}editor.components?.reset();editor.select(next);return next;}
 function identity(group,target){group.name=target.name;group.uuid=target.uuid;group.visible=target.visible;group.position.copy(target.position);group.quaternion.copy(target.quaternion);group.scale.copy(target.scale);group.updateMatrix();return group;}

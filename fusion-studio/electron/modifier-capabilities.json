@@ -14,5 +14,15 @@
   "twist":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
   "bend":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
   "taper":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
-  "stretch":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"}
+  "stretch":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "screw":{"topology":"changes","uv":"approximate","materials":"preserves","mapping":"duplicates"},
+  "radial_array":{"topology":"changes","uv":"preserves","materials":"preserves","mapping":"duplicates"},
+  "inset":{"topology":"changes","uv":"interpolates","materials":"preserves","mapping":"interpolated"},
+  "bisect":{"topology":"changes","uv":"interpolates","materials":"preserves","mapping":"interpolated"},
+  "quad_remesh":{"topology":"changes","uv":"drops","materials":"approximate","mapping":"unavailable"},
+  "quads":{"topology":"changes","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "fill_holes":{"topology":"changes","uv":"approximate","materials":"preserves","mapping":"approximate"},
+  "edge_split":{"topology":"changes","uv":"preserves","materials":"preserves","mapping":"duplicates"},
+  "displace":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"},
+  "cast":{"topology":"preserves","uv":"preserves","materials":"preserves","mapping":"preserves"}
 }
