@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const {capsuleForFile, adapterForName, copyOriginal} = require('../electron/source-capsule.cjs');
+const {capsuleForFile, adapterForName, copyOriginal, withDsonInventory} = require('../electron/source-capsule.cjs');
 
 test('main-process capsule hashes the real file and classifies by header', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-capsule-'));
@@ -19,6 +19,21 @@ test('main-process capsule hashes the real file and classifies by header', async
   assert.equal(capsule.completeness, 'complete');
   assert.equal(adapterForName('tool.ZPR').id, 'zbrush');
   assert.equal(adapterForName('gown.zprj').id, 'marvelous');
+});
+
+test('DSON inventory lands on the capsule with hashes and unsupported fields', () => {
+  const capsule = {dependencies: [], completeness: 'complete'};
+  const out = withDsonInventory(capsule, {
+    dependencies: [{path: 'C:/lib/data/figure.dsf', kind: 'dson', sha256: 'a'.repeat(64), bytes: 1234}, {path: 'C:/lib/tex.png', kind: 'texture', bytes: 55}],
+    unsupported_fields: ['image.gamma', 'studio/node/custom'],
+  });
+  assert.equal(out.dependencies.length, 2);
+  assert.equal(out.dependencies[0].status, 'found');
+  assert.equal(out.dependencies[0].sha256, 'a'.repeat(64));
+  assert.equal(out.dependencies[0].byteLength, 1234);
+  assert.deepEqual(out.unsupportedFields, ['image.gamma', 'studio/node/custom']);
+  assert.equal(withDsonInventory(null, {}), null);
+  assert.deepEqual(withDsonInventory({dependencies: []}, null).dependencies, []);
 });
 
 test('Export Original copies byte-exact to a new file and refuses in-place or overwrite', async () => {

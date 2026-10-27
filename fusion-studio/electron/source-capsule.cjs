@@ -71,4 +71,18 @@ async function copyOriginal(source, destination) {
   return {destination, sha256: after, byteLength: fs.statSync(destination).size};
 }
 
-module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File, copyOriginal};
+// Attach a DSON import report's dependency inventory + unsupported fields to a capsule.
+function withDsonInventory(capsule, dson) {
+  if (!capsule || !dson) return capsule;
+  const deps = Array.isArray(dson.dependencies) ? dson.dependencies : [];
+  if (deps.length) capsule.dependencies = deps.map((d, i) => ({
+    id: String(d.path || 'dependency-' + i), originalLocator: String(d.path || ''),
+    role: String(d.kind || 'dependency'), status: 'found',
+    ...(d.sha256 ? {sha256: d.sha256} : {}), ...(Number.isFinite(d.bytes) ? {byteLength: d.bytes} : {}),
+  }));
+  if (Array.isArray(dson.unsupported_fields) && dson.unsupported_fields.length)
+    capsule.unsupportedFields = dson.unsupported_fields.map(String);
+  return capsule;
+}
+
+module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File, copyOriginal, withDsonInventory};
