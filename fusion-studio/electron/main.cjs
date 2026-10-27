@@ -41,6 +41,7 @@ app.whenReady().then(()=>{
   ipcMain.handle('geometry',(_,method,request)=>geometry.run(method,request));
   ipcMain.handle('cancel',async()=>{const nativeActive=!!geometry.active,stopped=geometry.close(),validation=engine.validation.close(),result=engine.cancel();await Promise.all([stopped,validation]);return nativeActive||result;});
   ipcMain.handle('reveal',(_,file)=>{shell.showItemInFolder(owned(file));return true;});
+  ipcMain.handle('export-original',async(_,source)=>{if(!chosenImports.has(source)&&!nativeSources.has(source))throw Error('This original was not imported in this session, so its location cannot be verified. Re-import it to export the original.');const {copyOriginal}=require('./source-capsule.cjs');const r=await dialog.showSaveDialog(win,{title:'Export Original — untouched source copy',defaultPath:path.basename(source)});if(r.canceled||!r.filePath)return null;const result=await copyOriginal(source,r.filePath);return result;});
   ipcMain.handle('image',(_,file)=>{const p=owned(file);if(path.extname(p)!=='.png')throw Error('Only render previews are allowed.');return 'data:image/png;base64,'+fs.readFileSync(p).toString('base64');});
   win=new BrowserWindow({width:1600,height:1000,minWidth:1180,minHeight:750,backgroundColor:'#303030',title:'Fusion Studio',autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
   win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',event=>event.preventDefault());

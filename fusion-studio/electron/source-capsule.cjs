@@ -60,4 +60,15 @@ async function capsuleForFile(file) {
   };
 }
 
-module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File};
+// Export Original: byte-exact copy to a NEW file (never in place), verified by hash.
+async function copyOriginal(source, destination) {
+  if (!source || !destination || require('node:path').resolve(source) === require('node:path').resolve(destination))
+    throw Error('Export Original needs a different destination file.');
+  const before = await sha256File(source);
+  await fs.promises.copyFile(source, destination, fs.constants.COPYFILE_EXCL);
+  const after = await sha256File(destination);
+  if (after !== before) { await fs.promises.unlink(destination).catch(() => {}); throw Error('Exported original failed hash verification and was removed.'); }
+  return {destination, sha256: after, byteLength: fs.statSync(destination).size};
+}
+
+module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File, copyOriginal};

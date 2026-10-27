@@ -23,6 +23,7 @@ contextBridge.exposeInMainWorld('fusion',{
   geometry:(method,request)=>ipcRenderer.invoke('geometry',method,request),
   cancel:()=>ipcRenderer.invoke('cancel'),
   reveal:file=>ipcRenderer.invoke('reveal',file),
+  exportOriginal:source=>ipcRenderer.invoke('export-original',source),
   image:file=>ipcRenderer.invoke('image',file),
   onJob:fn=>{const handler=(_,job)=>fn(job);ipcRenderer.on('job-update',handler);return ()=>ipcRenderer.removeListener('job-update',handler);}
 });
