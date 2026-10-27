@@ -307,7 +307,7 @@ export function falloffValue(kind,t){ // t = distance/radius in [0,1]
   const u=Math.max(0,1-t);
   switch(kind){case 'sphere':return Math.sqrt(Math.max(0,1-t*t));case 'root':return Math.sqrt(u);case 'sharp':return u*u*u;case 'linear':return u;case 'constant':return 1;default:return u*u*(3-2*u);}
 }
-let adjacencyCache={key:null,adjacency:null};
+let adjacencyCache={key:null,adjacency:null,faces:null};
 function topologyKey(geo){ // vertex count alone is NOT topology identity (plan 7.6)
   const idx=geo.index?.array,p=geo.attributes.position;
   if(!idx)return `noidx:${p.count}`;
@@ -320,7 +320,46 @@ function adjacencyFor(geo){
   if(adjacencyCache.key===key)return adjacencyCache.adjacency;
   const p=geo.attributes.position,adjacency=Array.from({length:p.count},()=>new Set());const indices=geo.index?.array||Array.from({length:p.count},(_,i)=>i);
   for(let i=0;i<indices.length;i+=3){const tri=[indices[i],indices[i+1],indices[i+2]];for(const a of tri)for(const b of tri)if(a!==b)adjacency[a].add(b);}
-  adjacencyCache={key,adjacency};return adjacency;
+  adjacencyCache={key,adjacency,faces:adjacencyCache.key===key?adjacencyCache.faces:null};return adjacency;
+}
+function facesFor(geo){ // vertex -> face indices, cached with the same topology identity
+  const key=geo.uuid+':'+topologyKey(geo);
+  if(adjacencyCache.key===key&&adjacencyCache.faces)return adjacencyCache.faces;
+  adjacencyFor(geo);
+  const p=geo.attributes.position,faces=Array.from({length:p.count},()=>[]);
+  const indices=geo.index?.array||[];
+  for(let f=0;f<indices.length/3;f++)for(let e=0;e<3;e++)faces[indices[f*3+e]].push(f);
+  adjacencyCache={key,adjacency:adjacencyCache.adjacency,faces};return faces;
+}
+// Partial normal recompute: only faces touching affected vertices (hot-path, plan M8).
+const normalScratch={stamp:0,faceMark:null,vertMark:null};
+export function recomputeNormalsPartial(geo,affected){
+  const p=geo.attributes.position,n=geo.attributes.normal,idx=geo.index?.array;
+  if(!idx||!affected.length||affected.length>p.count*0.5){geo.computeVertexNormals();return false;}
+  const faces=facesFor(geo),pa=p.array,na=n.array,faceCount=idx.length/3;
+  // Stamp-marked scratch arrays: Set allocation/lookup dominated this path.
+  if(!normalScratch.faceMark||normalScratch.faceMark.length<faceCount)normalScratch.faceMark=new Uint32Array(faceCount);
+  if(!normalScratch.vertMark||normalScratch.vertMark.length<p.count)normalScratch.vertMark=new Uint32Array(p.count);
+  if(++normalScratch.stamp===0xffffffff){normalScratch.faceMark.fill(0);normalScratch.vertMark.fill(0);normalScratch.stamp=1;}
+  const stamp=normalScratch.stamp,fm=normalScratch.faceMark,vm=normalScratch.vertMark,faceList=[],coveredList=[];
+  for(const i of affected)for(const f of faces[i]||[])if(fm[f]!==stamp){fm[f]=stamp;faceList.push(f);}
+  // Only vertices of the initial faces have complete face coverage after one
+  // expansion ring; second-ring vertices keep their existing normals because
+  // none of their faces changed shape.
+  for(const f of faceList)for(let e=0;e<3;e++){const v=idx[f*3+e];if(vm[v]!==stamp){vm[v]=stamp;coveredList.push(v);}}
+  for(const i of coveredList)for(const f of faces[i]||[])if(fm[f]!==stamp){fm[f]=stamp;faceList.push(f);}
+  for(const i of coveredList){const i3=i*3;na[i3]=0;na[i3+1]=0;na[i3+2]=0;}
+  for(const f of faceList){
+    const v0=idx[f*3],v1=idx[f*3+1],v2=idx[f*3+2],i0=v0*3,i1=v1*3,i2=v2*3;
+    const ax=pa[i0],ay=pa[i0+1],az=pa[i0+2];
+    const abx=pa[i1]-ax,aby=pa[i1+1]-ay,abz=pa[i1+2]-az,acx=pa[i2]-ax,acy=pa[i2+1]-ay,acz=pa[i2+2]-az;
+    const cx=aby*acz-abz*acy,cy=abz*acx-abx*acz,cz=abx*acy-aby*acx;
+    if(vm[v0]===stamp){na[i0]+=cx;na[i0+1]+=cy;na[i0+2]+=cz;}
+    if(vm[v1]===stamp){na[i1]+=cx;na[i1+1]+=cy;na[i1+2]+=cz;}
+    if(vm[v2]===stamp){na[i2]+=cx;na[i2+1]+=cy;na[i2+2]+=cz;}
+  }
+  for(const i of coveredList){const i3=i*3,x=na[i3],y=na[i3+1],z=na[i3+2],l=Math.sqrt(x*x+y*y+z*z);if(l>0){na[i3]=x/l;na[i3+1]=y/l;na[i3+2]=z/l;}}
+  n.needsUpdate=true;return true;
 }
 const DRAG_MODES=new Set(['nudge','thumb','snake-hook','grab']);
 export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate',invert=false,opts={}){
@@ -334,18 +373,23 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
   const mask=geo.attributes.mask,protection=i=>mask?THREE.MathUtils.clamp(mask.array[i]||0,0,1):0;
   if(mode==='mask'){ // persistent protection channel; never touches positions or vertex colors
     const attr=maskAttribute(geo);let touched=0;
-    const w=new THREE.Vector3();
-    for(let i=0;i<p.count;i++){w.fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld);const d=w.distanceTo(point);if(d>radius)continue;attr.array[i]=THREE.MathUtils.clamp(attr.array[i]+dir*falloffValue(falloffKind,d/radius)*Math.abs(strength)*24,0,1);touched++;}
+    const pa=p.array,me=mesh.matrixWorld.elements,r2=radius*radius;
+    for(let i=0;i<p.count;i++){const i3=i*3,dx=me[0]*pa[i3]+me[4]*pa[i3+1]+me[8]*pa[i3+2]+me[12]-point.x,dy=me[1]*pa[i3]+me[5]*pa[i3+1]+me[9]*pa[i3+2]+me[13]-point.y,dz=me[2]*pa[i3]+me[6]*pa[i3+1]+me[10]*pa[i3+2]+me[14]-point.z,d2=dx*dx+dy*dy+dz*dz;if(d2>r2)continue;attr.array[i]=THREE.MathUtils.clamp(attr.array[i]+dir*falloffValue(falloffKind,Math.sqrt(d2)/radius)*Math.abs(strength)*24,0,1);touched++;}
     attr.needsUpdate=true;return touched;
   }
-  const saved=new Float32Array(p.array),affected=[],world=new THREE.Vector3(),vNormal=new THREE.Vector3(),tmp=new THREE.Vector3(),tmp2=new THREE.Vector3();
+  const affected=[],world=new THREE.Vector3(),vNormal=new THREE.Vector3(),tmp=new THREE.Vector3(),tmp2=new THREE.Vector3();
+  let maxShift=0; // largest local-space displacement, tracked inline for conservative bounds
   // Clay Strips frame: tangent along stroke direction, binormal across it, both in the brush plane.
   const tangent=new THREE.Vector3(1,0,0);if(drag.lengthSq()>1e-12)tangent.copy(drag).addScaledVector(brushNormal,-drag.dot(brushNormal));
   if(tangent.lengthSq()<1e-9)tangent.set(1,0,0).addScaledVector(brushNormal,-brushNormal.x);tangent.normalize();
   const binormal=new THREE.Vector3().crossVectors(brushNormal,tangent).normalize();
   const reach=mode==='elastic-deform'?radius*3:radius; // Elastic Deform's gaussian field extends past the brush circle
+  const pa=p.array,me=mesh.matrixWorld.elements,reachSq=reach*reach;
   for(let i=0;i<p.count;i++){
-    world.fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld);const distance=world.distanceTo(point);if(distance>reach)continue;
+    const i3=i*3,lx=pa[i3],ly=pa[i3+1],lz=pa[i3+2];
+    const dx=me[0]*lx+me[4]*ly+me[8]*lz+me[12]-point.x,dy=me[1]*lx+me[5]*ly+me[9]*lz+me[13]-point.y,dz=me[2]*lx+me[6]*ly+me[10]*lz+me[14]-point.z,d2=dx*dx+dy*dy+dz*dz;
+    if(d2>reachSq)continue;
+    const distance=Math.sqrt(d2);world.set(point.x+dx,point.y+dy,point.z+dz);
     const f0=falloffValue(falloffKind,distance/radius),f=f0*(1-protection(i));if(f<=0&&mode!=='smooth'&&mode!=='elastic-deform')continue;
     affected.push(i);
     if(mode==='smooth'||mode==='slide-relax'||mode==='crease-polish')continue;
@@ -397,8 +441,11 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
         world.addScaledVector(drag,g); break; }
       default: world.addScaledVector(vNormal,strength*f*dir);
     }
-    world.applyMatrix4(inverse);p.setXYZ(i,world.x,world.y,world.z);
+    world.applyMatrix4(inverse);
+    const shx=world.x-lx,shy=world.y-ly,shz=world.z-lz,sh=Math.sqrt(shx*shx+shy*shy+shz*shz);if(sh>maxShift)maxShift=sh;
+    pa[i3]=world.x;pa[i3+1]=world.y;pa[i3+2]=world.z;
   }
+  let postShift=0;
   if(mode==='smooth'||mode==='slide-relax'||mode==='crease-polish'||(opts.autosmooth>0&&affected.length)){
     // Read the POST-primary positions (plan 7.6: autosmooth must not smooth the pre-stroke mesh over the brush result).
     const post=new Float32Array(p.array);
@@ -411,9 +458,17 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
       else if(mode==='crease-polish'){ // smooth the flanks, spare the crease center itself
         const centerSparing=1-falloffValue('sharp',Math.min(1,wp.distanceTo(point)/radius));prior.lerp(avg,amount*centerSparing*wf); }
       else prior.lerp(avg,amount*wf);
-      p.setXYZ(i,prior.x,prior.y,prior.z);}
+      p.setXYZ(i,prior.x,prior.y,prior.z);
+      const psh=Math.hypot(prior.x-post[i*3],prior.y-post[i*3+1],prior.z-post[i*3+2]);if(psh>postShift)postShift=psh;}
   }
-  p.needsUpdate=true;geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();return affected.length;
+  p.needsUpdate=true;
+  recomputeNormalsPartial(geo,affected);
+  // Conservative bounds: expand by the largest local shift instead of rescanning the mesh.
+  maxShift+=postShift; // a vertex can move in both passes; sum of maxima stays conservative
+  const bp=new THREE.Vector3();
+  if(geo.boundingSphere)geo.boundingSphere.radius+=maxShift;else geo.computeBoundingSphere();
+  if(geo.boundingBox){for(const i of affected)geo.boundingBox.expandByPoint(bp.fromBufferAttribute(p,i));}else geo.computeBoundingBox();
+  return affected.length;
 }
 
 export class MeshTools{

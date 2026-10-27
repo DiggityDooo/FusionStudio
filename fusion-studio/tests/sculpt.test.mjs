@@ -347,6 +347,47 @@ test('multires: Loop subdivision grows topology, level is re-evaluable from the 
   assert.throws(() => setMultiresLevel(source, 1), /no retained multires source/);
 });
 
+test('partial normal recompute matches a full recompute after a stroke', () => {
+  const mesh = sphere();
+  const beforePos = new Float32Array(mesh.geometry.attributes.position.array);
+  sculptGeometry(mesh, top.clone(), 0.3, 0.05, 'draw', false, {normal: frontNormal});
+  const partial = new Float32Array(mesh.geometry.attributes.normal.array);
+  mesh.geometry.computeVertexNormals();
+  const full = mesh.geometry.attributes.normal.array;
+  const pos = mesh.geometry.attributes.position, idx = mesh.geometry.index.array;
+  // Covered = moved vertices plus every vertex sharing a face with one. Only
+  // covered vertices may change normals; all others must be left untouched.
+  const covered = new Set();
+  for (let f = 0; f < idx.length / 3; f++) {
+    const tri = [idx[f * 3], idx[f * 3 + 1], idx[f * 3 + 2]];
+    if (tri.some(vi => Math.hypot(pos.getX(vi) - beforePos[vi * 3], pos.getY(vi) - beforePos[vi * 3 + 1], pos.getZ(vi) - beforePos[vi * 3 + 2]) > 1e-9)) tri.forEach(vi => covered.add(vi));
+  }
+  assert.ok(covered.size > 50, `expected a real covered region, got ${covered.size}`);
+  let maxDotError = 0;
+  for (const vi of covered) {
+    const i = vi * 3;
+    const dot = partial[i] * full[i] + partial[i + 1] * full[i + 1] + partial[i + 2] * full[i + 2];
+    maxDotError = Math.max(maxDotError, 1 - dot);
+  }
+  assert.ok(maxDotError < 1e-4, `partial normals diverged from full recompute by ${maxDotError}`);
+  assert.ok(mesh.geometry.boundingSphere.radius >= 0.5, 'bounds must stay conservative after a stroke');
+});
+
+test('sculpt dab at production density stays inside the plan 14.4 warm-update target', () => {
+  // Plan 14.4: warm sculpt update at most 100 ms on a 50k–200k tri fixture.
+  // This measures compute only (no render/upload/history), with 190k tris.
+  const geo = subdivideGeometry(new THREE.SphereGeometry(0.5, 48, 32), 3);
+  assert.ok(geo.index.count / 3 > 150000, 'fixture must be at production density');
+  const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial());
+  mesh.updateMatrixWorld(true);
+  const point = new THREE.Vector3(0, 0.5, 0), normal = new THREE.Vector3(0, 1, 0);
+  sculptGeometry(mesh, point.clone(), 0.25, 0.01, 'draw', false, {normal}); // warm caches
+  const dabs = 15, start = performance.now();
+  for (let i = 0; i < dabs; i++) sculptGeometry(mesh, point.clone(), 0.25, 0.01, 'draw', false, {normal});
+  const perDab = (performance.now() - start) / dabs;
+  assert.ok(perDab < 100, `sculpt dab took ${perDab.toFixed(1)} ms at ${geo.index.count / 3} tris (plan 14.4 target: 100 ms)`);
+});
+
 test('grab follows the drag delta', () => {
   const mesh = sphere();
   const before = new Float32Array(mesh.geometry.attributes.position.array);
