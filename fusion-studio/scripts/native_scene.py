@@ -61,9 +61,9 @@ def scene_inventory(scene):
     return {'scene':scene.name,'collections':collections,'objects':objects,'mesh_details':mesh_details,
             'materials':[{'name':m.name,'base_color':_material_color(m)} for m in bpy.data.materials],
             'meshes':[m.name for m in bpy.data.meshes],
-            'cameras':[c.name for c in bpy.data.cameras],
+            'cameras':[{'name':c.name,'lens':round(c.lens,6),'angle':round(c.angle,6)} for c in bpy.data.cameras],
             'lights':[l.name for l in bpy.data.lights],
-            'armatures':[{'name':a.name,'bones':[b.name for b in a.bones]} for a in bpy.data.armatures],
+            'armatures':[{'name':a.name,'bones':[{'name':b.name,'head':[round(v,6) for v in b.head_local],'tail':[round(v,6) for v in b.tail_local]} for b in a.bones]} for a in bpy.data.armatures],
             'actions':[a.name for a in bpy.data.actions],
             'images':[i.name for i in bpy.data.images]}
 

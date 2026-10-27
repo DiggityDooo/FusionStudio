@@ -37,7 +37,7 @@ test('preserved .blend source cage reopens with identical ordered hierarchy', {s
   assert.ok(verdict.objects >= 3 && verdict.collections >= 3);
 });
 
-test('authored shape-key, material, transform and UV edits on a copied .blend preserve unrelated native data', {skip: !fs.existsSync(BLENDER) && 'Blender 5.2 not installed'}, () => {
+test('authored shape-key, material, transform, UV, camera and armature edits on a copied .blend preserve unrelated native data', {skip: !fs.existsSync(BLENDER) && 'Blender 5.2 not installed'}, () => {
   const work = fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-cage-edit-'));
   const build = runBlender(work, 'editbuild');
   assert.equal(build.status, 0, (build.stdout || '').slice(-1500) + (build.stderr || '').slice(-1000));

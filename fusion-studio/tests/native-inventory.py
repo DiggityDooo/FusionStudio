@@ -96,12 +96,22 @@ def editapply(work):
     mat = bpy.data.materials['HeroMat']
     mat.node_tree.nodes['Principled BSDF'].inputs['Base Color'].default_value = (0.2, 0.4, 0.9, 1.0)
     bpy.data.objects['KeyLight'].location.z = 1.5
+    bpy.data.cameras['CamData'].lens = 35.0
+    rig = bpy.data.objects['Rig']
+    bpy.context.view_layer.objects.active = rig
+    rig.select_set(True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    rig.data.edit_bones['Root'].tail.z += 0.3
+    bpy.ops.object.mode_set(mode='OBJECT')
+    rig.select_set(False)
     for loop_uv in mesh.uv_layers[0].data:
         loop_uv.uv.x += 0.05
     expect = {'smile_after': after,
               'material_color': native_scene._material_color(mat),
               'light_location': [round(v, 6) for v in bpy.data.objects['KeyLight'].location],
-              'uv_after': native_scene._uv_digest(mesh)}
+              'uv_after': native_scene._uv_digest(mesh),
+              'camera_lens': round(bpy.data.cameras['CamData'].lens, 6),
+              'bone_tail': [round(v, 6) for v in bpy.data.armatures['RigData'].bones['Root'].tail_local]}
     (work / 'edit-expect.json').write_text(json.dumps(expect))
     bpy.ops.wm.save_mainfile()
     print(json.dumps({'edited': True, 'smile_changed': True, 'components_changed': True}))
@@ -116,9 +126,33 @@ def editcheck(work):
     scene = next(s for s in dst.scenes if s)
     after = native_scene.scene_inventory(scene)
     problems = []
-    for key in ('collections', 'scene', 'armatures', 'cameras', 'lights'):
+    for key in ('collections', 'scene', 'lights'):
         if before[key] != after[key]:
             problems.append(f"unrelated data changed: {key}")
+    def normalized_cameras(inv):
+        out = json.loads(json.dumps(inv['cameras']))
+        for entry in out:
+            if entry['name'] == 'CamData':
+                entry['lens'] = None
+                entry['angle'] = None
+        return out
+    if normalized_cameras(before) != normalized_cameras(after):
+        problems.append('unrelated camera data changed')
+    cam = next(c for c in after['cameras'] if c['name'] == 'CamData')
+    if cam['lens'] != expect['camera_lens']:
+        problems.append(f"CamData lens {cam['lens']} != expected edit {expect['camera_lens']}")
+    def normalized_armatures(inv):
+        out = json.loads(json.dumps(inv['armatures']))
+        for arm in out:
+            for bone in arm['bones']:
+                if bone['name'] == 'Root':
+                    bone['tail'] = None
+        return out
+    if normalized_armatures(before) != normalized_armatures(after):
+        problems.append('unrelated armature data changed')
+    root_bone = next(b for a in after['armatures'] for b in a['bones'] if b['name'] == 'Root')
+    if root_bone['tail'] != expect['bone_tail']:
+        problems.append(f"Root bone tail {root_bone['tail']} != expected edit {expect['bone_tail']}")
     # Objects/materials: exactly the edited component may differ, to the expected value.
     def normalized_objects(inv):
         out = json.loads(json.dumps(inv['objects']))
