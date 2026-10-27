@@ -523,7 +523,17 @@ def _make_plan(source_path, content_roots, options=None):
         if scene.get('animations'):
             reader.unsupported_field('animations', 'Animation curves are omitted; current scene values are imported.')
         for mesh in meshes:
-            report['meshes'].append({'id': mesh['instance_id'], 'node': mesh['node_id'], 'label': mesh['label'], 'vertices': len(mesh['vertices']), 'faces': len(mesh['faces']), 'uv_coordinates': len(mesh['uvs']), 'material_groups': mesh['groups'], 'morphs': [{k: m[k] for k in ('key', 'id', 'label', 'value', 'min', 'max', 'source')} | {'delta_count': len(m['deltas'])} for m in mesh['morphs']], 'bones': len(mesh['bones']), 'weighted_joints': len(mesh['skin'].get('joints', [])) if mesh['skin'] else 0})
+            joints = []
+            if mesh.get('skeleton_nodes'):
+                try:
+                    posed = _dson_transforms(mesh['skeleton_nodes'])
+                except ModuleNotFoundError:
+                    posed = None  # plain-Python preflight has no mathutils; the Blender import report carries joints
+                if posed:
+                    for bone in mesh['bones']:
+                        origin = posed[bone['id']]['matrix'].to_translation()
+                        joints.append({'id': bone['id'], 'name': bone.get('label', bone['id']), 'center_cm': [round(float(v), 4) for v in origin]})
+            report['meshes'].append({'id': mesh['instance_id'], 'node': mesh['node_id'], 'label': mesh['label'], 'vertices': len(mesh['vertices']), 'faces': len(mesh['faces']), 'uv_coordinates': len(mesh['uvs']), 'material_groups': mesh['groups'], 'morphs': [{k: m[k] for k in ('key', 'id', 'label', 'value', 'min', 'max', 'source')} | {'delta_count': len(m['deltas'])} for m in mesh['morphs']], 'bones': len(mesh['bones']), 'weighted_joints': len(mesh['skin'].get('joints', [])) if mesh['skin'] else 0, 'joints': joints})
         properties = {}
         for mesh in meshes:
             for morph in mesh['morphs']:
