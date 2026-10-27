@@ -25,12 +25,21 @@ def scene_inventory(scene):
               'collection':o.users_collection[0].name if o.users_collection else None,
               'materials':[s.material.name if s.material else None for s in o.material_slots] if hasattr(o,'material_slots') else []}
              for o in scene.objects]
-    return {'scene':scene.name,'collections':collections,'objects':objects,
+    mesh_details={}
+    for mesh in bpy.data.meshes:
+        keys=mesh.shape_keys.key_blocks if mesh.shape_keys else []
+        mesh_details[mesh.name]={'uv_layers':[uv.name for uv in mesh.uv_layers],
+                                 'shape_keys':[k.name for k in keys],
+                                 'attributes':sorted(a.name for a in mesh.attributes if not a.name.startswith('.'))}
+    for entry in objects:
+        obj=scene.objects[entry['name']]
+        entry['vertex_groups']=[g.name for g in obj.vertex_groups] if hasattr(obj,'vertex_groups') else []
+    return {'scene':scene.name,'collections':collections,'objects':objects,'mesh_details':mesh_details,
             'materials':[m.name for m in bpy.data.materials],
             'meshes':[m.name for m in bpy.data.meshes],
             'cameras':[c.name for c in bpy.data.cameras],
             'lights':[l.name for l in bpy.data.lights],
-            'armatures':[a.name for a in bpy.data.armatures],
+            'armatures':[{'name':a.name,'bones':[b.name for b in a.bones]} for a in bpy.data.armatures],
             'actions':[a.name for a in bpy.data.actions],
             'images':[i.name for i in bpy.data.images]}
 

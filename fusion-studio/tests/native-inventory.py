@@ -32,6 +32,12 @@ def build_fixture(path):
     cube.name = 'HeroCube'
     cube.data.name = 'HeroCubeMesh'
     cube.data.materials.append(mat)
+    cube.shape_key_add(name='Basis', from_mix=False)
+    smile = cube.shape_key_add(name='Smile', from_mix=False)
+    for block_point in smile.data:
+        block_point.co.z += 0.25
+    group = cube.vertex_groups.new(name='Top')
+    group.add([i for i, v in enumerate(cube.data.vertices) if v.co.z > 0], 1.0, 'REPLACE')
     hero.objects.link(cube)
     try:
         scene.collection.objects.unlink(cube)
@@ -42,6 +48,11 @@ def build_fixture(path):
     scene.camera = cam
     light = bpy.data.objects.new('KeyLight', bpy.data.lights.new('KeyData', 'AREA'))
     scene.collection.objects.link(light)
+    bpy.ops.object.armature_add(enter_editmode=False)
+    rig = bpy.context.object
+    rig.name = 'Rig'
+    rig.data.name = 'RigData'
+    rig.data.bones[0].name = 'Root'
     instance = bpy.data.objects.new('PropsInstance', None)
     instance.instance_type = 'COLLECTION'
     instance.instance_collection = props
@@ -68,7 +79,7 @@ def check(work):
     scene = next(s for s in dst.scenes if s)
     after = native_scene.scene_inventory(scene)
     problems = []
-    for key in ('objects', 'collections', 'materials', 'scene'):
+    for key in ('objects', 'collections', 'materials', 'scene', 'mesh_details', 'armatures', 'cameras', 'lights'):
         if before[key] != after[key]:
             problems.append(f"{key} differ:\nbefore={json.dumps(before[key])}\nafter={json.dumps(after[key])}")
     print(json.dumps({'ok': not problems, 'problems': problems, 'objects': len(after['objects']), 'collections': len(after['collections'])}))
