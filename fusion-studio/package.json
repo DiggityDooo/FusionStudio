@@ -1,6 +1,6 @@
 {
   "name": "fusion-studio",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "An integrated modeling, character, clothing, animation and rendering workspace",
   "author": "Fusion Studio",
   "private": true,
@@ -48,6 +48,7 @@
     "test:creator-performance": "node tests/creator-performance.mjs && node tests/creator-interactive-performance.cjs",
     "test:sculpt": "node --test tests/sculpt.test.mjs",
     "test:dson": "node tests/dson-integration.cjs",
+    "test:packaged": "node --test tests/packaged-smoke.cjs",
     "showcase": "node tests/showcase.cjs && node tests/workflow-showcase.cjs && python scripts/make-showcase-gif.py"
   },
   "dependencies": {
@@ -65,7 +66,7 @@
     "appId": "local.fusion.studio",
     "productName": "Fusion Studio",
     "directories": {
-      "output": "release-v0.0"
+      "output": "release-v0.1.0"
     },
     "files": [
       "dist/**",

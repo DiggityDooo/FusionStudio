@@ -117,7 +117,7 @@ The document is authoritative; workers return revision-checked results and never
 
 ## Status
 
-v0.0 is a development snapshot, not a certified release. Production garment fit, layered/animated cloth, fabric calibration and dense interactive drape remain open — see the roadmap for honest per-area fidelity (Exact / Compatible / Inspired) and remaining gates.
+v0.1.0 is a development snapshot, not a certified release. Production garment fit, layered/animated cloth, fabric calibration and dense interactive drape remain open — see the roadmap for honest per-area fidelity (Exact / Compatible / Inspired) and remaining gates. Per-milestone evidence lives in [docs/muse-implementation-status.md](fusion-studio/docs/muse-implementation-status.md).
 
 ## License
 
