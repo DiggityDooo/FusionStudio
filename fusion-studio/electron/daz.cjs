@@ -1,4 +1,4 @@
-const fs=require('node:fs');const path=require('node:path');const {spawn}=require('node:child_process');
+const fs=require('node:fs');const path=require('node:path');const os=require('node:os');const {spawn}=require('node:child_process');
 const {uniqueDir,writeNew,isolatedEnv}=require('./core.cjs');
 class DazEngine{
  constructor(root,script,onUpdate=()=>{}){this.root=root;this.script=script;this.onUpdate=onUpdate;this.active=null;}
@@ -15,7 +15,7 @@ class DazEngine{
   if(this.active)throw Error('A native character job is already running.');
   const executable=await this.prepare();const dir=uniqueDir(path.join(this.root,'jobs'),'native-character');
   const id=path.basename(dir),output=path.join(dir,'character.fbx'),result=path.join(dir,'native-result.json');
-  const spec={source,output,result,contentRoots:['C:/Users/Public/Documents/My DAZ 3D Library','C:/Users/Sean/Documents/DAZ 3D/Studio/My Library','C:/Users/Sean/Documents/DAZ 3D/Studio/My Daz Connect Library'],morphs};
+  const spec={source,output,result,contentRoots:[path.join(process.env.PUBLIC||'C:/Users/Public','Documents','My DAZ 3D Library'),path.join(os.homedir(),'Documents','DAZ 3D','Studio','My Library'),path.join(os.homedir(),'Documents','DAZ 3D','Studio','My Daz Connect Library')],morphs};
   const jobfile=writeNew(this.root,path.join(dir,'native-job.json'),JSON.stringify(spec));
   const job={id,action:'native character',status:'running',started:new Date().toISOString(),directory:dir,output,log:''};this.onUpdate({...job});
   const args=['-instanceName','FusionStudioJob#','-headless','-noPrompt','-noDefaultScene','-cleanOnLaunch','true','-cleanOnExit','true','-copyAppSettings','!','-copySessionUI','!','-scriptArg',jobfile,this.script];

@@ -1,13 +1,17 @@
-const fs=require('node:fs');const path=require('node:path');const crypto=require('node:crypto');
+const fs=require('node:fs');const path=require('node:path');const crypto=require('node:crypto');const os=require('node:os');
 const {IMPORTS}=require('./core.cjs');
+// Default content roots are derived per machine: shared Public folders plus
+// the current user's Documents. Never hardcode a specific user's profile.
+const PUBLIC_DOCS=process.env.PUBLIC?path.join(process.env.PUBLIC,'Documents'):'C:\\Users\\Public\\Documents';
+const USER_DOCS=path.join(os.homedir(),'Documents');
 const DEFAULT_ROOTS=[
- ['DAZ','C:\\Users\\Public\\Documents\\My DAZ 3D Library'],
- ['DAZ','C:\\Users\\Sean\\Documents\\DAZ 3D\\Studio\\My Library'],
- ['DAZ','C:\\Users\\Sean\\Documents\\DAZ 3D\\Studio\\My Daz Connect Library'],
- ['Reallusion','C:\\Users\\Public\\Documents\\Reallusion\\Reallusion Templates'],
- ['Reallusion','C:\\Users\\Public\\Documents\\Reallusion\\Custom\\Character Creator 5 Custom'],
- ['Projects','C:\\Users\\Sean\\Documents\\Reallusion\\DataLink'],
- ['Marvelous','C:\\Users\\Public\\Documents\\Marvelous Designer'],
+ ['DAZ',path.join(PUBLIC_DOCS,'My DAZ 3D Library')],
+ ['DAZ',path.join(USER_DOCS,'DAZ 3D','Studio','My Library')],
+ ['DAZ',path.join(USER_DOCS,'DAZ 3D','Studio','My Daz Connect Library')],
+ ['Reallusion',path.join(PUBLIC_DOCS,'Reallusion','Reallusion Templates')],
+ ['Reallusion',path.join(PUBLIC_DOCS,'Reallusion','Custom','Character Creator 5 Custom')],
+ ['Projects',path.join(USER_DOCS,'Reallusion','DataLink')],
+ ['Marvelous',path.join(PUBLIC_DOCS,'Marvelous Designer')],
 ];
 const NATIVE=new Set(['.duf','.ccavatar','.iavatar','.ccproject','.zprj','.zpac']);
 class AssetCatalog{
