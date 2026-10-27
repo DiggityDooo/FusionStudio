@@ -1,0 +1,2946 @@
+{
+ "version": 1,
+ "items": {
+  "A1 Orbit, pan and zoom navigation; fly/walk mode; focus on selection": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Orbit/pan/zoom, RMB+WASD fly and frame selected done; gravity walk mode missing."
+  },
+  "A1 Perspective and orthographic views; multi-view layouts (quad view)": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Ortho toggle with framing preserved; quad view missing (one live viewport)."
+  },
+  "A1 Shading modes: wireframe, solid, textured, X-ray, matcap, material preview, rendered": {
+   "status": "open"
+  },
+  "A1 Real-time viewport PBR, ambient occlusion, SSR, shadows and HDRI lighting": {
+   "status": "open"
+  },
+  "A1 Grid, snapping (vertex/edge/face/grid/surface/increment), and custom pivots": {
+   "status": "open"
+  },
+  "A1 Transform gizmos (move/rotate/scale), local/global/normal/gimbal orientation": {
+   "status": "open"
+  },
+  "A1 Outliner or scene hierarchy; parenting, grouping and instancing": {
+   "status": "open"
+  },
+  "A1 Layers, collections, display layers, visibility and selection isolation": {
+   "status": "open"
+  },
+  "A1 Selection tools: box, lasso, paint, loop, ring, grow/shrink, select similar, soft select": {
+   "status": "open"
+  },
+  "A1 Undo history and non-destructive edit stacks": {
+   "status": "open"
+  },
+  "A1 Reference image planes, background images and blueprints": {
+   "status": "open"
+  },
+  "A1 Measurement tools, rulers and annotations": {
+   "status": "open"
+  },
+  "A1 Scene units and scale management": {
+   "status": "open"
+  },
+  "A1 Multi-object editing": {
+   "status": "open"
+  },
+  "A1 Viewport clipping and cutaway": {
+   "status": "open"
+  },
+  "A1 Bookmarks and saved views": {
+   "status": "open"
+  },
+  "A1 Turntable preview": {
+   "status": "open"
+  },
+  "A2 Primitive creation: cube, sphere, cylinder, cone, torus, plane, capsule": {
+   "status": "open"
+  },
+  "A2 Vertex, edge and face editing modes": {
+   "status": "open"
+  },
+  "A2 Extrude (face/edge/vertex/along path), inset, bevel and chamfer": {
+   "status": "open"
+  },
+  "A2 Loop cut, edge slide, offset edge loops and multi-cut/knife": {
+   "status": "open"
+  },
+  "A2 Bridge edge loops, fill hole, and merge/weld/collapse": {
+   "status": "open"
+  },
+  "A2 Dissolve, delete and clean up edges and vertices": {
+   "status": "open"
+  },
+  "A2 Bisect/slice, cut with plane, and boolean (union/difference/intersect)": {
+   "status": "open"
+  },
+  "A2 Mirror and symmetry (object, topology, radial)": {
+   "status": "open"
+  },
+  "A2 Array, radial array and path array": {
+   "status": "open"
+  },
+  "A2 Spin, lathe and revolve": {
+   "status": "open"
+  },
+  "A2 Loft and sweep": {
+   "status": "open"
+  },
+  "A2 Solidify and shell/thicken": {
+   "status": "open"
+  },
+  "A2 Triangulate, quadrangulate and tris-to-quads": {
+   "status": "open"
+  },
+  "A2 Flip and recalculate normals; custom/split normals; smooth/hard edge tagging": {
+   "status": "open"
+  },
+  "A2 Edge crease and bevel weight": {
+   "status": "open"
+  },
+  "A2 Subdivision surface (Catmull-Clark, OpenSubdiv) with multi-level preview": {
+   "status": "open"
+  },
+  "A2 Smooth, relax, flatten and straighten": {
+   "status": "open"
+  },
+  "A2 Vertex/edge/face merging by distance": {
+   "status": "open"
+  },
+  "A2 Inflate, shrink/fatten and push/pull": {
+   "status": "open"
+  },
+  "A2 Lattice, cage and bend/twist/taper/skew deformers": {
+   "status": "open"
+  },
+  "A2 Proportional/soft editing": {
+   "status": "open"
+  },
+  "A2 Edge flow tools and topology cleanup": {
+   "status": "open"
+  },
+  "A2 Mesh decimation and optimization": {
+   "status": "open"
+  },
+  "A2 Remesh (voxel, quad, Dynamesh-style)": {
+   "status": "open"
+  },
+  "A2 Convert between mesh, curve, NURBS and subdivision representations": {
+   "status": "open"
+  },
+  "A2 Mesh analysis: non-manifold detection, ngon detection, poles and flipped normals": {
+   "status": "open"
+  },
+  "A2 Knife project and shrinkwrap": {
+   "status": "open"
+  },
+  "A2 Snapping a mesh onto a surface (conform)": {
+   "status": "open"
+  },
+  "A3 Bezier, B-spline and NURBS curves": {
+   "status": "open"
+  },
+  "A3 Curve editing: CV and control-point manipulation, knot insertion, degree changes": {
+   "status": "open"
+  },
+  "A3 NURBS surfaces: loft, revolve, extrude, birail, boundary, patch": {
+   "status": "open"
+  },
+  "A3 Trim, untrim, project curve on surface and surface fillets": {
+   "status": "open"
+  },
+  "A3 Curve offset, blend, fillet and join": {
+   "status": "open"
+  },
+  "A3 Surface continuity analysis (G0/G1/G2/G3), zebra stripes and curvature combs": {
+   "status": "open"
+  },
+  "A3 Sketch-based modeling with constraints": {
+   "status": "open"
+  },
+  "A3 Feature tree and parametric history": {
+   "status": "open"
+  },
+  "A3 Assembly constraints and mates": {
+   "status": "open"
+  },
+  "A3 Sheet metal, weldments and surface-body workflows": {
+   "status": "open"
+  },
+  "A3 Boolean solids (BREP)": {
+   "status": "open"
+  },
+  "A3 Exact measurement and tolerances": {
+   "status": "open"
+  },
+  "A3 STEP, IGES and Parasolid import/export": {
+   "status": "open"
+  },
+  "A3 Dimensions, GD&T and technical drawing generation": {
+   "status": "open"
+  },
+  "A3 Exploded views": {
+   "status": "open"
+  },
+  "A3 Configurations and variants (design tables)": {
+   "status": "open"
+  },
+  "A3 Topology optimization and generative design": {
+   "status": "open"
+  },
+  "A3 Finite element analysis (FEA) basics": {
+   "status": "open"
+  },
+  "A3 Conversion from CAD to mesh": {
+   "status": "open"
+  },
+  "A4 Geometry nodes and procedural networks": {
+   "status": "open"
+  },
+  "A4 Modifier stack (non-destructive)": {
+   "status": "open"
+  },
+  "A4 Attribute systems and custom data layers": {
+   "status": "open"
+  },
+  "A4 Point, vertex, primitive and detail attributes": {
+   "status": "open"
+  },
+  "A4 Scatter/point distribution and instance on points": {
+   "status": "open"
+  },
+  "A4 Procedural noise, fractal and Voronoi patterns": {
+   "status": "open"
+  },
+  "A4 Curve-to-mesh and mesh-to-curve": {
+   "status": "open"
+  },
+  "A4 Procedural building, city and road generation": {
+   "status": "open"
+  },
+  "A4 Procedural rule-based generation (L-systems, shape grammars)": {
+   "status": "open"
+  },
+  "A4 Volumes, VDB and SDF modeling": {
+   "status": "open"
+  },
+  "A4 Field-based operations": {
+   "status": "open"
+  },
+  "A4 HDAs/node groups/digital assets and exposed parameters": {
+   "status": "open"
+  },
+  "A4 Randomization and seed control": {
+   "status": "open"
+  },
+  "A4 Simulation zones and loops/iterations": {
+   "status": "open"
+  },
+  "A4 Wrangles/expressions/scripting inside nodes": {
+   "status": "open"
+  },
+  "A4 Procedural UV and procedural material integration": {
+   "status": "open"
+  },
+  "A4 Cache nodes and time-dependent procedurals": {
+   "status": "open"
+  },
+  "A5 Brush set: clay, clay buildup, move, grab, smooth, pinch, crease, inflate, flatten, polish, layer, snake hook, nudge, draw, mask, dam standard, trim, hPolish, slash": {
+   "status": "open"
+  },
+  "A5 Brush falloff, alpha/stencil textures, stroke types, lazy mouse and spacing": {
+   "status": "open"
+  },
+  "A5 Dynamic topology and adaptive tessellation": {
+   "status": "open"
+  },
+  "A5 Multi-resolution sculpting; subdivision levels with detail preservation": {
+   "status": "open"
+  },
+  "A5 Voxel remesh and dynamesh-style remeshing": {
+   "status": "open"
+  },
+  "A5 ZRemesher/quad remesh with guides and density painting": {
+   "status": "open"
+  },
+  "A5 Masking (by brush, cavity, curvature, topology, face sets, polygroups)": {
+   "status": "open"
+  },
+  "A5 Polygroups/face sets and partitioning": {
+   "status": "open"
+  },
+  "A5 Hide/isolate/show regions": {
+   "status": "open"
+  },
+  "A5 Symmetry (axial, radial, topological)": {
+   "status": "open"
+  },
+  "A5 Sculpt layers with strength sliders": {
+   "status": "open"
+  },
+  "A5 Morph targets and morph-target storing/switching": {
+   "status": "open"
+  },
+  "A5 Insert multi-mesh (IMM) and kitbash brushes": {
+   "status": "open"
+  },
+  "A5 Surface noise and procedural detail": {
+   "status": "open"
+  },
+  "A5 Stamp and alpha-based detailing": {
+   "status": "open"
+  },
+  "A5 Subtools/mesh management": {
+   "status": "open"
+  },
+  "A5 Boolean live and polygroup-based booleans": {
+   "status": "open"
+  },
+  "A5 Curve-based brushes and tube/stroke tools": {
+   "status": "open"
+  },
+  "A5 Fibermesh and strand-based sculpting": {
+   "status": "open"
+  },
+  "A5 Posing tools: transpose, gizmo, mask-based posing, puppet/pose-based deformation": {
+   "status": "open"
+  },
+  "A5 Project detail (projection/reprojection) and bake between levels": {
+   "status": "open"
+  },
+  "A5 Sculpt-ready decimation": {
+   "status": "open"
+  },
+  "A5 Millions-of-polygons performance and GPU sculpting": {
+   "status": "open"
+  },
+  "A5 Tablet pressure and tilt support": {
+   "status": "open"
+  },
+  "A5 Stencil and tiling alpha creation": {
+   "status": "open"
+  },
+  "A5 Retopology-friendly sculpt workflows": {
+   "status": "open"
+  },
+  "A6 Manual retopology with surface snapping": {
+   "status": "open"
+  },
+  "A6 Quad draw, poly draw and strip tools": {
+   "status": "open"
+  },
+  "A6 Auto-retopology (ZRemesher, Quad Remesher, Instant Meshes)": {
+   "status": "open"
+  },
+  "A6 Edge flow guides and curve guides": {
+   "status": "open"
+  },
+  "A6 Symmetry-aware retopo": {
+   "status": "open"
+  },
+  "A6 Density painting": {
+   "status": "open"
+  },
+  "A6 Re-projection onto high-poly": {
+   "status": "open"
+  },
+  "A6 Loop-flow tools for faces, joints and hands": {
+   "status": "open"
+  },
+  "A6 Retopo for animation (deformation-friendly topology)": {
+   "status": "open"
+  },
+  "A6 Retopo for games (low-poly budgets)": {
+   "status": "open"
+  },
+  "A6 LOD generation and quad decimation": {
+   "status": "open"
+  },
+  "A6 Edge constraint preservation during remeshing": {
+   "status": "open"
+  },
+  "A7 Automatic unwrap, smart UV project, cube/cylinder/sphere/planar projection": {
+   "status": "open"
+  },
+  "A7 Seam marking and cutting; seam stitching": {
+   "status": "open"
+  },
+  "A7 Conformal (LSCM/ABF), angle-based and minimum-stretch unwrapping": {
+   "status": "open"
+  },
+  "A7 UV relax, straighten, pin, align, orient and rotate": {
+   "status": "open"
+  },
+  "A7 UV packing: manual, automatic, island rotation, padding control": {
+   "status": "open"
+  },
+  "A7 Texel density checks and normalization": {
+   "status": "open"
+  },
+  "A7 UDIM tile workflow": {
+   "status": "open"
+  },
+  "A7 UV distortion/stretch visualization and checker patterns": {
+   "status": "open"
+  },
+  "A7 UV sets/channels; multi-UV per mesh": {
+   "status": "open"
+  },
+  "A7 UV copy/transfer between meshes": {
+   "status": "open"
+  },
+  "A7 Lightmap UV generation": {
+   "status": "open"
+  },
+  "A7 Atlasing and trim sheets": {
+   "status": "open"
+  },
+  "A7 UV editing in 3D view (live unwrap)": {
+   "status": "open"
+  },
+  "A7 Procedural UV tools for triplanar, box and world-space mapping": {
+   "status": "open"
+  },
+  "A8 3D painting with brushes directly on a model": {
+   "status": "open"
+  },
+  "A8 Layer-based texturing (paint, fill, filter, mask layers)": {
+   "status": "open"
+  },
+  "A8 Smart materials and smart masks (curvature, AO, thickness, position, world-space normal)": {
+   "status": "open"
+  },
+  "A8 Procedural texture generators (noise, grunge, patterns, tiles, bricks)": {
+   "status": "open"
+  },
+  "A8 Substance-style node-graph texture authoring": {
+   "status": "open"
+  },
+  "A8 Anchor points and non-destructive workflows": {
+   "status": "open"
+  },
+  "A8 Projection painting, stencils and clone tool": {
+   "status": "open"
+  },
+  "A8 Triplanar projection": {
+   "status": "open"
+  },
+  "A8 Decal painting and decal projection": {
+   "status": "open"
+  },
+  "A8 Mask painting and mask-based generators": {
+   "status": "open"
+  },
+  "A8 Baking maps: normal, tangent-space, object-space, AO, curvature, thickness, position, world-space normal, ID/color-ID, height/displacement, bent normals, UV-space": {
+   "status": "open"
+  },
+  "A8 Cage-based bake and ray distance control": {
+   "status": "open"
+  },
+  "A8 High-to-low poly bake": {
+   "status": "open"
+  },
+  "A8 Texture channel painting: base color, roughness, metallic, height, emissive, opacity, subsurface, anisotropy, clearcoat, sheen": {
+   "status": "open"
+  },
+  "A8 Seamless/tiling texture creation": {
+   "status": "open"
+  },
+  "A8 Texture stitching, sharpening and de-lighting": {
+   "status": "open"
+  },
+  "A8 Photo-to-material (scan-based material generation)": {
+   "status": "open"
+  },
+  "A8 Texture atlas creation and compression": {
+   "status": "open"
+  },
+  "A8 Virtual texturing and mipmap generation": {
+   "status": "open"
+  },
+  "A8 Texture resolution control and UDIM painting": {
+   "status": "open"
+  },
+  "A8 Image editing in 3D context (layer styles, blend modes)": {
+   "status": "open"
+  },
+  "A8 Vertex color painting": {
+   "status": "open"
+  },
+  "A8 Weight painting (see Rigging)": {
+   "status": "open"
+  },
+  "A8 Material ID painting": {
+   "status": "open"
+  },
+  "A8 Material library management": {
+   "status": "open"
+  },
+  "A8 Export presets for engines (Unreal, Unity, glTF, etc.)": {
+   "status": "open"
+  },
+  "A9 PBR shaders (metallic-roughness and specular-glossiness workflows)": {
+   "status": "open"
+  },
+  "A9 Physically based BSDF/uber shader": {
+   "status": "open"
+  },
+  "A9 Diffuse, specular, reflection, refraction, transmission, IOR": {
+   "status": "open"
+  },
+  "A9 Subsurface scattering (skin, wax, marble, leaves)": {
+   "status": "open"
+  },
+  "A9 Translucency and thin-film iridescence": {
+   "status": "open"
+  },
+  "A9 Clearcoat, sheen, anisotropy and rough conductor/dielectric models": {
+   "status": "open"
+  },
+  "A9 Emission and light-emitting materials": {
+   "status": "open"
+  },
+  "A9 Volume shaders (smoke, fog, fire, atmosphere)": {
+   "status": "open"
+  },
+  "A9 Displacement (bump, normal, true micro-displacement, vector displacement)": {
+   "status": "open"
+  },
+  "A9 Opacity/alpha, cutouts and dithering": {
+   "status": "open"
+  },
+  "A9 Node-based shader editors with procedural textures": {
+   "status": "open"
+  },
+  "A9 Layered and blended materials": {
+   "status": "open"
+  },
+  "A9 Toon/NPR/cel shading, outline shaders and stylized shading": {
+   "status": "open"
+  },
+  "A9 Hair/fur shaders (Marschner, Chiang)": {
+   "status": "open"
+  },
+  "A9 Skin shaders, eye shaders (cornea, sclera, iris), teeth and tear-line shaders": {
+   "status": "open"
+  },
+  "A9 Car paint, glass, liquid, metal and fabric shaders (with sheen and weave)": {
+   "status": "open"
+  },
+  "A9 Procedural weathering and aging": {
+   "status": "open"
+  },
+  "A9 Material instancing and parameter overrides": {
+   "status": "open"
+  },
+  "A9 OSL/MaterialX/MDL shader support": {
+   "status": "open"
+  },
+  "A9 Shader baking to textures": {
+   "status": "open"
+  },
+  "A9 Light-path/ray-visibility controls": {
+   "status": "open"
+  },
+  "A9 Per-object material overrides": {
+   "status": "open"
+  },
+  "A9 Vertex-color-driven shader inputs": {
+   "status": "open"
+  },
+  "A9 Ambient occlusion, curvature and edge-wear shader inputs": {
+   "status": "open"
+  },
+  "A9 UV-independent world-space and object-space texturing": {
+   "status": "open"
+  },
+  "A9 Decals and projected materials": {
+   "status": "open"
+  },
+  "A10 Point, spot, directional/sun, area (rect, disk, sphere, tube), mesh/emissive lights": {
+   "status": "open"
+  },
+  "A10 IES profile lights": {
+   "status": "open"
+  },
+  "A10 HDRI and image-based lighting": {
+   "status": "open"
+  },
+  "A10 Physical sun/sky systems with time-of-day/location": {
+   "status": "open"
+  },
+  "A10 Light linking and exclusion": {
+   "status": "open"
+  },
+  "A10 Light intensity in physical units (lumens, nits, EV)": {
+   "status": "open"
+  },
+  "A10 Color temperature (Kelvin)": {
+   "status": "open"
+  },
+  "A10 Soft shadows, shadow catchers and contact shadows": {
+   "status": "open"
+  },
+  "A10 Gobos/cookies and barn doors": {
+   "status": "open"
+  },
+  "A10 Volumetric lights and god rays": {
+   "status": "open"
+  },
+  "A10 Light groups and light mixer": {
+   "status": "open"
+  },
+  "A10 Portal lights for interiors": {
+   "status": "open"
+  },
+  "A10 Lightmaps and lightmass baking": {
+   "status": "open"
+  },
+  "A10 Global illumination: path tracing, irradiance cache, light cache, photon mapping, ray-traced GI, Lumen-style dynamic GI": {
+   "status": "open"
+  },
+  "A10 Caustics": {
+   "status": "open"
+  },
+  "A10 Mesh light and emissive geometry sampling": {
+   "status": "open"
+  },
+  "A10 Light-path controls": {
+   "status": "open"
+  },
+  "A10 Lighting rigs and presets (three-point, studio, HDRI studio)": {
+   "status": "open"
+  },
+  "A10 Light painting and interactive placement": {
+   "status": "open"
+  },
+  "A11 Perspective and orthographic cameras": {
+   "status": "open"
+  },
+  "A11 Focal length, sensor size, FOV and aspect ratio": {
+   "status": "open"
+  },
+  "A11 Depth of field with aperture/f-stop and focus distance (plus bokeh shape)": {
+   "status": "open"
+  },
+  "A11 Motion blur (camera and object, shutter angle)": {
+   "status": "open"
+  },
+  "A11 Lens distortion, chromatic aberration, vignette and lens flare": {
+   "status": "open"
+  },
+  "A11 Camera shake and procedural camera animation": {
+   "status": "open"
+  },
+  "A11 Camera rigs: dolly, crane, orbit, follow path": {
+   "status": "open"
+  },
+  "A11 Tilt-shift": {
+   "status": "open"
+  },
+  "A11 Stereoscopic/VR/360 panoramic and fisheye": {
+   "status": "open"
+  },
+  "A11 Safe frames and composition guides": {
+   "status": "open"
+  },
+  "A11 Camera tracking/matchmoving integration": {
+   "status": "open"
+  },
+  "A11 Multiple cameras and camera switching": {
+   "status": "open"
+  },
+  "A11 Exposure, ISO, white balance and tone mapping": {
+   "status": "open"
+  },
+  "A11 Camera culling and clipping planes": {
+   "status": "open"
+  },
+  "A11 Cinematic camera presets": {
+   "status": "open"
+  },
+  "A11 Virtual camera / Live-link support": {
+   "status": "open"
+  },
+  "A12 Unbiased path tracing, biased/hybrid rendering and real-time ray tracing": {
+   "status": "open"
+  },
+  "A12 CPU, GPU and hybrid rendering (CUDA, OptiX, Metal, HIP, Vulkan)": {
+   "status": "open"
+  },
+  "A12 Rasterization and real-time rendering (EEVEE/Unreal-style)": {
+   "status": "open"
+  },
+  "A12 Progressive/interactive rendering (IPR/live render)": {
+   "status": "open"
+  },
+  "A12 Denoising (OptiX, OIDN, AI-based) and adaptive sampling": {
+   "status": "open"
+  },
+  "A12 Render passes/AOVs: beauty, diffuse, glossy, AO, depth, normal, position, cryptomatte, motion vector, shadow, emission, light groups, material ID, object ID, UV, wireframe": {
+   "status": "open"
+  },
+  "A12 Cryptomatte for compositing": {
+   "status": "open"
+  },
+  "A12 Multi-layer EXR output with 16/32-bit float and ACES/OCIO color management": {
+   "status": "open"
+  },
+  "A12 Render regions and render tiles/buckets": {
+   "status": "open"
+  },
+  "A12 Render farm and distributed network rendering (Deadline, Backburner, cloud)": {
+   "status": "open"
+  },
+  "A12 Render queue and batch rendering": {
+   "status": "open"
+  },
+  "A12 Render presets and quality profiles": {
+   "status": "open"
+  },
+  "A12 Image-based environment rendering": {
+   "status": "open"
+  },
+  "A12 Out-of-core rendering for large scenes": {
+   "status": "open"
+  },
+  "A12 Instancing and proxy rendering for heavy scenes": {
+   "status": "open"
+  },
+  "A12 Toon and NPR render modes": {
+   "status": "open"
+  },
+  "A12 Hair/fur and volumetric rendering": {
+   "status": "open"
+  },
+  "A12 Subsurface and SSS rendering modes": {
+   "status": "open"
+  },
+  "A12 Render time estimators and sampling controls": {
+   "status": "open"
+  },
+  "A12 Light cache and irradiance map caching": {
+   "status": "open"
+  },
+  "A12 Shadow catcher and holdout/matte objects for compositing": {
+   "status": "open"
+  },
+  "A12 Turntable and animation rendering": {
+   "status": "open"
+  },
+  "A12 Stereo/VR/360° rendering": {
+   "status": "open"
+  },
+  "A12 Network license and license management": {
+   "status": "open"
+  },
+  "A12 Render-engine plugins (Cycles, Arnold, V-Ray, Redshift, Octane, RenderMan, Corona, Karma, Eevee, Lumen, Twinmotion, D5)": {
+   "status": "open"
+  },
+  "A12 Interactive viewport denoising": {
+   "status": "open"
+  },
+  "A12 Sequence output (PNG, EXR, TIFF, JPEG, video)": {
+   "status": "open"
+  },
+  "A12 Video encoding (H.264, ProRes, etc.)": {
+   "status": "open"
+  },
+  "A13 Skeleton/armature/joint creation and orientation": {
+   "status": "open"
+  },
+  "A13 Forward kinematics (FK) and inverse kinematics (IK)": {
+   "status": "open"
+  },
+  "A13 IK solvers: single-chain, spline, rotate-plane, spring, multi-chain, HIK": {
+   "status": "open"
+  },
+  "A13 FK/IK switching and blending": {
+   "status": "open"
+  },
+  "A13 Constraints: parent, point, orient, aim/track-to, scale, pole vector, copy transforms, limit, child-of, follow path, spring": {
+   "status": "open"
+  },
+  "A13 Control curves/controllers and custom control shapes": {
+   "status": "open"
+  },
+  "A13 Set Driven Key/drivers and driver expressions": {
+   "status": "open"
+  },
+  "A13 Custom attributes and rig UI panels": {
+   "status": "open"
+  },
+  "A13 Reverse foot and foot roll setups": {
+   "status": "open"
+  },
+  "A13 Twist joints and corrective joints": {
+   "status": "open"
+  },
+  "A13 Spine, neck, tail and tentacle spline rigs": {
+   "status": "open"
+  },
+  "A13 Face rigging: blendshapes/shape keys, bone-based, joint-based, FACS-based": {
+   "status": "open"
+  },
+  "A13 Facial controls and eye/jaw/tongue rigs": {
+   "status": "open"
+  },
+  "A13 Auto-rigging (Mixamo-style, Rigify, Advanced Skeleton, HumanIK, Character Creator)": {
+   "status": "open"
+  },
+  "A13 Biped/quadruped/creature templates": {
+   "status": "open"
+  },
+  "A13 Modular rig building and rig scripting": {
+   "status": "open"
+  },
+  "A13 Rig mirroring and symmetry": {
+   "status": "open"
+  },
+  "A13 Rig layers and visibility sets": {
+   "status": "open"
+  },
+  "A13 Rig retargeting (see Animation)": {
+   "status": "open"
+  },
+  "A13 Squash/stretch and stretchy limbs": {
+   "status": "open"
+  },
+  "A13 Ribbon/spline IK for spine and cloth": {
+   "status": "open"
+  },
+  "A13 Muscle and flesh simulation": {
+   "status": "open"
+  },
+  "A13 Jiggle/secondary motion bones": {
+   "status": "open"
+  },
+  "A13 Dynamic bones and soft-body bones": {
+   "status": "open"
+  },
+  "A13 Pose libraries and pose mirroring": {
+   "status": "open"
+  },
+  "A13 Rig bake/export for game engines (FBX, glTF, USD)": {
+   "status": "open"
+  },
+  "A13 Rig proxies and low-res rig versions": {
+   "status": "open"
+  },
+  "A13 Control-rig graph (node-based rigs)": {
+   "status": "open"
+  },
+  "A13 Space switching": {
+   "status": "open"
+  },
+  "A13 Facial rig transfer between characters": {
+   "status": "open"
+  },
+  "A13 Corrective blendshapes and pose-space deformation (PSD)": {
+   "status": "open"
+  },
+  "A14 Smooth bind and rigid bind": {
+   "status": "open"
+  },
+  "A14 Linear blend skinning, dual quaternion skinning": {
+   "status": "open"
+  },
+  "A14 Weight painting with brush modes (add, replace, smooth, scale)": {
+   "status": "open"
+  },
+  "A14 Weight mirroring, copying and transferring between meshes": {
+   "status": "open"
+  },
+  "A14 Auto-weights (heat map, envelope, geodesic voxel)": {
+   "status": "open"
+  },
+  "A14 Weight normalization, pruning, limits per vertex": {
+   "status": "open"
+  },
+  "A14 Weight hammer/smoothing tools": {
+   "status": "open"
+  },
+  "A14 Component editor for weights": {
+   "status": "open"
+  },
+  "A14 Skin cluster and skin layers": {
+   "status": "open"
+  },
+  "A14 Delta Mush and smoothing deformers": {
+   "status": "open"
+  },
+  "A14 Wrap/surface-follow deformers": {
+   "status": "open"
+  },
+  "A14 Cage deformers and lattice deformers": {
+   "status": "open"
+  },
+  "A14 Shrinkwrap and sculpt deformers": {
+   "status": "open"
+  },
+  "A14 Muscle/tissue/flesh deformation": {
+   "status": "open"
+  },
+  "A14 Cloth-based deformation for tight clothing": {
+   "status": "open"
+  },
+  "A14 Pose-space and corrective shapes": {
+   "status": "open"
+  },
+  "A14 Blendshape/morph target tools: creation, combination, in-between, inversion, splitting": {
+   "status": "open"
+  },
+  "A14 Wrinkle maps and tension-driven maps": {
+   "status": "open"
+  },
+  "A14 Skin-slide/sliding skin simulation": {
+   "status": "open"
+  },
+  "A14 Fit and weight transfer for clothing to a character": {
+   "status": "open"
+  },
+  "A14 Proxy-based weight transfer for clothes": {
+   "status": "open"
+  },
+  "A14 Bone-based and shape-key-based deformation mixing": {
+   "status": "open"
+  },
+  "A15 Keyframe animation with timeline, dope sheet and graph editor": {
+   "status": "open"
+  },
+  "A15 Interpolation: linear, constant, Bezier, spline, stepped, custom": {
+   "status": "open"
+  },
+  "A15 F-curves, tangents, handle editing and curve filters": {
+   "status": "open"
+  },
+  "A15 Non-linear animation (NLA) / animation layers / clips / tracks": {
+   "status": "open"
+  },
+  "A15 Motion paths and ghosting/onion skinning": {
+   "status": "open"
+  },
+  "A15 Pose-to-pose and straight-ahead workflows": {
+   "status": "open"
+  },
+  "A15 Auto-key and key filtering": {
+   "status": "open"
+  },
+  "A15 Time-stretching, retiming, speed ramping": {
+   "status": "open"
+  },
+  "A15 Animation baking and keyframe reduction/simplification": {
+   "status": "open"
+  },
+  "A15 Looping and cycles (walk/run cycle, ping-pong)": {
+   "status": "open"
+  },
+  "A15 Pose libraries and animation libraries": {
+   "status": "open"
+  },
+  "A15 Blend shapes/shape keys animation": {
+   "status": "open"
+  },
+  "A15 Path animation and follow path": {
+   "status": "open"
+  },
+  "A15 Camera and object animation": {
+   "status": "open"
+  },
+  "A15 Procedural animation and expression-driven animation": {
+   "status": "open"
+  },
+  "A15 Retargeting between different skeletons": {
+   "status": "open"
+  },
+  "A15 Motion capture import/cleanup and mocap editing (BVH, FBX, C3D)": {
+   "status": "open"
+  },
+  "A15 Motion matching and motion layering": {
+   "status": "open"
+  },
+  "A15 State machines and animation blending (game engines)": {
+   "status": "open"
+  },
+  "A15 Lip sync (phoneme/viseme-based) and audio-driven animation": {
+   "status": "open"
+  },
+  "A15 Facial animation capture (ARKit, Faceware, Live Link Face, audio2face)": {
+   "status": "open"
+  },
+  "A15 Crowd simulation and agents": {
+   "status": "open"
+  },
+  "A15 Muscle-driven animation": {
+   "status": "open"
+  },
+  "A15 Physics-based animation (ragdoll, active ragdoll)": {
+   "status": "open"
+  },
+  "A15 Constraint-based animation and baking constraints": {
+   "status": "open"
+  },
+  "A15 Animation retiming across shots": {
+   "status": "open"
+  },
+  "A15 Sequencer/shot/cinematic editor": {
+   "status": "open"
+  },
+  "A15 Previs and storyboard tools": {
+   "status": "open"
+  },
+  "A15 Grease pencil/2D-in-3D animation": {
+   "status": "open"
+  },
+  "A15 Motion graphics: cloners, effectors, fields, MoGraph": {
+   "status": "open"
+  },
+  "A15 Morph-target-based animation": {
+   "status": "open"
+  },
+  "A15 Mesh cache and Alembic/USD point-cache playback": {
+   "status": "open"
+  },
+  "A15 Time-warping and animation curves for non-transform values": {
+   "status": "open"
+  },
+  "A15 Animation compression for game export": {
+   "status": "open"
+  },
+  "A15 Animation events/notifies": {
+   "status": "open"
+  },
+  "A16 Parametric character creators (body, face, age, ethnicity, proportion sliders)": {
+   "status": "open"
+  },
+  "A16 Morph-based customization": {
+   "status": "open"
+  },
+  "A16 Base-mesh libraries": {
+   "status": "open"
+  },
+  "A16 Clothing, shoe and accessory fitting and auto-resizing": {
+   "status": "open"
+  },
+  "A16 Skin tone, makeup, tattoos, scars, pores, wrinkles, freckles layering": {
+   "status": "open"
+  },
+  "A16 Facial expression presets and facial pose libraries": {
+   "status": "open"
+  },
+  "A16 Teeth, tongue, eyes and eyelash libraries": {
+   "status": "open"
+  },
+  "A16 Hair/beard/eyebrow libraries and groom assets": {
+   "status": "open"
+  },
+  "A16 Body-shape morphs and fat/muscle sliders": {
+   "status": "open"
+  },
+  "A16 Bone-scale and proportion adjustments with retargeting": {
+   "status": "open"
+  },
+  "A16 Character export to Unreal, Unity, Maya, Blender": {
+   "status": "open"
+  },
+  "A16 Digital-human scan workflows (photogrammetry to rigged face)": {
+   "status": "open"
+  },
+  "A16 Scan-based facial topology projection and wrap tools": {
+   "status": "open"
+  },
+  "A16 Character LOD generation": {
+   "status": "open"
+  },
+  "A16 Digital double and look-dev workflows": {
+   "status": "open"
+  },
+  "A16 Texture-set generation for characters (multi-UDIM)": {
+   "status": "open"
+  },
+  "A16 Facial expression libraries and corrective shapes": {
+   "status": "open"
+  },
+  "A16 Face tracking and performance capture retargeting": {
+   "status": "open"
+  },
+  "A16 Character import/export between platforms (e.g., Genesis → Maya/Blender)": {
+   "status": "open"
+  },
+  "A16 Figure/morph asset systems and ERC-style morph linking": {
+   "status": "open"
+  },
+  "A16 Wardrobe and body-conforming asset systems": {
+   "status": "open"
+  },
+  "A17 Strand-based hair/fur systems and hair cards": {
+   "status": "open"
+  },
+  "A17 Guide-curve grooming": {
+   "status": "open"
+  },
+  "A17 Comb, cut, grow, puff, smooth, clump and length brushes": {
+   "status": "open"
+  },
+  "A17 Hair interpolation (children/clumps)": {
+   "status": "open"
+  },
+  "A17 Frizz, flyaways, noise, curl, wave and braid generation": {
+   "status": "open"
+  },
+  "A17 Hair collision and hair dynamics/simulation": {
+   "status": "open"
+  },
+  "A17 Wind and gravity on hair/fur": {
+   "status": "open"
+  },
+  "A17 Hair shading (melanin-based, color ramp, root/tip color)": {
+   "status": "open"
+  },
+  "A17 Fur on animals, creatures and fabric surfaces": {
+   "status": "open"
+  },
+  "A17 Eyebrow, eyelash and beard tools": {
+   "status": "open"
+  },
+  "A17 Hair-card conversion for real-time use": {
+   "status": "open"
+  },
+  "A17 Hair LOD and strand count optimization": {
+   "status": "open"
+  },
+  "A17 Hair caching, Alembic and groom export": {
+   "status": "open"
+  },
+  "A17 Hair texture and mask painting": {
+   "status": "open"
+  },
+  "A17 Hair-to-mesh conversion": {
+   "status": "open"
+  },
+  "A17 Groom-asset libraries": {
+   "status": "open"
+  },
+  "A17 Procedural grooming nodes": {
+   "status": "open"
+  },
+  "A17 Grass/feather/moss-like strand generation": {
+   "status": "open"
+  },
+  "A18 2D pattern-based garment design": {
+   "status": "open"
+  },
+  "A18 Pattern drawing, editing, seam creation, and sewing/stitching": {
+   "status": "open"
+  },
+  "A18 Pattern grading and sizing": {
+   "status": "open"
+  },
+  "A18 Fabric presets (cotton, silk, leather, denim, wool, etc.) and custom physical properties": {
+   "status": "open"
+  },
+  "A18 Cloth simulation (stretch, shear, bend, density, friction, damping)": {
+   "status": "open"
+  },
+  "A18 Collision against animated characters; self-collision and layered garments": {
+   "status": "open"
+  },
+  "A18 Pins, pressure, tension and wind": {
+   "status": "open"
+  },
+  "A18 Cloth tearing and cutting": {
+   "status": "open"
+  },
+  "A18 Pleats, folds, gathers, elastic, stitches and topstitching": {
+   "status": "open"
+  },
+  "A18 Buttons, zippers, trims and hardware": {
+   "status": "open"
+  },
+  "A18 Fabric texture and normal-map creation and print/pattern placement": {
+   "status": "open"
+  },
+  "A18 Garment fitting and auto-resizing to avatars": {
+   "status": "open"
+  },
+  "A18 Animated-garment simulation (cloth cache)": {
+   "status": "open"
+  },
+  "A18 Simulation-to-retopo for games": {
+   "status": "open"
+  },
+  "A18 Cloth-sim caching and export (Alembic, FBX, USD)": {
+   "status": "open"
+  },
+  "A18 Cloth painting and weight maps for stiffness": {
+   "status": "open"
+  },
+  "A18 Soft-body and cloth-like deformation in DCCs": {
+   "status": "open"
+  },
+  "A18 Flags, curtains, capes and sail simulation": {
+   "status": "open"
+  },
+  "A18 Digital pattern-making for production": {
+   "status": "open"
+  },
+  "A19 Rigid-body dynamics and constraints": {
+   "status": "open"
+  },
+  "A19 Soft-body dynamics": {
+   "status": "open"
+  },
+  "A19 Cloth (see above)": {
+   "status": "open"
+  },
+  "A19 Fluid/liquid simulation (FLIP, SPH, PBD)": {
+   "status": "open"
+  },
+  "A19 Smoke, fire and explosion simulation (grid-based/Pyro)": {
+   "status": "open"
+  },
+  "A19 Gas/volume solvers": {
+   "status": "open"
+  },
+  "A19 Particle systems: emitters, forces, collisions, lifespan, instancing": {
+   "status": "open"
+  },
+  "A19 Destruction/fracture (Voronoi, boolean, procedural)": {
+   "status": "open"
+  },
+  "A19 Granular/sand/snow/mud simulation": {
+   "status": "open"
+  },
+  "A19 Vellum-style position-based dynamics": {
+   "status": "open"
+  },
+  "A19 Hair/fur simulation": {
+   "status": "open"
+  },
+  "A19 Ocean and wave simulation": {
+   "status": "open"
+  },
+  "A19 Foam, spray and bubbles": {
+   "status": "open"
+  },
+  "A19 Vehicle and wheel physics": {
+   "status": "open"
+  },
+  "A19 Rope, chain and cable simulation": {
+   "status": "open"
+  },
+  "A19 Ragdoll physics": {
+   "status": "open"
+  },
+  "A19 Wind, turbulence, vortex and force fields": {
+   "status": "open"
+  },
+  "A19 Caches: Alembic, VDB, bgeo, USD, point cache": {
+   "status": "open"
+  },
+  "A19 Simulation substeps and solver quality control": {
+   "status": "open"
+  },
+  "A19 Collision proxies and collision shapes": {
+   "status": "open"
+  },
+  "A19 Magnetic, gravitational and custom field forces": {
+   "status": "open"
+  },
+  "A19 Lightning, electricity and magic/energy FX": {
+   "status": "open"
+  },
+  "A19 Procedural shatter and debris": {
+   "status": "open"
+  },
+  "A19 Volumetric rendering for FX": {
+   "status": "open"
+  },
+  "A19 FX presets and libraries": {
+   "status": "open"
+  },
+  "A19 Particle rendering as sprites/meshes/volumes": {
+   "status": "open"
+  },
+  "A19 Real-time VFX (Niagara/VFX Graph/Shuriken-like)": {
+   "status": "open"
+  },
+  "A19 Simulation visualization and debug tools": {
+   "status": "open"
+  },
+  "A20 Terrain: heightfield generation, erosion, noise, sculpting": {
+   "status": "open"
+  },
+  "A20 Terrain painting (layers, splat maps) and landscape tools": {
+   "status": "open"
+  },
+  "A20 Foliage and vegetation scattering": {
+   "status": "open"
+  },
+  "A20 Procedural tree/plant generators (leaf, branch, growth)": {
+   "status": "open"
+  },
+  "A20 Wind animation for vegetation": {
+   "status": "open"
+  },
+  "A20 Rock/cliff generation, scatter and kitbashing": {
+   "status": "open"
+  },
+  "A20 Road/spline/river/water-body tools": {
+   "status": "open"
+  },
+  "A20 Water, ocean and lake shaders": {
+   "status": "open"
+  },
+  "A20 Sky, clouds, atmosphere and weather systems": {
+   "status": "open"
+  },
+  "A20 Time-of-day systems": {
+   "status": "open"
+  },
+  "A20 City/building/architectural generation": {
+   "status": "open"
+  },
+  "A20 Modular kits and snapping asset workflows": {
+   "status": "open"
+  },
+  "A20 Prefabs/blueprints/asset packs": {
+   "status": "open"
+  },
+  "A20 Level-of-detail systems and HLOD": {
+   "status": "open"
+  },
+  "A20 Instancing and proxies for large scenes": {
+   "status": "open"
+  },
+  "A20 Scene streaming/world partition": {
+   "status": "open"
+  },
+  "A20 Asset browser and libraries (Quixel, Poly Haven-style)": {
+   "status": "open"
+  },
+  "A20 Photogrammetry asset integration": {
+   "status": "open"
+  },
+  "A20 Biome and ecosystem scattering rules": {
+   "status": "open"
+  },
+  "A20 Decal and detail-mesh scatter": {
+   "status": "open"
+  },
+  "A20 Interior design and furniture placement tools": {
+   "status": "open"
+  },
+  "A20 Floor plan to 3D conversion": {
+   "status": "open"
+  },
+  "A20 Mesh kitbashing libraries": {
+   "status": "open"
+  },
+  "A20 Level blockout/greybox tools": {
+   "status": "open"
+  },
+  "A20 Scene optimization and occlusion culling": {
+   "status": "open"
+  },
+  "A20 Seasonal and procedural variation": {
+   "status": "open"
+  },
+  "A21 Node-based compositor": {
+   "status": "open"
+  },
+  "A21 Multi-pass/AOV compositing and relighting": {
+   "status": "open"
+  },
+  "A21 Color grading: lift/gamma/gain, curves, LUTs, tone mapping": {
+   "status": "open"
+  },
+  "A21 Color management (OCIO, ACES, sRGB, Rec.709, Rec.2020, linear workflows)": {
+   "status": "open"
+  },
+  "A21 Glare, bloom, lens effects and film grain": {
+   "status": "open"
+  },
+  "A21 Depth-of-field and motion-blur post effects": {
+   "status": "open"
+  },
+  "A21 Z-depth fog and atmospheric perspective": {
+   "status": "open"
+  },
+  "A21 Cryptomatte-based masking": {
+   "status": "open"
+  },
+  "A21 Keying, rotoscoping and matte tools": {
+   "status": "open"
+  },
+  "A21 Camera tracking and 3D integration (matchmove)": {
+   "status": "open"
+  },
+  "A21 Denoising passes": {
+   "status": "open"
+  },
+  "A21 Vignette, chromatic aberration and sharpen": {
+   "status": "open"
+  },
+  "A21 LUT import/export": {
+   "status": "open"
+  },
+  "A21 Render-to-compositor live linking": {
+   "status": "open"
+  },
+  "A21 Image sequence processing": {
+   "status": "open"
+  },
+  "A21 Real-time post-process volumes (game-engine style)": {
+   "status": "open"
+  },
+  "A21 Stabilization and distortion correction": {
+   "status": "open"
+  },
+  "A21 Output to video/sequence formats": {
+   "status": "open"
+  },
+  "A22 Live link to game engines": {
+   "status": "open"
+  },
+  "A22 Optical, inertial and webcam-based mocap support": {
+   "status": "open"
+  },
+  "A22 Facial performance capture": {
+   "status": "open"
+  },
+  "A22 Virtual camera and virtual scouting": {
+   "status": "open"
+  },
+  "A22 Real-time retargeting": {
+   "status": "open"
+  },
+  "A22 LED volume/in-camera VFX workflows (nDisplay-style)": {
+   "status": "open"
+  },
+  "A22 Timecode and genlock synchronization": {
+   "status": "open"
+  },
+  "A22 Real-time previs and sequencer": {
+   "status": "open"
+  },
+  "A22 Live compositing and keying": {
+   "status": "open"
+  },
+  "A22 VR/AR modeling, sculpting and scene review": {
+   "status": "open"
+  },
+  "A22 Object and body tracking": {
+   "status": "open"
+  },
+  "A22 Stage/blocking previz tools": {
+   "status": "open"
+  },
+  "A23 PBR real-time pipeline": {
+   "status": "open"
+  },
+  "A23 Virtualized geometry (Nanite-style) and mesh streaming": {
+   "status": "open"
+  },
+  "A23 Dynamic GI (Lumen-style), baked GI and reflection probes": {
+   "status": "open"
+  },
+  "A23 Real-time ray tracing and path-traced mode": {
+   "status": "open"
+  },
+  "A23 LOD generation and impostors": {
+   "status": "open"
+  },
+  "A23 Collision mesh generation": {
+   "status": "open"
+  },
+  "A23 Occlusion culling and frustum culling": {
+   "status": "open"
+  },
+  "A23 Material and shader graph": {
+   "status": "open"
+  },
+  "A23 Visual scripting (Blueprints/Bolt-style)": {
+   "status": "open"
+  },
+  "A23 Animation blueprints, state machines, blend spaces, IK rig nodes": {
+   "status": "open"
+  },
+  "A23 Physics assets and ragdoll setup": {
+   "status": "open"
+  },
+  "A23 Particle/VFX systems": {
+   "status": "open"
+  },
+  "A23 Level sequencer/timeline": {
+   "status": "open"
+  },
+  "A23 Landscape, foliage and world-building systems": {
+   "status": "open"
+  },
+  "A23 Lightmap baking": {
+   "status": "open"
+  },
+  "A23 Texture streaming and compression (BCn/ASTC)": {
+   "status": "open"
+  },
+  "A23 Skeletal mesh and morph target import": {
+   "status": "open"
+  },
+  "A23 Cloth and hair real-time simulation": {
+   "status": "open"
+  },
+  "A23 Mesh LODs and nanite-ready mesh pipelines": {
+   "status": "open"
+  },
+  "A23 Audio integration": {
+   "status": "open"
+  },
+  "A23 UI/UX systems": {
+   "status": "open"
+  },
+  "A23 Build/packaging for multiple platforms": {
+   "status": "open"
+  },
+  "A23 Profiling and performance tools": {
+   "status": "open"
+  },
+  "A23 Datasmith/live-sync import for CAD and DCC data": {
+   "status": "open"
+  },
+  "A23 Mobile/XR optimization": {
+   "status": "open"
+  },
+  "A24 Watertight/manifold mesh checks and auto-repair": {
+   "status": "open"
+  },
+  "A24 Wall-thickness and overhang analysis": {
+   "status": "open"
+  },
+  "A24 Hollowing and drain-hole creation": {
+   "status": "open"
+  },
+  "A24 Support generation and editing (auto, tree, manual)": {
+   "status": "open"
+  },
+  "A24 Slicing: layer height, infill patterns, perimeters, adaptive layers": {
+   "status": "open"
+  },
+  "A24 Print orientation optimization": {
+   "status": "open"
+  },
+  "A24 Boolean-based part splitting with alignment keys/pins": {
+   "status": "open"
+  },
+  "A24 Tolerance and clearance tools": {
+   "status": "open"
+  },
+  "A24 Model scaling to real-world units": {
+   "status": "open"
+  },
+  "A24 Multi-material and multi-color print setup": {
+   "status": "open"
+  },
+  "A24 Lattice/infill generation": {
+   "status": "open"
+  },
+  "A24 G-code generation/preview and printer profiles": {
+   "status": "open"
+  },
+  "A24 Resin and FDM-specific workflows": {
+   "status": "open"
+  },
+  "A24 STL, 3MF and OBJ export": {
+   "status": "open"
+  },
+  "A24 CNC toolpath generation (CAM)": {
+   "status": "open"
+  },
+  "A24 Laser-cutting/vector export": {
+   "status": "open"
+  },
+  "A24 Print time/material estimation": {
+   "status": "open"
+  },
+  "A24 Textured surface and displacement for print": {
+   "status": "open"
+  },
+  "A24 Slicer integration with printer firmware/network": {
+   "status": "open"
+  },
+  "A25 Photogrammetry reconstruction from photos": {
+   "status": "open"
+  },
+  "A25 LiDAR/depth scan import": {
+   "status": "open"
+  },
+  "A25 Point-cloud import, editing, cleaning and meshing": {
+   "status": "open"
+  },
+  "A25 NeRF/Gaussian splat import and viewing": {
+   "status": "open"
+  },
+  "A25 Mesh cleanup, hole filling and decimation for scans": {
+   "status": "open"
+  },
+  "A25 De-lighting and texture cleanup": {
+   "status": "open"
+  },
+  "A25 Scan-to-retopo workflows": {
+   "status": "open"
+  },
+  "A25 Marker/target alignment": {
+   "status": "open"
+  },
+  "A25 Body, face and object scanning pipelines": {
+   "status": "open"
+  },
+  "A25 Texture projection and baking onto retopologized mesh": {
+   "status": "open"
+  },
+  "A25 Alignment/registration of scans": {
+   "status": "open"
+  },
+  "A26 Native formats and scene packaging": {
+   "status": "open"
+  },
+  "A26 FBX, OBJ, glTF/GLB, Alembic (ABC), USD/USDZ, STL, PLY, DAE (Collada), 3DS, BVH, VDB, MaterialX": {
+   "status": "open"
+  },
+  "A26 STEP, IGES, SAT, JT and Parasolid (CAD)": {
+   "status": "open"
+  },
+  "A26 3MF and AMF": {
+   "status": "open"
+  },
+  "A26 Image formats: PNG, JPG, TIFF, EXR, HDR, TGA, PSD": {
+   "status": "open"
+  },
+  "A26 Video formats: MP4, MOV/ProRes, AVI": {
+   "status": "open"
+  },
+  "A26 Batch import/export": {
+   "status": "open"
+  },
+  "A26 Linking and referencing external files; asset instancing": {
+   "status": "open"
+  },
+  "A26 Version control integration (Perforce, Git/LFS, ShotGrid, Kitsu)": {
+   "status": "open"
+  },
+  "A26 Pipeline tools and production tracking (shots, assets, tasks)": {
+   "status": "open"
+  },
+  "A26 Auto-backup and recovery": {
+   "status": "open"
+  },
+  "A26 Live link/bridge plugins (Maya–Unreal, Blender–Unity, Daz-to-Maya, etc.)": {
+   "status": "open"
+  },
+  "A26 Scene optimization and cleanup tools": {
+   "status": "open"
+  },
+  "A26 Naming conventions and validation tools": {
+   "status": "open"
+  },
+  "A26 Scene units and axis conversion (Y-up/Z-up)": {
+   "status": "open"
+  },
+  "A26 Metadata/custom properties": {
+   "status": "open"
+  },
+  "A26 Sub-asset packaging and texture path relinking": {
+   "status": "open"
+  },
+  "A26 Cloud storage and project collaboration": {
+   "status": "open"
+  },
+  "A27 Python, MEL, MaxScript, C++ SDK, C#, JavaScript, Lua and expression languages": {
+   "status": "open"
+  },
+  "A27 Node-based visual programming": {
+   "status": "open"
+  },
+  "A27 Plugin/add-on ecosystems and marketplaces": {
+   "status": "open"
+  },
+  "A27 Custom tool/UI creation": {
+   "status": "open"
+  },
+  "A27 Macro/action recording": {
+   "status": "open"
+  },
+  "A27 Batch processing and command-line/headless operation": {
+   "status": "open"
+  },
+  "A27 API access to scene data, tools, renderers and exporters": {
+   "status": "open"
+  },
+  "A27 Event handlers and callbacks": {
+   "status": "open"
+  },
+  "A27 Custom shelf buttons, hotkeys, marking menus and workspaces": {
+   "status": "open"
+  },
+  "A27 Render automation and farm submission scripts": {
+   "status": "open"
+  },
+  "A27 Procedural asset generators": {
+   "status": "open"
+  },
+  "A27 Machine-learning integration hooks": {
+   "status": "open"
+  },
+  "A27 Cross-DCC tooling (USD-based pipelines)": {
+   "status": "open"
+  },
+  "A27 Web/Electron-based and browser-based 3D tool frameworks": {
+   "status": "open"
+  },
+  "A28 Customizable workspaces/layouts and dockable panels": {
+   "status": "partial",
+   "evidence": [
+    "tests/foundation-ui.cjs"
+   ],
+   "note": "Split/resize/swap/maximize/join areas persist; panels are not dockable."
+  },
+  "A28 Hotkey customization and keymaps (including mimicking other DCCs)": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "A28 Marking/radial/pie menus": {
+   "status": "open"
+  },
+  "A28 Context-sensitive menus and search-based command lookup": {
+   "status": "partial",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "F3/Shift+C/Tab search; no right-click context menus."
+  },
+  "A28 Properties/attribute/inspector panels": {
+   "status": "open"
+  },
+  "A28 Node editors (shader, geometry, compositing, rig, animation)": {
+   "status": "open"
+  },
+  "A28 Timeline, dope sheet and graph editor": {
+   "status": "open"
+  },
+  "A28 Asset browsers with thumbnails and tagging": {
+   "status": "open"
+  },
+  "A28 Tablet/pen/touch support": {
+   "status": "open"
+  },
+  "A28 Dark/light themes and scaling": {
+   "status": "open"
+  },
+  "A28 Multi-monitor support": {
+   "status": "open"
+  },
+  "A28 Tooltips, built-in tutorials and in-app help": {
+   "status": "open"
+  },
+  "A28 Auto-save and incremental save": {
+   "status": "open"
+  },
+  "A28 Project/workspace management": {
+   "status": "open"
+  },
+  "A28 Real-time collaboration and cloud sync": {
+   "status": "open"
+  },
+  "A28 Accessibility features": {
+   "status": "open"
+  },
+  "A29 BIM/Revit/CAD import (Datasmith, Rhino.Inside, IFC)": {
+   "status": "open"
+  },
+  "A29 Sun-study and daylight analysis": {
+   "status": "open"
+  },
+  "A29 Section planes, cutaways and elevation views": {
+   "status": "open"
+  },
+  "A29 Material libraries for architectural finishes": {
+   "status": "open"
+  },
+  "A29 Furniture/object libraries": {
+   "status": "open"
+  },
+  "A29 Real-time walkthroughs and VR tours": {
+   "status": "open"
+  },
+  "A29 Panorama (360) renders and interactive web viewers": {
+   "status": "open"
+  },
+  "A29 Product configurators and variant rendering": {
+   "status": "open"
+  },
+  "A29 Studio lighting presets and turntable setups": {
+   "status": "open"
+  },
+  "A29 Camera matching to photographs": {
+   "status": "open"
+  },
+  "A29 Photo-real compositing of 3D into photos": {
+   "status": "open"
+  },
+  "A29 Exploded views and technical illustrations": {
+   "status": "open"
+  },
+  "A29 Packaging and label wrapping tools": {
+   "status": "open"
+  },
+  "A29 Jewelry, automotive and industrial-design surfacing tools": {
+   "status": "open"
+  },
+  "A29 AR export (USDZ/glTF) and web 3D viewers": {
+   "status": "open"
+  },
+  "A30 Cloner/instance arrays and effectors": {
+   "status": "open"
+  },
+  "A30 Fields and falloffs": {
+   "status": "open"
+  },
+  "A30 Text/3D text with extrusion, bevel and per-character animation": {
+   "status": "open"
+  },
+  "A30 Spline/vector import (SVG, AI)": {
+   "status": "open"
+  },
+  "A30 Grease pencil/2D drawing in 3D space": {
+   "status": "open"
+  },
+  "A30 Toon/outline rendering": {
+   "status": "open"
+  },
+  "A30 Procedural animation/mograph presets": {
+   "status": "open"
+  },
+  "A30 Audio-reactive animation": {
+   "status": "open"
+  },
+  "A30 Volume builder and metaballs": {
+   "status": "open"
+  },
+  "A30 Camera-mapped 2.5D workflows": {
+   "status": "open"
+  },
+  "A30 Procedural shape and pattern generators": {
+   "status": "open"
+  },
+  "A31 Text-to-3D and image-to-3D mesh generation": {
+   "status": "open"
+  },
+  "A31 AI texture and material generation": {
+   "status": "open"
+  },
+  "A31 AI auto-retopology, auto-UV and auto-rigging": {
+   "status": "open"
+  },
+  "A31 AI denoising and upscaling": {
+   "status": "open"
+  },
+  "A31 AI motion and animation generation, mocap cleanup": {
+   "status": "open"
+  },
+  "A31 Audio-to-face animation": {
+   "status": "open"
+  },
+  "A31 AI-assisted rotoscoping and masking": {
+   "status": "open"
+  },
+  "A31 Generative scene layout and scattering": {
+   "status": "open"
+  },
+  "A31 Gaussian splatting and NeRF capture": {
+   "status": "open"
+  },
+  "A31 Neural rendering and AI-driven viewport previews": {
+   "status": "open"
+  },
+  "A31 Natural-language command/assistant interfaces": {
+   "status": "open"
+  },
+  "A31 Smart selection and segmentation of meshes": {
+   "status": "open"
+  },
+  "A32 Cloud project sharing and live multi-user editing": {
+   "status": "open"
+  },
+  "A32 Version history, branching and rollback": {
+   "status": "open"
+  },
+  "A32 Review/annotation tools and playlists": {
+   "status": "open"
+  },
+  "A32 Asset libraries, tagging, metadata and search": {
+   "status": "open"
+  },
+  "A32 Task, shot and asset tracking": {
+   "status": "open"
+  },
+  "A32 Render-farm and cloud-compute integration": {
+   "status": "open"
+  },
+  "A32 License and seat management": {
+   "status": "open"
+  },
+  "A32 Pipeline-level validation and publishing": {
+   "status": "open"
+  },
+  "A32 USD-based layered scene assembly": {
+   "status": "open"
+  },
+  "A32 Dependency tracking and relinking": {
+   "status": "open"
+  },
+  "B1 Undo / Redo": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Save / Save As": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Ctrl+S saves a project version; no Save As."
+  },
+  "B1 Open / New": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B1 Copy / Paste / Cut": {
+   "status": "open"
+  },
+  "B1 Select all": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Components only (single object selection)."
+  },
+  "B1 Delete": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Duplicate": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Frame selection": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Hide / show": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Search commands": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Mouse wheel": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Right-click": {
+   "status": "open"
+  },
+  "B1 Escape": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
+  },
+  "B1 Enter": {
+   "status": "open"
+  },
+  "B2 **Quad view:** four viewports (Top, Front, Side, Perspective). Standard in 3ds Max, Maya, C4D, Houdini. Toggle a single maximized view.": {
+   "status": "open"
+  },
+  "B2 **One large viewport with side panels:** Blender, ZBrush, Substance Painter, Marvelous Designer.": {
+   "status": "done",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "docs/showcase/2026-10-26/native-workspace.png"
+   ]
+  },
+  "B2 **Left toolbar + center viewport + right properties:** Blender, Substance, Unreal/Unity details panels.": {
+   "status": "done",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "docs/showcase/2026-10-26/native-workspace.png"
+   ]
+  },
+  "B2 **Top shelf/ribbon + viewport + bottom timeline:** Maya (shelf), 3ds Max (ribbon), C4D (command palette).": {
+   "status": "open"
+  },
+  "B2 **Hierarchy (left) + viewport (center) + inspector (right) + asset browser (bottom):** Unreal, Unity, Godot, Fusion-style engines.": {
+   "status": "open"
+  },
+  "B2 **Network/node editor + viewport + parameters:** Houdini, Blender geometry nodes/shaders, C4D node editor.": {
+   "status": "open"
+  },
+  "B2 **Split 2D pattern window + 3D garment window:** Marvelous Designer, CLO.": {
+   "status": "open"
+  },
+  "B2 **Dedicated task-based workspaces/tabs:** Blender workspaces, Maya workspaces, C4D layouts, Houdini desktops.": {
+   "status": "done",
+   "evidence": [
+    "docs/showcase/2026-10-26/native-workspace.png",
+    "tests/ui-v2.cjs"
+   ]
+  },
+  "B2 **Layer stack + properties + shelf:** Substance Painter, Photoshop-style texturing.": {
+   "status": "open"
+  },
+  "B3 **3D Viewport** (center) with **Toolbar** (`T`, left) and **Sidebar** (`N`, right) for transform and item properties": {
+   "status": "open"
+  },
+  "B3 **Outliner** (top right) and **Properties Editor** (bottom right: tool, render, output, view layer, scene, world, object, modifiers, particles, physics, constraints, data, material, texture tabs)": {
+   "status": "open"
+  },
+  "B3 **Timeline** along the bottom": {
+   "status": "done",
+   "evidence": [
+    "docs/showcase/2026-10-26/native-workspace.png"
+   ]
+  },
+  "B3 **Header bars** per editor; editor-type switcher in the top-left of every area": {
+   "status": "open"
+  },
+  "B3 **Workspace tabs** across the top: Layout, Modeling, Sculpting, UV Editing, Texture Paint, Shading, Animation, Rendering, Compositing, Geometry Nodes, Scripting": {
+   "status": "open"
+  },
+  "B3 Every area can be split, joined, swapped or maximized (`Ctrl+Space`)": {
+   "status": "done",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B3 Editors include: 3D Viewport, UV Editor, Image Editor, Shader Editor, Geometry Node Editor, Compositor, Texture Node Editor, Video Sequencer, Movie Clip Editor, Dope Sheet, Timeline, Graph Editor, Drivers, Nonlinear Animation, Text Editor, Python Console, File Browser, Asset Browser, Spreadsheet, Info": {
+   "status": "open"
+  },
+  "B3 **Menu sets** (Modeling, Rigging, Animation, FX, Rendering) switched from the top-left dropdown": {
+   "status": "open"
+  },
+  "B3 **Shelf** with tabbed tool icons": {
+   "status": "open"
+  },
+  "B3 **Viewport** with **Panel menu** and **View/Shading/Lighting/Show/Renderer** menus": {
+   "status": "open"
+  },
+  "B3 **Toolbox** on the left (Select, Move, Rotate, Scale + layout shortcuts)": {
+   "status": "open"
+  },
+  "B3 **Channel Box / Layer Editor** and **Attribute Editor** on the right; **Modeling Toolkit** and **Tool Settings**": {
+   "status": "open"
+  },
+  "B3 **Outliner**, **Hypergraph**, **Node Editor**, **Hypershade**, **UV Editor**, **Graph Editor**, **Dope Sheet**": {
+   "status": "open"
+  },
+  "B3 **Time Slider and Range Slider** along the bottom with **Command Line / Script Editor**": {
+   "status": "open"
+  },
+  "B3 **Workspaces** (Modeling – Standard, Sculpting, Rigging, Animation, Rendering, UV Editing, Blue Pencil, etc.)": {
+   "status": "open"
+  },
+  "B3 **Ribbon** (Modeling, Graphite tools, Freeform, Selection, Object Paint) across the top": {
+   "status": "open"
+  },
+  "B3 **Command Panel** (right) with tabs: Create, Modify, Hierarchy, Motion, Display, Utilities": {
+   "status": "open"
+  },
+  "B3 **Quad menu** (right-click) and **Main toolbar**": {
+   "status": "open"
+  },
+  "B3 **Viewport Layout tabs** and 4-view default": {
+   "status": "open"
+  },
+  "B3 **Scene Explorer**, **Layer Explorer**, **Material Editor** (Slate and Compact), **Schematic View**, **Curve Editor / Dope Sheet (Track View)**": {
+   "status": "open"
+  },
+  "B3 **Time slider**, **Animation controls**, **Status bar with Coordinate display**, **MAXScript Listener**": {
+   "status": "open"
+  },
+  "B3 **Viewport** center with **Mode/Tool palettes** on the left and **Command bar** across the top": {
+   "status": "open"
+  },
+  "B3 **Object Manager** (top right), **Attribute Manager** (bottom right), **Coordinates Manager**": {
+   "status": "open"
+  },
+  "B3 **Material Manager** and **Timeline** at the bottom; **Content Browser** and **Layer Manager** as tabs": {
+   "status": "open"
+  },
+  "B3 **Layouts**: Standard, Model, Sculpt, UV Edit, Paint, Animate, Node Editor, Scene Nodes, etc.": {
+   "status": "open"
+  },
+  "B3 **Picture Viewer** for renders; **Commander** (`Shift+C`) for command search": {
+   "status": "open"
+  },
+  "B3 **Canvas** (center) with **Top Shelf** (brush, stroke, alpha, texture, material, draw controls)": {
+   "status": "open"
+  },
+  "B3 **Left Shelf** (Brush, Stroke, Alpha, Texture, Material, Color selectors, Gizmo, Draw size and intensity)": {
+   "status": "open"
+  },
+  "B3 **Right Shelf** (Local, Frame, Move/Scale/Rotate, Polyframe, Transparency, Solo, Dynamic Subdiv, Floor)": {
+   "status": "open"
+  },
+  "B3 **Tool Palette** and **SubTool palette** (stack of meshes), **Geometry palette** (Divide, Dynamesh, ZRemesher), **Masking**, **Polygroups**, **Layers**, **Deformation**, **Surface**, **Zplugin**": {
+   "status": "open"
+  },
+  "B3 **Lightbox** (project/file browser)": {
+   "status": "open"
+  },
+  "B3 **Palette and menu bar** across the top, hotbox on `Space`; custom menus supported": {
+   "status": "open"
+  },
+  "B3 **Scene View** (3D viewport), **Network Editor** (node graph), **Parameters Pane**, **Geometry Spreadsheet**, **Scene Graph Tree** (Solaris), **Animation Editor**, **Material Palette**, **Take List**, **Render View**, **Composite View**": {
+   "status": "open"
+  },
+  "B3 **Desktops** (Build, Animate, Technical, Lookdev, Solaris, Karma, Tabs, etc.)": {
+   "status": "open"
+  },
+  "B3 **Contexts**: OBJ, SOP, DOP, VOP, CHOP, COP, LOP, TOP, ROP; nodes are created with `Tab`": {
+   "status": "open"
+  },
+  "B3 Pane tabs can be swapped for any pane type": {
+   "status": "open"
+  },
+  "B3 **3D Viewport** and **2D UV Viewport** (toggle or split)": {
+   "status": "open"
+  },
+  "B3 **Layers panel**, **Properties panel** (brush/filter/fill settings), **Shelf** (assets, materials, brushes, alphas, filters, procedurals, environments)": {
+   "status": "open"
+  },
+  "B3 **Texture Set List** and **Texture Set Settings**": {
+   "status": "open"
+  },
+  "B3 **Display Settings**, **Viewer Settings**, **Bake Mesh Maps** window, **Export** dialog": {
+   "status": "open"
+  },
+  "B3 **Toolbar** (paint, eraser, projection, polygon fill, smudge, clone, material picker, selection)": {
+   "status": "open"
+  },
+  "B3 **2D Pattern Window** (left) and **3D Garment Window** (right)": {
+   "status": "open"
+  },
+  "B3 **Object Browser** and **Property Editor** (fabric, pattern, avatar, simulation settings)": {
+   "status": "open"
+  },
+  "B3 **Toolbars** for Transform, Polygon, Curve, Internal polygon, Seam, Sewing, Pin and simulation play/pause": {
+   "status": "open"
+  },
+  "B3 **Viewport** center, **Place Actors** and **Modes** panel (left), **Outliner** (top right), **Details** (right)": {
+   "status": "open"
+  },
+  "B3 **Content Browser** (docked bottom, `Ctrl+Space` to toggle drawer)": {
+   "status": "open"
+  },
+  "B3 **Toolbar** with Play, Platforms, Source Control, Settings": {
+   "status": "open"
+  },
+  "B3 Standalone editors: Material, Niagara, Blueprint, Animation, Sequencer, Skeletal Mesh, Static Mesh, MetaHuman": {
+   "status": "open"
+  },
+  "B3 **Scene View** and **Game View** tabs, **Hierarchy** (left), **Inspector** (right), **Project** and **Console** (bottom)": {
+   "status": "open"
+  },
+  "B3 **Toolbar** with Play/Pause/Step, **Package Manager**, **Animation/Animator** windows, **Shader Graph**, **VFX Graph**, **Timeline**": {
+   "status": "open"
+  },
+  "B3 Scene tree (left), 2D/3D/Script/AssetLib workspaces (top center), Inspector (right), FileSystem (bottom left), Output/Debugger (bottom)": {
+   "status": "open"
+  },
+  "B4 **Blender default**": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B4 **Maya style**": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B4 **Max style**": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B4 **C4D style**": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B4 **Houdini**": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B4 **ZBrush**": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "LMB orbit, Alt+LMB pan, wheel zoom; release-Alt-to-zoom missing."
+  },
+  "B4 **Game-engine fly**": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B4 **Touchpad/trackpad**": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Emulate 3-button (Alt+LMB) done; touch gestures are Orbit Controls defaults, unverified."
+  },
+  "B4 Maya: `F` frame selection, `A` frame all, spacebar toggles single/4-view": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Space toggles maximize; no 4-view."
+  },
+  "B4 3ds Max: `P` perspective, `T` top, `F` front, `L` left, `B` bottom, `C` camera, `Alt+W` maximize viewport": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "C camera view missing."
+  },
+  "B4 Cinema 4D: `F1` perspective, `F2` top, `F3` right, `F4` front, `F5` four views": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "F5 toggles maximize; no four views."
+  },
+  "B4 Unreal / Unity: `F` focus": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Select tool": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Move": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Rotate": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Scale": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Axis constrain": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Gizmo handles constrain; G-then-X style key constraints missing."
+  },
+  "B5 Snap toggle": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Vertex mode": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Edge mode": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Face / Polygon mode": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Object/component toggle": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Isolate": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Duplicate": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Group / parent": {
+   "status": "open"
+  },
+  "B5 Hide": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B5 Select loop": {
+   "status": "open"
+  },
+  "B5 Select ring": {
+   "status": "open"
+  },
+  "B5 Grow / shrink selection": {
+   "status": "open"
+  },
+  "B5 Invert selection": {
+   "status": "open"
+  },
+  "B5 Select linked": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Ctrl+L selects connected components (Blender); other presets unbound."
+  },
+  "B6 Add object": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Extrude": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Inset faces": {
+   "status": "open"
+  },
+  "B6 Bevel": {
+   "status": "open"
+  },
+  "B6 Loop cut and slide": {
+   "status": "open"
+  },
+  "B6 Knife": {
+   "status": "open"
+  },
+  "B6 Merge": {
+   "status": "open"
+  },
+  "B6 Fill / Make face": {
+   "status": "open"
+  },
+  "B6 Connect vertex path": {
+   "status": "open"
+  },
+  "B6 Delete menu": {
+   "status": "open"
+  },
+  "B6 Separate": {
+   "status": "open"
+  },
+  "B6 Join objects": {
+   "status": "open"
+  },
+  "B6 Subdivide (preview levels)": {
+   "status": "open"
+  },
+  "B6 Smooth / flat shading": {
+   "status": "open"
+  },
+  "B6 Proportional editing": {
+   "status": "open"
+  },
+  "B6 Select menu: all / none / invert": {
+   "status": "open"
+  },
+  "B6 Hide / reveal": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Mesh context menus": {
+   "status": "open"
+  },
+  "B6 Apply transforms": {
+   "status": "open"
+  },
+  "B6 Repeat last": {
+   "status": "open"
+  },
+  "B6 Mode pie": {
+   "status": "open"
+  },
+  "B6 Shading pie": {
+   "status": "open"
+  },
+  "B6 Snap pie": {
+   "status": "open"
+  },
+  "B6 Pivot pie": {
+   "status": "open"
+  },
+  "B6 Orientation pie": {
+   "status": "open"
+  },
+  "B6 Multi-Cut": {
+   "status": "open"
+  },
+  "B6 Insert Edge Loop": {
+   "status": "open"
+  },
+  "B6 Delete edge/vertex (clean)": {
+   "status": "open"
+  },
+  "B6 Smooth preview": {
+   "status": "open"
+  },
+  "B6 Wireframe / shaded / textured": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "4 wireframe / 5 shaded; 6 textured missing."
+  },
+  "B6 Hotbox": {
+   "status": "open"
+  },
+  "B6 Duplicate": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Group": {
+   "status": "open"
+  },
+  "B6 Center pivot": {
+   "status": "open"
+  },
+  "B6 Edit pivot": {
+   "status": "open"
+  },
+  "B6 Sub-object levels": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "1 vertex / 2 edge / 4 face; border and element missing."
+  },
+  "B6 Cut": {
+   "status": "open"
+  },
+  "B6 Connect": {
+   "status": "open"
+  },
+  "B6 Isolate selection": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 X-ray": {
+   "status": "open"
+  },
+  "B6 Maximize viewport": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Wireframe toggle": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Edged faces": {
+   "status": "open"
+  },
+  "B6 Make editable": {
+   "status": "open"
+  },
+  "B6 Tool menu popup": {
+   "status": "open"
+  },
+  "B6 Commander (search)": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Swap last tool": {
+   "status": "open"
+  },
+  "B6 Hide / show": {
+   "status": "open"
+  },
+  "B6 Subdivide up / down": {
+   "status": "open"
+  },
+  "B6 Draw size": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "[ and ] resize; S popup missing."
+  },
+  "B6 Frame model": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Edit mode toggle": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Draw / Move / Scale / Rotate modes": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B6 Brush palette popup": {
+   "status": "open"
+  },
+  "B6 Symmetry X / Y / Z": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "X key toggles X symmetry; Y/Z via sculpt panel only."
+  },
+  "B7 Brush size": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "[ and ] resize; F-drag radial resize missing."
+  },
+  "B7 Brush strength": {
+   "status": "open"
+  },
+  "B7 Smooth brush": {
+   "status": "open"
+  },
+  "B7 Invert/subtract": {
+   "status": "open"
+  },
+  "B7 Mask paint": {
+   "status": "open"
+  },
+  "B7 Invert mask": {
+   "status": "open"
+  },
+  "B7 Clear mask": {
+   "status": "open"
+  },
+  "B7 Hide / isolate": {
+   "status": "open"
+  },
+  "B7 Voxel remesh": {
+   "status": "open"
+  },
+  "B7 Symmetry": {
+   "status": "open"
+  },
+  "B7 Brush selection": {
+   "status": "open"
+  },
+  "B7 Frame model": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B8 Play / pause": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B8 Next / previous frame": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B8 Next / previous keyframe": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B8 First / last frame": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B8 Insert key": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B8 Auto-key": {
+   "status": "open"
+  },
+  "B8 Key translate/rotate/scale": {
+   "status": "open"
+  },
+  "B8 Scrub": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B8 Graph editor": {
+   "status": "open"
+  },
+  "B9 Render still": {
+   "status": "done",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B9 Render animation": {
+   "status": "open"
+  },
+  "B9 View render": {
+   "status": "open"
+  },
+  "B9 Rendered viewport": {
+   "status": "open"
+  },
+  "B9 Render settings": {
+   "status": "open"
+  },
+  "B9 Camera view": {
+   "status": "open"
+  },
+  "B9 Material editor": {
+   "status": "open"
+  },
+  "B10 **Pie menus**": {
+   "status": "open"
+  },
+  "B10 **Marking menus**": {
+   "status": "open"
+  },
+  "B10 **Hotbox**": {
+   "status": "open"
+  },
+  "B10 **Quad menu**": {
+   "status": "open"
+  },
+  "B10 **Popup menu**": {
+   "status": "open"
+  },
+  "B10 **Radial menus**": {
+   "status": "open"
+  },
+  "B10 **Brush popup**": {
+   "status": "open"
+  },
+  "B10 **Search**": {
+   "status": "done",
+   "evidence": [
+    "tests/foundation-ui.cjs",
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B11 Add node": {
+   "status": "open"
+  },
+  "B11 Connect": {
+   "status": "open"
+  },
+  "B11 Disconnect": {
+   "status": "open"
+  },
+  "B11 Box select": {
+   "status": "open"
+  },
+  "B11 Move / pan canvas": {
+   "status": "open"
+  },
+  "B11 Zoom canvas": {
+   "status": "open"
+  },
+  "B11 Frame all / selected": {
+   "status": "open"
+  },
+  "B11 Group nodes": {
+   "status": "open"
+  },
+  "B11 Preview node output": {
+   "status": "open"
+  },
+  "B11 Mute / bypass": {
+   "status": "open"
+  },
+  "B11 Rename": {
+   "status": "open"
+  },
+  "B12 **Pressure** maps to size, strength, flow, opacity (configurable)": {
+   "status": "open"
+  },
+  "B12 **Tilt/rotation** drives brush angle (ZBrush, Painter, Blender with supported tablets)": {
+   "status": "open"
+  },
+  "B12 **Pen buttons** are mapped to `MMB` / `RMB` to enable pen-only navigation": {
+   "status": "open"
+  },
+  "B12 **Lazy mouse / stabilizer** smooths strokes in sculpt and paint": {
+   "status": "open"
+  },
+  "B12 **Touch gestures** (two-finger pan/zoom, pinch) exist in Blender, ZBrush (iPad), Nomad, Shapr3D": {
+   "status": "open"
+  },
+  "B12 **Radial brush resize** (hold key and drag) is common across apps": {
+   "status": "open"
+  },
+  "B13 Blender": {
+   "status": "open"
+  },
+  "B13 Maya": {
+   "status": "open"
+  },
+  "B13 3ds Max": {
+   "status": "open"
+  },
+  "B13 Cinema 4D": {
+   "status": "open"
+  },
+  "B13 Houdini": {
+   "status": "open"
+  },
+  "B13 ZBrush": {
+   "status": "open"
+  },
+  "B13 Unreal": {
+   "status": "open"
+  },
+  "B13 Unity": {
+   "status": "open"
+  },
+  "B14 **Blender default** (G/R/S, MMB orbit, pie menus)": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Pie menus missing."
+  },
+  "B14 **Maya** (QWER, Alt+mouse nav, marking menus)": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Marking menus missing."
+  },
+  "B14 **3ds Max** (QWER, Alt+MMB orbit, quad menu)": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Quad menu missing."
+  },
+  "B14 **Cinema 4D** (ERT, `1/2/3` + mouse nav)": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B14 **ZBrush** (sculpt brush hotkeys, `Alt`/`Shift` modifiers)": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Q/W/E/R/T/X/[ ] only; brush hotkeys missing."
+  },
+  "B14 **Houdini** (`Space`-based navigation)": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B14 **Unreal / Unity style** (RMB fly, QWER gizmo)": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  },
+  "B14 **Substance Painter** (paint hotkeys, `Alt` nav)": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Alt navigation; texture painting not implemented."
+  },
+  "B14 **Industry Compatible** (Blender's own Maya-like preset)": {
+   "status": "partial",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ],
+   "note": "Approximation of Blender's preset."
+  },
+  "B14 **Custom** with a searchable keymap editor, conflict detection, import/export of keymaps": {
+   "status": "done",
+   "evidence": [
+    "tests/keymap.test.mjs",
+    "tests/keymap-ui.cjs"
+   ]
+  }
+ }
+}

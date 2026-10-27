@@ -13,6 +13,7 @@ export class Timeline{
     const keys=this.keys();let key=keys.find(k=>k.frame===this.frame);if(!key){key={frame:this.frame,tracks:{}};keys.push(key);}Object.assign(key.tracks,tracks);keys.sort((a,b)=>a.frame-b.frame);e.root.userData.fusion_timeline=keys;e.commit();e.change('frame');
   }
   remove(){this.editor.root.userData.fusion_timeline=this.keys().filter(k=>k.frame!==this.frame);this.editor.commit();}
+  jumpKey(direction){const frames=this.keys().map(k=>k.frame).filter(f=>direction>0?f>this.frame:f<this.frame);if(frames.length)this.evaluate(direction>0?Math.min(...frames):Math.max(...frames));}
   evaluate(frame,{notify=true,strict=false}={}){
     const saved=capturePoseState(this.editor.root),priorFrame=this.frame,mixers=this.mixers.map(({mixer,actions=[]})=>({time:mixer.time,actions:actions.map(a=>({paused:a.paused,enabled:a.enabled}))}));try{
     this.editor.root.traverse(n=>restoreAuthoredRotations(n));this.frame=Math.min(this.end,Math.max(this.start,Math.round(frame)));const keys=this.keys(),objects=new Map();this.editor.root.traverse(n=>objects.set(n.uuid,n));

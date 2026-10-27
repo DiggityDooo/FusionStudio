@@ -2,6 +2,8 @@
 
 Current package/source snapshot: **0.1.0**, following the October 26 Muse implementation and packaged-executable checkpoint. The earlier **v0.0** user-defined baseline remains preserved. Read the [current implementation ledger](docs/muse-implementation-status.md) for later sculpt, source-capsule, performance and packaging evidence; dated results below describe their historical checkpoints. The [app overview](../README.md) and [workflow gallery](docs/WORKFLOW-GALLERY.md) separate demonstrated behavior from remaining acceptance gates.
 
+Every item of the [industry feature and controls reference](../3d-software-features-and-controls.md) is tracked in `docs/feature-ledger.json` (status `done` / `partial` / `open` with test evidence); `node scripts/feature-ledger.mjs` prints the totals and `tests/feature-ledger.test.mjs` rejects untracked items or missing evidence. Keymap presets (Fusion, Blender, Maya, 3ds Max, Cinema 4D, ZBrush, Houdini, Unreal/Unity, Substance, Industry Compatible), their navigation schemes, a searchable rebinding editor with conflict reports and JSON import/export live in Edit › Preferences (`src/keymap.js`, `tests/keymap-ui.cjs`).
+
 The standing brief is `../CODEX-UNIFIED-EXCELLENCE-PROMPT.md`: one original workspace that excels at the character → garment → accessory → render pipeline. The aim is capability quality and integration, rather than recreating every vendor feature. **The unified excellence goal remains in progress.**
 
 | Fidelity | Current measured scope | Evidence and practical limit |

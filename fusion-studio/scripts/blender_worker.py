@@ -74,6 +74,8 @@ def studio(meshes, options=None):
         camera.rotation_euler=(look-camera.location).to_track_quat('-Z','Y').to_euler()
         camera.data.type='PERSP';camera.data.sensor_fit='VERTICAL';camera.data.sensor_height=24
         camera.data.lens=24/(2*math.tan(math.radians(max(5,min(120,float(setting.get('fov',38)))))/2))
+        if setting.get('orthoHeight'):
+            camera.data.type='ORTHO';camera.data.ortho_scale=max(.001,float(setting['orthoHeight']))
     scene.camera=camera
     for name,offset,power,size in [
         ('Key',(1,-1.8,2.8),220,2),('Fill',(-2,-.5,1),100,3),('Rim',(0,2,2),300,2)

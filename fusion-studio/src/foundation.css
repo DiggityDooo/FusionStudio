@@ -2,4 +2,6 @@
 
 .area-bar{overflow-x:auto;scrollbar-width:none}
 
+.keymap-prefs{display:flex;flex-direction:column;gap:6px;min-width:520px}.keymap-prefs .check-row{display:flex;align-items:center;gap:6px;color:#ccc}.keymap-table{max-height:300px;overflow:auto;display:block}.keymap-table td{padding:3px 6px}.keymap-table .chip{background:#3a3a3a;border-radius:3px;padding:1px 4px;margin:1px;color:#ddd}.keymap-table .chip:hover{background:#5a3a3a}.keymap-actions{display:flex;gap:6px}#keymap-json{font:10px Consolas,monospace;background:#222;color:#ccc;border:1px solid #444}
+
 .rig-coordinates{display:flex;gap:5px}.rig-coordinates label{min-width:0;flex:1;font-size:10px;color:#a8aab3}.rig-coordinates input{width:100%;min-width:0;padding:5px 3px} #ik-status{color:#82ccd8}

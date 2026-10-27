@@ -175,6 +175,8 @@ def render_native(snapshot, ordinary_input, output, options, import_model):
         camera.rotation_euler=(look-camera.location).to_track_quat('-Z','Y').to_euler()
         camera.data.sensor_fit='VERTICAL';camera.data.sensor_height=24
         camera.data.lens=24/(2*math.tan(math.radians(float(setting.get('fov',38)))/2))
+        if setting.get('orthoHeight'):
+            camera.data.type='ORTHO';camera.data.ortho_scale=max(.001,float(setting['orthoHeight']))
         scene.camera=camera
     if not scene.camera: raise ValueError('This preserved scene has no camera. Choose viewport camera.')
     report=settings(scene,options)

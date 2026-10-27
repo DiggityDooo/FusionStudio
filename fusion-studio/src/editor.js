@@ -51,10 +51,10 @@ export class Editor {
     this.outline=new THREE.BoxHelper(new THREE.Object3D(),0xe8b28a);this.outline.visible=false;this.scene.add(this.outline);
     this.ray=new THREE.Raycaster();this.pointer=new THREE.Vector2();this.down=null;
     this.renderer.domElement.addEventListener('pointerdown',e=>{this.down={x:e.clientX,y:e.clientY};});
-    this.renderer.domElement.addEventListener('pointerup',e=>{if(!this.down || Math.hypot(e.clientX-this.down.x,e.clientY-this.down.y)>5 || this.transform.dragging || this.transform.axis)return;const r=this.renderer.domElement.getBoundingClientRect();this.pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);this.ray.setFromCamera(this.pointer,this.camera);const hit=this.ray.intersectObjects(this.root.children,true).find(h=>{let o=h.object;while(o&&o!==this.root){if(!o.visible)return false;o=o.parent;}return true;});let obj=hit?.object;while(obj&&obj.parent!==this.root)obj=obj.parent;this.select(obj||null);});
-    this.resize=new ResizeObserver(()=>{const w=element.clientWidth,h=element.clientHeight;if(!w||!h)return;this.renderer.setSize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();});this.resize.observe(element);
-    this.history=[];this.historyAt=-1;this.wireframe=false;this.ik=new IKHandles(this);this.meshTools=new MeshTools(this);this.timeline=new Timeline(this);
-    this.renderer.setAnimationLoop(time=>{this.timeline.tick(time);this.ik.sync();this.weightPaint?.sync();this.orbit.update();if(this.selected)this.outline.setFromObject(this.selected);this.renderer.render(this.scene,this.camera);});
+    this.renderer.domElement.addEventListener('pointerup',e=>{if(!this.down || Math.hypot(e.clientX-this.down.x,e.clientY-this.down.y)>5 || this.transform.dragging || this.transform.axis)return;const r=this.renderer.domElement.getBoundingClientRect();this.pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);this.ray.setFromCamera(this.pointer,this.camera);const hit=this.ray.intersectObjects(this.root.children.filter(o=>!this.localView||this.localView.has(o.uuid)),true).find(h=>{let o=h.object;while(o&&o!==this.root){if(!o.visible)return false;o=o.parent;}return true;});let obj=hit?.object;while(obj&&obj.parent!==this.root)obj=obj.parent;this.select(obj||null);});
+    this.perspectiveCamera=this.camera;this.resize=new ResizeObserver(()=>{const w=element.clientWidth,h=element.clientHeight;if(!w||!h)return;this.renderer.setSize(w,h);this.fitCamera();});this.resize.observe(element);
+    this.history=[];this.historyAt=-1;this.wireframe=false;this.tool='translate';this.localView=null;this.ik=new IKHandles(this);this.meshTools=new MeshTools(this);this.timeline=new Timeline(this);
+    this.renderer.setAnimationLoop(time=>{this.timeline.tick(time);this.ik.sync();this.weightPaint?.sync();this.navigation?.tick(time);this.orbit.update();if(this.selected)this.outline.setFromObject(this.selected);const isolated=this.localView&&this.root.children.filter(o=>o.visible&&!this.localView.has(o.uuid));for(const o of isolated||[])o.visible=false;this.renderer.render(this.scene,this.camera);for(const o of isolated||[])o.visible=true;});
   }
   material(color=colors.clay){return new THREE.MeshStandardMaterial({color,roughness:.58,metalness:.05});}
   mesh(name,geometry,color,position=[0,0,0],scale=[1,1,1],rotation=[0,0,0]){
@@ -100,10 +100,26 @@ export class Editor {
     this.timeline?.reset();this.meshTools?.setMode('object');this.history=[];this.historyAt=-1;this.commit();
   }
   disposeRoot(){this.scene.remove(this.root);this.root.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of [].concat(o.material))m.dispose();}});}
-  select(obj){if(this.weightPaint?.active&&obj!==this.weightPaint.owner)this.weightPaint.stop(false);this.ik?.detach();this.selected=obj;this.transform.detach();this.outline.visible=!!obj;if(obj){if(!this.meshTools||this.meshTools.mode==='object')this.transform.attach(obj);this.outline.setFromObject(obj);}this.change('selection');}
-  mode(mode){this.transform.setMode(this.ik?.active?'translate':mode);}
+  select(obj){if(this.weightPaint?.active&&obj!==this.weightPaint.owner)this.weightPaint.stop(false);this.ik?.detach();this.selected=obj;this.transform.detach();this.outline.visible=!!obj;if(obj){if(this.tool!=='select'&&(!this.meshTools||this.meshTools.mode==='object'))this.transform.attach(obj);this.outline.setFromObject(obj);}this.change('selection');}
+  mode(mode){this.tool=mode;if(mode==='select'){if(!this.ik?.active)this.transform.detach();return;}this.transform.setMode(this.ik?.active?'translate':mode);if(this.selected&&!this.transform.object&&!this.ik?.active&&this.meshTools.mode==='object')this.transform.attach(this.selected);}
+  fitCamera(){const w=this.element.clientWidth||1,h=this.element.clientHeight||1,c=this.camera;if(c.isOrthographicCamera){const half=(c.top-c.bottom)/2;Object.assign(c,{left:-half*w/h,right:half*w/h});}else c.aspect=w/h;c.updateProjectionMatrix();}
+  // Orthographic height matches the perspective frustum at the target distance, so toggling keeps framing.
+  setProjection(ortho){
+    this.settleOrbit();const from=this.camera,dist=from.position.distanceTo(this.orbit.target),tan=Math.tan(THREE.MathUtils.degToRad(this.perspectiveCamera.fov)/2);if(ortho===!!from.isOrthographicCamera)return;
+    let to;if(ortho){const half=dist*tan;to=new THREE.OrthographicCamera(-half,half,half,-half,-10000,10000);to.position.copy(from.position);}
+    else{to=this.perspectiveCamera;const visible=(from.top-from.bottom)/from.zoom/2/tan,dir=from.position.clone().sub(this.orbit.target).normalize();to.position.copy(this.orbit.target).addScaledVector(dir,visible);}
+    to.quaternion.copy(from.quaternion);this.camera=to;this.orbit.object=to;this.transform.camera=to;this.fitCamera();this.orbit.update();this.change('view');
+  }
+  renderCamera(){const c=this.camera;return {position:c.position.toArray(),target:this.orbit.target.toArray(),fov:this.perspectiveCamera.fov,...c.isOrthographicCamera?{orthoHeight:(c.top-c.bottom)/c.zoom}:{}};}
+  hideSelected(){if(!this.selected)return;const obj=this.selected;obj.visible=false;this.select(null);this.commit();}
+  revealAll(){const hidden=this.root.children.filter(o=>!o.visible);if(!hidden.length)return;for(const o of hidden)o.visible=true;this.commit();}
+  // Local view is display-only: other objects are skipped while rendering and picking, never saved hidden.
+  toggleLocalView(){if(this.localView){this.localView=null;this.frame(this.root);}else if(this.selected){this.localView=new Set([this.selected.uuid]);this.frame(this.selected);}this.change('view');}
+  dropToFloor(){const obj=this.selected;if(!obj)return;const box=new THREE.Box3().setFromObject(obj);if(box.isEmpty())return;return this.transformField('position','y',obj.position.y-box.min.y);}
   frame(obj=this.selected||this.root){const box=new THREE.Box3().setFromObject(obj);if(box.isEmpty())return;const center=box.getCenter(new THREE.Vector3());const size=Math.max(box.getSize(new THREE.Vector3()).length(),.5);const direction=this.camera.position.clone().sub(this.orbit.target).normalize();this.orbit.target.copy(center);this.camera.position.copy(center).addScaledVector(direction,size*1.5);this.camera.updateProjectionMatrix();}
-  view(name){const offset={front:[0,0,1],right:[1,0,0],top:[0,1,.001],perspective:[.7,.4,1]}[name];const dist=this.camera.position.distanceTo(this.orbit.target);this.camera.position.copy(this.orbit.target).add(new THREE.Vector3(...offset).normalize().multiplyScalar(dist));this.orbit.update();}
+  // Damped Orbit Controls keep applying leftover drag motion; flushing it keeps snapped views exact.
+  settleOrbit(){const damping=this.orbit.enableDamping;this.orbit.enableDamping=false;this.orbit.update();this.orbit.enableDamping=damping;}
+  view(name){this.settleOrbit();const offset={front:[0,0,1],back:[0,0,-1],right:[1,0,0],left:[-1,0,0],top:[0,1,.001],bottom:[0,-1,.001],perspective:[.7,.4,1]}[name];const dist=this.camera.position.distanceTo(this.orbit.target);this.camera.position.copy(this.orbit.target).add(new THREE.Vector3(...offset).normalize().multiplyScalar(dist));this.orbit.update();}
   snap(on){this.transform.setTranslationSnap(on?.1:null);this.transform.setRotationSnap(on?THREE.MathUtils.degToRad(15):null);this.transform.setScaleSnap(on?.1:null);}
   wire(on){this.wireframe=on;this.root.traverse(o=>{if(o.material)for(const m of [].concat(o.material))m.wireframe=on;});}
   remove(){if(!this.selected)return;this.root.remove(this.selected);this.select(null);this.commit();}
