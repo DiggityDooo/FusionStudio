@@ -28,6 +28,33 @@ function sha256File(file) {
   });
 }
 
+// External dependency inventory for text .gltf: buffers and textures referenced
+// by URI. Embedded (data:) payloads and binary .glb files have none to resolve.
+async function gltfDependencies(file) {
+  let doc;
+  try { doc = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return null; }
+  if (!doc || typeof doc !== 'object' || !doc.asset) return null;
+  const path = require('node:path');
+  const dir = path.dirname(file);
+  const uris = new Map();
+  for (const b of doc.buffers || []) if (b.uri && !String(b.uri).startsWith('data:')) uris.set(String(b.uri), 'buffer');
+  for (const im of doc.images || []) if (im.uri && !String(im.uri).startsWith('data:')) uris.set(String(im.uri), 'texture');
+  const deps = [];
+  for (const [uri, role] of uris) {
+    let rel = uri;
+    try { rel = decodeURIComponent(uri); } catch { /* keep the raw locator */ }
+    const entry = {id: uri, originalLocator: uri, role, status: 'missing'};
+    try {
+      const resolved = path.resolve(dir, rel);
+      entry.sha256 = await sha256File(resolved);
+      entry.byteLength = fs.statSync(resolved).size;
+      entry.status = 'found';
+    } catch { /* stays 'missing': reported, never silently dropped */ }
+    deps.push(entry);
+  }
+  return deps;
+}
+
 async function capsuleForFile(file) {
   const stat = fs.statSync(file);
   const fd = fs.openSync(file, 'r');
@@ -44,7 +71,7 @@ async function capsuleForFile(file) {
   const byName = adapterForName(file);
   const adapter = detected === 'blend' ? ADAPTERS[0] : detected === 'gltf' ? ADAPTERS[2] : byName;
   const sha256 = await sha256File(file);
-  return {
+  const capsule = {
     schema: 1,
     sourceId: 'src-' + sha256.slice(0, 16),
     originalName: require('node:path').basename(file),
@@ -58,6 +85,14 @@ async function capsuleForFile(file) {
     dependencies: [],
     completeness: adapter ? 'complete' : 'opaque',
   };
+  if (adapter?.id === 'gltf') {
+    const deps = await gltfDependencies(file);
+    if (deps) {
+      capsule.dependencies = deps;
+      if (deps.some(d => d.status === 'missing')) capsule.completeness = 'missing-dependencies';
+    }
+  }
+  return capsule;
 }
 
 // Export Original: byte-exact copy to a NEW file (never in place), verified by hash.
@@ -85,4 +120,4 @@ function withDsonInventory(capsule, dson) {
   return capsule;
 }
 
-module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File, copyOriginal, withDsonInventory};
+module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File, copyOriginal, withDsonInventory, gltfDependencies};

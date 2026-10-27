@@ -22,6 +22,17 @@ test('textured edits share unchanged history pixels, retain changed pixels throu
  for(let i=0;i<5;i++){mesh.name='Texture study '+i;e.commit();}assert.equal(e.journal.entries.length,5);assert.equal(e.historyImages.characters,retained);assert.ok(e.journal.snapshotCharacters<retained/2);assert.ok(JSON.parse(e.journal.baseline).images.every(i=>i.fusion_history_image));assert.ok(e.serialize().images.every(i=>!i.fusion_history_image));
  const detached=e.serialize();detached.images.find(i=>i.uuid===texture.source.uuid).url.data[0]=2;assert.equal(e.serialize().images.find(i=>i.uuid===texture.source.uuid).url.data[0],180,'Editing a returned document must not mutate the encoding cache');texture.image.data[0]=77;texture.needsUpdate=true;e.commit();await e.undo();assert.equal(e.root.children[0].material.map.image.data[0],180);await e.redo();assert.equal(e.root.children[0].material.map.image.data[0],77);const saved=JSON.parse(JSON.stringify(e.serialize())),copy=await new ProjectLoader().parseAsync(saved);assert.equal(copy.children[0].material.map.image.data[0],77);assert.equal(copy.children[0].material.map.source.uuid,texture.source.uuid);await assert.rejects(new ProjectLoader().parseAsync(JSON.parse(e.journal.baseline)),/History-only/);
 });
+test('source capsule and original path survive a project save/reopen roundtrip',async()=>{
+ const {e}=fixture();
+ const capsule={schema:1,sourceId:'src-abc',originalName:'Genesis 9.duf',formatId:'dson',adapterId:'dson',adapterKind:'direct-import',editable:'subset',sha256:'a'.repeat(64),byteLength:42,dependencies:[{id:'data/base.dsf',originalLocator:'data/base.dsf',role:'dependency',status:'found',sha256:'b'.repeat(64)}],completeness:'complete',unsupportedFields:['hd_morphs']};
+ const group=new THREE.Group();group.name='Genesis 9';group.userData={sourceCapsule:capsule,sourceOriginalPath:'C:/lib/Genesis 9.duf'};
+ group.add(new THREE.Mesh(new THREE.SphereGeometry(1,12,8),new THREE.MeshStandardMaterial()));e.root.add(group);
+ const saved=JSON.parse(JSON.stringify(e.serialize()));
+ const copy=await new ProjectLoader().parseAsync(saved);
+ const restored=copy.children.find(c=>c.name==='Genesis 9');assert.ok(restored,'imported group must survive the roundtrip');
+ assert.deepEqual(restored.userData.sourceCapsule,capsule,'capsule in a saved project must reopen intact');
+ assert.equal(restored.userData.sourceOriginalPath,'C:/lib/Genesis 9.duf');
+});
 const valuesEqual=(actual,expected)=>actual.length===expected.length&&actual.every((n,i)=>n===expected[i]);
 test('snapshot captures numeric transforms immediately, before a render',async()=>{
  const {e,mesh}=fixture();e.commit();mesh.position.x=3;mesh.rotation.z=.4;mesh.scale.y=2;e.commit();
