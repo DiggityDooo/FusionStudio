@@ -171,6 +171,111 @@ export function dyntopoRefine(geo, center, radius, detailSize, passes = 3) {
   }
   return totalSplit;
 }
+// M6 Simplify (plan 9.4): local Dyntopo edge collapse. Short edges under the
+// brush collapse to their midpoint only when the link condition keeps the
+// mesh manifold, neither endpoint is boundary or fully mask-protected, and no
+// neighbouring face flips. Rejections happen before any mutation, as with
+// refinement; UVs and mask are averaged onto the surviving vertex.
+export function dyntopoCollapse(geo, center, radius, detailSize, {maxCollapses = 1024, maxPasses = 8} = {}) {
+  if (!geo.index) throw Error('Dyntopo collapse needs an indexed mesh.');
+  if (Object.keys(geo.morphAttributes || {}).length) throw Error('Dyntopo collapse cannot preserve shape keys. Apply or remove morphs, or use a static working copy.');
+  if ((geo.groups || []).length > 1) throw Error('Dyntopo collapse cannot preserve multiple material groups. Use a single-material working copy.');
+  const centerV = new THREE.Vector3(...center);
+  let collapsed = 0, removedFaces = 0;
+  const skipped = {protected: 0, boundary: 0, link: 0, flip: 0};
+  const posOf = (arr, i) => [arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2]];
+  for (let pass = 0; pass < maxPasses && collapsed < maxCollapses; pass++) {
+    const p = geo.attributes.position, idx = geo.index.array, count = p.count;
+    const mask = geo.attributes.mask, uv = geo.attributes.uv;
+    const facesOf = Array.from({length: count}, () => []);
+    const edgeFaces = new Map(), ekey = (a, b) => a < b ? a * count + b : b * count + a;
+    for (let f = 0; f < idx.length / 3; f++) {
+      const tri = [idx[f * 3], idx[f * 3 + 1], idx[f * 3 + 2]];
+      for (let e = 0; e < 3; e++) {
+        facesOf[tri[e]].push(f);
+        const key = ekey(tri[e], tri[(e + 1) % 3]);
+        if (!edgeFaces.has(key)) edgeFaces.set(key, []);
+        edgeFaces.get(key).push(tri[(e + 2) % 3]);
+      }
+    }
+    const boundaryVerts = new Set();
+    for (const [key, opposites] of edgeFaces) if (opposites.length === 1) { boundaryVerts.add(Math.floor(key / count)); boundaryVerts.add(key % count); }
+    const neighbors = new Map();
+    const neighborsOf = v => {
+      if (!neighbors.has(v)) { const set = new Set(); for (const f of facesOf[v]) for (let e = 0; e < 3; e++) if (idx[f * 3 + e] !== v) set.add(idx[f * 3 + e]); neighbors.set(v, set); }
+      return neighbors.get(v);
+    };
+    const candidates = [];
+    for (const [key, opposites] of edgeFaces) {
+      if (opposites.length > 2) continue;
+      const a = Math.floor(key / count), b = key % count;
+      const pa = posOf(p.array, a), pb = posOf(p.array, b);
+      const mid = [(pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2, (pa[2] + pb[2]) / 2];
+      const len = Math.hypot(pa[0] - pb[0], pa[1] - pb[1], pa[2] - pb[2]);
+      if (len >= detailSize) continue;
+      if (Math.hypot(mid[0] - centerV.x, mid[1] - centerV.y, mid[2] - centerV.z) > radius) continue;
+      candidates.push({a, b, len, mid});
+    }
+    candidates.sort((x, y) => x.len - y.len);
+    if (!candidates.length) break;
+    const used = new Set(), remap = new Map(), midpoints = new Map();
+    const faceNormal = (tri, override) => {
+      const [A, B, C] = tri.map(v => override?.has(v) ? override.get(v) : posOf(p.array, v));
+      const ux = B[0] - A[0], uy = B[1] - A[1], uz = B[2] - A[2], vx = C[0] - A[0], vy = C[1] - A[1], vz = C[2] - A[2];
+      return [uy * vz - uz * vy, uz * vx - ux * vz, ux * vy - uy * vx];
+    };
+    for (const {a, b, mid} of candidates) {
+      if (collapsed >= maxCollapses) break;
+      if (used.has(a) || used.has(b)) continue;
+      if ((mask && (mask.array[a] >= 0.999 || mask.array[b] >= 0.999))) { skipped.protected++; continue; }
+      if (boundaryVerts.has(a) || boundaryVerts.has(b)) { skipped.boundary++; continue; }
+      const opposites = edgeFaces.get(ekey(a, b)) || [];
+      const common = [...neighborsOf(a)].filter(v => neighborsOf(b).has(v));
+      if (common.length !== opposites.length || !common.every(v => opposites.includes(v))) { skipped.link++; continue; }
+      const override = new Map([[a, mid], [b, mid]]);
+      let flips = false;
+      for (const v of [a, b]) for (const f of facesOf[v]) {
+        const tri = [idx[f * 3], idx[f * 3 + 1], idx[f * 3 + 2]];
+        if (tri.includes(a) && tri.includes(b)) continue;
+        const before = faceNormal(tri), after = faceNormal(tri, override);
+        const dot = before[0] * after[0] + before[1] * after[1] + before[2] * after[2];
+        if (!(dot > 0) || Math.hypot(...after) < 1e-12) { flips = true; break; }
+      }
+      if (flips) { skipped.flip++; continue; }
+      remap.set(b, a); midpoints.set(a, mid); used.add(a); used.add(b); collapsed++;
+    }
+    if (!remap.size) break;
+    for (const [v, mid] of midpoints) {
+      const other = [...remap].find(([, target]) => target === v)?.[0];
+      p.setXYZ(v, mid[0], mid[1], mid[2]);
+      if (uv && other !== undefined) uv.setXY(v, (uv.getX(v) + uv.getX(other)) / 2, (uv.getY(v) + uv.getY(other)) / 2);
+      if (mask && other !== undefined) mask.array[v] = (mask.array[v] + mask.array[other]) / 2;
+    }
+    const remapped = v => remap.get(v) ?? v;
+    const newIdx = [];
+    for (let f = 0; f < idx.length / 3; f++) {
+      const tri = [remapped(idx[f * 3]), remapped(idx[f * 3 + 1]), remapped(idx[f * 3 + 2])];
+      if (new Set(tri).size < 3) { removedFaces++; continue; }
+      newIdx.push(...tri);
+    }
+    const keep = new Map(), usedVerts = [...new Set(newIdx)].sort((x, y) => x - y);
+    usedVerts.forEach((v, i) => keep.set(v, i));
+    const positions = new Float32Array(usedVerts.length * 3), uvs = uv ? new Float32Array(usedVerts.length * 2) : null, masks = mask ? new Float32Array(usedVerts.length) : null;
+    for (const [oldV, newV] of keep) {
+      positions.set(posOf(p.array, oldV), newV * 3);
+      if (uvs) { uvs[newV * 2] = uv.getX(oldV); uvs[newV * 2 + 1] = uv.getY(oldV); }
+      if (masks) masks[newV] = mask.array[oldV];
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    if (uvs) geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+    if (masks) { const attr = new THREE.BufferAttribute(masks, 1); attr.name = 'mask'; geo.setAttribute('mask', attr); }
+    if (geo.attributes.normal) geo.deleteAttribute('normal');
+    geo.setIndex(newIdx.map(v => keep.get(v)));
+    geo.computeVertexNormals();
+    geo.computeBoundingSphere(); geo.computeBoundingBox();
+  }
+  return {collapsed, removedFaces, skipped};
+}
 // M6 Multires: Loop subdivision for a retained-source working copy. The level is
 // a document property (userData.multires); the source geometry JSON is stored on
 // the copy so levels can be re-evaluated without touching the original object.
@@ -370,6 +475,7 @@ const DRAG_MODES=new Set(['nudge','thumb','snake-hook','grab']);
 export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate',invert=false,opts={}){
   const geo=mesh.geometry,p=geo.attributes.position,n=geo.attributes.normal;mesh.updateWorldMatrix(true,false);
   if(mode==='annotate')return 0; // annotations are scene data, handled by MeshTools
+  if(mode==='simplify')return 0; // topology action (Dyntopo edge collapse), handled by MeshTools
   if(invert&&INVERT_PAIRS[mode]){mode=INVERT_PAIRS[mode];invert=false;}
   const falloffKind=opts.falloff||'smooth',dir=invert?-1:1;
   const inverse=mesh.matrixWorld.clone().invert(),normalMatrix=new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld);
@@ -505,6 +611,11 @@ export class MeshTools{
   applyBrush(hit,invert,event){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
     if(this.brush.type==='annotate'){if(!this._annotateArmed)return;this._annotateArmed=false;const local=hit.object.worldToLocal(hit.point.clone());addAnnotation(hit.object,local,this.annotationText||'Note');this.refreshAnnotations(hit.object);this.editor.change('annotation');return;}
     const mesh=hit.object,delta=this.lastPoint?hit.point.clone().sub(this.lastPoint):new THREE.Vector3();
+    if(this.brush.type==='simplify'){ // plan 9.4: local edge collapse, Dyntopo-only, never a silent whole-object decimate
+      if(!this.brush.dyntopo?.enabled){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Simplify collapses edges locally and requires Dyntopo. Enable Dyntopo for this working copy, or use the Decimate modifier for whole-object reduction.'));return;}
+      try{const report=dyntopoCollapse(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.editor.change('sculpt-stroke',report);}catch(error){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);}
+      return;
+    }
     if(this.brush.dyntopo?.enabled&&this.brush.type!=='mask'){try{dyntopoRefine(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);}catch(error){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);return;}}
     const normal=hit.face?hit.face.normal.clone().transformDirection(mesh.matrixWorld):new THREE.Vector3(0,0,1);
     const strength=this.brush.strength*pressureScale(this.brush,event);

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine, subdivideGeometry, createMultiresCopy, setMultiresLevel, pressureScale, MeshTools} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine, dyntopoCollapse, subdivideGeometry, createMultiresCopy, setMultiresLevel, pressureScale, MeshTools} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -403,6 +403,82 @@ test('pen pressure scales strength; mouse, touch and disabled pressure do not', 
   sculptGeometry(full, top.clone(), 0.3, 0.05, 'draw', false, {normal: frontNormal});
   const peak = m => Math.max(...Array.from({length: m.geometry.attributes.position.count}, (_, i) => m.geometry.attributes.position.getY(i)));
   assert.ok(Math.abs((peak(light) - 0.5) - (peak(full) - 0.5) * 0.5) < 1e-6, 'half pressure must halve the draw displacement');
+});
+
+function assertManifold(geo, label) {
+  const idx = geo.index.array, counts = new Map(), referenced = new Set();
+  for (let f = 0; f < idx.length; f += 3) {
+    const tri = [idx[f], idx[f + 1], idx[f + 2]];
+    assert.equal(new Set(tri).size, 3, `${label}: degenerate face survived collapse`);
+    tri.forEach(v => referenced.add(v));
+    for (let e = 0; e < 3; e++) { const k = [tri[e], tri[(e + 1) % 3]].sort((a, b) => a - b).join('_'); counts.set(k, (counts.get(k) || 0) + 1); }
+  }
+  for (const [edge, n] of counts) assert.ok(n <= 2, `${label}: edge ${edge} has ${n} faces (nonmanifold)`);
+  assert.equal(referenced.size, geo.attributes.position.count, `${label}: unreferenced vertices survived compaction`);
+}
+
+test('dyntopo collapse simplifies locally, stays manifold and compacts vertices', () => {
+  const mesh = sphere();
+  const geo = mesh.geometry, trisBefore = geo.index.count / 3;
+  const report = dyntopoCollapse(geo, [0, 0.5, 0], 0.3, 0.08);
+  assert.ok(report.collapsed > 10, `expected real collapses, got ${report.collapsed}`);
+  assert.ok(geo.index.count / 3 < trisBefore, 'triangle count must drop');
+  assertManifold(geo, 'collapse');
+  const p = geo.attributes.position;
+  let pole = false;
+  for (let i = 0; i < p.count; i++) if (Math.abs(p.getX(i)) < 1e-6 && Math.abs(p.getY(i) + 0.5) < 1e-6 && Math.abs(p.getZ(i)) < 1e-6) pole = true;
+  assert.ok(pole, 'geometry outside the brush radius must be untouched');
+});
+
+test('dyntopo collapse protects fully masked vertices and open boundaries', () => {
+  const mesh = sphere();
+  const mask = maskAttribute(mesh.geometry);
+  mask.array.fill(1);
+  const trisBefore = mesh.geometry.index.count;
+  const report = dyntopoCollapse(mesh.geometry, [0, 0.5, 0], 0.3, 0.08);
+  assert.equal(report.collapsed, 0, 'fully masked mesh must not collapse');
+  assert.ok(report.skipped.protected > 0, 'protected skips must be reported');
+  assert.equal(mesh.geometry.index.count, trisBefore);
+  const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 8, 8), new THREE.MeshStandardMaterial());
+  const corners = [[-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5], [0.5, 0.5]].map(([x, y]) => [x, y]);
+  dyntopoCollapse(plane.geometry, [0, 0, 0], 0.45, 0.2);
+  assertManifold(plane.geometry, 'plane collapse');
+  const pp = plane.geometry.attributes.position;
+  for (const [x, y] of corners) {
+    let found = false;
+    for (let i = 0; i < pp.count; i++) if (Math.abs(pp.getX(i) - x) < 1e-6 && Math.abs(pp.getY(i) - y) < 1e-6) found = true;
+    assert.ok(found, `boundary corner ${x},${y} must survive`);
+  }
+});
+
+test('dyntopo collapse rejects shape keys and material groups before mutating', () => {
+  const mesh = sphere();
+  mesh.geometry.morphAttributes.position = [new THREE.BufferAttribute(new Float32Array(mesh.geometry.attributes.position.count * 3), 3)];
+  const before = mesh.geometry.index.count;
+  assert.throws(() => dyntopoCollapse(mesh.geometry, [0, 0.5, 0], 0.3, 0.08), /shape keys/);
+  assert.equal(mesh.geometry.index.count, before, 'rejected collapse must not mutate');
+  const grouped = sphere();
+  grouped.geometry.groups = [{start: 0, count: 6, materialIndex: 0}, {start: 6, count: 6, materialIndex: 1}];
+  assert.throws(() => dyntopoCollapse(grouped.geometry, [0, 0.5, 0], 0.3, 0.08), /material groups/);
+});
+
+test('simplify brush requires Dyntopo and otherwise reports an actionable error', () => {
+  const mesh = sphere();
+  const errors = [];
+  const editor = {scene: new THREE.Scene(), renderer: {domElement: {addEventListener() {}, setPointerCapture() {}}}, orbit: {enabled: true}, selected: null, change(kind, payload) { if (kind === 'operator-error') errors.push(payload); }, commit() {}, transform: {detach() {}, attach() {}}};
+  const tools = new MeshTools(editor);
+  tools.mode = 'sculpt'; tools.stroke = true;
+  tools.brush = {...tools.brush, type: 'simplify', radius: 0.3, dyntopo: {enabled: false, detail: 0.08}};
+  const hit = {object: mesh, point: new THREE.Vector3(0, 0.5, 0), face: {normal: new THREE.Vector3(0, 1, 0)}};
+  const trisBefore = mesh.geometry.index.count;
+  tools.applyBrush(hit, false, undefined);
+  assert.equal(errors.length, 1);
+  assert.match(errors[0].message, /requires Dyntopo/);
+  assert.equal(mesh.geometry.index.count, trisBefore, 'disabled simplify must not mutate');
+  tools.brush.dyntopo.enabled = true;
+  tools.applyBrush(hit, false, undefined);
+  assert.ok(mesh.geometry.index.count < trisBefore, 'dyntopo simplify must collapse under the brush');
+  assert.equal(sculptGeometry(mesh, top.clone(), 0.3, 0.03, 'simplify', false, {normal: frontNormal}), 0, 'sculptGeometry must never displace for the topology action');
 });
 
 function fakeTools(mesh) {
