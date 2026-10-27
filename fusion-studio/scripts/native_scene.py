@@ -1,6 +1,19 @@
 """Preserved Blender scenes and explicit render devices. All writes are job-local."""
 import bpy, hashlib, math, struct, time
 
+def _uv_digest(mesh):
+    if not mesh.uv_layers: return None
+    digest=hashlib.sha256()
+    for loop_uv in mesh.uv_layers[0].data:
+        digest.update(struct.pack('<2f',round(loop_uv.uv.x,6),round(loop_uv.uv.y,6)))
+    return digest.hexdigest()
+
+def _material_color(material):
+    if not material.use_nodes or not material.node_tree: return None
+    principled=material.node_tree.nodes.get('Principled BSDF')
+    if not principled: return None
+    return [round(v,6) for v in principled.inputs['Base Color'].default_value]
+
 def _points_digest(points):
     digest=hashlib.sha256()
     for point in points:
@@ -29,6 +42,7 @@ def scene_inventory(scene):
     walk(scene.collection)
     objects=[{'name':o.name,'type':o.type,'parent':o.parent.name if o.parent else None,
               'collection':o.users_collection[0].name if o.users_collection else None,
+              'location':[round(v,6) for v in o.location],
               'materials':[s.material.name if s.material else None for s in o.material_slots] if hasattr(o,'material_slots') else []}
              for o in scene.objects]
     mesh_details={}
@@ -39,12 +53,13 @@ def scene_inventory(scene):
                                  'vertices':len(mesh.vertices),
                                  'basis_digest':_points_digest(mesh.vertices),
                                  'shape_key_digests':{k.name:_points_digest(k.data) for k in keys if k.name!='Basis'},
+                                 'uv_digest':_uv_digest(mesh),
                                  'attributes':sorted(a.name for a in mesh.attributes if not a.name.startswith('.'))}
     for entry in objects:
         obj=scene.objects[entry['name']]
         entry['vertex_groups']=[g.name for g in obj.vertex_groups] if hasattr(obj,'vertex_groups') else []
     return {'scene':scene.name,'collections':collections,'objects':objects,'mesh_details':mesh_details,
-            'materials':[m.name for m in bpy.data.materials],
+            'materials':[{'name':m.name,'base_color':_material_color(m)} for m in bpy.data.materials],
             'meshes':[m.name for m in bpy.data.meshes],
             'cameras':[c.name for c in bpy.data.cameras],
             'lights':[l.name for l in bpy.data.lights],

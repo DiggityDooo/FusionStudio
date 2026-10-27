@@ -92,9 +92,19 @@ def editapply(work):
     after = native_scene._points_digest(smile.data)
     if before == after:
         raise SystemExit('shape-key edit changed nothing')
-    (work / 'edit-expect.json').write_text(json.dumps({'smile_after': after}))
+    # Component edits on the same copy: material color, object transform, UV data.
+    mat = bpy.data.materials['HeroMat']
+    mat.node_tree.nodes['Principled BSDF'].inputs['Base Color'].default_value = (0.2, 0.4, 0.9, 1.0)
+    bpy.data.objects['KeyLight'].location.z = 1.5
+    for loop_uv in mesh.uv_layers[0].data:
+        loop_uv.uv.x += 0.05
+    expect = {'smile_after': after,
+              'material_color': native_scene._material_color(mat),
+              'light_location': [round(v, 6) for v in bpy.data.objects['KeyLight'].location],
+              'uv_after': native_scene._uv_digest(mesh)}
+    (work / 'edit-expect.json').write_text(json.dumps(expect))
     bpy.ops.wm.save_mainfile()
-    print(json.dumps({'edited': True, 'smile_changed': True}))
+    print(json.dumps({'edited': True, 'smile_changed': True, 'components_changed': True}))
 
 
 def editcheck(work):
@@ -106,14 +116,39 @@ def editcheck(work):
     scene = next(s for s in dst.scenes if s)
     after = native_scene.scene_inventory(scene)
     problems = []
-    for key in ('objects', 'collections', 'materials', 'scene', 'armatures', 'cameras', 'lights'):
+    for key in ('collections', 'scene', 'armatures', 'cameras', 'lights'):
         if before[key] != after[key]:
             problems.append(f"unrelated data changed: {key}")
+    # Objects/materials: exactly the edited component may differ, to the expected value.
+    def normalized_objects(inv):
+        out = json.loads(json.dumps(inv['objects']))
+        for entry in out:
+            if entry['name'] == 'KeyLight':
+                entry['location'] = None
+        return out
+    if normalized_objects(before) != normalized_objects(after):
+        problems.append('unrelated object data changed')
+    light = next(o for o in after['objects'] if o['name'] == 'KeyLight')
+    if light['location'] != expect['light_location']:
+        problems.append(f"KeyLight location {light['location']} != expected edit {expect['light_location']}")
+    def normalized_materials(inv):
+        out = json.loads(json.dumps(inv['materials']))
+        for entry in out:
+            if entry['name'] == 'HeroMat':
+                entry['base_color'] = None
+        return out
+    if normalized_materials(before) != normalized_materials(after):
+        problems.append('unrelated material data changed')
+    hero_mat = next(m for m in after['materials'] if m['name'] == 'HeroMat')
+    if hero_mat['base_color'] != expect['material_color']:
+        problems.append(f"HeroMat color {hero_mat['base_color']} != expected edit {expect['material_color']}")
     bmesh = before['mesh_details']['HeroCubeMesh']
     amesh = after['mesh_details']['HeroCubeMesh']
     for key in ('uv_layers', 'shape_keys', 'attributes', 'vertices', 'basis_digest'):
         if bmesh[key] != amesh[key]:
             problems.append(f"HeroCubeMesh.{key} changed by a shape-key-only edit")
+    if amesh['uv_digest'] != expect['uv_after'] or amesh['uv_digest'] == bmesh['uv_digest']:
+        problems.append('UV edit was lost or altered on save/reopen')
     if amesh['shape_key_digests'].get('Smile') == bmesh['shape_key_digests'].get('Smile'):
         problems.append('Smile digest did not change: edit was lost on save/reopen')
     if amesh['shape_key_digests'].get('Smile') != expect['smile_after']:
