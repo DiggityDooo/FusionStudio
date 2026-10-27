@@ -361,6 +361,11 @@ export function recomputeNormalsPartial(geo,affected){
   for(const i of coveredList){const i3=i*3,x=na[i3],y=na[i3+1],z=na[i3+2],l=Math.sqrt(x*x+y*y+z*z);if(l>0){na[i3]=x/l;na[i3+1]=y/l;na[i3+2]=z/l;}}
   n.needsUpdate=true;return true;
 }
+export function pressureScale(brush,event){ // pen pressure scales strength; mouse/touch and disabled pressure stay at full strength
+  if(!brush?.pressure||!event||event.pointerType!=='pen')return 1;
+  const p=Number(event.pressure);if(!Number.isFinite(p)||p<=0)return 1;
+  return Math.min(1,p);
+}
 const DRAG_MODES=new Set(['nudge','thumb','snake-hook','grab']);
 export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate',invert=false,opts={}){
   const geo=mesh.geometry,p=geo.attributes.position,n=geo.attributes.normal;mesh.updateWorldMatrix(true,false);
@@ -473,11 +478,11 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
 
 export class MeshTools{
   constructor(editor){
-    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false},dyntopo:{enabled:false,detail:0.03}};this.activeMesh=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
+    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false},dyntopo:{enabled:false,detail:0.03},pressure:true};this.activeMesh=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
     this.faceHighlight=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:'#ff9b33',transparent:true,opacity:.4,side:THREE.DoubleSide,depthTest:false}));this.faceHighlight.visible=false;this.faceHighlight.renderOrder=10;editor.scene.add(this.faceHighlight);
     const canvas=editor.renderer.domElement;
-    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
-    canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey);e.stopImmediatePropagation();}},true);
+    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey,e);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
+    canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey,e);e.stopImmediatePropagation();}},true);
     const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.editor.commit();}};
     canvas.addEventListener('pointerup',end,true);canvas.addEventListener('pointercancel',end,true);
   }
@@ -497,7 +502,7 @@ export class MeshTools{
     markers.position.setFromMatrixPosition(object.matrixWorld);markers.quaternion.setFromRotationMatrix(object.matrixWorld);markers.scale.setFromMatrixScale(object.matrixWorld);
     this.annotationOverlay=markers;this.editor.scene.add(markers);
   }
-  applyBrush(hit,invert){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
+  applyBrush(hit,invert,event){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
     if(this.brush.type==='annotate'){if(!this._annotateArmed)return;this._annotateArmed=false;const local=hit.object.worldToLocal(hit.point.clone());addAnnotation(hit.object,local,this.annotationText||'Note');this.refreshAnnotations(hit.object);this.editor.change('annotation');return;}
     const mesh=hit.object,delta=this.lastPoint?hit.point.clone().sub(this.lastPoint):new THREE.Vector3();
     if(this.brush.dyntopo?.enabled&&this.brush.type!=='mask'){try{dyntopoRefine(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);}catch(error){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);return;}}
@@ -509,6 +514,7 @@ export class MeshTools{
       for(const cx of (sym.x?[0,1]:[0]))for(const cy of (sym.y?[0,1]:[0]))for(const cz of (sym.z?[0,1]:[0]))combos.add(cx+','+cy+','+cz);
       for(const key of combos){if(key==='0,0,0')continue;const [cx,cy,cz]=key.split(',').map(Number);const m=local.clone();if(cx)m.x*=-1;if(cy)m.y*=-1;if(cz)m.z*=-1;points.push(m.applyMatrix4(mesh.matrixWorld));}
     }
-    for(const point of points)sculptGeometry(mesh,point,this.brush.radius,this.brush.strength,this.brush.type,invert,point===hit.point?opts:{...opts,delta:delta.clone()});
+    const strength=this.brush.strength*pressureScale(this.brush,event);
+    for(const point of points)sculptGeometry(mesh,point,this.brush.radius,strength,this.brush.type,invert,point===hit.point?opts:{...opts,delta:delta.clone()});
     this.lastPoint=hit.point.clone();this.editor.change('sculpt-stroke');}
 }

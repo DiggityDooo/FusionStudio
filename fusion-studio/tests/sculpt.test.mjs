@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine, subdivideGeometry, createMultiresCopy, setMultiresLevel} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine, subdivideGeometry, createMultiresCopy, setMultiresLevel, pressureScale} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -386,6 +386,23 @@ test('sculpt dab at production density stays inside the plan 14.4 warm-update ta
   for (let i = 0; i < dabs; i++) sculptGeometry(mesh, point.clone(), 0.25, 0.01, 'draw', false, {normal});
   const perDab = (performance.now() - start) / dabs;
   assert.ok(perDab < 100, `sculpt dab took ${perDab.toFixed(1)} ms at ${geo.index.count / 3} tris (plan 14.4 target: 100 ms)`);
+});
+
+test('pen pressure scales strength; mouse, touch and disabled pressure do not', () => {
+  const brush = {pressure: true};
+  assert.equal(pressureScale(brush, {pointerType: 'pen', pressure: 0.4}), 0.4);
+  assert.equal(pressureScale(brush, {pointerType: 'pen', pressure: 1.7}), 1, 'pressure clamps to full strength');
+  assert.equal(pressureScale(brush, {pointerType: 'pen', pressure: 0}), 1, 'unreported pen pressure falls back to full strength');
+  assert.equal(pressureScale(brush, {pointerType: 'mouse', pressure: 0.5}), 1, 'mouse pressure must not halve strokes');
+  assert.equal(pressureScale(brush, {pointerType: 'touch', pressure: 0.3}), 1);
+  assert.equal(pressureScale(brush, undefined), 1);
+  assert.equal(pressureScale({pressure: false}, {pointerType: 'pen', pressure: 0.4}), 1, 'disabled pressure is full strength');
+  // End-to-end: half pressure on Draw displaces exactly half as far at the pole.
+  const light = sphere(), full = sphere();
+  sculptGeometry(light, top.clone(), 0.3, 0.05 * pressureScale(brush, {pointerType: 'pen', pressure: 0.5}), 'draw', false, {normal: frontNormal});
+  sculptGeometry(full, top.clone(), 0.3, 0.05, 'draw', false, {normal: frontNormal});
+  const peak = m => Math.max(...Array.from({length: m.geometry.attributes.position.count}, (_, i) => m.geometry.attributes.position.getY(i)));
+  assert.ok(Math.abs((peak(light) - 0.5) - (peak(full) - 0.5) * 0.5) < 1e-6, 'half pressure must halve the draw displacement');
 });
 
 test('grab follows the drag delta', () => {
