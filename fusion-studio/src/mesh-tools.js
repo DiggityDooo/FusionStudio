@@ -587,10 +587,22 @@ export class MeshTools{
     this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false},dyntopo:{enabled:false,detail:0.03},pressure:true,spacing:.3};this.activeMesh=null;this.lastDabPoint=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
     this.faceHighlight=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:'#ff9b33',transparent:true,opacity:.4,side:THREE.DoubleSide,depthTest:false}));this.faceHighlight.visible=false;this.faceHighlight.renderOrder=10;editor.scene.add(this.faceHighlight);
     const canvas=editor.renderer.domElement;
-    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey,e);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
+    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.beginStrokeSnapshot(hit.object);this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey,e);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
     canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey,e);e.stopImmediatePropagation();}},true);
-    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.lastDabPoint=null;this.editor.commit();}};
-    canvas.addEventListener('pointerup',end,true);canvas.addEventListener('pointercancel',end,true);
+    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.lastDabPoint=null;this.strokeSnapshot=null;this.editor.commit();}};
+    canvas.addEventListener('pointerup',end,true);
+    canvas.addEventListener('pointercancel',e=>{if(this.stroke){e.stopImmediatePropagation();this.cancelStroke();}},true); // capture loss cancels the uncommitted gesture (plan 14.2)
+    canvas.ownerDocument?.addEventListener?.('keydown',e=>{if(e.key==='Escape'&&this.stroke)this.cancelStroke();});
+  }
+  beginStrokeSnapshot(mesh){const g=mesh.geometry,copy=(attr,itemSize)=>attr?new Float32Array(attr.array):null;this.strokeSnapshot={mesh,position:copy(g.attributes.position),normal:copy(g.attributes.normal),uv:copy(g.attributes.uv),mask:copy(g.attributes.mask),index:g.index?g.index.array.slice():null};}
+  cancelStroke(){ // Escape / pointer-cancel: restore the exact pre-stroke geometry, no history entry
+    const snap=this.strokeSnapshot;if(!this.stroke||!snap)return;const g=snap.mesh.geometry;
+    g.setAttribute('position',new THREE.BufferAttribute(snap.position,3));
+    if(snap.normal)g.setAttribute('normal',new THREE.BufferAttribute(snap.normal,3));else if(g.attributes.normal)g.deleteAttribute('normal');
+    if(snap.uv)g.setAttribute('uv',new THREE.BufferAttribute(snap.uv,2));
+    if(snap.mask){const attr=new THREE.BufferAttribute(snap.mask,1);attr.name='mask';g.setAttribute('mask',attr);}else if(g.attributes.mask)g.deleteAttribute('mask');
+    g.setIndex(snap.index?Array.from(snap.index):null);g.computeBoundingSphere();g.computeBoundingBox();
+    this.stroke=false;this.strokeSnapshot=null;this.lastPoint=null;this.lastDabPoint=null;this.editor.orbit.enabled=true;this.editor.change('sculpt-cancelled');
   }
   hit(event){const e=this.editor,r=e.renderer.domElement.getBoundingClientRect();e.pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);e.ray.setFromCamera(e.pointer,e.camera);return e.ray.intersectObject(e.selected||e.root,true).find(h=>h.object.isMesh&&!h.object.isSkinnedMesh);}
   setMode(mode){this.mode=mode;this.faceHighlight.visible=false;this.faceIndex=null;this.activeMesh=null;this.editor.transform.detach();if(mode==='object'&&this.editor.selected)this.editor.transform.attach(this.editor.selected);this.editor.change('mode');}

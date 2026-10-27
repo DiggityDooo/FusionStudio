@@ -520,6 +520,32 @@ test('pointer jitter below the spacing distance adds no dabs', () => {
   assert.ok(p.every((v, i) => v === afterDab[i]), 'sub-spacing jitter must not accumulate displacement');
 });
 
+test('Escape/pointer-cancel restores the exact pre-stroke geometry without committing', () => {
+  const mesh = sphere();
+  const changes = [];
+  const editor = {scene: new THREE.Scene(), renderer: {domElement: {addEventListener() {}, setPointerCapture() {}}}, orbit: {enabled: false}, selected: null, change(kind) { changes.push(kind); }, commit() { changes.push('commit'); }, transform: {detach() {}, attach() {}}};
+  const tools = new MeshTools(editor);
+  tools.mode = 'sculpt'; tools.stroke = true;
+  tools.brush = {...tools.brush, type: 'draw', radius: 0.3, strength: 0.05};
+  const before = new Float32Array(mesh.geometry.attributes.position.array);
+  const trisBefore = mesh.geometry.index.count;
+  tools.beginStrokeSnapshot(mesh);
+  tools.applyBrush({object: mesh, point: top.clone(), face: {normal: new THREE.Vector3(0, 1, 0)}}, false, undefined);
+  assert.ok(displacement(mesh, before) > 0, 'stroke must displace before cancel');
+  tools.cancelStroke();
+  assert.equal(tools.stroke, false);
+  assert.ok(mesh.geometry.attributes.position.array.every((v, i) => v === before[i]), 'cancel must restore exact pre-stroke positions');
+  assert.equal(mesh.geometry.index.count, trisBefore);
+  assert.ok(changes.includes('sculpt-cancelled') && !changes.includes('commit'), 'cancel must not create a history entry');
+  // Topology-changing strokes cancel back to the original topology too.
+  tools.stroke = true; tools.beginStrokeSnapshot(mesh);
+  dyntopoRefine(mesh.geometry, [0, 0.5, 0], 0.3, 0.02);
+  assert.ok(mesh.geometry.index.count > trisBefore, 'dyntopo must refine before cancel');
+  tools.cancelStroke();
+  assert.equal(mesh.geometry.index.count, trisBefore, 'cancel must restore the original topology');
+  assert.ok(mesh.geometry.attributes.position.array.every((v, i) => v === before[i]));
+});
+
 test('grab follows the drag delta', () => {
   const mesh = sphere();
   const before = new Float32Array(mesh.geometry.attributes.position.array);
