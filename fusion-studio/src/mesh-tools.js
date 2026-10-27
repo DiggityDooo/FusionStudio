@@ -478,12 +478,12 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
 
 export class MeshTools{
   constructor(editor){
-    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false},dyntopo:{enabled:false,detail:0.03},pressure:true};this.activeMesh=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
+    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false},dyntopo:{enabled:false,detail:0.03},pressure:true,spacing:.3};this.activeMesh=null;this.lastDabPoint=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
     this.faceHighlight=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:'#ff9b33',transparent:true,opacity:.4,side:THREE.DoubleSide,depthTest:false}));this.faceHighlight.visible=false;this.faceHighlight.renderOrder=10;editor.scene.add(this.faceHighlight);
     const canvas=editor.renderer.domElement;
-    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey,e);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
+    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey,e);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
     canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey,e);e.stopImmediatePropagation();}},true);
-    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.editor.commit();}};
+    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.lastDabPoint=null;this.editor.commit();}};
     canvas.addEventListener('pointerup',end,true);canvas.addEventListener('pointercancel',end,true);
   }
   hit(event){const e=this.editor,r=e.renderer.domElement.getBoundingClientRect();e.pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);e.ray.setFromCamera(e.pointer,e.camera);return e.ray.intersectObject(e.selected||e.root,true).find(h=>h.object.isMesh&&!h.object.isSkinnedMesh);}
@@ -507,14 +507,26 @@ export class MeshTools{
     const mesh=hit.object,delta=this.lastPoint?hit.point.clone().sub(this.lastPoint):new THREE.Vector3();
     if(this.brush.dyntopo?.enabled&&this.brush.type!=='mask'){try{dyntopoRefine(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);}catch(error){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);return;}}
     const normal=hit.face?hit.face.normal.clone().transformDirection(mesh.matrixWorld):new THREE.Vector3(0,0,1);
-    const opts={falloff:this.brush.falloff,autosmooth:this.brush.autosmooth,delta,normal,layerBase:this.layerBase&&this.layerBase.uuid===mesh.geometry.uuid?this.layerBase.base:null};
-    const points=[hit.point];
-    const sym=this.brush.symmetry;if(sym&&(sym.x||sym.y||sym.z)){ // mirror the stroke across mesh-local axes
-      mesh.updateWorldMatrix(true,false);const inv=mesh.matrixWorld.clone().invert(),local=hit.point.clone().applyMatrix4(inv),combos=new Set(['0,0,0']);
-      for(const cx of (sym.x?[0,1]:[0]))for(const cy of (sym.y?[0,1]:[0]))for(const cz of (sym.z?[0,1]:[0]))combos.add(cx+','+cy+','+cz);
-      for(const key of combos){if(key==='0,0,0')continue;const [cx,cy,cz]=key.split(',').map(Number);const m=local.clone();if(cx)m.x*=-1;if(cy)m.y*=-1;if(cz)m.z*=-1;points.push(m.applyMatrix4(mesh.matrixWorld));}
-    }
     const strength=this.brush.strength*pressureScale(this.brush,event);
-    for(const point of points)sculptGeometry(mesh,point,this.brush.radius,strength,this.brush.type,invert,point===hit.point?opts:{...opts,delta:delta.clone()});
+    const dabAt=(point,dabDelta)=>{
+      const opts={falloff:this.brush.falloff,autosmooth:this.brush.autosmooth,delta:dabDelta,normal,layerBase:this.layerBase&&this.layerBase.uuid===mesh.geometry.uuid?this.layerBase.base:null};
+      const points=[point];
+      const sym=this.brush.symmetry;if(sym&&(sym.x||sym.y||sym.z)){ // mirror the stroke across mesh-local axes
+        mesh.updateWorldMatrix(true,false);const inv=mesh.matrixWorld.clone().invert(),local=point.clone().applyMatrix4(inv),combos=new Set(['0,0,0']);
+        for(const cx of (sym.x?[0,1]:[0]))for(const cy of (sym.y?[0,1]:[0]))for(const cz of (sym.z?[0,1]:[0]))combos.add(cx+','+cy+','+cz);
+        for(const key of combos){if(key==='0,0,0')continue;const [cx,cy,cz]=key.split(',').map(Number);const m=local.clone();if(cx)m.x*=-1;if(cy)m.y*=-1;if(cz)m.z*=-1;points.push(m.applyMatrix4(mesh.matrixWorld));}
+      }
+      for(const p of points)sculptGeometry(mesh,p,this.brush.radius,strength,this.brush.type,invert,p===point?opts:{...opts,delta:dabDelta.clone()});
+    };
+    // Dab spacing (plan 14.2): displacement must depend on path length, not on
+    // how densely the pointer reports events. Drag-family brushes consume the
+    // raw delta instead and are exempt.
+    const spaced=!DRAG_MODES.has(this.brush.type)&&!['pose','rotate','elastic-deform'].includes(this.brush.type);
+    if(spaced&&this.lastDabPoint){
+      const spacing=Math.max(1e-4,this.brush.radius*(this.brush.spacing??.3)),from=this.lastDabPoint,dist=from.distanceTo(hit.point);
+      if(dist<spacing){this.lastPoint=hit.point.clone();return;}
+      const steps=Math.min(64,Math.floor(dist/spacing)),step=hit.point.clone().sub(from).multiplyScalar(spacing/dist);
+      for(let k=1;k<=steps;k++){dabAt(from.clone().addScaledVector(step,k),step);this.lastDabPoint=from.clone().addScaledVector(step,k);}
+    }else{dabAt(hit.point,delta);this.lastDabPoint=hit.point.clone();}
     this.lastPoint=hit.point.clone();this.editor.change('sculpt-stroke');}
 }

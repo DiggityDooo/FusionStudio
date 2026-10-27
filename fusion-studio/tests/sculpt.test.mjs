@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine, subdivideGeometry, createMultiresCopy, setMultiresLevel, pressureScale} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine, subdivideGeometry, createMultiresCopy, setMultiresLevel, pressureScale, MeshTools} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -403,6 +403,45 @@ test('pen pressure scales strength; mouse, touch and disabled pressure do not', 
   sculptGeometry(full, top.clone(), 0.3, 0.05, 'draw', false, {normal: frontNormal});
   const peak = m => Math.max(...Array.from({length: m.geometry.attributes.position.count}, (_, i) => m.geometry.attributes.position.getY(i)));
   assert.ok(Math.abs((peak(light) - 0.5) - (peak(full) - 0.5) * 0.5) < 1e-6, 'half pressure must halve the draw displacement');
+});
+
+function fakeTools(mesh) {
+  const editor = {scene: new THREE.Scene(), renderer: {domElement: {addEventListener() {}, setPointerCapture() {}}}, orbit: {enabled: true}, selected: null, change() {}, commit() {}, transform: {detach() {}, attach() {}}};
+  const tools = new MeshTools(editor);
+  tools.mode = 'sculpt';
+  tools.brush = {...tools.brush, type: 'draw', radius: 0.15, strength: 0.02};
+  tools.stroke = true;
+  mesh.updateMatrixWorld(true);
+  const hit = x => ({object: mesh, point: new THREE.Vector3(x, 0.5, 0), face: {normal: new THREE.Vector3(0, 1, 0)}});
+  return {tools, hit};
+}
+
+test('dab spacing makes stroke displacement depend on path length, not pointer sampling rate', () => {
+  const runStroke = moves => {
+    const mesh = sphere();
+    const {tools, hit} = fakeTools(mesh);
+    const before = new Float32Array(mesh.geometry.attributes.position.array);
+    tools.lastDabPoint = null;
+    tools.applyBrush(hit(0), false, undefined);
+    for (const x of moves) tools.applyBrush(hit(x), false, undefined);
+    return displacement(mesh, before);
+  };
+  const dense = runStroke(Array.from({length: 30}, (_, i) => (i + 1) * 0.01));
+  const sparse = runStroke([0.1, 0.2, 0.3]);
+  assert.ok(dense > 0 && sparse > 0, 'both strokes must displace geometry');
+  const ratio = dense / sparse;
+  assert.ok(ratio > 0.5 && ratio < 2, `sampling-rate independence: dense/sparse displacement ratio ${ratio.toFixed(2)} (was ~10x before spacing)`);
+});
+
+test('pointer jitter below the spacing distance adds no dabs', () => {
+  const mesh = sphere();
+  const {tools, hit} = fakeTools(mesh);
+  tools.lastDabPoint = null;
+  tools.applyBrush(hit(0), false, undefined);
+  const afterDab = new Float32Array(mesh.geometry.attributes.position.array);
+  for (let i = 1; i <= 10; i++) tools.applyBrush(hit(i * 0.004), false, undefined);
+  const p = mesh.geometry.attributes.position.array;
+  assert.ok(p.every((v, i) => v === afterDab[i]), 'sub-spacing jitter must not accumulate displacement');
 });
 
 test('grab follows the drag delta', () => {
