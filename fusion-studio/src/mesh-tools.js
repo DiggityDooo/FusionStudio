@@ -104,6 +104,73 @@ export function applyMeshFilter(geo,kind,amount=.5){
   p.needsUpdate=true;geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();return touched;
 }
 export function clearMask(geo){const attr=geo.attributes.mask;if(attr){attr.array.fill(0);attr.needsUpdate=true;} }
+// M6 Dyntopo-style local refinement: conforming red-green splits of triangles
+// near the brush whose edges exceed the detail size. Shape keys and multiple
+// material groups are rejected BEFORE any mutation (their contracts are not
+// transferable by midpoint interpolation); UVs and mask are interpolated.
+export function dyntopoRefine(geo, center, radius, detailSize, passes = 3) {
+  if (!geo.index) throw Error('Dyntopo refinement needs an indexed mesh.');
+  if (Object.keys(geo.morphAttributes || {}).length) throw Error('Dyntopo refinement cannot preserve shape keys. Apply or remove morphs, or use a static working copy.');
+  if ((geo.groups || []).length > 1) throw Error('Dyntopo refinement cannot preserve multiple material groups. Use a single-material working copy.');
+  const centerV = new THREE.Vector3(...center);
+  let totalSplit = 0;
+  for (let pass = 0; pass < passes; pass++) {
+    const p = geo.attributes.position, idx = Array.from(geo.index.array);
+    const centroid = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+    const selected = new Set();
+    for (let t = 0; t < idx.length; t += 3) {
+      a.fromBufferAttribute(p, idx[t]); b.fromBufferAttribute(p, idx[t + 1]); c.fromBufferAttribute(p, idx[t + 2]);
+      centroid.copy(a).add(b).add(c).divideScalar(3);
+      if (centroid.distanceTo(centerV) > radius) continue;
+      const longest = Math.max(a.distanceTo(b), b.distanceTo(c), c.distanceTo(a));
+      if (longest > detailSize) selected.add(t / 3);
+    }
+    if (!selected.size) break;
+    const edgeKey = (i, j) => i < j ? i + '_' + j : j + '_' + i;
+    const splitEdges = new Set();
+    for (const t of selected) for (let e = 0; e < 3; e++) splitEdges.add(edgeKey(idx[t * 3 + e], idx[t * 3 + (e + 1) % 3]));
+    const positions = [], uvs = geo.attributes.uv ? [] : null, masks = geo.attributes.mask ? [] : null;
+    for (let i = 0; i < p.count; i++) { positions.push(p.getX(i), p.getY(i), p.getZ(i)); if (uvs) uvs.push(geo.attributes.uv.getX(i), geo.attributes.uv.getY(i)); if (masks) masks.push(geo.attributes.mask.array[i]); }
+    const midpoint = new Map();
+    const midIndex = (i, j) => {
+      const key = edgeKey(i, j);
+      if (midpoint.has(key)) return midpoint.get(key);
+      const index = positions.length / 3;
+      positions.push((p.getX(i) + p.getX(j)) / 2, (p.getY(i) + p.getY(j)) / 2, (p.getZ(i) + p.getZ(j)) / 2);
+      if (uvs) uvs.push((geo.attributes.uv.getX(i) + geo.attributes.uv.getX(j)) / 2, (geo.attributes.uv.getY(i) + geo.attributes.uv.getY(j)) / 2);
+      if (masks) masks.push((geo.attributes.mask.array[i] + geo.attributes.mask.array[j]) / 2);
+      midpoint.set(key, index);
+      return index;
+    };
+    const out = [];
+    for (let t = 0; t < idx.length / 3; t++) {
+      const [i0, i1, i2] = [idx[t * 3], idx[t * 3 + 1], idx[t * 3 + 2]];
+      const m01 = splitEdges.has(edgeKey(i0, i1)) ? midIndex(i0, i1) : -1;
+      const m12 = splitEdges.has(edgeKey(i1, i2)) ? midIndex(i1, i2) : -1;
+      const m20 = splitEdges.has(edgeKey(i2, i0)) ? midIndex(i2, i0) : -1;
+      const splits = [m01, m12, m20].filter(m => m >= 0).length;
+      if (!splits) { out.push(i0, i1, i2); continue; }
+      totalSplit++;
+      if (splits === 3) out.push(i0, m01, m20, m01, i1, m12, m20, m12, i2, m01, m12, m20);
+      else if (splits === 1) {
+        if (m01 >= 0) out.push(i0, m01, i2, m01, i1, i2);
+        else if (m12 >= 0) out.push(i1, m12, i0, m12, i2, i0);
+        else out.push(i2, m20, i1, m20, i0, i1);
+      } else {
+        if (m01 >= 0 && m12 >= 0) out.push(i0, m01, i2, m01, m12, i2, m01, i1, m12);
+        else if (m12 >= 0 && m20 >= 0) out.push(i1, m12, i0, m12, m20, i0, m12, i2, m20);
+        else out.push(i2, m20, i1, m20, m01, i1, m20, i0, m01);
+      }
+    }
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    if (uvs) geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    if (masks) { const attr = new THREE.BufferAttribute(new Float32Array(masks), 1); attr.name = 'mask'; geo.setAttribute('mask', attr); }
+    geo.setIndex(out);
+    geo.computeVertexNormals();
+    geo.computeBoundingSphere(); geo.computeBoundingBox();
+  }
+  return totalSplit;
+}
 // Annotations are scene data on the object, never geometry (plan 8.3). Points are
 // stored in mesh-local space so markers follow the object transform.
 export function addAnnotation(object, localPoint, text) {
@@ -255,7 +322,7 @@ export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate'
 
 export class MeshTools{
   constructor(editor){
-    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false}};this.activeMesh=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
+    this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false},dyntopo:{enabled:false,detail:0.03}};this.activeMesh=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
     this.faceHighlight=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:'#ff9b33',transparent:true,opacity:.4,side:THREE.DoubleSide,depthTest:false}));this.faceHighlight.visible=false;this.faceHighlight.renderOrder=10;editor.scene.add(this.faceHighlight);
     const canvas=editor.renderer.domElement;
     canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
@@ -282,6 +349,7 @@ export class MeshTools{
   applyBrush(hit,invert){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
     if(this.brush.type==='annotate'){if(!this._annotateArmed)return;this._annotateArmed=false;const local=hit.object.worldToLocal(hit.point.clone());addAnnotation(hit.object,local,this.annotationText||'Note');this.refreshAnnotations(hit.object);this.editor.change('annotation');return;}
     const mesh=hit.object,delta=this.lastPoint?hit.point.clone().sub(this.lastPoint):new THREE.Vector3();
+    if(this.brush.dyntopo?.enabled&&this.brush.type!=='mask'){try{dyntopoRefine(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);}catch(error){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);return;}}
     const normal=hit.face?hit.face.normal.clone().transformDirection(mesh.matrixWorld):new THREE.Vector3(0,0,1);
     const opts={falloff:this.brush.falloff,autosmooth:this.brush.autosmooth,delta,normal,layerBase:this.layerBase&&this.layerBase.uuid===mesh.geometry.uuid?this.layerBase.base:null};
     const points=[hit.point];

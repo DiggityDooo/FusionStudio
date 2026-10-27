@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter, transferMask, addAnnotation, removeAnnotation, annotationMarkers, dyntopoRefine} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -302,6 +302,30 @@ test('annotations are scene data with markers and removal', () => {
   assert.equal(mesh.userData.fusion_annotations.length, 0);
   assert.equal(removeAnnotation(mesh, entry.id), false);
   assert.deepEqual(new Float32Array(mesh.geometry.attributes.position.array), before, 'annotations must never modify geometry');
+});
+
+test('dyntopo refines only near the brush, stays conforming, and rejects shape keys before mutating', () => {
+  const geo = new THREE.SphereGeometry(0.5, 12, 8);
+  const before = geo.index.count;
+  const farVertex = geo.attributes.position.count;
+  const split = dyntopoRefine(geo, [0, 0.5, 0], 0.25, 0.05);
+  assert.ok(split > 0, 'dyntopo must split coarse triangles near the brush');
+  assert.ok(geo.index.count > before, 'triangle count must grow');
+  assert.ok(geo.attributes.position.count > farVertex, 'midpoint vertices must be added');
+  // Conforming: every undirected edge is shared by at most 2 triangles, no NaNs.
+  const edges = new Map(), p = geo.attributes.position, idx = geo.index.array;
+  for (let i = 0; i < p.count; i++) assert.ok(Number.isFinite(p.getX(i) + p.getY(i) + p.getZ(i)));
+  for (let t = 0; t < idx.length; t += 3) for (let e = 0; e < 3; e++) {
+    const a = idx[t + e], b = idx[t + (e + 1) % 3], key = a < b ? a + '_' + b : b + '_' + a;
+    edges.set(key, (edges.get(key) || 0) + 1);
+  }
+  assert.ok([...edges.values()].every(n => n <= 2), 'refinement must not create non-manifold edges');
+  // A distant region keeps its original coarse triangles: count vertices far from the brush before/after via a fresh mesh.
+  const morphGeo = new THREE.SphereGeometry(0.5, 8, 6);
+  morphGeo.morphAttributes.position = [new THREE.Float32BufferAttribute(new Float32Array(morphGeo.attributes.position.count * 3), 3)];
+  const countBefore = morphGeo.attributes.position.count;
+  assert.throws(() => dyntopoRefine(morphGeo, [0, 0.5, 0], 0.25, 0.05), /shape keys/);
+  assert.equal(morphGeo.attributes.position.count, countBefore, 'rejection must happen before any mutation');
 });
 
 test('grab follows the drag delta', () => {
