@@ -13,6 +13,27 @@ def load_scene(file):
     bpy.context.view_layer.update()
     return scene
 
+def scene_inventory(scene):
+    """Ordered source-cage identity: collections, objects, parents and data-blocks.
+    Used to prove a preserved scene reopens as the same hierarchy, not a rebuild."""
+    collections=[]
+    def walk(collection):
+        collections.append({'name':collection.name,'objects':[o.name for o in collection.objects],'children':[c.name for c in collection.children]})
+        for child in collection.children: walk(child)
+    walk(scene.collection)
+    objects=[{'name':o.name,'type':o.type,'parent':o.parent.name if o.parent else None,
+              'collection':o.users_collection[0].name if o.users_collection else None,
+              'materials':[s.material.name if s.material else None for s in o.material_slots] if hasattr(o,'material_slots') else []}
+             for o in scene.objects]
+    return {'scene':scene.name,'collections':collections,'objects':objects,
+            'materials':[m.name for m in bpy.data.materials],
+            'meshes':[m.name for m in bpy.data.meshes],
+            'cameras':[c.name for c in bpy.data.cameras],
+            'lights':[l.name for l in bpy.data.lights],
+            'armatures':[a.name for a in bpy.data.armatures],
+            'actions':[a.name for a in bpy.data.actions],
+            'images':[i.name for i in bpy.data.images]}
+
 def configure_device(scene, backend):
     if backend == 'CPU':
         scene.cycles.device = 'CPU'
