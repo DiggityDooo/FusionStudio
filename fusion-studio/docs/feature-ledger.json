@@ -10,12 +10,12 @@
    "note": "Orbit/pan/zoom, RMB+WASD fly and frame selected done; gravity walk mode missing."
   },
   "A1 Perspective and orthographic views; multi-view layouts (quad view)": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
-   ],
-   "note": "Ortho toggle with framing preserved; quad view missing (one live viewport)."
+    "tests/keymap-ui.cjs",
+    "tests/quad-view-ui.cjs"
+   ]
   },
   "A1 Shading modes: wireframe, solid, textured, X-ray, matcap, material preview, rendered": {
    "status": "open"
@@ -2019,7 +2019,10 @@
    "status": "open"
   },
   "B2 **Quad view:** four viewports (Top, Front, Side, Perspective). Standard in 3ds Max, Maya, C4D, Houdini. Toggle a single maximized view.": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/quad-view-ui.cjs"
+   ]
   },
   "B2 **One large viewport with side panels:** Blender, ZBrush, Substance Painter, Marvelous Designer.": {
    "status": "done",
@@ -2120,7 +2123,11 @@
    "status": "open"
   },
   "B3 **Viewport Layout tabs** and 4-view default": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/quad-view-ui.cjs"
+   ],
+   "note": "Four-view layout available (toggle); not the default and no layout tabs."
   },
   "B3 **Scene Explorer**, **Layer Explorer**, **Material Editor** (Slate and Compact), **Schematic View**, **Curve Editor / Dope Sheet (Track View)**": {
    "status": "open"
@@ -2277,12 +2284,13 @@
    "note": "Emulate 3-button (Alt+LMB) done; touch gestures are Orbit Controls defaults, unverified."
   },
   "B4 Maya: `F` frame selection, `A` frame all, spacebar toggles single/4-view": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
-   ],
-   "note": "Space toggles maximize; no 4-view."
+    "tests/keymap-ui.cjs",
+    "tests/quad-view-ui.cjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B4 3ds Max: `P` perspective, `T` top, `F` front, `L` left, `B` bottom, `C` camera, `Alt+W` maximize viewport": {
    "status": "partial",
@@ -2293,12 +2301,12 @@
    "note": "C camera view missing."
   },
   "B4 Cinema 4D: `F1` perspective, `F2` top, `F3` right, `F4` front, `F5` four views": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
-   ],
-   "note": "F5 toggles maximize; no four views."
+    "tests/keymap-ui.cjs",
+    "tests/quad-view-ui.cjs"
+   ]
   },
   "B4 Unreal / Unity: `F` focus": {
    "status": "done",
@@ -2607,8 +2615,10 @@
    "status": "done",
    "evidence": [
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
-   ]
+    "tests/keymap-ui.cjs",
+    "tests/quad-view-ui.cjs"
+   ],
+   "note": "Alt+W (3ds Max) toggles single / four views."
   },
   "B6 Wireframe toggle": {
    "status": "done",

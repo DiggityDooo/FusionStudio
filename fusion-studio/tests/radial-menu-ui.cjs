@@ -30,7 +30,7 @@ const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output');
   await use('maya');await page.mouse.move(at.x,at.y);await page.mouse.down({button:'right'});await menu('Object').waitFor();const dup=await item('Duplicate').boundingBox();await page.mouse.move(dup.x+dup.width/2,dup.y+dup.height/2,{steps:6});await page.mouse.up({button:'right'});
   await page.waitForFunction(()=>fusionEditor.root.children.length===2);assert.equal(await menu('Object').count(),0);
   // Maya Space: tap maximizes, hold opens the filterable hotbox.
-  const max=await page.evaluate(()=>fusionAreas.maximized);await page.keyboard.press('Space');assert.notEqual(await page.evaluate(()=>fusionAreas.maximized),max,'Space tap toggles maximize');await page.keyboard.press('Space');
+  await page.keyboard.press('Space');assert.ok(await page.evaluate(()=>!!fusionEditor.quad),'Space tap toggles four views');await page.keyboard.press('Space');assert.equal(await page.evaluate(()=>fusionEditor.quad),null);
   await page.keyboard.down('Space');await menu('Hotbox').waitFor();await page.keyboard.type('drop to');await page.keyboard.press('Enter');await page.keyboard.up('Space');
   await page.waitForFunction(()=>!fusionOperators.running);assert.ok(Math.abs(await page.evaluate(()=>fusionEditor.selected.position.y)-.5)<1e-6,'hotbox Drop to floor rests the unit cube on y=0');
   // 3ds Max quad menu.
@@ -41,6 +41,6 @@ const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output');
   await use('fusion');const before=await page.evaluate(()=>fusionEditor.orbit.target.toArray());await page.mouse.move(at.x,at.y);await page.mouse.down({button:'right'});await page.mouse.move(at.x+80,at.y+30,{steps:6});await page.mouse.up({button:'right'});await page.waitForTimeout(400);
   assert.equal(await page.locator('.radial-menu').count(),0);assert.notDeepEqual(await page.evaluate(()=>fusionEditor.orbit.target.toArray()),before);
   await page.screenshot({path:path.join(output,'radial-menu-ui.png')});await page.evaluate(()=>localStorage.removeItem('fusion-keymap-v1'));
-  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(output,'radial-menu-ui-results.json'),JSON.stringify({passed:true,checks:['Blender Z shading pie tap+click and hold+aim+release','` view pie digit selection','Shift+S snap pie (single undo)',', orientation pie','Ctrl+Tab mode pie','edit/object RMB context lists','Maya RMB marking menu drag-release','Maya Space tap maximize / hold hotbox with filter','3ds Max quad menu','ZBrush B brush popup filter','Fusion RMB still pans'],errors,runtime},null,2));console.log('Radial menu desktop PASS');
+  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(output,'radial-menu-ui-results.json'),JSON.stringify({passed:true,checks:['Blender Z shading pie tap+click and hold+aim+release','` view pie digit selection','Shift+S snap pie (single undo)',', orientation pie','Ctrl+Tab mode pie','edit/object RMB context lists','Maya RMB marking menu drag-release','Maya Space tap four views / hold hotbox with filter','3ds Max quad menu','ZBrush B brush popup filter','Fusion RMB still pans'],errors,runtime},null,2));console.log('Radial menu desktop PASS');
  }finally{if(app)await app.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

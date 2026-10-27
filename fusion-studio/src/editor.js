@@ -45,16 +45,20 @@ export class Editor {
     const rim=new THREE.DirectionalLight(0x8eb3ff,3);rim.position.set(-4,4,-4);this.scene.add(rim);
     this.ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:'#363636',roughness:1}));this.ground.rotation.x=-Math.PI/2;this.ground.position.y=-.055;this.ground.receiveShadow=true;this.scene.add(this.ground);
     this.grid=new THREE.GridHelper(40,80,0x585858,0x454545);this.grid.position.y=-.045;this.grid.material.transparent=true;this.grid.material.opacity=.5;this.scene.add(this.grid);
-    this.transform=new TransformControls(this.camera,this.renderer.domElement);this.transform.setSize(.85);this.scene.add(this.transform.getHelper());
+    this.transform=new TransformControls(this.camera,this.renderer.domElement);this.transform.setSize(.85);this.scene.add(this.transform.getHelper());this.transform._getPointer=e=>({...this.ndc(e),button:e.button});
+    // TransformControls picks the axis on pointer-down but orients its drag plane only when rendered; refresh it first.
+    const pointerDown=this.transform.pointerDown.bind(this.transform);this.transform.pointerDown=p=>{this.transform.getHelper().updateMatrixWorld(true);pointerDown(p);};
     this.transform.addEventListener('dragging-changed',e=>{this.orbit.enabled=!e.value;if(e.value){this.timeline.playing=false;this.transformStart=this.ik?.active?{ik:true,before:this.captureRig(this.ik.owner)}:this.selected?{id:this.selected.uuid,before:this.captureTransform(this.selected)}:null;}else if(this.transformStart){const gesture=this.transformStart;this.transformStart=null;if(this.operators)this.operators.run(gesture.ik?'rig.ik_finish':'object.transform_gesture',gesture).catch(error=>this.change('operator-error',error));else if(gesture.ik)this.finishRig(gesture.before);else this.finishTransform(gesture);}});
     this.transform.addEventListener('objectChange',()=>{if(this.ik?.active){try{this.ik.preview();}catch(error){this.change('operator-error',error);}}else this.change('transform');});
     this.outline=new THREE.BoxHelper(new THREE.Object3D(),0xe8b28a);this.outline.visible=false;this.scene.add(this.outline);
     this.ray=new THREE.Raycaster();this.pointer=new THREE.Vector2();this.down=null;
     this.renderer.domElement.addEventListener('pointerdown',e=>{this.down={x:e.clientX,y:e.clientY};});
-    this.renderer.domElement.addEventListener('pointerup',e=>{if(!this.down || Math.hypot(e.clientX-this.down.x,e.clientY-this.down.y)>5 || this.transform.dragging || this.transform.axis)return;const r=this.renderer.domElement.getBoundingClientRect();this.pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);this.ray.setFromCamera(this.pointer,this.camera);const hit=this.ray.intersectObjects(this.root.children.filter(o=>!this.localView||this.localView.has(o.uuid)),true).find(h=>{let o=h.object;while(o&&o!==this.root){if(!o.visible)return false;o=o.parent;}return true;});let obj=hit?.object;while(obj&&obj.parent!==this.root)obj=obj.parent;this.select(obj||null);});
-    this.perspectiveCamera=this.camera;this.resize=new ResizeObserver(()=>{const w=element.clientWidth,h=element.clientHeight;if(!w||!h)return;this.renderer.setSize(w,h);this.fitCamera();});this.resize.observe(element);
-    this.history=[];this.historyAt=-1;this.wireframe=false;this.tool='translate';this.localView=null;this.ik=new IKHandles(this);this.meshTools=new MeshTools(this);this.timeline=new Timeline(this);
-    this.renderer.setAnimationLoop(time=>{this.timeline.tick(time);this.ik.sync();this.weightPaint?.sync();this.navigation?.tick(time);this.orbit.update();if(this.selected)this.outline.setFromObject(this.selected);const isolated=this.localView&&this.root.children.filter(o=>o.visible&&!this.localView.has(o.uuid));for(const o of isolated||[])o.visible=false;this.renderer.render(this.scene,this.camera);for(const o of isolated||[])o.visible=true;});
+    this.renderer.domElement.addEventListener('pointerup',e=>{if(!this.down || Math.hypot(e.clientX-this.down.x,e.clientY-this.down.y)>5 || this.transform.dragging || this.transform.axis)return;this.pointer.copy(this.ndc(e));this.ray.setFromCamera(this.pointer,this.camera);const hit=this.ray.intersectObjects(this.root.children.filter(o=>!this.localView||this.localView.has(o.uuid)),true).find(h=>{let o=h.object;while(o&&o!==this.root){if(!o.visible)return false;o=o.parent;}return true;});let obj=hit?.object;while(obj&&obj.parent!==this.root)obj=obj.parent;this.select(obj||null);});
+    this.perspectiveCamera=this.camera;this.resize=new ResizeObserver(()=>{const w=element.clientWidth,h=element.clientHeight;if(!w||!h)return;this.renderer.setSize(w,h);this.fitCameras();});this.resize.observe(element);
+    // The quad view under the pointer becomes active before any tool sees the event.
+    const hover=e=>{if(this.quad&&(e.type==='pointerdown'||!e.buttons)&&!this.transform.dragging)this.activateView(this.viewAt(e));};element.addEventListener('pointerdown',hover,true);element.addEventListener('pointermove',hover,true);
+    this.history=[];this.historyAt=-1;this.wireframe=false;this.tool='translate';this.localView=null;this.quad=null;this.ik=new IKHandles(this);this.meshTools=new MeshTools(this);this.timeline=new Timeline(this);
+    this.renderer.setAnimationLoop(time=>{this.timeline.tick(time);this.ik.sync();this.weightPaint?.sync();this.navigation?.tick(time);this.orbit.update();if(this.selected)this.outline.setFromObject(this.selected);const isolated=this.localView&&this.root.children.filter(o=>o.visible&&!this.localView.has(o.uuid));for(const o of isolated||[])o.visible=false;this.draw();for(const o of isolated||[])o.visible=true;});
   }
   material(color=colors.clay){return new THREE.MeshStandardMaterial({color,roughness:.58,metalness:.05});}
   mesh(name,geometry,color,position=[0,0,0],scale=[1,1,1],rotation=[0,0,0]){
@@ -102,13 +106,39 @@ export class Editor {
   disposeRoot(){this.scene.remove(this.root);this.root.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of [].concat(o.material))m.dispose();}});}
   select(obj){if(this.weightPaint?.active&&obj!==this.weightPaint.owner)this.weightPaint.stop(false);this.ik?.detach();this.selected=obj;this.transform.detach();this.outline.visible=!!obj;if(obj){if(this.tool!=='select'&&(!this.meshTools||this.meshTools.mode==='object'))this.transform.attach(obj);this.outline.setFromObject(obj);}this.change('selection');}
   mode(mode){this.tool=mode;if(mode==='select'){if(!this.ik?.active)this.transform.detach();return;}this.transform.setMode(this.ik?.active?'translate':mode);if(this.selected&&!this.transform.object&&!this.ik?.active&&this.meshTools.mode==='object')this.transform.attach(this.selected);}
-  fitCamera(){const w=this.element.clientWidth||1,h=this.element.clientHeight||1,c=this.camera;if(c.isOrthographicCamera){const half=(c.top-c.bottom)/2;Object.assign(c,{left:-half*w/h,right:half*w/h});}else c.aspect=w/h;c.updateProjectionMatrix();}
+  viewRect(){const r=this.renderer.domElement.getBoundingClientRect();if(!this.quad)return r;const [x0,y0,x1,y1]=this.quad.views[this.quad.active].rect;return {left:r.left+x0*r.width,top:r.top+y0*r.height,width:(x1-x0)*r.width,height:(y1-y0)*r.height};}
+  ndc(e){const r=this.viewRect();return new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);}
+  viewAt(e){const r=this.renderer.domElement.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;return this.quad.views.findIndex(({rect:[x0,y0,x1,y1]})=>x>=x0&&x<x1&&y>=y0&&y<y1);}
+  useCamera(c){this.camera=c;this.orbit.object=c;this.transform.camera=c;}
+  activateView(i){const q=this.quad;if(!q||i<0||i===q.active)return;this.settleOrbit();q.views[q.active].target.copy(this.orbit.target);q.active=i;const v=q.views[i];this.useCamera(v.camera);this.orbit.target.copy(v.target);this.orbit.enableRotate=v.user;this.orbit.update();this.transform.getHelper().updateMatrixWorld(true);this.change('view');}
+  // Quad view: orthographic Top / Front / Right and the user camera, drawn into one canvas with scissoring.
+  toggleQuad(){
+    this.settleOrbit();
+    if(this.quad){this.activateView(3);this.quad=null;this.orbit.enableRotate=true;this.fitCameras();this.change('view');return;}
+    const box=new THREE.Box3().setFromObject(this.root),center=box.isEmpty()?new THREE.Vector3():box.getCenter(new THREE.Vector3()),size=box.isEmpty()?4:Math.max(box.getSize(new THREE.Vector3()).length(),1);
+    const side=(label,dir,rect)=>{const camera=new THREE.OrthographicCamera(-1,1,size*.6,-size*.6,-10000,10000);camera.position.copy(center).addScaledVector(new THREE.Vector3(...dir).normalize(),size*2);camera.lookAt(center);return {label,user:false,camera,target:center.clone(),rect};};
+    this.quad={active:3,views:[side('top',[0,1,.0001],[0,0,.5,.5]),side('front',[0,0,1],[.5,0,1,.5]),side('right',[1,0,0],[0,.5,.5,1]),{label:null,user:true,camera:this.camera,target:this.orbit.target.clone(),rect:[.5,.5,1,1]}]};
+    this.fitCameras();this.change('view');
+  }
+  refreshQuadOverlay(){
+    let overlay=this.element.querySelector(':scope>.quad-overlay');if(!this.quad){overlay?.remove();return;}
+    if(!overlay){overlay=document.createElement('div');overlay.className='quad-overlay';this.element.style.position||='relative';this.element.append(overlay);}
+    overlay.innerHTML=this.quad.views.map(({label,rect:[x0,y0,x1,y1]},i)=>`<div class="${i===this.quad.active?'active':''}" style="left:${x0*100}%;top:${y0*100}%;width:${(x1-x0)*100}%;height:${(y1-y0)*100}%"><span>${label?label[0].toUpperCase()+label.slice(1):'User'}</span></div>`).join('');
+  }
+  draw(){
+    const r=this.renderer;if(!this.quad){r.render(this.scene,this.camera);return;}
+    const W=this.element.clientWidth,H=this.element.clientHeight,helper=this.transform.getHelper(),shown=helper.visible;r.setScissorTest(true);
+    this.quad.views.forEach(({rect:[x0,y0,x1,y1],camera},i)=>{const x=x0*W,y=(1-y1)*H,w=(x1-x0)*W-1,h=(y1-y0)*H-1;r.setViewport(x,y,w,h);r.setScissor(x,y,w,h);helper.visible=shown&&i===this.quad.active;r.render(this.scene,camera);});
+    helper.visible=shown;r.setScissorTest(false);r.setViewport(0,0,W,H);
+  }
+  fitCameras(){for(const c of this.quad?this.quad.views.map(v=>v.camera):[this.camera])this.fitCamera(c);}
+  fitCamera(c=this.camera){const W=this.element.clientWidth||1,H=this.element.clientHeight||1,v=this.quad?.views.find(v=>v.camera===c),w=v?W*(v.rect[2]-v.rect[0]):W,h=v?H*(v.rect[3]-v.rect[1]):H;if(c.isOrthographicCamera){const half=(c.top-c.bottom)/2;Object.assign(c,{left:-half*w/h,right:half*w/h});}else c.aspect=w/h;c.updateProjectionMatrix();}
   // Orthographic height matches the perspective frustum at the target distance, so toggling keeps framing.
   setProjection(ortho){
-    this.settleOrbit();const from=this.camera,dist=from.position.distanceTo(this.orbit.target),tan=Math.tan(THREE.MathUtils.degToRad(this.perspectiveCamera.fov)/2);if(ortho===!!from.isOrthographicCamera)return;
+    if(this.quad&&!this.quad.views[this.quad.active].user)return;this.settleOrbit();const from=this.camera,dist=from.position.distanceTo(this.orbit.target),tan=Math.tan(THREE.MathUtils.degToRad(this.perspectiveCamera.fov)/2);if(ortho===!!from.isOrthographicCamera)return;
     let to;if(ortho){const half=dist*tan;to=new THREE.OrthographicCamera(-half,half,half,-half,-10000,10000);to.position.copy(from.position);}
     else{to=this.perspectiveCamera;const visible=(from.top-from.bottom)/from.zoom/2/tan,dir=from.position.clone().sub(this.orbit.target).normalize();to.position.copy(this.orbit.target).addScaledVector(dir,visible);}
-    to.quaternion.copy(from.quaternion);this.camera=to;this.orbit.object=to;this.transform.camera=to;this.fitCamera();this.orbit.update();this.change('view');
+    to.quaternion.copy(from.quaternion);if(this.quad)this.quad.views[this.quad.active].camera=to;this.useCamera(to);this.fitCamera();this.orbit.update();this.change('view');
   }
   renderCamera(){const c=this.camera;return {position:c.position.toArray(),target:this.orbit.target.toArray(),fov:this.perspectiveCamera.fov,...c.isOrthographicCamera?{orthoHeight:(c.top-c.bottom)/c.zoom}:{}};}
   hideSelected(){if(!this.selected)return;const obj=this.selected;obj.visible=false;this.select(null);this.commit();}
