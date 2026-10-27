@@ -5,8 +5,8 @@ const NATIVE={LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.ROTATE,RIGHT:THREE.MOUS
 // OrbitControls swaps rotate and pan while Ctrl/Meta/Shift is held; compensate so the scheme's action wins.
 export function orbitButton(action,e){const swap=e.ctrlKey||e.metaKey||e.shiftKey;return action==='orbit'?(swap?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE):action==='pan'?(swap?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN):action==='zoom'?THREE.MOUSE.DOLLY:-1;}
 export class ViewportNavigation {
-  constructor(editor,settings){
-    this.editor=editor;this.settings=settings;this.held=new Set();this.fly=null;this.flySpeed=3;const canvas=editor.renderer.domElement,doc=canvas.ownerDocument,orbit=editor.orbit;
+  constructor(editor,settings,{onContext=null}={}){
+    this.editor=editor;this.settings=settings;this.onContext=onContext;this.held=new Set();this.fly=null;this.flySpeed=3;const canvas=editor.renderer.domElement,doc=canvas.ownerDocument,orbit=editor.orbit;
     canvas.addEventListener('pointerdown',e=>this.down(e),true);
     canvas.addEventListener('wheel',e=>{if(!this.fly)return;e.preventDefault();e.stopImmediatePropagation();this.flySpeed=Math.min(100,Math.max(.1,this.flySpeed*(e.deltaY<0?1.25:.8)));},{capture:true,passive:false});
     // Orbit Controls always looks at its target, so orbiting around the selection recenters on it once the drag moves.
@@ -23,6 +23,8 @@ export class ViewportNavigation {
   apply(){const s=this.settings(),orbit=this.editor.orbit;orbit.zoomToCursor=s.zoomToCursor;orbit.zoomSpeed=s.invertZoom?-1:1;Object.assign(orbit.mouseButtons,NATIVE);}
   down(e){
     if(e.pointerType==='touch'||!SLOT[e.button])return;const orbit=this.editor.orbit,action=navigationAction(this.settings(),e,this.held);
+    const context=NAVIGATION[navigationScheme(this.settings())]?.context;
+    if(context&&action===null&&e.button===2&&this.onContext){e.preventDefault();e.stopImmediatePropagation();this.onContext(e,context);return;}
     orbit.mouseButtons[SLOT[e.button]]=action===undefined?NATIVE[SLOT[e.button]]:orbitButton(action,e);
     if(action==='fly')this.startFly(e);
   }

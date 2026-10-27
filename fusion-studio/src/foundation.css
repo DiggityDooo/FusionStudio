@@ -4,4 +4,10 @@
 
 .keymap-prefs{display:flex;flex-direction:column;gap:6px;min-width:520px}.keymap-prefs .check-row{display:flex;align-items:center;gap:6px;color:#ccc}.keymap-table{max-height:300px;overflow:auto;display:block}.keymap-table td{padding:3px 6px}.keymap-table .chip{background:#3a3a3a;border-radius:3px;padding:1px 4px;margin:1px;color:#ddd}.keymap-table .chip:hover{background:#5a3a3a}.keymap-actions{display:flex;gap:6px}#keymap-json{font:10px Consolas,monospace;background:#222;color:#ccc;border:1px solid #444}
 
+.radial-menu{position:fixed;inset:0;z-index:2000}.radial-anchor{position:absolute;width:0;height:0}.radial-title{position:absolute;transform:translate(-50%,-50%);background:#1d1d1d;color:#e99536;padding:3px 9px;border-radius:10px;font-size:10px;white-space:nowrap;pointer-events:none;display:flex;gap:8px}.radial-query{color:#999}
+.radial-item{background:#2c2c2c;border:1px solid #4a4a4a;color:#ddd;border-radius:4px;padding:4px 9px;font-size:11px;white-space:nowrap;display:flex;gap:6px;align-items:center;justify-content:space-between}.radial-item.hot,.radial-item:hover{background:#4a6077;color:#fff}.radial-item:disabled{opacity:.4}.radial-item kbd{opacity:.6;font-size:9px}.radial-item small{opacity:.5}
+.radial-pie .radial-item{position:absolute;left:0;top:0}
+.radial-list .radial-anchor{width:auto;height:auto;display:flex;flex-direction:column;gap:1px;background:#232323;border:1px solid #444;padding:3px;transform:translate(-12px,-12px);max-height:70vh;overflow:auto;min-width:180px}.radial-list .radial-title{position:static;transform:none;border-radius:2px}
+.radial-quadrant{position:absolute;display:flex;flex-direction:column;gap:1px;min-width:150px}.radial-quadrant.top-left{right:8px;bottom:14px}.radial-quadrant.top-right{left:8px;bottom:14px}.radial-quadrant.bottom-left{right:8px;top:14px}.radial-quadrant.bottom-right{left:8px;top:14px}
+
 .rig-coordinates{display:flex;gap:5px}.rig-coordinates label{min-width:0;flex:1;font-size:10px;color:#a8aab3}.rig-coordinates input{width:100%;min-width:0;padding:5px 3px} #ik-status{color:#82ccd8}

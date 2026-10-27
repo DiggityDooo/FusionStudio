@@ -115,6 +115,7 @@ export class Editor {
   revealAll(){const hidden=this.root.children.filter(o=>!o.visible);if(!hidden.length)return;for(const o of hidden)o.visible=true;this.commit();}
   // Local view is display-only: other objects are skipped while rendering and picking, never saved hidden.
   toggleLocalView(){if(this.localView){this.localView=null;this.frame(this.root);}else if(this.selected){this.localView=new Set([this.selected.uuid]);this.frame(this.selected);}this.change('view');}
+  placeSelection(update){const obj=this.selected;if(!obj)return;const gesture={id:obj.uuid,before:this.captureTransform(obj)};update(obj.position);obj.updateMatrixWorld(true);return this.operators?this.operators.run('object.transform_gesture',gesture):this.finishTransform(gesture);}
   dropToFloor(){const obj=this.selected;if(!obj)return;const box=new THREE.Box3().setFromObject(obj);if(box.isEmpty())return;return this.transformField('position','y',obj.position.y-box.min.y);}
   frame(obj=this.selected||this.root){const box=new THREE.Box3().setFromObject(obj);if(box.isEmpty())return;const center=box.getCenter(new THREE.Vector3());const size=Math.max(box.getSize(new THREE.Vector3()).length(),.5);const direction=this.camera.position.clone().sub(this.orbit.target).normalize();this.orbit.target.copy(center);this.camera.position.copy(center).addScaledVector(direction,size*1.5);this.camera.updateProjectionMatrix();}
   // Damped Orbit Controls keep applying leftover drag motion; flushing it keeps snapped views exact.

@@ -3,9 +3,9 @@ import {ViewportNavigation} from './navigation.js';
 
 const STORE='fusion-keymap-v1',OPTIONS=[['orbitSelection','Orbit around selection (recenters on it)'],['zoomToCursor','Zoom to mouse position'],['invertZoom','Invert wheel zoom'],['emulate3','Emulate 3-button mouse (Alt + left drag)']];
 export class Keyboard {
-  constructor(editor,{onChange=()=>{},notify=()=>{}}={}){
+  constructor(editor,{onChange=()=>{},notify=()=>{},onContext=null}={}){
     this.onChange=onChange;try{this.settings=normalize(JSON.parse(localStorage.getItem(STORE)||'{}'));}catch(error){this.settings=normalize({});notify('Saved keymap could not be read and was reset: '+error.message,true);}
-    this.navigation=editor.navigation=new ViewportNavigation(editor,()=>this.settings);
+    this.navigation=editor.navigation=new ViewportNavigation(editor,()=>this.settings,{onContext});
   }
   set(next){this.settings=normalize(next);localStorage.setItem(STORE,JSON.stringify(this.settings));this.navigation.apply();this.onChange();}
   resolve(e){return this.navigation.heldConsumes(e)?null:resolveKey(this.settings,e);}

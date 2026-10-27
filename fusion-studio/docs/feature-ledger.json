@@ -1721,16 +1721,21 @@
    ]
   },
   "A28 Marking/radial/pie menus": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "A28 Context-sensitive menus and search-based command lookup": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
-    "tests/foundation-ui.cjs",
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs",
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
-   ],
-   "note": "F3/Shift+C/Tab search; no right-click context menus."
+    "tests/keymap-ui.cjs",
+    "tests/foundation-ui.cjs"
+   ]
   },
   "A28 Properties/attribute/inspector panels": {
    "status": "open"
@@ -1995,7 +2000,12 @@
    ]
   },
   "B1 Right-click": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Context list (Blender/C4D), marking menu (Maya/Houdini), quad menu (Max); Fusion/ZBrush/game keep RMB navigation."
   },
   "B1 Escape": {
    "status": "done",
@@ -2460,7 +2470,11 @@
    "status": "open"
   },
   "B6 Smooth / flat shading": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B6 Proportional editing": {
    "status": "open"
@@ -2476,7 +2490,12 @@
    ]
   },
   "B6 Mesh context menus": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Single edit-mode context menu rather than Ctrl+V/E/F split."
   },
   "B6 Apply transforms": {
    "status": "open"
@@ -2485,19 +2504,37 @@
    "status": "open"
   },
   "B6 Mode pie": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B6 Shading pie": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Wireframe/solid/grid; material preview and rendered viewport missing."
   },
   "B6 Snap pie": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Selection to grid/origin/floor and snapping toggle; no 3D cursor."
   },
   "B6 Pivot pie": {
    "status": "open"
   },
   "B6 Orientation pie": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B6 Multi-Cut": {
    "status": "open"
@@ -2520,7 +2557,11 @@
    "note": "4 wireframe / 5 shaded; 6 textured missing."
   },
   "B6 Hotbox": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B6 Duplicate": {
    "status": "done",
@@ -2583,7 +2624,11 @@
    "status": "open"
   },
   "B6 Tool menu popup": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B6 Commander (search)": {
    "status": "done",
@@ -2631,7 +2676,11 @@
    ]
   },
   "B6 Brush palette popup": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B6 Symmetry X / Y / Z": {
    "status": "partial",
@@ -2677,7 +2726,11 @@
    "status": "open"
   },
   "B7 Brush selection": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B7 Frame model": {
    "status": "done",
@@ -2763,25 +2816,55 @@
    "status": "open"
   },
   "B10 **Pie menus**": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B10 **Marking menus**": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B10 **Hotbox**": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Filterable action list; not Maya's full menu-bar layout."
   },
   "B10 **Quad menu**": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B10 **Popup menu**": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B10 **Radial menus**": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ],
+   "note": "Houdini W opens a radial shading menu; other Houdini radial keys missing."
   },
   "B10 **Brush popup**": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B10 **Search**": {
    "status": "done",
@@ -2870,25 +2953,29 @@
    "status": "partial",
    "evidence": [
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
+    "tests/keymap-ui.cjs",
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
    ],
-   "note": "Pie menus missing."
+   "note": "Pivot pie missing (no pivot modes)."
   },
   "B14 **Maya** (QWER, Alt+mouse nav, marking menus)": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
-   ],
-   "note": "Marking menus missing."
+    "tests/keymap-ui.cjs",
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B14 **3ds Max** (QWER, Alt+MMB orbit, quad menu)": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
     "tests/keymap.test.mjs",
-    "tests/keymap-ui.cjs"
-   ],
-   "note": "Quad menu missing."
+    "tests/keymap-ui.cjs",
+    "tests/radial-menu.test.mjs",
+    "tests/radial-menu-ui.cjs"
+   ]
   },
   "B14 **Cinema 4D** (ERT, `1/2/3` + mouse nav)": {
    "status": "done",
