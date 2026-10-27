@@ -59,6 +59,50 @@ export function maskAttribute(geo){
   if(!attr){attr=new THREE.BufferAttribute(new Float32Array(geo.attributes.position.count),1);attr.name='mask';geo.setAttribute('mask',attr);}
   return attr;
 }
+export const MESH_FILTERS=[
+  {id:'smooth',label:'Smooth mesh'},{id:'sharpen',label:'Sharpen mesh'},
+  {id:'relax',label:'Relax (tangential)'},{id:'volume-smooth',label:'Volume-preserving smooth'},
+  {id:'mask-blur',label:'Blur mask'},{id:'mask-grow',label:'Grow mask'},{id:'mask-shrink',label:'Shrink mask'},
+];
+function meshVolume(geo){ // signed volume of a closed triangle mesh, for volume-preserving smoothing
+  const p=geo.attributes.position,idx=geo.index?.array;if(!idx)return 0;
+  const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();let volume=0;
+  for(let i=0;i<idx.length;i+=3){a.fromBufferAttribute(p,idx[i]);b.fromBufferAttribute(p,idx[i+1]);c.fromBufferAttribute(p,idx[i+2]);volume+=a.dot(b.cross(c))/6;}
+  return volume;
+}
+export function applyMeshFilter(geo,kind,amount=.5){
+  const p=geo.attributes.position,adjacency=adjacencyFor(geo),before=new Float32Array(p.array);
+  const prior=new THREE.Vector3(),avg=new THREE.Vector3(),tan=new THREE.Vector3(),nrm=new THREE.Vector3();
+  const laplacian=i=>{const neighbors=adjacency[i];avg.set(0,0,0);if(!neighbors||!neighbors.size)return null;for(const j of neighbors)avg.add(tan.set(before[j*3],before[j*3+1],before[j*3+2]));return avg.divideScalar(neighbors.size);};
+  if(kind==='mask-blur'||kind==='mask-grow'||kind==='mask-shrink'){
+    const attr=maskAttribute(geo),source=new Float32Array(attr.array);
+    for(let i=0;i<attr.count;i++){const neighbors=adjacency[i];if(!neighbors||!neighbors.size)continue;let value=source[i];
+      if(kind==='mask-blur'){let sum=source[i];for(const j of neighbors)sum+=source[j];value=sum/(neighbors.size+1);}
+      else if(kind==='mask-grow'){for(const j of neighbors)value=Math.max(value,source[j]);}
+      else {for(const j of neighbors)value=Math.min(value,source[j]);}
+      attr.array[i]=kind==='mask-blur'?THREE.MathUtils.lerp(source[i],value,THREE.MathUtils.clamp(amount*2,0,1)):value;}
+    attr.needsUpdate=true;return attr.count;
+  }
+  const volumeBefore=kind==='volume-smooth'?meshVolume(geo):0,centerBefore=new THREE.Vector3();
+  if(kind==='volume-smooth')geo.computeBoundingBox(),geo.boundingBox.getCenter(centerBefore);
+  let touched=0;
+  for(let i=0;i<p.count;i++){
+    const protection=geo.attributes.mask?THREE.MathUtils.clamp(geo.attributes.mask.array[i]||0,0,1):0;
+    const a=laplacian(i);if(!a)continue;prior.set(before[i*3],before[i*3+1],before[i*3+2]);
+    const f=amount*(1-protection);if(f<=0)continue;touched++;
+    if(kind==='smooth'||kind==='volume-smooth')prior.lerp(a,Math.min(1,f));
+    else if(kind==='sharpen')prior.add(tan.copy(prior).sub(a).multiplyScalar(Math.min(1,f)));
+    else if(kind==='relax'){tan.copy(a).sub(prior);nrm.fromBufferAttribute(geo.attributes.normal,i);tan.addScaledVector(nrm,-tan.dot(nrm));prior.addScaledVector(tan,Math.min(1,f));}
+    else return 0;
+    p.setXYZ(i,prior.x,prior.y,prior.z);
+  }
+  if(kind==='volume-smooth'&&Math.abs(volumeBefore)>1e-12){
+    const volumeAfter=meshVolume(geo);
+    if(Math.abs(volumeAfter)>1e-12){const scale=Math.cbrt(volumeBefore/volumeAfter);geo.computeBoundingBox();const centerAfter=geo.boundingBox.getCenter(new THREE.Vector3());
+      for(let i=0;i<p.count;i++){prior.fromBufferAttribute(p,i).sub(centerAfter).multiplyScalar(scale).add(centerBefore);p.setXYZ(i,prior.x,prior.y,prior.z);} }
+  }
+  p.needsUpdate=true;geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();return touched;
+}
 export function clearMask(geo){const attr=geo.attributes.mask;if(attr){attr.array.fill(0);attr.needsUpdate=true;} }
 export function invertMask(geo){const attr=maskAttribute(geo);for(let i=0;i<attr.count;i++)attr.array[i]=1-attr.array[i];attr.needsUpdate=true;}
 export const FALLOFFS=['smooth','sphere','root','sharp','linear','constant'];

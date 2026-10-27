@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask} from '../src/mesh-tools.js';
+import {sculptGeometry, SCULPT_BRUSHES, FALLOFFS, falloffValue, maskAttribute, clearMask, invertMask, applyMeshFilter} from '../src/mesh-tools.js';
 
 function sphere(detail = 4) {
   const geo = new THREE.SphereGeometry(0.5, 48, 32);
@@ -233,6 +233,43 @@ test('pose bends a limb-like strip around the brush pivot', () => {
   }
   assert.equal(baseMove, 0, 'pose must pin the region behind the pivot');
   assert.ok(tipMove > 0.02, `pose must bend the tip, moved ${tipMove}`);
+});
+
+test('mesh filters: sharpen amplifies detail, volume-smooth preserves volume, mask ops spread protection', () => {
+  const spiky = () => { const m = sphere(); const p = m.geometry.attributes.position; p.setY(100, p.getY(100) + 0.2); m.geometry.computeVertexNormals(); return m; };
+  const smoothed = spiky(), sharpened = spiky();
+  const peak = m => Math.max(...m.geometry.attributes.position.array.filter((_, i) => i % 3 === 1));
+  applyMeshFilter(smoothed.geometry, 'smooth', 0.6);
+  applyMeshFilter(sharpened.geometry, 'sharpen', 0.6);
+  assert.ok(peak(smoothed) < peak(spiky()), 'smooth must reduce the spike');
+  assert.ok(peak(sharpened) > peak(spiky()), 'sharpen must amplify the spike');
+
+  const vol = m => { const p = m.geometry.attributes.position, idx = m.geometry.index.array, v = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(); let s = 0; for (let i = 0; i < idx.length; i += 3) { a.fromBufferAttribute(p, idx[i]); b.fromBufferAttribute(p, idx[i + 1]); c.fromBufferAttribute(p, idx[i + 2]); s += a.dot(v.copy(b).cross(c)) / 6; } return s; };
+  const preserved = spiky(), plain = spiky();
+  const v0 = vol(preserved);
+  applyMeshFilter(preserved.geometry, 'volume-smooth', 0.6);
+  applyMeshFilter(plain.geometry, 'smooth', 0.6);
+  assert.ok(Math.abs(vol(preserved) - v0) / Math.abs(v0) < 0.02, `volume-preserving smooth drifted ${Math.abs(vol(preserved) - v0) / Math.abs(v0)}`);
+  assert.ok(Math.abs(vol(plain) - v0) / Math.abs(v0) > Math.abs(vol(preserved) - v0) / Math.abs(v0), 'plain smooth should lose more volume');
+
+  const masked = sphere();
+  maskAttribute(masked.geometry).array[500] = 1;
+  applyMeshFilter(masked.geometry, 'mask-grow', 0.5);
+  const sum1 = masked.geometry.attributes.mask.array.reduce((a, b) => a + b, 0);
+  assert.ok(sum1 > 1, 'mask-grow must spread protection to neighbours');
+  applyMeshFilter(masked.geometry, 'mask-shrink', 0.5);
+  assert.ok(masked.geometry.attributes.mask.array.reduce((a, b) => a + b, 0) < sum1, 'mask-shrink must contract protection');
+});
+
+test('mask survives the editor serialization path (buffer-view toJSON roundtrip)', () => {
+  const geo = new THREE.SphereGeometry(0.5, 16, 12);
+  maskAttribute(geo).array[10] = 0.75;
+  const buffer = new THREE.BufferGeometry();
+  buffer.uuid = geo.uuid;
+  for (const key of ['index', 'attributes', 'morphAttributes', 'morphTargetsRelative', 'groups', 'boundingSphere', 'userData']) buffer[key] = geo[key];
+  const back = new THREE.BufferGeometryLoader().parse(buffer.toJSON());
+  assert.ok(back.attributes.mask, 'mask attribute must survive save/reopen');
+  assert.equal(back.attributes.mask.array[10], 0.75);
 });
 
 test('grab follows the drag delta', () => {
