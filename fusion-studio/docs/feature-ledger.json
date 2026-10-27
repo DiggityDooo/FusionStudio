@@ -550,41 +550,86 @@
    "status": "open"
   },
   "A7 Automatic unwrap, smart UV project, cube/cylinder/sphere/planar projection": {
-   "status": "partial",
+   "status": "done",
    "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs",
     "tests/engine-modeling.cjs"
    ],
-   "note": "Smart UV Project via Blender; projection types missing."
+   "note": "Smart UV project, box, cylinder, sphere and planar projections."
   },
   "A7 Seam marking and cutting; seam stitching": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs"
+   ],
+   "note": "Seams from sharp angles at unwrap; manual seam painting and stitching missing."
   },
   "A7 Conformal (LSCM/ABF), angle-based and minimum-stretch unwrapping": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs"
+   ],
+   "note": "Angle based, conformal and minimum stretch unwrapping."
   },
   "A7 UV relax, straighten, pin, align, orient and rotate": {
    "status": "open"
   },
   "A7 UV packing: manual, automatic, island rotation, padding control": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs"
+   ],
+   "note": "Automatic packing with margin and rotation; manual island transforms missing."
   },
   "A7 Texel density checks and normalization": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs"
+   ],
+   "note": "World-space texel density readout per texture size; Average Island Scale normalizes."
   },
   "A7 UDIM tile workflow": {
    "status": "open"
   },
   "A7 UV distortion/stretch visualization and checker patterns": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs"
+   ],
+   "note": "Numbered colour checker overlay; per-face distortion heatmap missing."
   },
   "A7 UV sets/channels; multi-UV per mesh": {
-   "status": "open"
+   "status": "partial",
+   "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs"
+   ],
+   "note": "Multiple UV sets kept through processing and viewable in the UV editor; set creation/renaming UI missing."
   },
   "A7 UV copy/transfer between meshes": {
    "status": "open"
   },
   "A7 Lightmap UV generation": {
-   "status": "open"
+   "status": "done",
+   "evidence": [
+    "tests/uv-tools.cjs",
+    "tests/uv-ui.cjs",
+    "tests/uv-tools.test.mjs"
+   ],
+   "note": "Non-overlapping packed second UV set."
   },
   "A7 Atlasing and trim sheets": {
    "status": "open"

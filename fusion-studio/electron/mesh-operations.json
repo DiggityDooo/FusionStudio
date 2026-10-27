@@ -601,5 +601,133 @@
         "type": "number"
       }
     ]
+  },
+  "uv_unwrap": {
+    "label": "Unwrap",
+    "category": "UV",
+    "fields": [
+      {
+        "key": "method",
+        "label": "Method",
+        "default": "Angle based",
+        "values": [
+          "Angle based",
+          "Conformal",
+          "Minimum stretch"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "seams",
+        "label": "Seams",
+        "default": "Keep existing",
+        "values": [
+          "Keep existing",
+          "From sharp angles"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "angle",
+        "label": "Seam angle (degrees)",
+        "default": 60,
+        "min": 1,
+        "max": 180,
+        "step": 1,
+        "type": "number"
+      },
+      {
+        "key": "margin",
+        "label": "Island margin",
+        "default": 0.02,
+        "min": 0,
+        "max": 0.25,
+        "step": 0.001,
+        "type": "number"
+      }
+    ]
+  },
+  "uv_project": {
+    "label": "Projection UV",
+    "category": "UV",
+    "fields": [
+      {
+        "key": "type",
+        "label": "Projection",
+        "default": "Box",
+        "values": [
+          "Box",
+          "Cylinder",
+          "Sphere",
+          "Planar"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "axis",
+        "label": "Planar axis",
+        "default": "Y",
+        "values": [
+          "Y",
+          "X",
+          "Z"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "size",
+        "label": "Box size (m)",
+        "default": 1,
+        "min": 0.01,
+        "max": 100,
+        "step": 0.01,
+        "type": "number"
+      }
+    ]
+  },
+  "uv_pack": {
+    "label": "Pack Islands",
+    "category": "UV",
+    "fields": [
+      {
+        "key": "margin",
+        "label": "Margin",
+        "default": 0.01,
+        "min": 0,
+        "max": 0.25,
+        "step": 0.001,
+        "type": "number"
+      },
+      {
+        "key": "rotate",
+        "label": "Rotate islands",
+        "default": "Yes",
+        "values": [
+          "Yes",
+          "No"
+        ],
+        "type": "enum"
+      }
+    ]
+  },
+  "uv_average": {
+    "label": "Average Island Scale",
+    "category": "UV",
+    "fields": []
+  },
+  "uv_lightmap": {
+    "label": "Lightmap UVs",
+    "category": "UV",
+    "fields": [
+      {
+        "key": "margin",
+        "label": "Margin",
+        "default": 0.1,
+        "min": 0.001,
+        "max": 1,
+        "step": 0.001,
+        "type": "number"
+      }
+    ]
   }
 }

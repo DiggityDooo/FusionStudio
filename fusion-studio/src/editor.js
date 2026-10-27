@@ -31,6 +31,7 @@ import {HistoryImages} from './history-images.js';
 import {MeasureTool} from './measure.js';
 import {SceneObjectHelpers,createLight,createCamera} from './scene-objects.js';
 import {normalizeRenderSettings} from './render-ui.js';
+import {checkerTexture} from './uv-tools.js';
 
 const colors={clay:'#bfc8c7',orange:'#d47843',ink:'#333b42',fabric:'#58636a',cream:'#e5dfcb'};
 export class Editor {
@@ -61,7 +62,7 @@ export class Editor {
     // The quad view under the pointer becomes active before any tool sees the event.
     const hover=e=>{if(this.quad&&(e.type==='pointerdown'||!e.buttons)&&!this.transform.dragging)this.activateView(this.viewAt(e));};element.addEventListener('pointerdown',hover,true);element.addEventListener('pointermove',hover,true);
     this.history=[];this.historyAt=-1;this.wireframe=false;this.tool='translate';this.localView=null;this.quad=null;this.section=null;this.bookmarks=[];this.xray=false;this.xrayMaterials=new WeakMap();this.measure=new MeasureTool(this);this.sceneHelpers=new SceneObjectHelpers(this);this.viewFov=this.camera.fov;this.ik=new IKHandles(this);this.meshTools=new MeshTools(this);this.timeline=new Timeline(this);
-    this.renderer.setAnimationLoop(time=>{this.timeline.tick(time);this.ik.sync();this.weightPaint?.sync();this.navigation?.tick(time);this.orbit.update();if(this.selected)this.outline.setFromObject(this.selected);const isolated=this.localView&&this.root.children.filter(o=>o.visible&&!this.localView.has(o.uuid));for(const o of isolated||[])o.visible=false;this.sceneHelpers.sync();const swapped=this.xray?this.applyXray():null;this.draw();for(const [mesh,material] of swapped||[])mesh.material=material;for(const o of isolated||[])o.visible=true;this.measure.sync();});
+    this.renderer.setAnimationLoop(time=>{this.timeline.tick(time);this.ik.sync();this.weightPaint?.sync();this.navigation?.tick(time);this.orbit.update();if(this.selected)this.outline.setFromObject(this.selected);const isolated=this.localView&&this.root.children.filter(o=>o.visible&&!this.localView.has(o.uuid));for(const o of isolated||[])o.visible=false;this.sceneHelpers.sync();const swapped=this.xray?this.applyXray():this.uvChecker?this.applyChecker():null;this.draw();for(const [mesh,material] of swapped||[])mesh.material=material;for(const o of isolated||[])o.visible=true;this.measure.sync();});
   }
   material(color=colors.clay){return new THREE.MeshStandardMaterial({color,roughness:.58,metalness:.05});}
   mesh(name,geometry,color,position=[0,0,0],scale=[1,1,1],rotation=[0,0,0]){
@@ -152,7 +153,11 @@ export class Editor {
   setSection(section){this.section=section?{...section,plane:new THREE.Plane(new THREE.Vector3(...['x','y','z'].map(a=>a===section.axis?(section.flip?1:-1):0)),section.flip?-section.offset:section.offset)}:null;this.renderer.clippingPlanes=this.section?[this.section.plane]:[];}
   // X-ray draws see-through clones swapped in for one frame; saved materials never change.
   xrayMaterial(m){let c=this.xrayMaterials.get(m);if(!c||c.userData.sourceVersion!==m.version){c?.dispose();c=m.clone();c.userData={sourceVersion:m.version};this.xrayMaterials.set(m,c);}c.color?.copy(m.color);Object.assign(c,{transparent:true,opacity:Math.min(m.opacity,.35),depthWrite:false,wireframe:m.wireframe});return c;}
-  applyXray(){const swapped=[];this.root.traverse(n=>{if(n.isMesh&&n.material){swapped.push([n,n.material]);n.material=Array.isArray(n.material)?n.material.map(m=>this.xrayMaterial(m)):this.xrayMaterial(n.material);}});return swapped;}
+  // Display overrides swap materials for one frame only; callers restore the returned [mesh, material] pairs.
+  overrideMaterials(replace,include=()=>true){const swapped=[];this.root.traverse(n=>{if(n.isMesh&&n.material&&include(n)){swapped.push([n,n.material]);n.material=Array.isArray(n.material)?n.material.map(replace):replace(n.material);}});return swapped;}
+  applyXray(){return this.overrideMaterials(m=>this.xrayMaterial(m));}
+  // UV checker: a shared lit material with a numbered grid on meshes that have texture coordinates.
+  applyChecker(){const checker=this.checkerMaterial??=new THREE.MeshStandardMaterial({map:checkerTexture(),roughness:.75});return this.overrideMaterials(()=>checker,n=>!!n.geometry.attributes.uv);}
   async addReference(url,name='Reference'){
     const texture=await new THREE.TextureLoader().loadAsync(url);texture.colorSpace=THREE.SRGBColorSpace;const {width,height}=texture.image;
     const plane=new THREE.Mesh(new THREE.PlaneGeometry(2*width/height,2),new THREE.MeshBasicMaterial({map:texture,transparent:true,opacity:.6,side:THREE.DoubleSide,depthWrite:false}));

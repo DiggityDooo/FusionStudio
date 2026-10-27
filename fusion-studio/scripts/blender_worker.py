@@ -15,7 +15,61 @@ from mathutils import Matrix, Vector
 
 # Must list every operation in electron/mesh-operations.json (the worker cannot read the packaged archive).
 MESH_ACTIONS = {'subdivide','bevel','decimate','solidify','mirror','remesh','recalculate','uv','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch',
-    'screw','radial_array','inset','bisect','quad_remesh','quads','fill_holes','edge_split','displace','cast'}
+    'screw','radial_array','inset','bisect','quad_remesh','quads','fill_holes','edge_split','displace','cast',
+    'uv_unwrap','uv_project','uv_pack','uv_average','uv_lightmap'}
+UV_METHODS = {'Angle based': 'ANGLE_BASED', 'Conformal': 'CONFORMAL', 'Minimum stretch': 'MINIMUM_STRETCH'}
+
+
+def uv_operation(obj, action, options):
+    """UV unwrapping, projection, packing and lightmap layout on the whole mesh in Edit Mode."""
+    if action == 'uv_project' and options['type'] == 'Planar':
+        edit_bmesh(obj, lambda bm: planar_uv(bm, options['axis']))
+        return
+    layers = obj.data.uv_layers
+    if action == 'uv_lightmap':
+        # Mesh UV layers must change in Object Mode; Edit Mode keeps its own copy and overwrites them on exit.
+        if not layers: layers.new(name='UVMap')
+        layers.active = layers.new(name='Lightmap')
+    checked(bpy.ops.object.mode_set(mode='EDIT'), 'Edit mode')
+    try:
+        bpy.ops.mesh.select_all(action='SELECT')
+        if action == 'uv_unwrap':
+            method = UV_METHODS[options['method']]
+            available = [i.identifier for i in bpy.ops.uv.unwrap.get_rna_type().properties['method'].enum_items]
+            if method not in available: raise ValueError(options['method'] + ' unwrapping is not available in this Blender version.')
+            if options['seams'] == 'From sharp angles':
+                bpy.ops.mesh.select_mode(type='EDGE'); bpy.ops.mesh.select_all(action='DESELECT')
+                checked(bpy.ops.mesh.edges_select_sharp(sharpness=math.radians(float(options['angle']))), 'Select sharp edges')
+                checked(bpy.ops.mesh.mark_seam(clear=False), 'Mark seams'); bpy.ops.mesh.select_all(action='SELECT')
+            checked(bpy.ops.uv.unwrap(method=method, margin=float(options['margin'])), 'Unwrap')
+        elif action == 'uv_project':
+            if options['type'] == 'Box': checked(bpy.ops.uv.cube_project(cube_size=float(options['size']), scale_to_bounds=False), 'Box projection')
+            elif options['type'] == 'Cylinder': checked(bpy.ops.uv.cylinder_project(direction='ALIGN_TO_OBJECT', scale_to_bounds=True), 'Cylinder projection')
+            else: checked(bpy.ops.uv.sphere_project(direction='ALIGN_TO_OBJECT', scale_to_bounds=True), 'Sphere projection')
+        elif action == 'uv_pack':
+            checked(bpy.ops.uv.pack_islands(rotate=options['rotate'] == 'Yes', margin=float(options['margin'])), 'Pack islands')
+        elif action == 'uv_average':
+            checked(bpy.ops.uv.average_islands_scale(), 'Average island scale')
+        elif action == 'uv_lightmap':
+            # A second, non-overlapping UV set for baked lighting.
+            checked(bpy.ops.uv.lightmap_pack(PREF_CONTEXT='ALL_FACES', PREF_PACK_IN_ONE=True, PREF_NEW_UVLAYER=False, PREF_MARGIN_DIV=float(options['margin'])), 'Lightmap pack')
+    finally:
+        bpy.ops.object.mode_set(mode='OBJECT')
+    if action == 'uv_lightmap': layers.active = layers[0]
+
+
+def planar_uv(bm, axis):
+    """Project along a Fusion axis, keeping aspect and fitting the longer side to 0..1."""
+    normal = ui_axis(axis)
+    u = Vector((0, 1, 0)) if abs(normal.x) < .5 and abs(normal.z) > .5 else Vector((1, 0, 0))
+    if abs(normal.dot(u)) > .5: u = Vector((0, 0, 1))
+    v = normal.cross(u)
+    layer = bm.loops.layers.uv.verify()
+    coords = [(l, l.vert.co.dot(u), l.vert.co.dot(v)) for f in bm.faces for l in f.loops]
+    if not coords: return
+    lu, lv = min(c[1] for c in coords), min(c[2] for c in coords)
+    size = max(max(c[1] for c in coords) - lu, max(c[2] for c in coords) - lv, 1e-9)
+    for loop, a, b in coords: loop[layer].uv = ((a - lu) / size, (b - lv) / size)
 
 
 def checked(result, label):
@@ -520,6 +574,8 @@ def main(specfile=None):
                     modifier=obj.modifiers.new('Fusion displace','DISPLACE');modifier.texture=texture;modifier.texture_coords='LOCAL';modifier.strength=float(options['strength'])
                 elif action=='cast':
                     modifier=obj.modifiers.new('Fusion cast','CAST');modifier.cast_type='SPHERE';modifier.factor=float(options['factor'])
+                elif action.startswith('uv_'):
+                    uv_operation(obj,action,options);continue
                 elif action in ('uv','recalculate'):
                     checked(bpy.ops.object.mode_set(mode='EDIT'),'Edit mode');bpy.ops.mesh.select_all(action='SELECT')
                     if action=='uv':checked(bpy.ops.uv.smart_project(angle_limit=math.radians(float(options.get('angle',66))),island_margin=float(options.get('margin',.02))),'UV projection')
