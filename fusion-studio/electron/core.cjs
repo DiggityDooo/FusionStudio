@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const {spawn} = require('node:child_process');
+const {capsuleForFile}=require('./source-capsule.cjs');
 const {PersistentWorker}=require('./persistent-worker.cjs');
 const {GltfValidator}=require('./gltf-validator.cjs');
 const {assertUsable}=require('./gltf-inspection.cjs');
@@ -158,8 +159,9 @@ class Engine {
       let validation,validationPath;if(data){validation=await this.validation.run({data});validationPath=writeNew(this.root,path.join(dir,'output-validation.json'),JSON.stringify(validation,null,2));assertUsable(validation);}
       if(job.cancelled)throw Error('Job cancelled.');
       let nativeBlend;if(metadata.nativeBlend){const snapshot=metadata.nativeBlend.snapshot;if(!inside(dir,snapshot))throw Error('Invalid native scene output path.');const bytes=fs.readFileSync(snapshot);nativeBlend={version:1,...metadata.nativeBlend,data:bytes.toString('base64'),sha256:crypto.createHash('sha256').update(bytes).digest('hex')};}
+      let sourceCapsule;if(action==='convert'){sourceCapsule=await capsuleForFile(source);writeNew(this.root,path.join(dir,'source-capsule.json'),JSON.stringify(sourceCapsule,null,2));}
       let flattened;if(surfacePanels){if(fs.statSync(output).size>32000000)throw Error('Panel flattening output exceeds 32 MB. Simplify the working copy.');flattened=validateSurfacePanelResult(JSON.parse(fs.readFileSync(output,'utf8')),surfacePanels);}
-      job.status='complete';job.worker=worker;return {...job,metadata,data,nativeBlend,...(validation?{validation,validationPath}:{}),...(context?{context}:{}),...(flattened?{flattened}: {})};
+      job.status='complete';job.worker=worker;return {...job,metadata,data,nativeBlend,...(sourceCapsule?{sourceCapsule}:{}),...(validation?{validation,validationPath}:{}),...(context?{context}:{}),...(flattened?{flattened}: {})};
     }).catch(error=>{job.status=job.cancelled?'cancelled':'failed';job.error=job.error||(job.cancelled?'Job cancelled.':error.message);throw Error(job.error);})
       .finally(()=>{clearTimeout(timeout);logFile.end();this.active=null;job.finished=new Date().toISOString();this.onUpdate({...job});});
   }
