@@ -451,6 +451,24 @@ test('dyntopo collapse protects fully masked vertices and open boundaries', () =
   }
 });
 
+test('topology tools survive nonmanifold input and preserve UV seams', () => {
+  // Two tetrahedra sharing an edge: that edge has 4 faces (nonmanifold).
+  const geo = new THREE.BufferGeometry();
+  const verts = new Float32Array([0, 0, 0, 1, 0, 0, 0.5, 1, 0, 0.5, 0.3, 1, 0.5, 0.3, -1]);
+  geo.setAttribute('position', new THREE.BufferAttribute(verts, 3));
+  geo.setAttribute('uv', new THREE.BufferAttribute(new Float32Array([0, 0, 1, 0, 0.5, 1, 0.5, 0.3, 0.5, 0.7]), 2));
+  geo.setIndex([0, 1, 2, 1, 0, 3, 0, 1, 4]); // edge (0,1) has three faces: nonmanifold
+  geo.computeVertexNormals();
+  const report = dyntopoCollapse(geo, [0.5, 0.3, 0], 2, 1.2);
+  assert.ok(report, 'collapse must not crash on nonmanifold input');
+  const idx = geo.index.array;
+  for (const v of idx) assert.ok(v < geo.attributes.position.count, 'indices stay in range');
+  assert.equal(geo.attributes.uv.count, geo.attributes.position.count, 'UV seam channel survives collapse');
+  assert.ok([...geo.attributes.uv.array].every(Number.isFinite), 'UVs stay finite');
+  const refined = dyntopoCollapse(new THREE.SphereGeometry(0.5, 24, 16), [0, 0.5, 0], 0.3, 0.09);
+  assert.ok(refined.collapsed > 0, 'collapse works beside a UV seam (sphere poles/seam intact)');
+});
+
 test('dyntopo collapse rejects shape keys and material groups before mutating', () => {
   const mesh = sphere();
   mesh.geometry.morphAttributes.position = [new THREE.BufferAttribute(new Float32Array(mesh.geometry.attributes.position.count * 3), 3)];

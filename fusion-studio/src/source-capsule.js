@@ -9,15 +9,15 @@ export const CAPSULE_SCHEMA = 1;
 // kind: 'preserved-native' | 'direct-import' | 'exchange' | 'preservation-only'
 // editable: what Fusion can genuinely edit today, not what the suffix suggests.
 export const FORMAT_ADAPTERS = [
-  {id: 'blend', extensions: ['.blend'], kind: 'preserved-native', editable: 'working-copy', label: 'Blender scene (preserved; edits on a converted working copy)'},
-  {id: 'dson', extensions: ['.duf', '.dsf'], kind: 'direct-import', editable: 'subset', label: 'DAZ DSON (direct importer; unsupported fields preserved and reported)'},
-  {id: 'gltf', extensions: ['.glb', '.gltf'], kind: 'exchange', editable: 'subset', label: 'glTF (validated exchange; not a native preservation store)'},
-  {id: 'mesh-exchange', extensions: ['.obj', '.fbx', '.stl', '.ply'], kind: 'exchange', editable: 'mesh', label: 'Mesh exchange via the Blender worker (feature subset per format)'},
-  {id: 'usd', extensions: ['.usd', '.usda', '.usdc', '.usdz'], kind: 'exchange', editable: 'unverified', label: 'USD (route present; layer fidelity unverified)'},
-  {id: 'alembic', extensions: ['.abc'], kind: 'exchange', editable: 'unverified', label: 'Alembic cache (route present; fidelity unverified)'},
-  {id: 'zbrush', extensions: ['.zpr', '.ztl'], kind: 'preservation-only', editable: 'none', label: 'ZBrush project/tool — preservation only: no verified host/SDK on this machine'},
-  {id: 'marvelous', extensions: ['.zprj', '.zpac'], kind: 'preservation-only', editable: 'none', label: 'Marvelous Designer project — preserved original; Fusion patterns are an independent model'},
-  {id: 'native-project', extensions: ['.max', '.ma', '.mb', '.c4d', '.hip', '.lxo'], kind: 'preservation-only', editable: 'none', label: 'Native application project — preservation only until a verified bridge exists'},
+  {id: 'blend', version: 1, extensions: ['.blend'], kind: 'preserved-native', editable: 'working-copy', label: 'Blender scene (preserved; edits on a converted working copy)'},
+  {id: 'dson', version: 1, extensions: ['.duf', '.dsf'], kind: 'direct-import', editable: 'subset', label: 'DAZ DSON (direct importer; unsupported fields preserved and reported)'},
+  {id: 'gltf', version: 1, extensions: ['.glb', '.gltf'], kind: 'exchange', editable: 'subset', label: 'glTF (validated exchange; not a native preservation store)'},
+  {id: 'mesh-exchange', version: 1, extensions: ['.obj', '.fbx', '.stl', '.ply'], kind: 'exchange', editable: 'mesh', label: 'Mesh exchange via the Blender worker (feature subset per format)'},
+  {id: 'usd', version: 1, extensions: ['.usd', '.usda', '.usdc', '.usdz'], kind: 'exchange', editable: 'unverified', label: 'USD (route present; layer fidelity unverified)'},
+  {id: 'alembic', version: 1, extensions: ['.abc'], kind: 'exchange', editable: 'unverified', label: 'Alembic cache (route present; fidelity unverified)'},
+  {id: 'zbrush', version: 1, extensions: ['.zpr', '.ztl'], kind: 'preservation-only', editable: 'none', label: 'ZBrush project/tool — preservation only: no verified host/SDK on this machine'},
+  {id: 'marvelous', version: 1, extensions: ['.zprj', '.zpac'], kind: 'preservation-only', editable: 'none', label: 'Marvelous Designer project — preserved original; Fusion patterns are an independent model'},
+  {id: 'native-project', version: 1, extensions: ['.max', '.ma', '.mb', '.c4d', '.hip', '.lxo'], kind: 'preservation-only', editable: 'none', label: 'Native application project — preservation only until a verified bridge exists'},
 ];
 
 export function adapterForName(name = '') {
@@ -90,5 +90,7 @@ export function capsuleSummary(capsule) {
   const edit = capsule.editable === 'none' ? 'Not editable in Fusion — preservation only'
     : capsule.editable === 'unverified' ? 'Editability unverified'
     : `Editable: ${capsule.editable}`;
-  return `${preservation}. ${edit}.`;
+  const adapter = FORMAT_ADAPTERS.find(a => a.id === capsule.adapterId);
+  const via = adapter ? ` Adapter: ${adapter.id} v${adapter.version} (built-in).` : '';
+  return `${preservation}. ${edit}.${via}`;
 }

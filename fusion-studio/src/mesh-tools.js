@@ -49,7 +49,7 @@ export const SCULPT_BRUSHES=[
   {id:'snake-hook',label:'Snake Hook',icon:'hook'},{id:'grab',label:'Grab',icon:'grab'},
   {id:'rotate',label:'Rotate',icon:'rotate-3d'},{id:'slide-relax',label:'Slide / Relax',icon:'shuffle'},
   {id:'mask',label:'Mask',icon:'shield'},{id:'multi-plane-scrape',label:'Multi-plane Scrape',icon:'triangle-right'},
-  {id:'elastic-deform',label:'Elastic Deform',icon:'spline'},{id:'cloth',label:'Cloth',icon:'waves-2'},
+  {id:'elastic-deform',label:'Elastic Deform',icon:'spline'},{id:'cloth',label:'Cloth',icon:'waves-2',note:'Artistic wrinkle deformation — not a cloth simulation'},
   {id:'pose',label:'Pose',icon:'bone'},{id:'annotate',label:'Annotate',icon:'message-square'},
 ];
 // Paired tools: holding invert (Shift) switches to the defined counterpart instead of a sign flip that may do nothing.

@@ -5,15 +5,15 @@ const fs = require('node:fs');
 const crypto = require('node:crypto');
 
 const ADAPTERS = [
-  {id: 'blend', extensions: ['.blend'], kind: 'preserved-native', editable: 'working-copy'},
-  {id: 'dson', extensions: ['.duf', '.dsf'], kind: 'direct-import', editable: 'subset'},
-  {id: 'gltf', extensions: ['.glb', '.gltf'], kind: 'exchange', editable: 'subset'},
-  {id: 'mesh-exchange', extensions: ['.obj', '.fbx', '.stl', '.ply'], kind: 'exchange', editable: 'mesh'},
-  {id: 'usd', extensions: ['.usd', '.usda', '.usdc', '.usdz'], kind: 'exchange', editable: 'unverified'},
-  {id: 'alembic', extensions: ['.abc'], kind: 'exchange', editable: 'unverified'},
-  {id: 'zbrush', extensions: ['.zpr', '.ztl'], kind: 'preservation-only', editable: 'none'},
-  {id: 'marvelous', extensions: ['.zprj', '.zpac'], kind: 'preservation-only', editable: 'none'},
-  {id: 'native-project', extensions: ['.max', '.ma', '.mb', '.c4d', '.hip', '.lxo'], kind: 'preservation-only', editable: 'none'},
+  {id: 'blend', version: 1, extensions: ['.blend'], kind: 'preserved-native', editable: 'working-copy'},
+  {id: 'dson', version: 1, extensions: ['.duf', '.dsf'], kind: 'direct-import', editable: 'subset'},
+  {id: 'gltf', version: 1, extensions: ['.glb', '.gltf'], kind: 'exchange', editable: 'subset'},
+  {id: 'mesh-exchange', version: 1, extensions: ['.obj', '.fbx', '.stl', '.ply'], kind: 'exchange', editable: 'mesh'},
+  {id: 'usd', version: 1, extensions: ['.usd', '.usda', '.usdc', '.usdz'], kind: 'exchange', editable: 'unverified'},
+  {id: 'alembic', version: 1, extensions: ['.abc'], kind: 'exchange', editable: 'unverified'},
+  {id: 'zbrush', version: 1, extensions: ['.zpr', '.ztl'], kind: 'preservation-only', editable: 'none'},
+  {id: 'marvelous', version: 1, extensions: ['.zprj', '.zpac'], kind: 'preservation-only', editable: 'none'},
+  {id: 'native-project', version: 1, extensions: ['.max', '.ma', '.mb', '.c4d', '.hip', '.lxo'], kind: 'preservation-only', editable: 'none'},
 ];
 
 function adapterForName(name = '') {

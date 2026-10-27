@@ -4,6 +4,13 @@ import {FORMAT_ADAPTERS, adapterForName, probeFormat, createCapsule, verifyCapsu
 
 const enc = s => new TextEncoder().encode(s);
 
+test('built-in adapters are versioned and the summary names the adapter version', async () => {
+  for (const a of FORMAT_ADAPTERS) { assert.ok(Number.isInteger(a.version) && a.version >= 1, `adapter ${a.id} needs a capability version`); }
+  assert.equal(new Set(FORMAT_ADAPTERS.map(a => a.id)).size, FORMAT_ADAPTERS.length, 'adapter ids unique');
+  const capsule = await createCapsule({name: 'hero.blend', bytes: new TextEncoder().encode('BLENDER...')});
+  assert.match(capsuleSummary(capsule), /Adapter: blend v1 \(built-in\)/);
+});
+
 test('registry keeps .zpr (ZBrush) and .zprj (Marvelous) as separate adapters', () => {
   assert.equal(adapterForName('figure.ZPR').id, 'zbrush');
   assert.equal(adapterForName('dress.zprj').id, 'marvelous');
