@@ -27,5 +27,9 @@ contextBridge.exposeInMainWorld('fusion',{
   image:file=>ipcRenderer.invoke('image',file),
   chooseEnvironment:()=>ipcRenderer.invoke('choose-environment'),
   environment:file=>ipcRenderer.invoke('environment',file),
+  chooseIes:()=>ipcRenderer.invoke('choose-ies'),
+  chooseGobo:()=>ipcRenderer.invoke('choose-gobo'),
+  chooseCameraTrack:()=>ipcRenderer.invoke('choose-camera-track'),
+  lightFile:file=>ipcRenderer.invoke('light-file',file),
   onJob:fn=>{const handler=(_,job)=>fn(job);ipcRenderer.on('job-update',handler);return ()=>ipcRenderer.removeListener('job-update',handler);}
 });

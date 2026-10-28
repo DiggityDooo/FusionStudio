@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {fitHairGuides,scalpStrandGuides} from './creator-hair.js';
+import {createEyeSurfaces} from './creator-eyes.js';
 const cache=new WeakMap();
 const skinShaders=new WeakMap();
 export function configureSkinPreview(material,settings){
@@ -27,16 +28,27 @@ function irisDetail(){const size=256,data=irisPixels||new Uint8Array(size*size*4
 function frontSurface(source,positions,x,y,fallback){let z=-Infinity;const ids=source.triangles;for(let i=0;i<ids.length;i+=3){const a=ids[i]*3,b=ids[i+1]*3,c=ids[i+2]*3,ax=positions[a],ay=positions[a+1],bx=positions[b],by=positions[b+1],cx=positions[c],cy=positions[c+1],det=(by-cy)*(ax-cx)+(cx-bx)*(ay-cy);if(Math.abs(det)<1e-12)continue;const u=((by-cy)*(x-cx)+(cx-bx)*(y-cy))/det,v=((cy-ay)*(x-cx)+(ax-cx)*(y-cy))/det;if(u>=0&&v>=0&&u+v<=1)z=Math.max(z,u*positions[a+2]+v*positions[b+2]+(1-u-v)*positions[c+2]);}return Number.isFinite(z)?z:fallback;}
 export function updateCreatorAttachments(root,positions){
  const c=root.userData.fusion_creator,d=c.definition,s=d.source,r=c.recipe,a=r.appearance,head=root.getObjectByName('head'),body=root.getObjectByName('Body');if(!head||!s.landmarks)return;
- const existing=root.getObjectByName('Creator attachments'),previous=cache.get(root)||existing?.userData.fusion_attachment_key,key=JSON.stringify([r.sex,r.controls,r.shapes.map(s=>[s.id,s.value,s.deltas]),r.hair,r.visibility,a.eye,a.hair,a.roots,a.grey,root.userData.fusion_skin_edit?.revision||0]);let derivedMissing=false;existing?.traverse(n=>{if(n.geometry?.userData.fusion_derived_creator_hair)derivedMissing=true;});if(previous===key&&!derivedMissing)return;cache.set(root,key);
+ const existing=root.getObjectByName('Creator attachments'),previous=cache.get(root)||existing?.userData.fusion_attachment_key,parts=[r.sex,r.controls,r.shapes.map(s=>[s.id,s.value,s.deltas]),r.hair,r.visibility,a.eye,a.hair,a.roots,a.grey,root.userData.fusion_skin_edit?.revision||0],key=JSON.stringify(a.version===2?[{appearanceVersion:2},...parts]:parts);let derivedMissing=false;existing?.traverse(n=>{if(n.geometry?.userData.fusion_derived_creator_hair)derivedMissing=true;});if(previous===key&&!derivedMissing)return;
  const identities=[],retain=n=>identities.push({uuid:n.uuid,geometry:n.geometry?.uuid,material:n.material?.uuid,map:n.material?.map?.uuid,source:n.material?.map?.source?.uuid});if(derivedMissing){existing.traverse(retain);const coverage=root.getObjectByName('Creator coverage');if(coverage)retain(coverage);}
- const old=root.getObjectByName('Creator attachments');if(old)dispose(old);const group=new THREE.Group();group.name='Creator attachments';group.userData={fusion_creator_part:'attachments',fusion_attachment_key:key};head.add(group);
+ const old=root.getObjectByName('Creator attachments'),oldCoverage=root.getObjectByName('Creator coverage'),group=new THREE.Group();let coverage=null;group.name='Creator attachments';group.userData={fusion_creator_part:'attachments',fusion_attachment_key:key};
+ try{
  const headPoint=mean(s,positions,'joint-head'),eyes=['joint-l-eye','joint-r-eye'].map(k=>mean(s,positions,k)),eyeDistance=eyes[0].distanceTo(eyes[1]),radius=eyeDistance*.205;
  for(const [i,point] of eyes.entries()){
+  if(a.version===2){
+   const center=point.clone().sub(headPoint),surfaces=createEyeSurfaces(radius),materials={
+    sclera:new THREE.MeshPhysicalMaterial({color:'#e3dfd8',roughness:.25}),
+    iris:new THREE.MeshPhysicalMaterial({color:a.eye,roughness:.35,map:irisDetail()}),
+    pupil:new THREE.MeshStandardMaterial({color:'#010202',roughness:1}),
+    cornea:new THREE.MeshPhysicalMaterial({color:'white',roughness:.025,transmission:1,thickness:surfaces.dimensions.thickness,ior:1.376,attenuationDistance:1,side:THREE.DoubleSide})
+   };
+   for(const kind of ['sclera','iris','pupil','cornea']){const material=materials[kind],mesh=new THREE.Mesh(surfaces[kind],material);material.name=kind[0].toUpperCase()+kind.slice(1);material.userData.fusion_character_material={version:1,kind,appearanceVersion:2};mesh.name=(kind==='sclera'?'Eye':material.name)+' '+i;mesh.position.copy(center);mesh.userData.fusion_eye_surface={version:2,part:kind,radius};if(kind==='iris')mesh.userData.fusion_creator_part='iris';mesh.castShadow=kind!=='cornea';group.add(mesh);}
+  }else{
   const center=point.clone().sub(headPoint),sclera=new THREE.MeshPhysicalMaterial({color:'#e3dfd8',roughness:.25});sclera.name='Sclera';sclera.userData.fusion_character_material={version:1,kind:'sclera'};sphere('Eye '+i,center,radius,sclera,group);
   const irisMat=new THREE.MeshPhysicalMaterial({color:a.eye,roughness:.3,map:irisDetail()});irisMat.name='Iris';irisMat.userData.fusion_character_material={version:1,kind:'iris'};
   const iris=new THREE.Mesh(new THREE.CircleGeometry(radius*.5,64),irisMat);iris.position.copy(center).add(V().set(0,0,radius*.99));iris.userData.fusion_creator_part='iris';group.add(iris);
   const pupil=new THREE.Mesh(new THREE.SphereGeometry(radius*.21,32,16),new THREE.MeshStandardMaterial({color:'#070909',roughness:.2}));pupil.scale.z=.1;pupil.position.copy(center).add(V().set(0,0,radius*1.025));pupil.name='Pupil';group.add(pupil);
   const cornea=new THREE.MeshPhysicalMaterial({color:'white',roughness:.035,transmission:1,thickness:.001,ior:1.376,attenuationDistance:1});cornea.name='Cornea';cornea.userData.fusion_character_material={version:1,kind:'cornea'};sphere('Cornea '+i,center,radius*1.012,cornea,group).castShadow=false;
+  }
   if(s.hair)continue;
   const browPaths=[];for(let j=0;j<60;j++){const t=j/59-.5,x=point.x+t*radius*2.7,y=point.y+radius*(1.8-.35*Math.abs(t)),z=frontSurface(s,positions,x,y,point.z)+.0007,p=V().set(x,y,z).sub(headPoint);browPaths.push([p,p.clone().add(V().set(i?-.001:.001,.002,.0003)),p.clone().add(V().set(i?-.003:.003,.003,0))]);}tubes(browPaths,.00018,hairMaterial(a.hair,'brows'),'Eyebrows '+i,group);
   const lashPaths=[];for(let j=0;j<35;j++){const t=j/34*Math.PI,x=point.x+Math.cos(t)*radius*.98,y=point.y+Math.sin(t)*radius*.63,z=frontSurface(s,positions,x,y,point.z+radius*.6)+.0004,p=V().set(x,y,z).sub(headPoint);lashPaths.push([p,p.clone().add(V().set(Math.cos(t)*.001,.0015,.0015)),p.clone().add(V().set(Math.cos(t)*.002,.002,.003))]);}tubes(lashPaths,.00009,hairMaterial(a.hair,'brows'),'Eyelashes '+i,group);
@@ -61,7 +73,6 @@ export function updateCreatorAttachments(root,positions){
   }
   const grey=new THREE.Color(a.hair).lerp(new THREE.Color('#c1bbb3'),a.grey),material=hairMaterial(grey);material.userData.fusion_character_material={version:1,kind:'hair',roots:a.roots,grey:a.grey};tubes(paths,r.hair.style==='coily'?.0012:.00065,material,'Hairstyle · '+r.hair.style,group);
  }
- const oldCoverage=root.getObjectByName('Creator coverage');if(oldCoverage)dispose(oldCoverage);
  if(r.visibility.clothing!=='nude'||!r.visibility.anatomy){
   const h=r.controls.height,src=body.geometry,ids=src.attributes._fusion_source_vertex,index=src.index.array,points=[],weights=[],bones=[];
   for(let t=0;t<index.length;t+=3){const triangle=Array.from(index.slice(t,t+3)),p=triangle.map(i=>V().fromArray(positions,ids.getX(i)*3)),y=p.reduce((sum,v)=>sum+v.y,0)/3,x=p.reduce((sum,v)=>sum+Math.abs(v.x),0)/3,z=p.reduce((sum,v)=>sum+v.z,0)/3;
@@ -69,11 +80,15 @@ export function updateCreatorAttachments(root,positions){
    const clothed=r.visibility.clothing==='clothed'&&y>h*.43&&y<h*.8&&x<h*.18;
    if(!(hip||chest||clothed))continue;for(let j=0;j<3;j++){const i=triangle[j],normal=V().fromBufferAttribute(src.attributes.normal,i);points.push(...p[j].addScaledVector(normal,.0025).toArray());weights.push(...Array.from(src.attributes.skinWeight.array.slice(i*4,i*4+4)));bones.push(...Array.from(src.attributes.skinIndex.array.slice(i*4,i*4+4)));}
   }
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(points,3));g.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(bones,4));g.setAttribute('skinWeight',new THREE.Float32BufferAttribute(weights,4));g.computeVertexNormals();const m=new THREE.MeshStandardMaterial({color:'#343b46',roughness:.92,side:THREE.DoubleSide}),mesh=new THREE.SkinnedMesh(g,m);mesh.name='Creator coverage';mesh.userData.fusion_creator_part='coverage';root.add(mesh);mesh.bind(body.skeleton,body.bindMatrix);mesh.castShadow=true;
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(points,3));g.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(bones,4));g.setAttribute('skinWeight',new THREE.Float32BufferAttribute(weights,4));g.computeVertexNormals();const m=new THREE.MeshStandardMaterial({color:'#343b46',roughness:.92,side:THREE.DoubleSide}),mesh=new THREE.SkinnedMesh(g,m);mesh.name='Creator coverage';mesh.userData.fusion_creator_part='coverage';mesh.bind(body.skeleton,body.bindMatrix);mesh.castShadow=true;coverage=mesh;
  }
- if(derivedMissing){let at=0;const restore=n=>{const prior=identities[at++];if(!prior)return;n.uuid=prior.uuid;if(n.geometry&&prior.geometry)n.geometry.uuid=prior.geometry;if(n.material&&prior.material)n.material.uuid=prior.material;if(n.material?.map&&prior.map){n.material.map.uuid=prior.map;n.material.map.source.uuid=prior.source;}};group.traverse(restore);const coverage=root.getObjectByName('Creator coverage');if(coverage)restore(coverage);}
+ if(derivedMissing){let at=0;const restore=n=>{const prior=identities[at++];if(!prior)return;n.uuid=prior.uuid;if(n.geometry&&prior.geometry)n.geometry.uuid=prior.geometry;if(n.material&&prior.material)n.material.uuid=prior.material;if(n.material?.map&&prior.map){n.material.map.uuid=prior.map;n.material.map.source.uuid=prior.source;}};group.traverse(restore);if(coverage)restore(coverage);}
+ }catch(error){dispose(group);if(coverage)dispose(coverage);throw error;}
+ const replace=(previous,next,parent)=>{const index=previous?.parent===parent?parent.children.indexOf(previous):-1;if(previous)dispose(previous);if(next){parent.add(next);if(index>=0){parent.children.splice(parent.children.indexOf(next),1);parent.children.splice(index,0,next);}}};
+ replace(old,group,head);replace(oldCoverage,coverage,root);
+ cache.set(root,key);
 }
 export async function loadCreatorSkin(root,{signal}={}){
  if(typeof document==='undefined')return;const {recipe:r}=root.userData.fusion_creator,loader=new THREE.TextureLoader(),base=new URL(/* @vite-ignore */ '../characters/skins/',import.meta.url).href.replace('/src/../characters/','/characters/');
- const [map,bump]=await Promise.all([loader.loadAsync(base+r.sex+'-detail.jpg'),loader.loadAsync(base+r.sex+'-bump.png')]);if(signal?.aborted){map.dispose();bump.dispose();throw Error('Character texture loading cancelled.');}map.colorSpace=THREE.SRGBColorSpace;map.flipY=true;bump.flipY=true;const material=root.getObjectByName('Body').material;material.map=map;material.bumpMap=bump;material.bumpScale=.0001+r.appearance.pores*.00045+r.appearance.ageDetail*.0001;material.needsUpdate=true;
+ const results=await Promise.allSettled([loader.loadAsync(base+r.sex+'-detail.jpg'),loader.loadAsync(base+r.sex+'-bump.png')]);if(signal?.aborted||results.some(result=>result.status==='rejected')){for(const result of results)if(result.status==='fulfilled')result.value.dispose();if(signal?.aborted)throw Error('Character texture loading cancelled.');throw Error('Character skin textures are missing. Relink the matching starter skin assets.');}const [map,bump]=results.map(result=>result.value);map.colorSpace=THREE.SRGBColorSpace;map.flipY=true;bump.flipY=true;const material=root.getObjectByName('Body').material;material.map=map;material.bumpMap=bump;material.bumpScale=.0001+r.appearance.pores*.00045+r.appearance.ageDetail*.0001;material.needsUpdate=true;
 }

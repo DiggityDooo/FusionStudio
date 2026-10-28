@@ -3,6 +3,7 @@ import {nodePath,pathNode,bonesOf} from './rig-paths.js';
 import {hasJointLimit,clampJoint,enforceJointLimits} from './joint-limits.js';
 import {evaluateSceneDeformation} from './deformation.js';
 import {restoreAuthoredRotations,authoredQuaternion,capturePoseState,restorePoseState} from './formula-rotations.js';
+import {captureFkBases,applyIkBlend,evaluateRigExtras} from './armature.js';
 export {nodePath,pathNode,bonesOf} from './rig-paths.js';
 const V=()=>new THREE.Vector3(),Q=()=>new THREE.Quaternion();
 function resolve(root,control){const end=pathNode(root,control.end),links=control.chain.map(p=>pathNode(root,p));if(!end?.isBone||links.some(n=>!n?.isBone)||links.some((n,i)=>(i?links[i-1]:end).parent!==n))throw Error('IK joint hierarchy changed. Recreate this control.');return {end,links};}
@@ -19,7 +20,7 @@ export function createIK(root,end,count=2){
  let bend=middle.clone().sub(rootWorld).addScaledVector(axis,-middle.clone().sub(rootWorld).dot(axis));
  if(bend.length()<1e-5){bend.set(0,0,1).addScaledVector(axis,-axis.z);if(bend.length()<1e-5)bend.set(1,0,0).addScaledVector(axis,-axis.x);}
  const pole=root.worldToLocal(middle.clone().addScaledVector(bend.normalize(),length*.7));
- return {version:1,id:THREE.MathUtils.generateUUID(),name:end.name+' IK',enabled:true,end:nodePath(root,end),chain:links.map(n=>nodePath(root,n)),base:links.map(n=>authoredQuaternion(root,n).toArray()),target:root.worldToLocal(endWorld).toArray(),pole:pole.toArray(),keepOrientation:true,orientation:root.getWorldQuaternion(Q()).invert().multiply(end.getWorldQuaternion(Q())).toArray()};
+ return {version:1,id:THREE.MathUtils.generateUUID(),name:end.name+' IK',enabled:true,blend:1,stretch:false,end:nodePath(root,end),chain:links.map(n=>nodePath(root,n)),base:links.map(n=>authoredQuaternion(root,n).toArray()),target:root.worldToLocal(endWorld).toArray(),pole:pole.toArray(),keepOrientation:true,orientation:root.getWorldQuaternion(Q()).invert().multiply(end.getWorldQuaternion(Q())).toArray()};
 }
 function rotateWorld(bone,from,to){if(from.lengthSq()<1e-16||to.lengthSq()<1e-16)return;const delta=Q().setFromUnitVectors(from.normalize(),to.normalize()),parent=bone.parent.getWorldQuaternion(Q());bone.quaternion.copy(parent.clone().invert().multiply(delta).multiply(parent).multiply(bone.quaternion)).normalize();bone.updateWorldMatrix(false,true);}
 export function solveIK(root,control){
@@ -28,7 +29,8 @@ export function solveIK(root,control){
  for(const point of [control.target,control.pole])if(!Array.isArray(point)||point.length!==3||point.some(v=>!Number.isFinite(v)||Math.abs(v)>10000))throw Error('IK positions must be finite and within 10,000 meters.');
  if(control.base.some(q=>!Array.isArray(q)||q.length!==4||q.some(v=>!Number.isFinite(v))))throw Error('Invalid IK rest rotations.');
  if(control.keepOrientation&&(!Array.isArray(control.orientation)||control.orientation.length!==4||control.orientation.some(v=>!Number.isFinite(v))))throw Error('Invalid IK end orientation.');
- const {end,links}=resolve(root,control);uniformScale(end);
+ if(control.blend!==undefined&&(!Number.isFinite(control.blend)||control.blend<0||control.blend>1))throw Error('IK blend must be 0–1.');
+ const {end,links}=resolve(root,control);uniformScale(end);captureFkBases(root,control);
  links.forEach((n,i)=>{n.quaternion.fromArray(control.base[i]);clampJoint(root,n);});root.updateWorldMatrix(true,true);
  const target=root.localToWorld(V().fromArray(control.target)),pole=root.localToWorld(V().fromArray(control.pole)),start=links.at(-1).getWorldPosition(V());
  let clamped=false;
@@ -54,9 +56,12 @@ export function solveIK(root,control){
  }
  if(control.keepOrientation){if(!Array.isArray(control.orientation)||control.orientation.length!==4||control.orientation.some(v=>!Number.isFinite(v)))throw Error('Invalid IK end orientation.');end.quaternion.copy(end.parent.getWorldQuaternion(Q()).invert().multiply(root.getWorldQuaternion(Q())).multiply(Q().fromArray(control.orientation)));end.updateWorldMatrix(false,true);}
  clampJoint(root,end);
- const distance=end.getWorldPosition(V()).distanceTo(target);return {distance,clamped:clamped||distance>1e-3,limited:limitedJoints.length>0||hasJointLimit(root,end),limitedJoints:limitedJoints.map(n=>n.name),iterations,reach:start.distanceTo(end.getWorldPosition(V()))};
+ applyIkBlend(root,control,control._fkBase);
+ const distance=end.getWorldPosition(V()).distanceTo(target);return {distance,clamped:clamped||distance>1e-3,limited:limitedJoints.length>0||hasJointLimit(root,end),limitedJoints:limitedJoints.map(n=>n.name),iterations,reach:start.distanceTo(end.getWorldPosition(V())),blend:control.blend??1};
 }
-export function solveSceneIK(scene){const results=[];scene.traverse(root=>{restoreAuthoredRotations(root);if(root.userData.fusion_joint_limits)enforceJointLimits(root);const driven=new Set();for(const c of root.userData.fusion_ik||[])if(c.enabled)for(const link of [...resolve(root,c).links,...(c.keepOrientation?[resolve(root,c).end]:[])]){if(driven.has(link))throw Error('Enabled IK chains overlap. Disable the other control first.');driven.add(link);}for(const control of root.userData.fusion_ik||[])if(control.enabled)results.push({root,control,...solveIK(root,control)});});evaluateSceneDeformation(scene,{strict:true});return results;}
+export function solveSceneIK(scene){const results=[];scene.traverse(root=>{restoreAuthoredRotations(root);if(root.userData.fusion_joint_limits)enforceJointLimits(root);const driven=new Set();for(const c of root.userData.fusion_ik||[])if(c.enabled)for(const link of [...resolve(root,c).links,...(c.keepOrientation?[resolve(root,c).end]:[])]){if(driven.has(link))throw Error('Enabled IK chains overlap. Disable the other control first.');driven.add(link);}for(const control of root.userData.fusion_ik||[])if(control.enabled)results.push({root,control,...solveIK(root,control)});
+ if(root.userData.fusion_armature||root.userData.fusion_ik||root.userData.fusion_constraints||root.userData.character||root.userData.fusion_kind==='character'||root.userData.fusion_kind==='daz_character')evaluateRigExtras(root);
+});evaluateSceneDeformation(scene,{strict:true});return results;}
 export function hasSceneIK(scene){let found=false;scene.traverse(n=>{if(n.userData.fusion_ik?.some(c=>c.enabled))found=true;});return found;}
 export function validateIKScales(scene){scene.traverse(root=>{for(const c of root.userData.fusion_ik||[])if(c.enabled)uniformScale(resolve(root,c).end);});}
 

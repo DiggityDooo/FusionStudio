@@ -71,7 +71,7 @@ def configure_device(scene, backend):
     if backend == 'CPU':
         scene.cycles.device = 'CPU'
         return {'backend':'CPU','devices':[]}
-    if backend not in ('CUDA','OPTIX'): raise ValueError('Unsupported render device.')
+    if backend not in ('CUDA','OPTIX','HIP'): raise ValueError('Unsupported render device.')
     prefs = bpy.context.preferences.addons['cycles'].preferences
     prefs.compute_device_type = backend
     prefs.get_devices()
@@ -80,6 +80,103 @@ def configure_device(scene, backend):
     for device in prefs.devices: device.use = device.type == backend
     scene.cycles.device = 'GPU'
     return {'backend':backend,'devices':[{'name':d.name,'type':d.type} for d in devices]}
+
+def apply_engine(scene, requested='CYCLES'):
+    """Select Cycles or EEVEE. Prefer direct assignment (enum_items under factory-startup can omit Cycles)."""
+    try:
+        import addon_utils
+        addon_utils.enable('cycles', default_set=True)
+    except Exception:
+        pass
+    aliases = {
+        'CYCLES': ['CYCLES'],
+        'EEVEE': ['BLENDER_EEVEE_NEXT', 'BLENDER_EEVEE', 'EEVEE'],
+    }
+    errors = []
+    for ident in aliases.get(requested, ['CYCLES']):
+        try:
+            scene.render.engine = ident
+            if requested == 'CYCLES' and 'CYCLES' not in scene.render.engine.upper(): continue
+            if requested == 'EEVEE' and 'EEVEE' not in scene.render.engine.upper(): continue
+            return scene.render.engine
+        except TypeError as error:
+            errors.append(str(error)); continue
+    items = [i.identifier for i in bpy.types.RenderSettings.bl_rna.properties['engine'].enum_items]
+    raise ValueError(requested + ' render engine is unavailable. ' + ('; '.join(errors) or 'Available: ' + ', '.join(items)))
+
+def apply_view_transform(scene, name):
+    items = [i.identifier for i in scene.view_settings.bl_rna.properties['view_transform'].enum_items]
+    if name == 'ACES':
+        match = next((i for i in items if 'aces' in i.lower()), None)
+        if not match: raise ValueError('ACES view transform is not in this OCIO config.')
+        scene.view_settings.view_transform = match
+        return match
+    scene.view_settings.view_transform = name
+    return name
+
+def apply_region(scene, region):
+    if not region: return False
+    scene.render.use_border = True
+    scene.render.use_crop_to_border = True
+    x, y, w, h = float(region['x']), float(region['y']), float(region['w']), float(region['h'])
+    scene.render.border_min_x = max(0.0, min(1.0, x))
+    scene.render.border_min_y = max(0.0, min(1.0, y))
+    scene.render.border_max_x = max(scene.render.border_min_x + 0.01, min(1.0, x + w))
+    scene.render.border_max_y = max(scene.render.border_min_y + 0.01, min(1.0, y + h))
+    return True
+
+def apply_tiles(scene, tile):
+    if not tile or not hasattr(scene.cycles, 'tile_size'): return None
+    if hasattr(scene.cycles, 'use_auto_tile'): scene.cycles.use_auto_tile = True
+    scene.cycles.tile_size = max(8, min(4096, int(tile)))
+    return scene.cycles.tile_size
+
+def apply_holdouts(scene):
+    names = []
+    for obj in scene.objects:
+        if obj.type != 'MESH': continue
+        if obj.get('fusion_holdout'):
+            obj.is_holdout = True
+            names.append(obj.name)
+    return names
+
+def apply_light_groups(scene, enable=False):
+    layer = scene.view_layers[0]
+    groups = []
+    for obj in scene.objects:
+        if obj.type != 'LIGHT': continue
+        name = str(obj.get('fusion_group') or '').strip()[:64]
+        if not name: continue
+        try: obj.lightgroup = name
+        except Exception: pass
+        groups.append(name)
+    unique = sorted(set(groups))
+    if unique and hasattr(layer, 'lightgroups'):
+        existing = {lg.name for lg in layer.lightgroups}
+        for name in unique:
+            if name in existing: continue
+            try: layer.lightgroups.add(name=name)
+            except Exception:
+                try: bpy.ops.scene.view_layer_add_lightgroup(name=name)
+                except Exception: pass
+    if enable:
+        for target, prop in ((layer, 'use_pass_lightgroup'), (getattr(layer, 'cycles', None), 'use_pass_lightgroup')):
+            if target is not None and hasattr(target, prop): setattr(target, prop, True)
+    return unique
+
+def apply_npr(scene, enabled):
+    scene.render.use_freestyle = bool(enabled)
+    layer = scene.view_layers[0]
+    if hasattr(layer, 'use_freestyle'): layer.use_freestyle = bool(enabled)
+    return bool(enabled)
+
+def apply_eevee_samples(scene, options):
+    samples = max(1, min(4096, int(options.get('samples', 32))))
+    eevee = getattr(scene, 'eevee', None)
+    if not eevee: return samples
+    for attr in ('taa_render_samples', 'taa_samples'):
+        if hasattr(eevee, attr): setattr(eevee, attr, samples); break
+    return samples
 
 # Render pass id -> (owner, property). Owner 'layer' is the view layer, 'cycles' its Cycles settings.
 PASSES = {
@@ -91,25 +188,65 @@ PASSES = {
     'object_index': [('layer', 'use_pass_object_index')], 'material_index': [('layer', 'use_pass_material_index')],
     'crypto_object': [('layer', 'use_pass_cryptomatte_object')], 'crypto_material': [('layer', 'use_pass_cryptomatte_material')],
     'shadow_catcher': [('cycles', 'use_pass_shadow_catcher')],
+    'shadow': [('layer', 'use_pass_shadow')],
 }
 
 
 def settings(scene, options):
-    scene.render.engine = 'CYCLES'
-    device = configure_device(scene, options.get('device','CPU'))
     quality = options.get('render') or {}
-    scene.cycles.samples = max(1,min(4096,int(options.get('samples',32))))
-    scene.cycles.use_denoising = quality.get('denoise', True)
-    scene.cycles.use_adaptive_sampling = float(quality.get('adaptive', 0)) > 0
-    if scene.cycles.use_adaptive_sampling: scene.cycles.adaptive_threshold = float(quality['adaptive'])
-    scene.cycles.time_limit = float(quality.get('timeLimit', 0))
+    engine = apply_engine(scene, quality.get('engine') or 'CYCLES')
+    cycles = 'CYCLES' in scene.render.engine.upper()
+    device = configure_device(scene, options.get('device','CPU')) if cycles else {'backend':engine,'devices':[]}
+    if cycles:
+        scene.cycles.samples = max(1,min(4096,int(options.get('samples',32))))
+        scene.cycles.use_denoising = quality.get('denoise', True)
+        denoiser = quality.get('denoiser')
+        prop = scene.cycles.bl_rna.properties.get('denoiser')
+        if denoiser and prop:
+            mapped = 'OPENIMAGEDENOISE' if denoiser == 'OIDN' else 'OPTIX'
+            allowed = {i.identifier for i in prop.enum_items}
+            if mapped in allowed: scene.cycles.denoiser = mapped
+        scene.cycles.use_adaptive_sampling = float(quality.get('adaptive', 0)) > 0
+        if scene.cycles.use_adaptive_sampling: scene.cycles.adaptive_threshold = float(quality['adaptive'])
+        scene.cycles.time_limit = float(quality.get('timeLimit', 0))
+        if quality.get('caustics'):
+            scene.cycles.caustics_reflective = True
+            scene.cycles.caustics_refractive = True
+        if (quality.get('contactShadows') or quality.get('lightCache')) and hasattr(scene.cycles, 'use_fast_gi'):
+            scene.cycles.use_fast_gi = True
+        if quality.get('lightCache') and hasattr(scene.render, 'use_persistent_data'):
+            scene.render.use_persistent_data = True
+        if quality.get('outOfCore') and hasattr(scene.cycles, 'use_auto_tile'):
+            scene.cycles.use_auto_tile = True
+    else:
+        apply_eevee_samples(scene, options)
     scene.render.film_transparent = bool(quality.get('transparent', False))
-    if quality.get('viewTransform'): scene.view_settings.view_transform = quality['viewTransform']
+    view_transform = apply_view_transform(scene, quality['viewTransform']) if quality.get('viewTransform') else scene.view_settings.view_transform
     if quality.get('exposure') is not None: scene.view_settings.exposure = float(quality['exposure'])
+    iso = quality.get('iso')
+    if iso and not (options or {}).get('cameras'):
+        scene.view_settings.exposure += math.log2(max(50.0, float(iso)) / 100.0)
+    if quality.get('motionBlur'):
+        scene.render.use_motion_blur = True
+        scene.render.motion_blur_shutter = max(.01, min(1.0, float(quality.get('shutter', 180)) / 360.0))
+    kelvin = quality.get('whiteBalance')
+    if kelvin is not None:
+        for attr in ('white_balance_temperature', 'temperature'):
+            if hasattr(scene.view_settings, attr):
+                setattr(scene.view_settings, attr, max(1000.0, min(12000.0, float(kelvin))))
+                break
     layer = scene.view_layers[0]
-    for name in quality.get('passes', []):
+    passes = list(quality.get('passes', []))
+    for name in passes:
+        if name in ('light_groups', 'wireframe'): continue
         for owner, prop in PASSES[name]:
-            setattr(layer.cycles if owner == 'cycles' else layer, prop, True)
+            target = layer.cycles if owner == 'cycles' else layer
+            if hasattr(target, prop): setattr(target, prop, True)
+    groups = apply_light_groups(scene, 'light_groups' in passes)
+    npr = apply_npr(scene, quality.get('npr') or 'wireframe' in passes)
+    holdouts = apply_holdouts(scene)
+    border = apply_region(scene, quality.get('region'))
+    tile = apply_tiles(scene, quality.get('tileSize') or (64 if quality.get('outOfCore') else 0))
     scene.render.resolution_x = max(128,min(4096,int(options.get('width',1200))))
     scene.render.resolution_y = max(128,min(4096,int(options.get('height',1000))))
     scene.render.resolution_percentage = 100
@@ -121,7 +258,8 @@ def settings(scene, options):
     if tree:
         for node in tree.nodes:
             if node.bl_idname == 'CompositorNodeOutputFile': node.mute=True;muted+=1
-    return {**device,'muted_file_outputs':muted,'samples':scene.cycles.samples,'denoise':scene.cycles.use_denoising,'adaptive':scene.cycles.use_adaptive_sampling,'transparent':scene.render.film_transparent,'passes':list(quality.get('passes',[])),'view_transform':scene.view_settings.view_transform,'exposure':scene.view_settings.exposure}
+    samples = scene.cycles.samples if cycles else apply_eevee_samples(scene, options)
+    return {**device,'muted_file_outputs':muted,'samples':samples,'denoise':getattr(scene.cycles,'use_denoising',False) if cycles else False,'adaptive':getattr(scene.cycles,'use_adaptive_sampling',False) if cycles else False,'transparent':scene.render.film_transparent,'passes':passes,'view_transform':view_transform,'exposure':scene.view_settings.exposure,'engine':engine,'holdouts':holdouts,'border':border,'tileSize':tile,'npr':npr,'lightGroups':groups,'denoiser':getattr(scene.cycles,'denoiser',None) if cycles else None}
 
 def write_render(scene, output, options):
     """Render the still PNG and, when requested, a multilayer EXR with every enabled pass beside it."""
@@ -214,6 +352,13 @@ def render_native(snapshot, ordinary_input, output, options, import_model):
         if options.get('characterMaterials'):
             from character_materials import apply_character_materials
             apply_character_materials(options['characterMaterials'])
+        if options.get('surfaceMaterials'):
+            from surface_materials import apply_surface_materials
+            apply_surface_materials(options['surfaceMaterials'])
+        if options.get('lighting'):
+            from lighting import apply_lighting, apply_world_lighting
+            apply_lighting(options)
+            apply_world_lighting(scene, options.get('render') or {})
     if options.get('cameraMode','source')=='viewport':
         setting=options['camera']
         bpy.ops.object.camera_add(location=(setting['position'][0],-setting['position'][2],setting['position'][1]))
@@ -227,6 +372,9 @@ def render_native(snapshot, ordinary_input, output, options, import_model):
         scene.camera=camera
     if not scene.camera: raise ValueError('This preserved scene has no camera. Choose viewport camera.')
     report=settings(scene,options)
+    if options.get('cameras'):
+        from cameras import apply_cameras
+        report['cameras']=apply_cameras(options)
     start=time.perf_counter()
     report.update(write_render(scene,output,options))
     return {**report,'native_scene':scene.name,'transform_max_error':transform_error,'frozen_constraints':frozen_constraints,'render_seconds':time.perf_counter()-start,'camera_mode':options.get('cameraMode','source'),'additional_meshes':sum(o.type=='MESH' and 'fusion_native_object' not in o for o in scene.objects)}

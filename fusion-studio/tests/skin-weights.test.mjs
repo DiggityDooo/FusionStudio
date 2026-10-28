@@ -3,11 +3,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createSkinWeightModel,redistributeWeights,weightPatch,planSkinPatch,applySkinPatch,skinLocks,setSkinLocks,brushRegion,brushEdits,retainProceduralSkin,validateSkinEdit} from '../src/skin-weights.js';
+import {createSkinWeightModel,redistributeWeights,weightPatch,planSkinPatch,applySkinPatch,skinLocks,setSkinLocks,brushRegion,brushEdits,retainProceduralSkin,validateSkinEdit,smoothBind,rigidBind,applyAutoWeights,mirrorSkinWeights,transferSkinWeights,hammerSkinWeights,setSkinMethod,skinVertexLinear,skinVertexDualQuaternion,computeAutoWeights} from '../src/skin-weights.js';
 import {compactPrimitive} from '../src/geometry-interchange.js';
 import {evaluatedCharacterTriangles} from '../src/deformation.js';
 import {deformationTransaction} from '../src/deformation-ui.js';
 import {createCharacter} from '../src/character.js';
+import {createArmature} from '../src/armature.js';
 import {Editor} from '../src/editor.js';
 function rig({split=true}={}){
  const root=new THREE.Group(),scope=new THREE.Group();scope.userData={dson_geometry_id:'body',dson_deformation:{version:1}};root.add(scope);const bones=Array.from({length:5},(_,i)=>{const b=new THREE.Bone();b.name='Joint_'+i;return b;});root.add(bones[0]);for(let i=1;i<bones.length;i++)bones[0].add(bones[i]);const skeleton=new THREE.Skeleton(bones),meshes=[];
@@ -43,6 +44,39 @@ test('malformed project lock metadata and preserved native/stacked skins block b
 });
 test('procedural rebuilding preserves authored weights and project lock identities',async()=>{
  const root=createCharacter(),bone=root.getObjectByName('Forearm_L'),model=await createSkinWeightModel(root),row=[...model.rows.values()].find(r=>!r.weights.has(bone.uuid)),patch=weightPatch(model,[{key:row.key,boneId:bone.uuid,value:.2}]);await applySkinPatch(root,patch);setSkinLocks(root,[bone.uuid]);const next=createCharacter({height:2});retainProceduralSkin(root,next);const oldMeshes=[],newMeshes=[];root.traverse(n=>{if(n.isSkinnedMesh)oldMeshes.push(n);});next.traverse(n=>{if(n.isSkinnedMesh)newMeshes.push(n);});assert.deepEqual(Array.from(newMeshes[0].geometry.attributes.skinWeight.array),Array.from(oldMeshes[0].geometry.attributes.skinWeight.array));assert.equal(skinLocks(next).size,1);newMeshes[0].geometry.deleteAttribute('skinWeight');next.userData.fusion_skin_edit.locks[0].path=[999];assert.throws(()=>validateSkinEdit(next),/missing/);
+});
+test('smooth/rigid bind, auto-weights, mirror, transfer, hammer, scale brush and dual-quaternion evaluation',async()=>{
+ const armature=createArmature('biped'),mesh=new THREE.Mesh(new THREE.BoxGeometry(.4,1,.2,2,4,2),new THREE.MeshBasicMaterial());mesh.position.set(0,1,0);armature.add(mesh);
+ const skinned=smoothBind(mesh,armature);assert.equal(skinned.isSkinnedMesh,true);assert.equal(armature.userData.fusion_skin_edit.bindMode,'smooth');
+ const model=await createSkinWeightModel(armature);assert.ok(model.rows.size>0);assert.ok([...model.rows.values()].every(r=>Math.abs([...r.weights.values()].reduce((a,b)=>a+b,0)-1)<1e-5));
+ const rigidArm=createArmature('biped'),rigidMesh=new THREE.Mesh(new THREE.BoxGeometry(.2,.2,.2),new THREE.MeshBasicMaterial());rigidMesh.position.set(.3,1.2,0);rigidArm.add(rigidMesh);rigidBind(rigidMesh,rigidArm);
+ const rigidModel=await createSkinWeightModel(rigidArm),rigidRow=[...rigidModel.rows.values()][0];assert.equal(rigidRow.weights.size,1);assert.equal([...rigidRow.weights.values()][0],1);
+ await applyAutoWeights(armature,{method:'envelope',envelope:.35});const afterAuto=await createSkinWeightModel(armature);assert.ok([...afterAuto.rows.values()].every(r=>r.weights.size>=1&&r.weights.size<=4));
+ // Controlled L/R pair: paint left, mirror to right with bone-name remap.
+ const root=new THREE.Group();root.name='MirrorFixture';
+ const boneL=new THREE.Bone();boneL.name='Joint_L';boneL.position.set(.2,0,0);const boneR=new THREE.Bone();boneR.name='Joint_R';boneR.position.set(-.2,0,0);root.add(boneL);root.add(boneR);
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute([.2,0,0,-.2,0,0,0,.2,0],3));g.setIndex([0,1,2]);g.setAttribute('skinIndex',new THREE.Uint16BufferAttribute([0,1,0,0, 1,0,0,0, 0,1,0,0],4));g.setAttribute('skinWeight',new THREE.Float32BufferAttribute([1,0,0,0, 1,0,0,0, .5,.5,0,0],4));
+ const sk=new THREE.SkinnedMesh(g,new THREE.MeshBasicMaterial());root.add(sk);root.updateMatrixWorld(true);sk.bind(new THREE.Skeleton([boneL,boneR]));
+ const m0=await createSkinWeightModel(root),leftKey=[...m0.rows.values()].find(r=>m0.position(r).x>.1).key;
+ await applySkinPatch(root,weightPatch(m0,[{key:leftKey,boneId:boneL.uuid,value:1}]),{acceptPruning:true});
+ await mirrorSkinWeights(root,{axis:'x'});const m1=await createSkinWeightModel(root),rightKey=[...m1.rows.values()].find(r=>m1.position(r).x<-.1).key;
+ assert.ok(Math.abs((m1.rows.get(rightKey).weights.get(boneR.uuid)||0)-1)<1e-5);
+ const targetArm=createArmature('biped'),tMesh=new THREE.Mesh(new THREE.BoxGeometry(.4,1,.2,2,4,2),new THREE.MeshBasicMaterial());tMesh.position.set(0,1,0);targetArm.add(tMesh);smoothBind(tMesh,targetArm);
+ await transferSkinWeights(armature,targetArm,{tolerance:.25});const transferred=await createSkinWeightModel(targetArm);assert.equal(transferred.rows.size,afterAuto.rows.size);
+ const leftBone=[...afterAuto.bones.values()].find(b=>b.name==='UpperArm_L');assert.ok(leftBone);
+ const beforeHammer=await createSkinWeightModel(armature),noisy=[...beforeHammer.rows.values()].find(r=>r.neighbors.size>0);assert.ok(noisy);
+ await applySkinPatch(armature,weightPatch(beforeHammer,[{key:noisy.key,boneId:leftBone.uuid,value:1}]),{acceptPruning:true});
+ await hammerSkinWeights(armature,{iterations:2,strength:1});const hammered=await createSkinWeightModel(armature);
+ assert.ok((hammered.rows.get(noisy.key).weights.get(leftBone.uuid)||0)<1);
+ const brushModel=await createSkinWeightModel(armature),region=new Map([[noisy.key,1]]);
+ const scaled=brushEdits(brushModel,region,{boneId:leftBone.uuid,mode:'scale',target:.5,strength:1});assert.ok(scaled[0].value<=(brushModel.value(noisy.key,leftBone.uuid)+1e-9));
+ const hammerBrush=brushEdits(brushModel,region,{boneId:leftBone.uuid,mode:'hammer',target:.5,strength:1});assert.ok(Number.isFinite(hammerBrush[0].value));
+ setSkinMethod(armature,'dual_quaternion');assert.equal(armature.userData.fusion_skin_method,'dual_quaternion');
+ const body=skinned;body.skeleton.bones[0].rotation.z=.4;body.skeleton.update();
+ const lbs=skinVertexLinear(body,0),dq=skinVertexDualQuaternion(body,0);assert.ok(lbs.toArray().every(Number.isFinite));assert.ok(dq.toArray().every(Number.isFinite));
+ body.skeleton.bones[0].rotation.z=0;body.skeleton.update();
+ const restL=skinVertexLinear(body,0),restD=skinVertexDualQuaternion(body,0);assert.ok(restL.distanceTo(restD)<1e-4);
+ assert.throws(()=>computeAutoWeights(new THREE.Vector3(),[],{method:'nope'}),/heat, envelope or rigid/);
 });
 test('real Genesis material seams stay coherent and edited weights drive detailed collision geometry',async t=>{
  const fixture=JSON.parse(fs.readFileSync('test-output/dson-integration-results.json')),bytes=fs.readFileSync(fixture.output),{scene:root}=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');root.traverse(n=>{if(n.isSkinnedMesh)n.geometry=compactPrimitive(n.geometry);});const start=performance.now(),before=evaluatedCharacterTriangles(root),model=await createSkinWeightModel(root);assert.equal(model.rows.size,25182);assert.equal(model.vertexCount,27087);const split=[...model.rows.values()].find(r=>r.entries.length>1),bone=root.getObjectByName('l_forearm'),pose=bone.quaternion.clone(),key=split.key,patch=weightPatch(model,[{key,boneId:bone.uuid,value:.8}]);const plan=planSkinPatch(model,patch);assert.ok(plan.changedCopies>1);await applySkinPatch(root,patch,{acceptPruning:true});bone.rotation.x+=.5;const evaluated=evaluatedCharacterTriangles(root);assert.equal(evaluated.triangles.length/3,50312);assert.ok(evaluated.positions.every(Number.isFinite));assert.notDeepEqual(evaluated.positions,before.positions);bone.quaternion.copy(pose);const saved=await new THREE.ObjectLoader().parseAsync(root.toJSON()),restored=await createSkinWeightModel(saved),after=restored.rows.get(key);assert.ok(Math.abs(after.weights.get(bone.uuid)-.8)<1e-6);assert.ok(Math.abs([...after.weights.values()].reduce((a,b)=>a+b,0)-1)<1e-6);assert.deepEqual(fs.readFileSync(fixture.output),bytes);t.diagnostic(`Genesis: ${model.rows.size} source / ${model.vertexCount} split vertices; ${plan.changedCopies} copies updated; model/edit/posed collision/reload ${(performance.now()-start).toFixed(1)} ms.`);

@@ -79,7 +79,15 @@ function updateBody(root,result){
 function signature(recipe){return JSON.stringify([recipe.sex,recipe.controls,recipe.shapes]);}
 export function evaluateCreator(root,{result,deferAttachments=false}={}){
  const c=root.userData.fusion_creator;if(!c)return {valid:true,errors:[],warnings:[]};
- try{if(!c.definition.source){const asset=definitions.get(c.definition.identity);if(!asset)throw Error('Load the matching character foundation before evaluating this scene.');c.definition=bindDefinition(asset);}validateRecipe(c.recipe,c.definition);const sig=signature(c.recipe),old=evaluations.get(root);if(old?.signature===sig&&!result)return old.report;const output=result||computeCreator(creatorInputs(c.definition,c.recipe));if(!(output.positions instanceof Float32Array)||output.positions.length!==c.definition.source.positions.length||output.positions.some(v=>!Number.isFinite(v)))throw Error('Invalid character worker geometry.');updateBody(root,output);const report={valid:true,errors:[],warnings:[],milliseconds:output.milliseconds,sparseDeltas:output.sparseDeltas};evaluations.set(root,{signature:sig,positions:output.positions,scale:output.scale,report});updateCreatorAppearance(root,{deferAttachments});return report;}catch(e){return {valid:false,errors:[{channel:'character',message:e.message}],warnings:[]};}
+ try{
+  if(!c.definition.source){const asset=definitions.get(c.definition.identity);if(!asset)throw Error('Load the matching character foundation before evaluating this scene.');c.definition=bindDefinition(asset);}
+  validateRecipe(c.recipe,c.definition);const sig=signature(c.recipe),old=evaluations.get(root);if(old?.signature===sig&&!result)return old.report;
+  const output=validateCreatorResult(result||computeCreator(creatorInputs(c.definition,c.recipe)),c.definition.source.positions.length);
+  let low=Infinity,high=-Infinity;for(const id of c.definition.source.cornerSource){const y=output.positions[id*3+1];low=Math.min(low,y);high=Math.max(high,y);}
+  const tolerance=Math.max(1e-5,c.recipe.controls.height*1e-5);
+  if(Math.abs(low)>tolerance||Math.abs(high-low-c.recipe.controls.height)>tolerance)throw Error('Character worker geometry is collapsed or does not match the requested height and ground.');
+  updateBody(root,output);const report={valid:true,errors:[],warnings:[],milliseconds:output.milliseconds,sparseDeltas:output.sparseDeltas};evaluations.set(root,{signature:sig,positions:output.positions,scale:output.scale,report});updateCreatorAppearance(root,{deferAttachments});return report;
+ }catch(e){return {valid:false,errors:[{channel:'character',message:e.message}],warnings:[]};}
 }
 export function creatorPositions(root){const r=evaluateCreator(root);if(!r.valid)throw Error(r.errors[0].message);return evaluations.get(root).positions;}
 export function validateCreatorResult(result,count){if(!(result?.positions instanceof Float32Array)||result.positions.length!==count||result.positions.some(v=>!Number.isFinite(v)||Math.abs(v)>100)||!Number.isFinite(result.scale)||result.scale<=0||result.scale>20||!Number.isFinite(result.ground)||Math.abs(result.ground)>100||!Number.isFinite(result.milliseconds)||result.milliseconds<0||!Number.isInteger(result.sparseDeltas)||result.sparseDeltas<0||result.sparseDeltas>2000000)throw Error('Character worker returned malformed geometry or diagnostics.');return result;}
@@ -94,7 +102,17 @@ export function createDetailedCharacter(definition,{sex='female'}={}){
  const result=computeCreator(creatorInputs(definition,recipe)),material=new THREE.MeshPhysicalMaterial({color:SKIN_TONES[recipe.appearance.tone],roughness:.48,metalness:0,clearcoat:.05});material.name='Fusion skin';material.userData.fusion_character_material={version:1,kind:'skin'};
  const body=sourceMesh(definition,result.positions,material),bones=definition.source.bones.map(b=>{const n=new THREE.Bone();n.name=b.name;return n;}),map=new Map(bones.map(b=>[b.name,b]));group.add(body);definition.source.bones.forEach((r,i)=>{const p=landmark(definition.source,result.positions,r);bones[i].position.copy(p);if(r.parent){bones[i].position.sub(landmark(definition.source,result.positions,definition.source.bones.find(b=>b.name===r.parent)));map.get(r.parent).add(bones[i]);}else body.add(bones[i]);});group.updateMatrixWorld(true);body.bind(new THREE.Skeleton(bones));const report=evaluateCreator(group,{result});if(!report.valid)throw Error(report.errors[0].message);return group;
 }
-export function changeCreator(root,recipe,{result,deferAttachments=false}={}){const c=root.userData.fusion_creator,old=c.recipe;c.recipe=structuredClone(validateRecipe(recipe,c.definition));const report=evaluateCreator(root,{result,deferAttachments});if(!report.valid){c.recipe=old;evaluateCreator(root);throw Error(report.errors[0].message);}updateCreatorAppearance(root,{deferAttachments});return report;}
+export function changeCreator(root,recipe,{result,deferAttachments=false}={}){
+ const c=root.userData.fusion_creator,old=c.recipe,next=structuredClone(validateRecipe(recipe,c.definition)),body=root.getObjectByName('Body'),geometry=body.geometry;c.recipe=next;
+ try{const report=evaluateCreator(root,{result,deferAttachments});if(!report.valid)throw Error(report.errors[0].message);updateCreatorAppearance(root,{deferAttachments});return report;}
+ catch(error){
+  c.recipe=old; // A failed result may have cached the same recipe signature.
+  evaluations.delete(root);const restored=evaluateCreator(root);
+  if(!restored.valid)throw Error(error.message+'; character recovery failed: '+restored.errors.map(e=>e.message).join('; '));
+  if(body.geometry!==geometry){const discarded=body.geometry;body.geometry=geometry;discarded.dispose();}
+  throw error;
+ }
+}
 export function creatorShape(root,{action,id,name,deltas}){
  const recipe=structuredClone(root.userData.fusion_creator.recipe),shape=recipe.shapes.find(s=>s.id===id);
  if(action==='create'){recipe.shapes.push({id:crypto.randomUUID(),name:(name||'New shape').trim().slice(0,80),value:0,min:0,max:1,deltas:deltas||[]});}
@@ -122,7 +140,7 @@ export function finishShapeEditingCopy(root,mesh){
 // Appearance, attachments and render metadata share stable semantic identities.
 export function updateCreatorAppearance(root,{deferAttachments=false}={}){
  const c=root.userData.fusion_creator,r=c.recipe,a=r.appearance,body=root.getObjectByName('Body');if(!body)return;
- const mat=body.material,color=new THREE.Color(SKIN_TONES[Math.floor(a.tone)]).lerp(new THREE.Color(SKIN_TONES[Math.ceil(a.tone)]),a.tone%1);color.offsetHSL(a.undertone*.015,0,0);if(a.customColor)color.set(a.customColor);mat.color.copy(color);mat.roughness=a.roughness;mat.metalness=a.metalness||0;mat.bumpScale=.0001+a.pores*.00045+a.ageDetail*.0001;mat.userData.fusion_character_material={version:1,kind:'skin',tone:color.getHexString(),undertone:a.undertone,pores:a.pores,freckles:a.freckles,ageDetail:a.ageDetail,subsurface:.12,displacement:.0002};mat.needsUpdate=true;
+ const mat=body.material,color=new THREE.Color(SKIN_TONES[Math.floor(a.tone)]).lerp(new THREE.Color(SKIN_TONES[Math.ceil(a.tone)]),a.tone%1);color.offsetHSL(a.undertone*.015,0,0);if(a.customColor)color.set(a.customColor);mat.color.copy(color);mat.roughness=a.roughness;mat.metalness=a.metalness||0;mat.bumpScale=.0001+a.pores*.00045+a.ageDetail*.0001;mat.userData.fusion_character_material={version:1,kind:'skin',...(a.version===2?{appearanceVersion:2}:{}),tone:color.getHexString(),undertone:a.undertone,pores:a.pores,freckles:a.freckles,ageDetail:a.ageDetail,subsurface:.12,displacement:.0002};mat.needsUpdate=true;
  // Attachment rebuilds (eyes, brows, 8k-strand hair) cost more than the body
  // evaluation. Gesture previews defer them; the next settled update rebuilds
  // once from the latest evaluated positions.
@@ -131,4 +149,4 @@ export function updateCreatorAppearance(root,{deferAttachments=false}={}){
  configureSkinPreview(mat,a);
  root.traverse(n=>{if(n.userData.fusion_creator_part==='iris')n.material.color.set(a.eye);for(const m of [].concat(n.material||[]))if(m.userData.fusion_character_material)m.userData.fusion_material_id=m.uuid;});
 }
-export function creatorRenderMaterials(scene){const materials=[];scene.traverse(root=>{if(!root.userData.fusion_creator)return;const r=root.userData.fusion_creator.recipe;root.traverse(n=>{if(n.isMesh)for(const m of [].concat(n.material||[]))if(m?.userData.fusion_character_material)materials.push({objectId:n.uuid,materialId:m.uuid,materialName:m.name,...structuredClone(m.userData.fusion_character_material),roughness:m.roughness});});});return {version:1,materials};}
+export function creatorRenderMaterials(scene){const materials=[],seen=new Set();scene.traverse(root=>{if(!root.userData.fusion_creator)return;root.traverse(n=>{if(n.isMesh)for(const m of [].concat(n.material||[]))if(m?.userData.fusion_character_material){const key=n.uuid+':'+m.uuid;if(!seen.has(key)){seen.add(key);materials.push({objectId:n.uuid,materialId:m.uuid,materialName:m.name,...structuredClone(m.userData.fusion_character_material),roughness:m.roughness});}}});});return {version:1,materials};}

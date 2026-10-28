@@ -1,20 +1,22 @@
 import {modifierCapability} from './modifier-capabilities.js';
+import {animationSamplingReasons} from './animation-export.js';
 import meshOperations from '../electron/mesh-operations.json' with {type:'json'};
 const MESH_OPERATIONS=Object.keys(meshOperations),EXPORTS=['glb','fbx','blend','obj','usd','usdz','abc','stl','ply'],STATIC_EXPORTS=['obj','usd','usdz','abc','stl','ply'];
 export function inspectObject(object){
-  const result={nativeBlend:0,ik:0,jointLimits:0,formulas:0,creators:0,meshes:0,triangles:0,skinned:0,morphs:0,animations:0,materials:0,textures:0,nonUniform:false,mirrored:false,procedural:false,garment:false};
+  const result={nativeBlend:0,sculptLayers:0,bumpMaps:0,ik:0,jointLimits:0,formulas:0,creators:0,meshes:0,triangles:0,skinned:0,morphs:0,animations:0,materials:0,textures:0,nonUniform:false,mirrored:false,procedural:false,garment:false};
   object?.traverse?.(n=>{
     result.formulas+=n.userData?.fusion_deformation?.formulas?.length||0;
+    if(n.userData?.fusion_sculpt_layers)result.sculptLayers++;
     if(n.userData?.fusion_creator)result.creators++;
     if(n.userData?.dson_deformation)try{const data=typeof n.userData.dson_deformation==='string'?JSON.parse(n.userData.dson_deformation):n.userData.dson_deformation;result.formulas+=data.formulas?.length||0;}catch{}
     result.nativeBlend+=n.userData?.nativeBlend?1:0;result.animations+=(n.animations||[]).length;result.ik+=(n.userData?.fusion_ik||[]).length;result.jointLimits+=(n.userData?.fusion_joint_limits||[]).length;
     if((n.userData?.fusion_timeline||[]).length>1)result.animations++;
     if(n.isMesh){result.meshes++;result.triangles+=(n.geometry.index?.count||n.geometry.attributes.position?.count||0)/3;result.skinned+=n.isSkinnedMesh?1:0;result.morphs+=Object.keys(n.geometry.morphAttributes||{}).length;result.materials+=Array.isArray(n.material)?n.material.length:1;}
-    if(n.isMesh)for(const mat of [].concat(n.material))if(mat.map||mat.normalMap)result.textures++;
+    if(n.isMesh)for(const mat of [].concat(n.material)){if(mat?.map||mat?.normalMap||mat?.bumpMap)result.textures++;if(mat?.bumpMap)result.bumpMaps++;}
     const s=n.scale;if(s){if(Math.abs(Math.abs(s.x)-Math.abs(s.y))>1e-4||Math.abs(Math.abs(s.x)-Math.abs(s.z))>1e-4)result.nonUniform=true;if(s.x*s.y*s.z<0)result.mirrored=true;}
     if(['character','garment','pattern'].includes(n.userData?.fusion_kind))result.procedural=true;
     if(n.userData?.fusion_cloth||n.userData?.patternProject)result.garment=true;
-  });return result;
+  });result.animationSampling=object?.traverse?animationSamplingReasons(object):[];return result;
 }
 export function checkCompatibility(action,stats,context={}){
   const issues=[];
@@ -23,6 +25,7 @@ export function checkCompatibility(action,stats,context={}){
   if(action==='detach-native')add('warning','Native shader and scene data will be detached','A converted copy uses Fusion viewport geometry and generic materials. Original Blender shader graphs, lights, world and camera effects stay with the preserved source.');
   if(stats.nativeBlend&&(topology.includes(action)||['sculpt','extrude','delete-face',...EXPORTS].includes(action)))add('warning','Preserved Blender render data will not follow mesh conversion','Keep the preserved source. The converted working mesh uses approximate viewport materials; native shader graphs and scene presentation are not carried by generic interchange.');
   if(topology.includes(action)){
+    if(stats.sculptLayers&&action!=='sculpt')add('warning','Sculpt layers become a baked working copy','This operation cannot remap editable sculpt-layer deltas through topology or engine conversion. Retain the layered source and use an explicit working copy of its evaluated surface.');
     if(stats.skinned||stats.morphs){const keepsTopology=modifierCapability(action)?.topology==='preserves';add('block','Rig or morph data can be lost',keepsTopology?'This modifier preserves mesh connectivity, but the current Blender exchange returns a static evaluated mesh. Make a static working copy to retain the rigged source.':'This mesh contains skin weights or morph targets. Changing its topology can break deformation or prevent the modifier from applying. Make a static working copy and retain the rigged source.');}
     if(stats.animations)add('warning','Animated mesh','Applying this operation can invalidate animation bindings. Save a version and work on a copy.');
     if(context.keyed)add('warning','Keyframe bindings will be detached','This processing step returns a static geometry snapshot at the current frame. Use a working copy to keep the original object and its transform or pose keys.');
@@ -47,6 +50,9 @@ export function checkCompatibility(action,stats,context={}){
   if(EXPORTS.includes(action)&&stats.jointLimits)add('warning','Joint limits become evaluated motion','Exchange files retain the constrained pose or animation sampled once per timeline frame, rather than editable Fusion limits. Keep the Fusion project for local bounds and references.');
   if(EXPORTS.includes(action)&&stats.formulas)add('warning','Character drivers become evaluated motion','Fusion dependency graphs, source-axis bindings and pose correctives are baked into the exported pose, live morph targets or sampled animation. Keep the Fusion project to edit driver rules.');
   if(EXPORTS.includes(action)&&stats.creators)add('warning','Generator recipes stay in Fusion projects','Body and face controls, hairstyle bindings and generator settings are evaluated for exchange. Supported formats retain the resulting geometry, rig and authored shape keys; OBJ is static. Save a Fusion project to keep the editable character recipe.');
+  if(EXPORTS.includes(action)&&stats.bumpMaps)add('warning','Bump-map support depends on the target','GLB embeds Three.js EXT_materials_bump data. Fusion restores supported embedded PNG/JPEG bump textures in its Blender jobs, but other consumers and delivery formats may omit or approximate this shading. Keep the Fusion project and original maps; inspect the export report before relying on appearance parity.');
+  if(EXPORTS.includes(action)&&stats.sculptLayers)add('warning','Editable sculpt layers stay in Fusion projects','Exchange retains the current evaluated surface. Base geometry, sparse layer deltas, layer strengths and locks stay editable in the Fusion project; they are not silently represented as native Blender/ZBrush sculpt layers.');
+  if(EXPORTS.includes(action)&&stats.animationSampling?.length)add('warning','Animation requires sampled exchange',stats.animationSampling.join(', ')+'. Uniform linear and held tracks keep their interpolation. Eased or mixed curves are sampled four times per frame; evaluated character/rig dependencies use the timeline frame rate. Subframe motion is approximate. The GLB includes an animation report; keep the Fusion project for editable source curves and controls.');
   if(STATIC_EXPORTS.includes(action)&&(stats.skinned||stats.morphs||stats.animations))add('warning',action.toUpperCase()+' keeps a static mesh',action.toUpperCase()+' does not carry the rig, morphs, or animation here. Export GLB or FBX when you need deformation data.');
   if(action==='uv'&&stats.textures)add('warning','Texture placement will change','UV projection replaces the current texture coordinates. Existing skin, clothing, or detail maps can become misaligned. Keep the original mapped object as a reference.');
   if(action==='native-shape')add('warning','Native mesh and rig will be rebuilt','Reapplying native morphs rebuilds a working mesh from the saved source pose. Current in-app bone poses, animation bindings, and fitted clothing may need to be reapplied. Use a copy to retain the current state.');

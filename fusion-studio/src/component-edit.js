@@ -1,6 +1,8 @@
 import * as THREE from 'three';
+import {shapeEditingSession} from './shape-session.js';
 import {hybridTransaction} from './hybrid.js';
 import {updateStackSource} from './modifier-stack.js';
+import {captureSculptLayerEdit,finishSculptLayerEdit,rejectLayerTopology} from './sculpt-layers.js';
 export function geometryRequest(geometry){
  const p=geometry.attributes.position,positions=Array.from({length:p.count},(_,i)=>[p.getX(i),p.getY(i),p.getZ(i)]),idx=geometry.index?.array||Array.from({length:p.count},(_,i)=>i),faces=[];
  for(let i=0;i<idx.length;i+=3)faces.push([idx[i],idx[i+1],idx[i+2]]);
@@ -9,6 +11,11 @@ export function geometryRequest(geometry){
  return {positions,faces,weldClasses};
 }
 export function remapGeometry(source,result){
+ const fail=detail=>{throw Error('Malformed mesh edit result: '+detail);},count=source.attributes.position.count,faces=(source.index?.count??count)/3;
+ if(!result||!Array.isArray(result.positions)||result.positions.length>300000||!Array.isArray(result.faces)||result.faces.length>600000)fail('geometry exceeds the supported vertex/triangle bounds.');
+ if(result.positions.some(p=>!Array.isArray(p)||p.length!==3||p.some(v=>!Number.isFinite(v)||Math.abs(v)>1000000))||result.faces.some(f=>!Array.isArray(f)||f.length!==3||f.some(v=>!Number.isInteger(v)||v<0||v>=result.positions.length)))fail('positions or triangle indices are invalid.');
+ if(!Array.isArray(result.vertexSources)||result.vertexSources.length!==result.positions.length||!Array.isArray(result.faceSources)||result.faceSources.length!==result.faces.length||result.faceSources.some(id=>!Number.isInteger(id)||id<0||id>=faces))fail('attribute remapping is incomplete.');
+ let weights=0;for(const map of result.vertexSources){if(!Array.isArray(map)||map.length<1||map.length>64||(weights+=map.length)>4000000||map.some(pair=>!Array.isArray(pair)||pair.length!==2||!Number.isInteger(pair[0])||pair[0]<0||pair[0]>=count||!Number.isFinite(pair[1])||pair[1]<0||pair[1]>1)||Math.abs(map.reduce((sum,p)=>sum+p[1],0)-1)>1e-6)fail('source weights are invalid or exceed the supported bounds.');}
  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(result.positions.flat(),3));g.setIndex(result.faces.flat());
  for(const [name,a] of Object.entries(source.attributes)){if(['position','normal'].includes(name))continue;const values=new a.array.constructor(result.positions.length*a.itemSize),mapped=new THREE.BufferAttribute(values,a.itemSize,a.normalized);
   result.vertexSources.forEach((weights,i)=>{for(let c=0;c<a.itemSize;c++)mapped.setComponent(i,c,weights.reduce((v,[j,w])=>v+w*a.getComponent(j,c),0));});g.setAttribute(name,mapped);}
@@ -40,8 +47,22 @@ export class ComponentEditor {
  update(){const positions=[];if(this.mesh&&this.mesh.parent){this.mesh.updateWorldMatrix(true,false);for(const i of this.selectedVertices())positions.push(...new THREE.Vector3().fromBufferAttribute(this.mesh.geometry.attributes.position,i).applyMatrix4(this.mesh.matrixWorld).toArray());}this.marker.geometry.dispose();this.marker.geometry=new THREE.BufferGeometry();this.marker.geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));this.marker.visible=positions.length>0&&this.editor.meshTools.mode==='edit';const el=document.querySelector('#component-count');if(el)el.textContent=`${this.ids.size} ${this.kind} elements selected`;}
  async apply(operation,params={}){const mesh=this.mesh;if(!mesh||!this.ids.size)throw Error('Select mesh components first.');if(mesh.isSkinnedMesh||Object.keys(mesh.geometry.morphAttributes).length)throw Error('Make a static working copy before component editing.');let owner=mesh;while(owner.parent&&owner.parent!==this.editor.root)owner=owner.parent;if(owner.userData.modifierStack&&!owner.userData.modifierStack.editSource)throw Error('Choose Edit retained source cage in the modifier stack before component editing.');
   if(mesh.userData.fusion_shape_session&&operation!=='transform')throw Error('Shape-key editing preserves topology. Use Transform or the sculpt brushes.');
+  if(operation!=='transform')rejectLayerTopology(mesh);
   const request={...geometryRequest(mesh.geometry),operation,...params,vertices:['delete','dissolve'].includes(operation)&&this.kind!=='vertex'?[]:this.selectedVertices(),edges:this.kind==='edge'?[...this.ids].map(i=>this.edges()[i]):[],selectedFaces:this.kind==='face'?[...this.ids]:[]};
-  return hybridTransaction(this.editor,async()=>{const result=await this.editor.evaluation.run(mesh,request,async ticket=>{const r=await this.api.geometry('editMesh',{...request,context:ticket});return r;});mesh.geometry=remapGeometry(mesh.geometry,result);if(owner.userData.modifierStack)await updateStackSource(this.editor,this.api,owner);this.ids.clear();this.update();return result;});
+  const shape=shapeEditingSession(this.editor,mesh),signal=this.editor.operators?.running?.controller.signal;
+  if(mesh.userData.fusion_shape_session&&!shape)throw Error('The neutral shape editing session is no longer active.');
+  const execute=async()=>{
+    const before=mesh.geometry,layerEdit=captureSculptLayerEdit(mesh);
+    const result=await this.editor.evaluation.run(mesh,request,async ticket=>this.api.geometry('editMesh',{...request,context:ticket}));
+    if(signal?.aborted)throw Error('Component edit cancelled.');
+    if(shape&&(shapeEditingSession(this.editor,mesh)!==shape||mesh.geometry!==before))throw Error('Shape editing changed while the component update was being calculated.');
+    const next=remapGeometry(before,result);
+    if(operation==='transform'&&(next.attributes.position.count!==before.attributes.position.count||!next.index||next.index.count!==(before.index?.count??before.attributes.position.count)||next.index.array.some((v,i)=>v!==(before.index?before.index.getX(i):i))||result.vertexSources.some((map,i)=>map.length!==1||map[0][0]!==i||map[0][1]!==1)||result.faceSources.some((id,i)=>id!==i))){next.dispose();throw Error('Component transforms must preserve vertex order, attribute identity and topology.');}
+    mesh.geometry=next;finishSculptLayerEdit(layerEdit);if(owner.userData.modifierStack)await updateStackSource(this.editor,this.api,owner);this.ids.clear();this.update();return result;
+  };
+  // The isolated copy has its own staging geometry. Its completed gestures are
+  // captured by the parent shape transaction only when the user chooses Apply.
+  return shape?execute():hybridTransaction(this.editor,execute,{signal});
  }
 }
 export function componentPanel(){return `<section class="library-section"><div class="section-heading">COMPONENT EDITING</div><select id="component-kind"><option value="vertex">Vertex</option><option value="edge">Edge</option><option value="face">Face</option></select><label><input id="component-box" type="checkbox"> Box selection (through mesh)</label><button id="component-all">Select all</button><button id="component-connected">Select connected</button><p id="component-count" class="microcopy">Enter Edit Mode to select components.</p><select id="component-operation"><option value="transform">Transform selection</option><option value="split">Split edges</option><option value="merge">Merge by distance (UV-safe)</option><option value="extrude">Extrude selected faces</option><option value="dissolve">Dissolve planar valence-3 vertices</option><option value="delete">Delete selected components</option></select><select id="component-transform"><option value="translate">Move</option><option value="rotate">Rotate (degrees)</option><option value="scale">Scale</option></select><select id="component-axis"><option>X</option><option>Y</option><option>Z</option></select><label class="field-label">Amount / tolerance (local units)<input id="component-amount" type="number" step=".01" value=".1"></label><button id="component-apply" class="button import-button">Apply to selection</button></section>`;}

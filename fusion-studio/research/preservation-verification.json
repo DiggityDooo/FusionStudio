@@ -1,11 +1,19 @@
 ﻿{
-    "checkedAtUtc":  "2026-10-23T20:37:23.5329835Z",
+    "checkedAtUtc":  "2026-10-28T07:45:52.1847184Z",
     "recordedFiles":  34837,
-    "currentFiles":  34847,
+    "currentFiles":  34857,
     "metadataChanged":  [
 
                         ],
     "added":  [
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\FreeImage.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\octane.dat",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\octane.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\OctaneACM.exe",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\octane_helper.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\unins000.dat",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\unins000.exe",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\unins000.msg",
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to 3ds Max\\Daz to 3ds Max.dsx",
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to Maya\\Daz to Maya.dsx",
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\docs\\Plugins\\Daz to Maya\\Daz to Maya.pdf",
@@ -14,6 +22,8 @@
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dsp_RenderAssistant.dll",
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\dzmayabridge.dll",
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\RenderAssistant.dll",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\OctaneRender\\DazStudio otoy_nz_software_license_agreement_100914 Final.rtf",
+                  "C:\\Program Files\\DAZ 3D\\DAZStudio4\\plugins\\OctaneRender\\plordazs.dll",
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\resources\\images\\icons\\bridges\\Daz to 3ds Max.png",
                   "C:\\Program Files\\DAZ 3D\\DAZStudio4\\scripts\\support\\DAZ\\Daz to 3ds Max.dsa"
               ],

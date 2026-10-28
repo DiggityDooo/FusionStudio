@@ -5,6 +5,7 @@ import {Editor} from '../src/editor.js';
 import {sculptGeometry, subdivideGeometry, maskAttribute} from '../src/mesh-tools.js';
 import {compactPrimitive} from '../src/geometry-interchange.js';
 import {ProjectLoader} from '../src/project-loader.js';
+import {attachSceneFoundation} from '../src/scene-foundation.js';
 
 test('project reload retains shared image identities, normal-map pixels and source texture settings',async()=>{
  const texture=new THREE.DataTexture(new Uint8Array([150,128,250,255]),1,1);texture.flipY=false;const material=new THREE.MeshStandardMaterial({normalMap:texture}),root=new THREE.Group();root.add(new THREE.Mesh(new THREE.TorusGeometry(.5,.1,24,64),material));const source=texture.source.uuid;
@@ -16,6 +17,26 @@ function fixture(){
  Object.assign(e,{root:new THREE.Group(),scene:new THREE.Scene(),history:[],historyAt:-1,change(){},select(){},wire(){},meshTools:{setMode(){}},timeline:{reset(){}}});
  e.scene.add(e.root);const mesh=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),new THREE.MeshStandardMaterial());e.root.add(mesh);return {e,mesh};
 }
+
+test('scene-tool settings and collections survive history and project reload; invalid settings keep the live scene',async()=>{
+ const {e,mesh}=fixture();e.transform={setSpace(){},setTranslationSnap(){},setRotationSnap(){},setScaleSnap(){}};attachSceneFoundation(e);e.commit();
+ const collection=e.foundation.createCollection('Character working copies');e.foundation.assignCollection(mesh,collection.id);
+ e.foundation.setCollectionVisible(collection.id,false);
+ e.foundation.setSnap({enabled:true,mode:'grid',increment:.25,angleDeg:30});e.foundation.setGizmoSpace('local');
+ e.foundation.setUnits({system:'imperial',unit:'in',scale:.0254});
+ await e.undo();assert.equal(e.foundation.state.units.system,'metric');
+ await e.redo();assert.equal(e.foundation.state.units.unit,'in');
+ const saved=JSON.parse(JSON.stringify(e.serialize())),{e:copy}=fixture();attachSceneFoundation(copy);await copy.restore(saved);
+ assert.equal(copy.foundation.state.snap.increment,.25);assert.equal(copy.foundation.state.gizmo.space,'local');
+ assert.equal(copy.foundation.state.units.scale,.0254);
+ const restored=copy.foundation.state.collections.find(c=>c.id===collection.id);
+ assert.equal(restored.name,'Character working copies');assert.deepEqual(restored.members,[mesh.uuid]);assert.equal(restored.visible,false);
+ assert.equal(copy.root.getObjectByProperty('uuid',mesh.uuid).visible,false);
+ const invalid=structuredClone(saved);invalid.object.userData.fusion_scene_foundation.snap.increment=0;const before=copy.root;
+ await assert.rejects(copy.restore(invalid),/scene-tool settings/);assert.equal(copy.root,before);
+ const legacy=structuredClone(saved);delete legacy.object.userData.fusion_scene_foundation;delete legacy.object.userData.units;
+ await copy.restore(legacy);assert.equal(copy.foundation.state.snap.enabled,false);assert.equal(copy.foundation.state.collections.length,1);
+});
 
 test('textured edits share unchanged history pixels, retain changed pixels through undo/redo, and save self-contained projects',async()=>{
  const {e,mesh}=fixture(),texture=new THREE.DataTexture(new Uint8Array(256*256*4).fill(180),256,256);mesh.material.map=texture;e.commit();const retained=e.historyImages.characters;

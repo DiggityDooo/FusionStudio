@@ -4,6 +4,7 @@ use super::*;
 pub struct Edit {positions:Vec<V>,faces:Vec<[usize;3]>,operation:String,#[serde(default)]vertices:Vec<usize>,#[serde(default)]edges:Vec<[usize;2]>,#[serde(default)]selected_faces:Vec<usize>,#[serde(default)]distance:f64,#[serde(default)]matrix:Option<[f64;16]>,#[serde(default)]weld_classes:Vec<String>}
 pub fn run(q:Edit)->Result<serde_json::Value,String>{
  topology(&Mesh{positions:q.positions.clone(),faces:q.faces.clone()})?;
+ let preserve_order=q.operation=="transform";
  let mut p=q.positions;let mut f=q.faces;let mut sources:Vec<Vec<(usize,f64)>>=(0..p.len()).map(|i|vec![(i,1.)]).collect();let mut fs:Vec<usize>=(0..f.len()).collect();
  if q.vertices.iter().any(|&v|v>=p.len())||q.edges.iter().flatten().any(|&v|v>=p.len())||q.selected_faces.iter().any(|&v|v>=f.len())||!q.distance.is_finite(){return Err("Invalid component selection".into())}
  let selected:HashSet<_>=q.vertices.iter().copied().collect();let selected_faces:HashSet<_>=q.selected_faces.iter().copied().collect();
@@ -19,7 +20,23 @@ pub fn run(q:Edit)->Result<serde_json::Value,String>{
  _=>return Err("Unknown component operation".into())
  }
  if f.is_empty(){return Err("Operation would remove the entire mesh; delete the object instead".into())}
- let mut used=vec![false;p.len()];for t in &f{for &v in t{used[v]=true;}}let mut remap=vec![0;p.len()];let mut out=Vec::new();let mut weights=Vec::new();for i in 0..p.len(){if used[i]{remap[i]=out.len();out.push(p[i]);weights.push(sources[i].clone());}}for t in &mut f{*t=t.map(|v|remap[v]);}
+ // A component transform is topology-preserving, including unused source
+ // vertices. Compaction here used to invalidate morph/layer correspondence.
+ let mut used=vec![preserve_order;p.len()];for t in &f{for &v in t{used[v]=true;}}let mut remap=vec![0;p.len()];let mut out=Vec::new();let mut weights=Vec::new();for i in 0..p.len(){if used[i]{remap[i]=out.len();out.push(p[i]);weights.push(sources[i].clone());}}for t in &mut f{*t=t.map(|v|remap[v]);}
  let topo=topology(&Mesh{positions:out.clone(),faces:f.clone()})?;
  Ok(serde_json::json!({"positions":out,"faces":f,"vertexSources":weights,"faceSources":fs,"topology":topo}))
+}
+
+#[cfg(test)]
+mod tests {
+ use super::*;
+ #[test]
+ fn transform_preserves_unused_vertices_order_faces_and_identity_remaps() {
+  let q:Edit=serde_json::from_value(serde_json::json!({"positions":[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[99.,99.,99.]],"faces":[[0,1,2]],"operation":"transform","vertices":[0,3],"matrix":[1.,0.,0.,0.,0.,1.,0.,0.,0.,0.,1.,0.,0.25,0.5,0.,1.]})).unwrap();
+  let result=run(q).unwrap();
+  assert_eq!(result["positions"],serde_json::json!([[0.25,0.5,0.],[1.,0.,0.],[0.,1.,0.],[99.25,99.5,99.]]));
+  assert_eq!(result["faces"],serde_json::json!([[0,1,2]]));
+  assert_eq!(result["vertexSources"],serde_json::json!([[[0,1.]],[[1,1.]],[[2,1.]],[[3,1.]]]));
+  assert_eq!(result["faceSources"],serde_json::json!([0]));
+ }
 }

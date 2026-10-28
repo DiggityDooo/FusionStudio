@@ -1,4 +1,5 @@
 // Scene jobs are projections of an immutable document revision, never its authority.
+import {shapeEditingSession} from './shape-session.js';
 export class StaleEvaluation extends Error {constructor(){super('The scene changed while this result was being calculated.');this.name='StaleEvaluation';}}
 export class SceneEvaluator {
   constructor(editor){this.editor=editor;this.epoch=0;this.serial=0;this.active=new Map();}
@@ -11,7 +12,7 @@ export class SceneEvaluator {
     const ticket={projectId:root.uuid,objectId:object.uuid,revision:epoch,inputHash:hash,requestId:++this.serial};
     return ticket;
   }
-  current(ticket){return this.editor.root.uuid===ticket.projectId&&this.epoch===ticket.revision&&!!this.editor.root.getObjectByProperty('uuid',ticket.objectId);}
+  current(ticket){return this.editor.root.uuid===ticket.projectId&&this.epoch===ticket.revision&&(!!this.editor.root.getObjectByProperty('uuid',ticket.objectId)||shapeEditingSession(this.editor)?.copy.uuid===ticket.objectId);}
   async run(object,input,compute){
     const ticket=await this.ticket(object,input),key=object.uuid,abort=new AbortController();
     this.active.get(key)?.abort.abort();const job={ticket,abort};this.active.set(key,job);

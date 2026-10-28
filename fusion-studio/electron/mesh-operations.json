@@ -729,5 +729,50 @@
         "type": "number"
       }
     ]
+  },
+  "shader_bake": {
+    "label": "Bake shader to texture",
+    "category": "Shading",
+    "fields": [
+      {
+        "key": "type",
+        "label": "Bake type",
+        "default": "Combined",
+        "values": [
+          "Combined",
+          "Diffuse",
+          "Emit",
+          "AO",
+          "Normal",
+          "Roughness",
+          "Glossy"
+        ],
+        "type": "enum"
+      },
+      {
+        "key": "size",
+        "label": "Texture size",
+        "default": 1024,
+        "min": 128,
+        "max": 4096,
+        "step": 1,
+        "type": "number"
+      }
+    ]
+  },
+  "lightmap_bake": {
+    "label": "Bake lightmap",
+    "category": "Shading",
+    "fields": [
+      {
+        "key": "size",
+        "label": "Texture size",
+        "default": 1024,
+        "min": 128,
+        "max": 4096,
+        "step": 1,
+        "type": "number"
+      }
+    ]
   }
 }

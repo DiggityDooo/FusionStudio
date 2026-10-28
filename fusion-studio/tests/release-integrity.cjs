@@ -1,7 +1,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict'),asar=require('@electron/asar');
 const root=path.resolve(__dirname,'..'),pkg=require('../package.json'),executable=process.env.FUSION_TEST_EXECUTABLE||path.join(root,pkg.build.directories.output,'win-unpacked','Fusion Studio.exe'),archive=path.join(path.dirname(executable),'resources','app.asar');
 const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex'),components=[];
-for(const file of ['electron/geometry-worker.cjs','scripts/blender_worker.py','scripts/dson_importer.py','scripts/native_scene.py','scripts/surface_panels.py','native/fusion_geometry.node']){
+for(const file of ['electron/geometry-worker.cjs','scripts/blender_worker.py','scripts/animation_time.py','scripts/gltf_bump.py','scripts/character_materials.py','scripts/dson_importer.py','scripts/native_scene.py','scripts/surface_panels.py','scripts/surface_materials.py','scripts/lighting.py','scripts/cameras.py','native/fusion_geometry.node']){
  const source=fs.readFileSync(path.join(root,file)),packaged=asar.extractFile(archive,file),unpacked=fs.readFileSync(path.join(archive+'.unpacked',file));assert.deepEqual(packaged,source,'Packaged source mismatch: '+file);assert.deepEqual(unpacked,source,'Unpacked source mismatch: '+file);components.push({file,sha256:hash(source)});
 }
 const priorHashes=[

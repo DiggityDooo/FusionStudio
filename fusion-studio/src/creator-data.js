@@ -3,7 +3,7 @@ export const CREATOR_FORMAT='fusion.character-recipe';
 export const SKIN_TONES=['#f4d8c7','#efd0bc','#eac5ab','#e4bb9e','#dfb39a','#d8a88b','#d09d80','#c99476','#c38b70','#b98268','#af785e','#a66e55','#9c644c','#935d47','#89553f','#804d39','#764633','#6d3f30','#64392b','#5b3327','#522d23','#49291f','#40241d','#36201a'];
 export function defaultRecipe(sex='female'){
  if(!['female','male'].includes(sex))throw Error('Choose a supported adult preset.');
- return {format:CREATOR_FORMAT,version:1,family:'makehuman-hm08',base:'fusion.makehuman.adult.v1',sex,controls:{height:sex==='female'?1.7:1.8,muscle:.5,weight:.5},shapes:[],favorites:[],locks:[],symmetry:true,seed:12345,appearance:{tone:sex==='female'?5:9,undertone:0,roughness:.48,pores:.35,freckles:0,ageDetail:0,eye:'#50777b',hair:'#33251d',roots:'#211914',grey:0},hair:{style:'bald',facial:'none',length:1,volume:1,offset:0},visibility:{clothing:'nude',anatomy:true},pose:'standing'};
+ return {format:CREATOR_FORMAT,version:1,family:'makehuman-hm08',base:'fusion.makehuman.adult.v1',sex,controls:{height:sex==='female'?1.7:1.8,muscle:.5,weight:.5},shapes:[],favorites:[],locks:[],symmetry:true,seed:12345,appearance:{version:2,tone:sex==='female'?5:9,undertone:0,roughness:.48,pores:.35,freckles:0,ageDetail:0,eye:'#50777b',hair:'#33251d',roots:'#211914',grey:0},hair:{style:'bald',facial:'none',length:1,volume:1,offset:0},visibility:{clothing:'nude',anatomy:true},pose:'standing'};
 }
 export function validateRecipe(r,definition){
  if(!r||r.format!==CREATOR_FORMAT||r.version!==1||r.family!==definition.family||r.base!==definition.id||!['female','male'].includes(r.sex)||!r.controls||!r.appearance||!r.hair||!r.visibility)throw Error('Unsupported character recipe or base family.');
@@ -15,6 +15,7 @@ export function validateRecipe(r,definition){
  for(const k of ['favorites','locks'])if(!Array.isArray(r[k])||r[k].length>512||r[k].some(v=>typeof v!=='string'||v.length>200))throw Error('Invalid character control preferences.');
  if(typeof r.symmetry!=='boolean'||!Number.isInteger(r.seed)||r.seed<0||r.seed>0xffffffff)throw Error('Invalid character randomization settings.');
  const a=r.appearance;if(!Number.isFinite(a.tone)||a.tone<0||a.tone>SKIN_TONES.length-1||![a.roughness,a.pores,a.freckles,a.ageDetail,a.grey].every(v=>Number.isFinite(v)&&v>=0&&v<=1)||!Number.isFinite(a.undertone)||Math.abs(a.undertone)>1||![a.eye,a.hair,a.roots].every(v=>/^#[a-f\d]{6}$/i.test(v)))throw Error('Invalid character appearance.');
+ if(a.version!==undefined&&a.version!==1&&a.version!==2)throw Error('Unsupported character appearance version. Restore the matching application or a previous project version.');
  if(a.customColor!==undefined&&!/^#[a-f\d]{6}$/i.test(a.customColor)||a.metalness!==undefined&&(!Number.isFinite(a.metalness)||a.metalness<0||a.metalness>1))throw Error('Invalid character material override.');
  if(!['bald','short','medium','long','wavy','curly','coily'].includes(r.hair.style)||!['none','beard','moustache'].includes(r.hair.facial||'none')||![r.hair.length,r.hair.volume].every(v=>Number.isFinite(v)&&v>=.5&&v<=1.5)||!Number.isFinite(r.hair.offset)||Math.abs(r.hair.offset)>.025||!['nude','underwear','clothed'].includes(r.visibility.clothing)||typeof r.visibility.anatomy!=='boolean')throw Error('Invalid hair fitting or visibility settings.');
  return r;

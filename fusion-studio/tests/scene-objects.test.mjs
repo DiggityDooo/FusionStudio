@@ -24,6 +24,7 @@ test('cameras keep focal length, sensor and depth of field settings',()=>{
   assert.ok(editSceneObject(camera,'camera-sensor',24));assert.ok(Math.abs(camera.getFocalLength()-50)<1e-9,'sensor change keeps focal length');
   assert.equal(editSceneObject(camera,'camera-far',.001),false,'far must exceed near');
   assert.ok(editSceneObject(camera,'camera-dof',true));assert.ok(editSceneObject(camera,'camera-fstop',1.4));assert.deepEqual([camera.userData.fusion_dof,camera.userData.fusion_fstop],[true,1.4]);
+  assert.ok(editSceneObject(camera,'camera-blades',6));assert.ok(editSceneObject(camera,'camera-iso',400));assert.equal(editSceneObject(camera,'camera-focal',2),false);
 });
 
 test('lights and cameras survive project serialization with their targets',async()=>{

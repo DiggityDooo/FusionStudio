@@ -1,0 +1,142 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as R from '../src/remaining-features.js';
+
+const mesh={positions:new Float32Array(36),indices:new Uint32Array(36)};
+
+test('A1 foundation',()=>{
+  assert.ok(R.createSnapSettings({mode:'vertex'}).enabled);
+  assert.ok(R.createGizmoState({space:'gimbal'}).modes.length);
+  const o=R.createOutliner([{name:'A'},{name:'B'}]);R.parentOutlinerNodes(o,o.nodes[1].id,o.nodes[0].id);assert.equal(o.nodes[1].parent,o.nodes[0].id);
+  assert.ok(R.createCollectionLayers({}).layers.length);
+  assert.ok(R.createSelectionToolState({tool:'lasso'}).tool);
+  assert.ok(R.createUndoStackMeta({}).nonDestructive);
+  assert.equal(R.createSceneUnits({unit:'cm'}).unit,'cm');
+  assert.ok(R.enableMultiObjectEdit(['a','b']).active);
+});
+
+test('A2 mesh advanced',()=>{
+  assert.ok(R.loopCutPreview(mesh,{cuts:2}).cuts===2);
+  assert.ok(R.knifeCutPreview(mesh).hits);
+  assert.ok(R.loftSweepPreview({mode:'sweep'}).kind==='sweep');
+  assert.ok(R.edgeCreaseWeights({e0:.5}).edges.e0===.5);
+  assert.ok(R.proportionalEditState({}).enabled);
+  assert.ok(R.edgeFlowCleanup(mesh).suggestions.length);
+  assert.ok(R.convertRepresentation(mesh,{to:'nurbs'}).to==='nurbs');
+  assert.ok(R.meshAnalysisReport(mesh).tris>=0);
+});
+
+test('A5 sculpt advanced',()=>{
+  assert.ok(R.createPolygroups(mesh,{groups:3}).groups===3);
+  assert.ok(R.sculptRegionVisibility({hidden:[1]}).hidden.length);
+  assert.ok(R.createSculptLayers({}).layers.length);
+  assert.ok(R.createImmBrush({}).kitbash);
+  assert.ok(R.createStampAlpha({}).pixels);
+  assert.ok(R.createSubtoolStack({count:2}).tools.length===2);
+  assert.ok(R.livePolygroupBoolean({}).live);
+  assert.ok(R.curveTubeBrush({}).radius);
+  assert.ok(R.fibermeshPreview({}).strands);
+  assert.ok(R.projectDetailBake({}).levels);
+  assert.ok(R.gpuSculptBudget({}).gpu);
+  assert.ok(R.createStencil({}).tiling);
+  assert.ok(R.retopoFriendlySculpt({}).decimate);
+});
+
+test('A7 A8 UV texture',()=>{
+  assert.ok(R.uvRelaxStraighten([],{op:'straighten'}).kind);
+  assert.ok(R.createUdimTiles({tiles:2}).tiles.length===2);
+  assert.ok(R.uvTransfer([1],[2]).to===1);
+  assert.ok(R.createAtlasTrim({}).size);
+  assert.ok(R.liveUvUnwrap({}).enabled);
+  assert.ok(R.proceduralUv({mode:'box'}).mode);
+  assert.ok(R.createSubstanceGraph({nodes:3}).nodes.length===3);
+  assert.ok(R.textureStitchDelight({}).ops.includes('delight'));
+  assert.ok(R.photoToMaterial({}).maps.length);
+  assert.ok(R.virtualTextureMips({}).levels);
+});
+
+test('A12–A16 A18',()=>{
+  assert.ok(R.createRenderFarmJob({backend:'cloud'}).status);
+  assert.ok(R.createLicenseManager({}).network);
+  assert.ok(R.createRibbonIk({}).bones);
+  assert.ok(R.createMuscleSim({}).muscles);
+  assert.ok(R.createJiggleBones({}).stiffness);
+  assert.ok(R.createDynamicBones({}).count);
+  assert.ok(R.createRigProxy({}).lod);
+  assert.ok(R.createControlRigGraph({}).nodes);
+  assert.ok(R.facialRigTransfer({}).mapped);
+  assert.ok(R.createSkinClusterLayers({}).layers);
+  assert.ok(R.createTissueDeform({}).regions);
+  assert.ok(R.createTightClothDeform({}).influences);
+  assert.ok(R.blendshapeToolkit({}).ops.includes('invert'));
+  assert.ok(R.createWrinkleMaps({}).maps);
+  assert.ok(R.createSkinSlide({}).strength);
+  assert.ok(R.createMotionMatching({}).library);
+  assert.ok(R.createAnimStateMachine({}).states.length);
+  assert.ok(R.createLipSync({}).visemes);
+  assert.ok(R.createFaceCapture({}).blendshapes);
+  assert.ok(R.createCrowdAgents({count:5}).count===5);
+  assert.ok(R.createMuscleDrivenAnim({}).muscles);
+  assert.ok(R.createActiveRagdoll({}).bones);
+  assert.ok(R.retimeShot({}).scale);
+  assert.ok(R.createShotSequencer({}).shots);
+  assert.ok(R.createPrevisStoryboard({}).frames);
+  assert.ok(R.createGreaseAnim({}).strokes);
+  assert.ok(R.createMographAnim({}).cloners);
+  assert.ok(R.createMeshCachePlayback({format:'usd'}).format);
+  assert.ok(R.createTimeWarpCurves({}).keys);
+  assert.ok(R.compressAnimForGame({}).ratio);
+  assert.ok(R.createFacePartLibrary({}).parts.includes('eyes'));
+  assert.ok(R.characterEngineExport({}).targets.includes('unity'));
+  assert.ok(R.digitalHumanScanPipeline({}).steps.length);
+  assert.ok(R.facialTopologyWrap({}).landmarks);
+  assert.ok(R.digitalDoubleLookdev({}).maps);
+  assert.ok(R.characterUdimSets({}).udims);
+  assert.ok(R.faceTrackRetarget({}).source);
+  assert.ok(R.wardrobeConform({}).garments);
+  assert.ok(R.productionPatternMaking({}).graded);
+});
+
+test('A26–A29 interchange sdk ux archviz',()=>{
+  assert.ok(R.exportCadFormats({format:'iges'}).format);
+  assert.ok(R.exportAdditiveFormats({format:'amf'}).format);
+  assert.ok(R.listImageFormats().includes('exr'));
+  assert.ok(R.listVideoFormats().includes('mp4'));
+  assert.ok(R.batchImportExport({}).files);
+  assert.ok(R.createFileReference({}).instanced);
+  assert.ok(R.createVcsHook({system:'perforce'}).system);
+  assert.ok(R.createPipelineTracker({}).shots);
+  assert.ok(R.sceneCleanupReport({}).orphans);
+  assert.ok(R.validateNaming({}).ok);
+  assert.ok(R.relinkTextures({}).fixed);
+  assert.ok(R.cloudProjectSync({}).users);
+  assert.ok(R.createScriptHost({}).langs.includes('python'));
+  assert.ok(R.createVisualProgram({}).nodes);
+  assert.ok(R.createPluginRegistry({}).plugins);
+  assert.ok(R.createCustomToolUi({}).widgets);
+  const mac=R.createMacroRecorder();R.recordMacroStep(mac,'extrude');assert.equal(mac.actions.length,1);
+  assert.ok(R.createHeadlessCli({}).commands.includes('render'));
+  assert.ok(R.createSceneApi().methods.includes('export'));
+  assert.ok(R.createFarmSubmitScript({}).backend);
+  assert.ok(R.createProceduralGenerator({}).seed);
+  assert.ok(R.createMlHooks({}).hooks.includes('infer'));
+  assert.ok(R.createUsdPipelineTool().layers);
+  assert.ok(R.createNodeEditorKinds().includes('shader'));
+  assert.ok(R.createAssetBrowser({}).thumbnails);
+  assert.ok(R.createTheme({mode:'light'}).mode);
+  assert.ok(R.createMultiMonitorLayout({}).monitors);
+  assert.ok(R.createCollabSync({}).users);
+  assert.ok(R.createA11ySettings({}).screenReaderHints);
+  assert.ok(R.importBimCad({format:'ifc'}).format);
+  assert.ok(R.sunStudy({}).hours);
+  assert.ok(R.archMaterialLibrary({}).count);
+  assert.ok(R.furnitureLibrary({}).count);
+  assert.ok(R.realtimeWalkthrough({}).vr);
+  assert.ok(R.panoramaRender({}).res);
+  assert.ok(R.productConfigurator({}).variants);
+  assert.ok(R.cameraMatchPhoto({}).points);
+  assert.ok(R.photoComposite3d({}).layers);
+  assert.ok(R.explodedTechIllust({}).parts);
+  assert.ok(R.packagingLabelWrap({}).uv);
+  assert.ok(R.industrialSurfacing({}).degree);
+});

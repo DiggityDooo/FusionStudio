@@ -11,12 +11,15 @@ import bmesh
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from native_scene import capture as capture_native, render_native, settings as render_settings, write_render
 from character_materials import apply_character_materials
+from surface_materials import apply_surface_materials, shader_bake
+from lighting import apply_lighting, apply_world_lighting, lightmap_bake
+from cameras import apply_cameras, apply_scene_camera_extras
 from mathutils import Matrix, Vector
 
 # Must list every operation in electron/mesh-operations.json (the worker cannot read the packaged archive).
 MESH_ACTIONS = {'subdivide','bevel','decimate','solidify','mirror','remesh','recalculate','uv','boolean','array','wireframe','weld','triangulate','smooth','twist','bend','taper','stretch',
     'screw','radial_array','inset','bisect','quad_remesh','quads','fill_holes','edge_split','displace','cast',
-    'uv_unwrap','uv_project','uv_pack','uv_average','uv_lightmap'}
+    'uv_unwrap','uv_project','uv_pack','uv_average','uv_lightmap','shader_bake','lightmap_bake'}
 UV_METHODS = {'Angle based': 'ANGLE_BASED', 'Conformal': 'CONFORMAL', 'Minimum stretch': 'MINIMUM_STRETCH'}
 
 
@@ -146,7 +149,20 @@ def import_model(file, options=None):
     if ext not in ops:
         raise ValueError('Unsupported model: ' + ext)
     # STL carries no units; read it as millimetres, matching Fusion's STL export and slicer convention.
+    from animation_time import fusion_animation_timing, align_fusion_animation
+    from gltf_bump import bump_plan, apply_bump_plan
+    timing = fusion_animation_timing(file) if ext in ('.glb', '.gltf') else None
+    bumps = bump_plan(file) if ext in ('.glb', '.gltf') else None
+    previous_materials = set(bpy.data.materials) if bumps and bumps['materials'] else set()
+    previous_actions = set(bpy.data.actions) if timing else set()
     checked(ops[ext](filepath=str(file), **({'global_scale': .001} if ext == '.stl' else {})), 'Import')
+    if bumps is not None:
+        result = apply_bump_plan(bumps, set(bpy.data.materials) - previous_materials)
+        if options is not None:options['bumpTextures'] = result
+    if timing:
+        actions = set(bpy.data.actions) - previous_actions
+        settings = options if options is not None else {}
+        settings['animationTiming'] = align_fusion_animation(bpy.context.scene, bpy.data, actions, timing, settings.get('animation', {}).get('fps'))
 
 
 def bounds(meshes):
@@ -208,6 +224,7 @@ def studio(meshes, options=None):
         # A shadow catcher keeps only the shadows the scene casts on it, for compositing over plates.
         plane.is_shadow_catcher=floor=='shadow_catcher'
     world_settings(scene,quality.get('world') or {})
+    apply_world_lighting(scene,quality)
     scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=24
     scene.cycles.samples=max(8,min(256,int(options.get('samples',32))))
     scene.cycles.use_denoising=True
@@ -216,8 +233,10 @@ def studio(meshes, options=None):
     scene.view_settings.view_transform='AgX'
 
 
+SEQUENCE_STILLS = {'png':('PNG','.png'),'jpeg':('JPEG','.jpg'),'tiff':('TIFF','.tif'),'exr':('OPEN_EXR','.exr')}
+
 def write_animation(scene, output, options, meshes):
-    """Render a frame range as a PNG sequence or an H.264 MP4; a turntable orbits the camera once around the scene."""
+    """Render a frame range as an image sequence or video; a turntable orbits the camera once around the scene."""
     animation = options['animation']
     scene.frame_start, scene.frame_end = int(animation['start']), int(animation['end'])
     if animation['mode'] == 'turntable':
@@ -236,28 +255,44 @@ def write_animation(scene, output, options, meshes):
         for curve in action_fcurves(pivot):
             for key in curve.keyframe_points: key.interpolation = 'LINEAR'
     settings_ = scene.render.image_settings
-    video = animation['output'] == 'mp4'
+    fmt = animation['output']
+    video = fmt in ('mp4', 'prores')
     if video:
         if 'media_type' in settings_.bl_rna.properties: settings_.media_type = 'VIDEO'
         settings_.file_format = 'FFMPEG'
-        scene.render.ffmpeg.format = 'MPEG4'
-        scene.render.ffmpeg.codec = 'H264'
-        scene.render.ffmpeg.constant_rate_factor = 'HIGH'
+        codecs = {i.identifier for i in scene.render.ffmpeg.bl_rna.properties['codec'].enum_items}
+        formats = {i.identifier for i in scene.render.ffmpeg.bl_rna.properties['format'].enum_items}
+        if fmt == 'prores':
+            if 'PRORES' not in codecs: raise ValueError('ProRes encoding is not available in this Blender build.')
+            scene.render.ffmpeg.format = 'QUICKTIME' if 'QUICKTIME' in formats else next(iter(formats))
+            scene.render.ffmpeg.codec = 'PRORES'
+        else:
+            scene.render.ffmpeg.format = 'MPEG4' if 'MPEG4' in formats else next(iter(formats))
+            scene.render.ffmpeg.codec = 'H264' if 'H264' in codecs else next(iter(codecs))
+            if hasattr(scene.render.ffmpeg, 'constant_rate_factor'): scene.render.ffmpeg.constant_rate_factor = 'HIGH'
         scene.render.filepath = str(Path(output).with_suffix(''))
     else:
+        still = SEQUENCE_STILLS[fmt]
+        if 'media_type' in settings_.bl_rna.properties: settings_.media_type = 'IMAGE'
+        settings_.file_format = still[0]
+        if fmt == 'exr':
+            settings_.color_depth = '16'
+            if hasattr(settings_, 'exr_codec'): settings_.exr_codec = 'ZIP'
         scene.render.filepath = str(Path(output).with_suffix('')) + '_'
     checked(bpy.ops.render.render(animation=True), 'Animation render')
     folder, stem = Path(output).parent, Path(output).stem
     if video:
         # Blender appends the frame range to video names; deliver the file at the requested output path.
-        produced = [p for p in folder.glob(stem + '*.mp4') if p != Path(output)]
+        produced = [p for p in folder.glob(stem + '*.*') if p != Path(output) and p.suffix.lower() in ('.mp4', '.mov', '.mkv')]
         if not produced: raise RuntimeError('The video encoder produced no file.')
         produced[0].replace(output)
-        return {'video': str(output), 'frames': scene.frame_end - scene.frame_start + 1, 'fps': scene.render.fps, 'mode': animation['mode']}
-    frames = sorted(str(p) for p in folder.glob(stem + '_*.png'))
+        return {'video': str(output), 'frames': scene.frame_end - scene.frame_start + 1, 'fps': scene.render.fps, 'mode': animation['mode'], 'format': fmt}
+    suffix = SEQUENCE_STILLS[fmt][1]
+    frames = sorted(str(p) for p in folder.glob(stem + '_*' + suffix))
+    if not frames: frames = sorted(str(p) for p in folder.glob(stem + '_*.*') if p.suffix.lower() in (suffix, '.jpeg', '.tiff', '.exr', '.png'))
     if not frames: raise RuntimeError('The animation render produced no frames.')
     shutil.copyfile(frames[0], output)
-    return {'frames': frames, 'fps': scene.render.fps, 'mode': animation['mode']}
+    return {'frames': frames, 'fps': scene.render.fps, 'mode': animation['mode'], 'format': fmt}
 
 
 def action_fcurves(obj):
@@ -290,16 +325,31 @@ def scene_light(lamp):
     kind = lamp.get('fusion_light')
     if lamp.get('fusion_soft') is not None and hasattr(lamp.data, 'shadow_soft_size'):
         lamp.data.shadow_soft_size = max(0.0, float(lamp['fusion_soft']))
-    if kind == 'area':
+    area = kind in ('area', 'disk', 'tube')
+    if area or lamp.get('fusion_portal'):
         lamp.data.type = 'AREA'
-        lamp.data.shape = 'SQUARE'
+        shape = lamp.get('fusion_area_shape') or ('DISK' if kind == 'disk' else 'RECTANGLE' if kind == 'tube' else 'SQUARE')
+        allowed = {i.identifier for i in lamp.data.bl_rna.properties['shape'].enum_items}
+        if shape in allowed:
+            lamp.data.shape = shape
         lamp.data.size = max(.01, float(lamp.get('fusion_area', 1)))
+        if hasattr(lamp.data, 'size_y') and lamp.get('fusion_area_y') is not None:
+            lamp.data.size_y = max(.01, float(lamp['fusion_area_y']))
+        if lamp.get('fusion_portal') and hasattr(lamp.data, 'cycles'):
+            try: lamp.data.cycles.is_portal = True
+            except Exception: pass
+    elif kind == 'sphere':
+        lamp.data.type = 'POINT'
     # The viewport treats intensity as display-referred candela/lux; Cycles' photometric import would be ~683x darker.
     if kind and lamp.get('fusion_intensity') is not None:
         intensity = max(0.0, float(lamp['fusion_intensity']))
-        lamp.data.energy = intensity if kind == 'sun' else intensity * (math.pi if kind == 'area' else 4 * math.pi)
+        lamp.data.energy = intensity if kind == 'sun' else intensity * (math.pi if area else 4 * math.pi)
     if lamp.get('fusion_light') == 'sun' and lamp.get('fusion_soft') is not None:
         lamp.data.angle = min(math.pi, float(lamp['fusion_soft']))
+    group = str(lamp.get('fusion_group') or '').strip()[:64]
+    if group:
+        try: lamp.lightgroup = group
+        except Exception: pass
 
 
 def scene_camera(camera):
@@ -312,6 +362,7 @@ def scene_camera(camera):
     if camera.data.dof.use_dof:
         camera.data.dof.aperture_fstop = max(.5, float(camera.get('fusion_fstop', 2.8)))
         camera.data.dof.focus_distance = max(.01, float(camera.get('fusion_focus', 5)))
+    apply_scene_camera_extras(camera)
 
 
 def has_id(obj, target):
@@ -465,6 +516,9 @@ def main(specfile=None):
     else:dson=import_model(Path(spec['input']),options)
     scene=bpy.context.scene
     character_material_report=apply_character_materials(options.get('characterMaterials'))
+    surface_material_report=apply_surface_materials(options.get('surfaceMaterials'))
+    lighting_report={'applied':0,'meshes':0,'version':1}
+    cameras_report={'applied':0,'compositor':False,'motionBlur':False,'version':1}
     scene.unit_settings.system='METRIC';scene.unit_settings.scale_length=1
     factor=1 if native else spec.get('scale',1)
     for obj in scene.objects:
@@ -574,6 +628,10 @@ def main(specfile=None):
                     modifier=obj.modifiers.new('Fusion displace','DISPLACE');modifier.texture=texture;modifier.texture_coords='LOCAL';modifier.strength=float(options['strength'])
                 elif action=='cast':
                     modifier=obj.modifiers.new('Fusion cast','CAST');modifier.cast_type='SPHERE';modifier.factor=float(options['factor'])
+                elif action=='shader_bake':
+                    shader_bake(obj,options);continue
+                elif action=='lightmap_bake':
+                    lightmap_bake(obj,options);continue
                 elif action.startswith('uv_'):
                     uv_operation(obj,action,options);continue
                 elif action in ('uv','recalculate'):
@@ -593,10 +651,17 @@ def main(specfile=None):
     action=original_action;options=original_options
     if action in ('render','blend'):
         studio(meshes,options)
+        lighting_report=apply_lighting(options)
+    elif original_options.get('lighting'):
+        for lamp in [o for o in scene.objects if o.type=='LIGHT']:
+            scene_light(lamp)
+        lighting_report=apply_lighting(options)
     if action=='render':
         device_report=render_settings(scene,options)
+        cameras_report=apply_cameras(options)
         device_report.update(write_animation(scene,output,options,meshes) if options.get('animation') else write_render(scene,output,options))
     elif action=='blend':
+        cameras_report=apply_cameras(options)
         # Pack dependencies into this new project, leaving the source files alone.
         bpy.ops.file.pack_all()
         checked(bpy.ops.wm.save_as_mainfile(filepath=str(output),check_existing=False),'Save')
@@ -620,7 +685,15 @@ def main(specfile=None):
             bpy.ops.object.select_all(action='DESELECT')
             for obj in selected:obj.select_set(True)
         checked(bpy.ops.export_scene.gltf(filepath=str(output),export_format='GLB',export_yup=True,use_selection=use_selection,export_extras=True,export_attributes=True,export_current_frame=True,export_rest_position_armature=False),'GLB export')
+    if original_options.get('cameras') and action not in ('render','blend'):
+        cameras_report=apply_cameras(options)
     report={'blender':bpy.app.version_string,'action':action,'output':str(output),'mesh_count':len(meshes),'vertices':sum(len(o.data.vertices) for o in meshes),'polygons':sum(len(o.data.polygons) for o in meshes)}
+    if options.get('animationTiming'): report['animationTiming'] = options['animationTiming']
+    if original_options.get('characterMaterials'):report['characterMaterials']=character_material_report
+    if options.get('bumpTextures'):report['bumpTextures']=options['bumpTextures']
+    if original_options.get('surfaceMaterials'):report['surfaceMaterials']=surface_material_report
+    if original_options.get('lighting'):report['lighting']=lighting_report
+    if original_options.get('cameras'):report['cameras']=cameras_report
     if action=='stack':report['stack']=stack_report
     if native is not None:report['nativeBlend']=native
     if action=='render':
@@ -630,7 +703,7 @@ def main(specfile=None):
         report['world']={'hdri':next((n.image.filepath for n in world_nodes if n.type=='TEX_ENVIRONMENT' and n.image),None),'strength':next(n.inputs['Strength'].default_value for n in world_nodes if n.type=='BACKGROUND')}
         report['shadow_catchers']=[o.name for o in bpy.context.scene.objects if o.type=='MESH' and o.is_shadow_catcher]
         cam=bpy.context.scene.camera
-        if cam:report['camera']={'name':cam.name,'lens':cam.data.lens,'sensorFit':cam.data.sensor_fit,'dof':cam.data.dof.use_dof,'fstop':cam.data.dof.aperture_fstop,'focus':cam.data.dof.focus_distance}
+        if cam:report['camera']={'name':cam.name,'lens':cam.data.lens,'sensorFit':cam.data.sensor_fit,'dof':cam.data.dof.use_dof,'fstop':cam.data.dof.aperture_fstop,'focus':cam.data.dof.focus_distance,'blades':cam.data.dof.aperture_blades,'type':cam.data.type,'shiftX':cam.data.shift_x,'shiftY':cam.data.shift_y,'pano':getattr(cam.data,'panorama_type',None) if cam.data.type=='PANO' else None,'motionBlur':scene.render.use_motion_blur,'shutter':scene.render.motion_blur_shutter,'exposure':scene.view_settings.exposure}
     if dson is not None:report['dson']=dson
     if cloth_movement is not None:report['cloth_max_displacement']=cloth_movement
     if sewing_report is not None:report['sewing']=sewing_report

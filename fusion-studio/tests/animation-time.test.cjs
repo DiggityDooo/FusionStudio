@@ -1,0 +1,10 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{execFileSync}=require('node:child_process');
+const python=path.join(os.homedir(),'.cache','codex-runtimes','codex-primary-runtime','dependencies','python','python.exe');
+test('only a bounded, valid Fusion animation sidecar establishes frame origin and authoring rate',()=>{
+ const work=fs.mkdtempSync(path.join(os.tmpdir(),'fusion-animation-time-'));
+ const cases=[{}, {scenes:[{}]}, {scene:0,scenes:[{extras:{fusion_animation_export:{version:1,fps:23.976,frameOrigin:1,start:1,end:48}}}]}, {scenes:[{extras:{fusion_animation_export:{version:1,fps:0}}}]}];
+ for(let i=0;i<cases.length;i++)fs.writeFileSync(path.join(work,i+'.gltf'),JSON.stringify(cases[i]));
+ const json=Buffer.from(JSON.stringify(cases[2])+'   '),header=Buffer.alloc(20);header.writeUInt32LE(0x46546c67,0);header.writeUInt32LE(2,4);header.writeUInt32LE(20+json.length,8);header.writeUInt32LE(json.length,12);header.writeUInt32LE(0x4e4f534a,16);fs.writeFileSync(path.join(work,'fixture.glb'),Buffer.concat([header,json]));fs.writeFileSync(path.join(work,'truncated.glb'),header.subarray(0,12));
+ const script=`import sys,json\nfrom pathlib import Path\nsys.path.insert(0,sys.argv[1])\nfrom animation_time import fusion_animation_timing\nresults=[]\nfor name in ['0.gltf','1.gltf','2.gltf','3.gltf','fixture.glb','truncated.glb']:\n try: results.append(fusion_animation_timing(Path(sys.argv[2])/name))\n except ValueError as e: results.append({'error':str(e)})\nprint(json.dumps(results))`;
+ const results=JSON.parse(execFileSync(fs.existsSync(python)?python:'python',['-c',script,path.resolve('scripts'),work],{encoding:'utf8'}));assert.equal(results[0],null);assert.equal(results[1],null);assert.deepEqual(results[2],{version:1,fps:23.976,frameOrigin:1,start:1,end:48});assert.match(results[3].error,/frame rate/);assert.deepEqual(results[4],results[2]);assert.match(results[5].error,/Truncated/);
+});

@@ -4,7 +4,9 @@ export class OperatorRegistry {
   list(){return [...this.definitions.values()].map(op=>({id:op.id,label:op.label,hidden:!!op.hidden,available:op.poll?.(this.context)!==false}));}
   async run(id,properties={}){
     const op=this.definitions.get(id);if(!op)throw Error('Unknown operator: '+id);
-    if(this.context.creatorShapeSession&&!['character.creator_shape_apply','character.creator_shape_cancel','mesh.components'].includes(id))throw Error('Apply or cancel the active shape-key edit first.');
+    if(this.context.sculptLayerPreview||this.context.meshTools?.stroke)throw Error('Finish or cancel the active sculpt gesture first.');
+    if(this.context.transform?.dragging)throw Error('Finish or cancel the active transform gesture first.');
+    if(this.context.creatorShapeSession&&!['character.creator_shape_apply','character.creator_shape_cancel','mesh.components','sculpt.mask'].includes(id))throw Error('Apply or cancel the active shape-key edit first.');
     if(this.running||this.locked())throw Error('Finish or cancel the current operation first.');
     if(op.poll?.(this.context)===false)throw Error(op.unavailable||'This operation is unavailable for the current selection.');
     const props=op.validate?op.validate(properties):properties;

@@ -6,6 +6,8 @@ Fusion Studio is a Windows desktop application for moving supported 3D work betw
 
 The long-term goal is a dependable middle workspace for many 3D applications. The current application implements specific, tested paths toward that goal. It does **not** claim that every native format can already be edited or converted without loss.
 
+**October 28 development update:** functional static-mesh sculpt layers and geometric snapping, animation/skin-binding integrity repairs, versioned character eye surfaces, embedded skin-bump restoration in Blender jobs, and corrected pose mirroring and facial-expression reset. See the [current implementation status](fusion-studio/docs/progress/STATUS-implemented-vs-remaining.md) and [update evidence and remaining gaps](fusion-studio/docs/progress/2026-10-28-character-integrity-and-github-update.md). Source remains version 0.1.0; this update does not replace the archived downloadable releases. Character LOD generation remains a statistics/geometry prototype without a usable scene/export workflow; professional character realism and general native-format fidelity are unfinished.
+
 **Current snapshot:** `0.1.0` · Windows desktop · Electron / Three.js / Rust · local processing
 
 [Workflow videos](#watch-real-workflows) · [Features](#work-inside-one-scene) · [File support](#file-support-and-fidelity) · [Run from source](#run-from-source) · [Architecture](fusion-studio/ARCHITECTURE.md) · [Implementation evidence](fusion-studio/docs/muse-implementation-status.md)

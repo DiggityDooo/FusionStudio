@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import {shapeEditingSession} from './shape-session.js';
+import {captureSculptLayerEdit,finishSculptLayerEdit,cancelSculptLayerEdit,sculptBufferCopy,rejectLayerTopology,disposeUnusedSculptGeometry} from './sculpt-layers.js';
 
 export function canonicalGeometry(source){
   const pos=source.attributes.position,uv=source.attributes.uv,map=new Map(),positions=[],uvs=[],remap=[];
@@ -365,6 +367,7 @@ function geometryStateHash(geo) { // divergence guard: any sculpt/topology edit 
 }
 export function createMultiresCopy(object, level = 1) {
   if (!object?.isMesh) throw Error('Select a mesh for a multires working copy.');
+  rejectLayerTopology(object);
   const copy = object.clone(true);
   copy.name = object.name + ' (Multires)';
   copy.geometry = subdivideGeometry(object.geometry.clone(), level);
@@ -373,6 +376,7 @@ export function createMultiresCopy(object, level = 1) {
   return copy;
 }
 export function setMultiresLevel(object, level) {
+  rejectLayerTopology(object);
   const source = object?.userData.multiresSourceGeometry;
   if (!source) throw Error('This object has no retained multires source.');
   const clean = object.userData.multires?.cleanHash;
@@ -485,6 +489,10 @@ export function pressureScale(brush,event){ // pen pressure scales strength; mou
 }
 const DRAG_MODES=new Set(['nudge','thumb','snake-hook','grab']);
 export function sculptGeometry(mesh,point,radius=.12,strength=.01,mode='inflate',invert=false,opts={}){
+  if(mesh.userData.fusion_sculpt_layers&&!opts.layerGesture&&!['mask','annotate','simplify'].includes(mode)){
+    const token=captureSculptLayerEdit(mesh);mesh.geometry=sculptBufferCopy(mesh.geometry);
+    try{const count=sculptGeometry(mesh,point,radius,strength,mode,invert,{...opts,layerGesture:true});finishSculptLayerEdit(token);return count;}catch(error){cancelSculptLayerEdit(token);throw error;}
+  }
   const geo=mesh.geometry,p=geo.attributes.position,n=geo.attributes.normal;mesh.updateWorldMatrix(true,false);
   if(mode==='annotate')return 0; // annotations are scene data, handled by MeshTools
   if(mode==='simplify')return 0; // topology action (Dyntopo edge collapse), handled by MeshTools
@@ -599,32 +607,53 @@ export class MeshTools{
     this.editor=editor;this.mode='object';this.brush={radius:.15,strength:.014,type:'draw',falloff:'smooth',autosmooth:0,symmetry:{x:false,y:false,z:false},dyntopo:{enabled:false,detail:0.03},pressure:true,spacing:.3};this.activeMesh=null;this.lastDabPoint=null;this.faceIndex=null;this.stroke=false;this.lastPoint=null;
     this.faceHighlight=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:'#ff9b33',transparent:true,opacity:.4,side:THREE.DoubleSide,depthTest:false}));this.faceHighlight.visible=false;this.faceHighlight.renderOrder=10;editor.scene.add(this.faceHighlight);
     const canvas=editor.renderer.domElement;
-    canvas.addEventListener('pointerdown',e=>{if(this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.beginStrokeSnapshot(hit.object);this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey,e);}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
-    canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey,e);e.stopImmediatePropagation();}},true);
-    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke){this.stroke=false;this.lastPoint=null;this.lastDabPoint=null;this.strokeSnapshot=null;this.editor.commit();}};
+    canvas.addEventListener('pointerdown',e=>{const shape=shapeEditingSession(this.editor);if(this.editor.operators?.running||this.editor.batching&&!shape||this.editor.sculptLayerPreview||this.mode==='object'||e.button!==0||e.altKey)return;const hit=this.hit(e);if(!hit||this.editor.creatorShapeSession&&hit.object!==shape?.copy)return;e.stopImmediatePropagation();this.editor.orbit.enabled=false;canvas.setPointerCapture(e.pointerId);if(this.mode==='sculpt'){try{this.stroke=true;this._annotateArmed=true;this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.beginStrokeSnapshot(hit.object);this.layerBase=this.brush.type==='layer'?{uuid:hit.object.geometry.uuid,base:new Float32Array(hit.object.geometry.attributes.position.array)}:null;this.applyBrush(hit,e.shiftKey,e);}catch(error){this.failStroke(error);}}else {this.activeMesh=hit.object;this.faceIndex=hit.faceIndex;this.showFace();this.editor.change('mesh-selection');}},true);
+    canvas.addEventListener('pointermove',e=>{if(this.mode==='sculpt'&&this.stroke){try{const hit=this.hit(e);if(hit)this.applyBrush(hit,e.shiftKey,e);}catch(error){this.failStroke(error);}e.stopImmediatePropagation();}},true);
+    const end=e=>{if(this.mode==='object'||e.altKey||e.button!==0)return;e.stopImmediatePropagation();this.editor.orbit.enabled=true;if(this.stroke)try{this.finishStroke();}catch(error){this.failStroke(error);}};
     canvas.addEventListener('pointerup',end,true);
     canvas.addEventListener('pointercancel',e=>{if(this.stroke){e.stopImmediatePropagation();this.cancelStroke();}},true); // capture loss cancels the uncommitted gesture (plan 14.2)
     canvas.ownerDocument?.addEventListener?.('keydown',e=>{if(e.key==='Escape'&&this.stroke)this.cancelStroke();});
   }
-  beginStrokeSnapshot(mesh){const g=mesh.geometry,copy=(attr,itemSize)=>attr?new Float32Array(attr.array):null;this.strokeSnapshot={mesh,position:copy(g.attributes.position),normal:copy(g.attributes.normal),uv:copy(g.attributes.uv),mask:copy(g.attributes.mask),index:g.index?g.index.array.slice():null};}
+  beginStrokeSnapshot(mesh){
+    if(mesh.userData.fusion_shape_session&&(this.brush.type==='simplify'||this.brush.dyntopo?.enabled&&this.brush.type!=='mask'))throw Error('Shape-key editing must preserve topology. Disable Dyntopo and use a topology-preserving brush.');
+    if(this.brush.dyntopo?.enabled||this.brush.type==='simplify')rejectLayerTopology(mesh);
+    this.editor.ensureHistory?.();const g=mesh.geometry,copy=attr=>attr?new Float32Array(attr.array):null,layerEdit=['mask','annotate'].includes(this.brush.type)?null:captureSculptLayerEdit(mesh);
+    this.strokeSnapshot={mesh,geometry:g,layerEdit,position:copy(g.attributes.position),normal:copy(g.attributes.normal),uv:copy(g.attributes.uv),mask:copy(g.attributes.mask),index:g.index?g.index.array.slice():null};
+    mesh.geometry=sculptBufferCopy(g);if(!mesh.geometry.attributes.normal)mesh.geometry.computeVertexNormals();
+  }
+  finishStroke(){
+    const snap=this.strokeSnapshot;if(!this.stroke||!snap)return;
+    try{finishSculptLayerEdit(snap.layerEdit);}catch(error){this.cancelStroke();throw error;}
+    const after=snap.mesh.geometry,before=snap.geometry;
+    if(before){const names=new Set([...Object.keys(before.attributes),...Object.keys(after.attributes)]);let equal=true;
+      for(const name of names){if(name==='normal')continue;const a=before.attributes[name],b=after.attributes[name];if(!a||!b||a.count!==b.count||a.itemSize!==b.itemSize){equal=false;break;}for(let i=0;i<a.count&&equal;i++)for(let c=0;c<a.itemSize;c++)if(a.getComponent(i,c)!==b.getComponent(i,c)){equal=false;break;}}
+      if((before.index?.count||0)!==(after.index?.count||0))equal=false;else for(let i=0;i<(before.index?.count||0)&&equal;i++)if(before.index.getX(i)!==after.index.getX(i))equal=false;
+      if(equal){snap.mesh.geometry=before;disposeUnusedSculptGeometry(this.editor,after);}
+    }
+    try{this.editor.commit();}catch(error){this.cancelStroke();throw error;}
+    this.stroke=false;this.strokeSnapshot=null;this.lastPoint=null;this.lastDabPoint=null;this.editor.orbit.enabled=true;if(before)disposeUnusedSculptGeometry(this.editor,before);
+  }
+  failStroke(error){this.cancelStroke();this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);}
   cancelStroke(){ // Escape / pointer-cancel: restore the exact pre-stroke geometry, no history entry
-    const snap=this.strokeSnapshot;if(!this.stroke||!snap)return;const g=snap.mesh.geometry;
+    const snap=this.strokeSnapshot;if(!this.stroke||!snap)return;let g=snap.mesh.geometry;
+    if(snap.geometry){const discarded=g;snap.mesh.geometry=snap.geometry;g=snap.geometry;cancelSculptLayerEdit(snap.layerEdit);if(discarded!==g)disposeUnusedSculptGeometry(this.editor,discarded);}
+    else {
     g.setAttribute('position',new THREE.BufferAttribute(snap.position,3));
     if(snap.normal)g.setAttribute('normal',new THREE.BufferAttribute(snap.normal,3));else if(g.attributes.normal)g.deleteAttribute('normal');
     if(snap.uv)g.setAttribute('uv',new THREE.BufferAttribute(snap.uv,2));
     if(snap.mask){const attr=new THREE.BufferAttribute(snap.mask,1);attr.name='mask';g.setAttribute('mask',attr);}else if(g.attributes.mask)g.deleteAttribute('mask');
-    g.setIndex(snap.index?Array.from(snap.index):null);g.computeBoundingSphere();g.computeBoundingBox();
+    g.setIndex(snap.index?Array.from(snap.index):null);g.computeBoundingSphere();g.computeBoundingBox();}
     this.stroke=false;this.strokeSnapshot=null;this.lastPoint=null;this.lastDabPoint=null;this.editor.orbit.enabled=true;this.editor.change('sculpt-cancelled');
   }
   hit(event){const e=this.editor;e.pointer.copy(e.ndc(event));e.ray.setFromCamera(e.pointer,e.camera);return e.ray.intersectObject(e.selected||e.root,true).find(h=>h.object.isMesh&&!h.object.isSkinnedMesh&&e.unclipped(h));}
-  setMode(mode){this.mode=mode;this.faceHighlight.visible=false;this.faceIndex=null;this.activeMesh=null;this.editor.transform.detach();if(mode==='object'&&this.editor.selected)this.editor.transform.attach(this.editor.selected);this.editor.change('mode');}
+  setMode(mode){if(this.stroke)this.cancelStroke();this.mode=mode;this.faceHighlight.visible=false;this.faceIndex=null;this.activeMesh=null;this.editor.transform.detach();if(mode==='object'&&this.editor.selected)this.editor.transform.attach(this.editor.selected);this.editor.change('mode');}
   showFace(){if(!this.activeMesh||this.faceIndex===null)return;const mesh=this.activeMesh;const geo=mesh.geometry,idx=geo.index?.array||Array.from({length:geo.attributes.position.count},(_,i)=>i),pos=[];const {faces}=coplanarFaces(geo,this.faceIndex);
     for(const f of faces)for(let j=0;j<3;j++)pos.push(...new THREE.Vector3().fromBufferAttribute(geo.attributes.position,idx[f*3+j]).toArray());
     this.faceHighlight.geometry.dispose();this.faceHighlight.geometry=new THREE.BufferGeometry();this.faceHighlight.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));mesh.updateWorldMatrix(true,false);this.faceHighlight.matrixAutoUpdate=false;this.faceHighlight.matrix.copy(mesh.matrixWorld);this.faceHighlight.visible=true;
   }
   extrude(distance){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.editor.selected?.userData.modifierStack)throw Error('Use Component Editing on the retained source cage to keep the modifier stack evaluated.');return this.editor.operators?this.editor.operators.run('mesh.extrude_region',{distance}):this._extrude(distance);}
-  _extrude(distance){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face in Edit Mode first.');const mesh=this.activeMesh,result=extrudeRegion(mesh.geometry,this.faceIndex,distance);mesh.geometry.dispose();mesh.geometry=result;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];mesh.userData={...mesh.userData,fusion_kind:'mesh'};this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
-  deleteFace(){if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.editor.selected?.userData.modifierStack)throw Error('Use Component Editing on the retained source cage to keep the modifier stack evaluated.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face first.');const mesh=this.activeMesh;const geo=deleteRegion(mesh.geometry,this.faceIndex);mesh.geometry.dispose();mesh.geometry=geo;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
+  _extrude(distance){rejectLayerTopology(this.activeMesh);if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face in Edit Mode first.');const mesh=this.activeMesh,result=extrudeRegion(mesh.geometry,this.faceIndex,distance);mesh.geometry.dispose();mesh.geometry=result;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];mesh.userData={...mesh.userData,fusion_kind:'mesh'};this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
+  deleteFace(){rejectLayerTopology(this.activeMesh);if(this.editor.creatorShapeSession||this.activeMesh?.userData.fusion_shape_session)throw Error('Shape-key edits must preserve topology. Use vertex transforms or sculpt brushes, or cancel and make a static working copy.');if(this.editor.selected?.userData.modifierStack)throw Error('Use Component Editing on the retained source cage to keep the modifier stack evaluated.');if(this.faceIndex===null||!this.activeMesh)throw Error('Click a face first.');const mesh=this.activeMesh;const geo=deleteRegion(mesh.geometry,this.faceIndex);mesh.geometry.dispose();mesh.geometry=geo;if(Array.isArray(mesh.material))mesh.material=mesh.material[0];this.faceHighlight.visible=false;this.faceIndex=null;this.editor.commit();}
   refreshAnnotations(object){
     if(this.annotationOverlay){this.editor.scene.remove(this.annotationOverlay);this.annotationOverlay.geometry.dispose();this.annotationOverlay=null;}
     if(!object?.userData.fusion_annotations?.length)return;
@@ -632,19 +661,19 @@ export class MeshTools{
     markers.position.setFromMatrixPosition(object.matrixWorld);markers.quaternion.setFromRotationMatrix(object.matrixWorld);markers.scale.setFromMatrixScale(object.matrixWorld);
     this.annotationOverlay=markers;this.editor.scene.add(markers);
   }
-  applyBrush(hit,invert,event){if(this.editor.selected?.userData.modifierStack){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
+  applyBrush(hit,invert,event){if(this.editor.selected?.userData.modifierStack){this.failStroke(Error('Apply the modifier stack before sculpting. Use Component Editing for retained source geometry.'));return;}this.activeMesh=hit.object;
     if(this.brush.type==='annotate'){if(!this._annotateArmed)return;this._annotateArmed=false;const local=hit.object.worldToLocal(hit.point.clone());addAnnotation(hit.object,local,this.annotationText||'Note');this.refreshAnnotations(hit.object);this.editor.change('annotation');return;}
     const mesh=hit.object,delta=this.lastPoint?hit.point.clone().sub(this.lastPoint):new THREE.Vector3();
     if(this.brush.type==='simplify'){ // plan 9.4: local edge collapse, Dyntopo-only, never a silent whole-object decimate
-      if(!this.brush.dyntopo?.enabled){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',Error('Simplify collapses edges locally and requires Dyntopo. Enable Dyntopo for this working copy, or use the Decimate modifier for whole-object reduction.'));return;}
-      try{const report=dyntopoCollapse(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.editor.change('sculpt-stroke',report);}catch(error){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);}
+      if(!this.brush.dyntopo?.enabled){this.failStroke(Error('Simplify collapses edges locally and requires Dyntopo. Enable Dyntopo for this working copy, or use the Decimate modifier for whole-object reduction.'));return;}
+      try{const report=dyntopoCollapse(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);this.lastPoint=hit.point.clone();this.lastDabPoint=null;this.editor.change('sculpt-stroke',report);}catch(error){this.failStroke(error);}
       return;
     }
-    if(this.brush.dyntopo?.enabled&&this.brush.type!=='mask'){try{dyntopoRefine(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);}catch(error){this.stroke=false;this.editor.orbit.enabled=true;this.editor.change('operator-error',error);return;}}
+    if(this.brush.dyntopo?.enabled&&this.brush.type!=='mask'){try{dyntopoRefine(mesh.geometry,mesh.worldToLocal(hit.point.clone()).toArray(),this.brush.radius,this.brush.dyntopo.detail);}catch(error){this.failStroke(error);return;}}
     const normal=hit.face?hit.face.normal.clone().transformDirection(mesh.matrixWorld):new THREE.Vector3(0,0,1);
     const strength=this.brush.strength*pressureScale(this.brush,event);
     const dabAt=(point,dabDelta)=>{
-      const opts={falloff:this.brush.falloff,autosmooth:this.brush.autosmooth,delta:dabDelta,normal,layerBase:this.layerBase&&this.layerBase.uuid===mesh.geometry.uuid?this.layerBase.base:null};
+      const opts={layerGesture:true,falloff:this.brush.falloff,autosmooth:this.brush.autosmooth,delta:dabDelta,normal,layerBase:this.layerBase&&this.layerBase.uuid===mesh.geometry.uuid?this.layerBase.base:null};
       const points=[point];
       const sym=this.brush.symmetry;if(sym&&(sym.x||sym.y||sym.z)){ // mirror the stroke across mesh-local axes
         mesh.updateWorldMatrix(true,false);const inv=mesh.matrixWorld.clone().invert(),local=point.clone().applyMatrix4(inv),combos=new Set(['0,0,0']);
