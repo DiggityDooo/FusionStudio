@@ -1,5 +1,7 @@
 # October 28 — Usable character LODs and export integrity
 
+Follow-up: [retained-source editing and queue repair](2026-10-28-lod-source-workflow-and-queue.md) repairs the dense 25% reduction limit measured below and adds non-destructive regeneration. Measurements in this document describe the earlier checkpoint.
+
 The user requested a GitHub update containing all current changes. This checkpoint adds source, tests and evidence for the character LOD work following the previous update. It retains the complete modeling, character, garment and interchange goal. App version 0.1.0 and project schema 2 are unchanged; no installer or archived release is replaced. Some local evidence timestamps fall on October 29 UTC, still October 28 in the development timezone.
 
 ## Implemented behavior

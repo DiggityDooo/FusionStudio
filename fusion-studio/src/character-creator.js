@@ -1,14 +1,19 @@
 import * as THREE from 'three';
 import {defaultRecipe,validateRecipe,validateDeltas,creatorInputs,computeCreator,SKIN_TONES,mirrorShape} from './creator-data.js';
 import {updateCreatorAttachments,configureSkinPreview} from './creator-appearance.js';
+import {refitCreatorRig} from './creator-rig-refit.js';
+import {evaluateCreatorWorker,validateCreatorResult} from './creator-worker-client.js';
+export {evaluateCreatorWorker,validateCreatorResult};
 
 const libraries=new Map();
 const definitions=new Map();
 function bindDefinition(definition){const {source,provenance,...metadata}=definition,copy=structuredClone(metadata);Object.defineProperty(copy,'source',{value:source,enumerable:false});return copy;}
 export async function hydrateCreator(root){
  const c=root.userData.fusion_creator;if(!c)return;if(!c.definition?.source){const asset=definitions.get(c.definition?.identity)||await loadCreatorLibrary({identity:c.definition?.identity});if(asset.identity!==c.definition?.identity||asset.id!==c.definition?.id)throw Error('This character foundation is missing or has changed. Restore its matching asset version.');c.definition=bindDefinition(asset);}validateCreator(root);
- let derived=false,result;const body=root.getObjectByName('Body');if(body?.geometry.userData.fusion_derived_creator_body){if(!body.isSkinnedMesh||body.skeleton.bones.length!==c.definition.source.bones.length)throw Error('The saved creator body is missing its matching rig.');result=computeCreator(creatorInputs(c.definition,c.recipe));const geometry=sourceMesh(c.definition,result.positions,body.material).geometry;geometry.uuid=body.geometry.uuid;body.geometry.dispose();body.geometry=geometry;derived=true;}
- root.traverse(n=>{if(n.geometry?.userData.fusion_derived_creator_hair)derived=true;});if(derived){const report=evaluateCreator(root,{result});if(!report.valid)throw Error(report.errors[0].message);}
+ let result;const body=root.getObjectByName('Body');if(body?.geometry.userData.fusion_derived_creator_body){if(!body.isSkinnedMesh||body.skeleton.bones.length!==c.definition.source.bones.length)throw Error('The saved creator body is missing its matching rig.');result=computeCreator(creatorInputs(c.definition,c.recipe));const geometry=sourceMesh(c.definition,result.positions,body.material).geometry;geometry.uuid=body.geometry.uuid;body.geometry.dispose();body.geometry=geometry;}
+ // Hydration reconstructs derived display geometry, not a new bind pose.
+ // Existing projects keep their stored rest frames and authored pose exactly.
+ const report=evaluateCreator(root,{result,preserveRig:true});if(!report.valid)throw Error(report.errors[0].message);
 }
 // Strand buffers are reproducible display output. Persist their identity and
 // recipe, rather than multiplying their large arrays through snapshot history.
@@ -50,12 +55,7 @@ function sourceMesh(d,positions,material){
  const body=new THREE.SkinnedMesh(g,material);body.name='Body';body.userData={fusion_creator_part:'body',fusion_kind:'body'};body.castShadow=true;body.receiveShadow=true;return body;
 }
 function landmark(s,positions,bone){const p=V();for(const id of bone.landmarks)p.add(V().fromArray(positions,id*3));return p.divideScalar(bone.landmarks.length);}
-function refitSkeleton(root,positions){
- const {definition:d}=root.userData.fusion_creator,s=d.source,body=root.getObjectByName('Body'),bones=body.skeleton.bones,map=new Map(bones.map(b=>[b.name,b])),saved=bones.map(b=>b.quaternion.clone()),points=new Map(s.bones.map(b=>[b.name,landmark(s,positions,b)]));
- bones.forEach(b=>b.quaternion.identity());for(const r of s.bones){const bone=map.get(r.name);bone.position.copy(points.get(r.name));if(r.parent)bone.position.sub(points.get(r.parent));}
- root.updateMatrixWorld(true);const inverseBody=body.matrixWorld.clone().invert();body.skeleton.boneInverses=bones.map(b=>b.matrixWorld.clone().premultiply(inverseBody).invert());bones.forEach((b,i)=>b.quaternion.copy(saved[i]));root.updateMatrixWorld(true);body.skeleton.update();
-}
-function updateBody(root,result){
+function updateBody(root,result,{preserveRig=false,previousPositions}={}){
  const body=root.getObjectByName('Body');if(geometryOwners.has(body.geometry)&&geometryOwners.get(body.geometry)!==root)body.geometry=body.geometry.clone();geometryOwners.set(body.geometry,root);const g=body.geometry,s=root.userData.fusion_creator.definition.source,map=g.attributes._fusion_source_vertex,p=g.attributes.position;
  if(g.morphAttributes.position?.length)g.dispose();
  // Raw typed-array remap: attribute getters + a throwaway canonical geometry
@@ -66,7 +66,7 @@ function updateBody(root,result){
  for(let v=0;v<sourceNormal.length;v+=3){const x=sourceNormal[v],y=sourceNormal[v+1],z=sourceNormal[v+2],l=Math.sqrt(x*x+y*y+z*z);if(l>0){sourceNormal[v]=x/l;sourceNormal[v+1]=y/l;sourceNormal[v+2]=z/l;}}
  const outNormal=new Float32Array(p.count*3);
  for(let i=0;i<p.count;i++){const o=i*3,src=ids[i]*3;pa[o]=rp[src];pa[o+1]=rp[src+1];pa[o+2]=rp[src+2];outNormal[o]=sourceNormal[src];outNormal[o+1]=sourceNormal[src+1];outNormal[o+2]=sourceNormal[src+2];}
- p.needsUpdate=true;g.setAttribute('normal',new THREE.BufferAttribute(outNormal,3));g.computeBoundingBox();g.computeBoundingSphere();refitSkeleton(root,result.positions);
+ p.needsUpdate=true;g.setAttribute('normal',new THREE.BufferAttribute(outNormal,3));g.computeBoundingBox();g.computeBoundingSphere();const rigRefit=refitCreatorRig(body,s.bones,result.positions,{preserveBind:preserveRig,previousPositions});
  // Authored targets remain actual relative shape keys for generic exchange.
  // Body controls change the retained cage; authored shapes do not get baked twice.
  g.morphAttributes.position=[];body.morphTargetDictionary={};body.morphTargetInfluences=[];
@@ -74,10 +74,10 @@ function updateBody(root,result){
  // result already includes authored shapes. Remove their position contribution
  // from the cage before Three adds the live influences.
  for(let i=0;i<g.morphAttributes.position.length;i++){const a=g.morphAttributes.position[i].array,w=body.morphTargetInfluences[i];for(let j=0;j<p.array.length;j++)p.array[j]-=a[j]*w;}if(!g.morphAttributes.position.length)delete g.morphAttributes.position;p.needsUpdate=true;
- body.boundingBox=null;body.boundingSphere=null;
+ body.boundingBox=null;body.boundingSphere=null;return rigRefit;
 }
 function signature(recipe){return JSON.stringify([recipe.sex,recipe.controls,recipe.shapes]);}
-export function evaluateCreator(root,{result,deferAttachments=false}={}){
+export function evaluateCreator(root,{result,deferAttachments=false,preserveRig=false}={}){
  const c=root.userData.fusion_creator;if(!c)return {valid:true,errors:[],warnings:[]};
  try{
   if(!c.definition.source){const asset=definitions.get(c.definition.identity);if(!asset)throw Error('Load the matching character foundation before evaluating this scene.');c.definition=bindDefinition(asset);}
@@ -86,16 +86,10 @@ export function evaluateCreator(root,{result,deferAttachments=false}={}){
   let low=Infinity,high=-Infinity;for(const id of c.definition.source.cornerSource){const y=output.positions[id*3+1];low=Math.min(low,y);high=Math.max(high,y);}
   const tolerance=Math.max(1e-5,c.recipe.controls.height*1e-5);
   if(Math.abs(low)>tolerance||Math.abs(high-low-c.recipe.controls.height)>tolerance)throw Error('Character worker geometry is collapsed or does not match the requested height and ground.');
-  updateBody(root,output);const report={valid:true,errors:[],warnings:[],milliseconds:output.milliseconds,sparseDeltas:output.sparseDeltas};evaluations.set(root,{signature:sig,positions:output.positions,scale:output.scale,report});updateCreatorAppearance(root,{deferAttachments});return report;
+  const rigRefit=updateBody(root,output,{preserveRig,previousPositions:old?.positions});const report={valid:true,errors:[],warnings:[],milliseconds:output.milliseconds,sparseDeltas:output.sparseDeltas,rigRefit};evaluations.set(root,{signature:sig,positions:output.positions,scale:output.scale,report});updateCreatorAppearance(root,{deferAttachments});return report;
  }catch(e){return {valid:false,errors:[{channel:'character',message:e.message}],warnings:[]};}
 }
 export function creatorPositions(root){const r=evaluateCreator(root);if(!r.valid)throw Error(r.errors[0].message);return evaluations.get(root).positions;}
-export function validateCreatorResult(result,count){if(!(result?.positions instanceof Float32Array)||result.positions.length!==count||result.positions.some(v=>!Number.isFinite(v)||Math.abs(v)>100)||!Number.isFinite(result.scale)||result.scale<=0||result.scale>20||!Number.isFinite(result.ground)||Math.abs(result.ground)>100||!Number.isFinite(result.milliseconds)||result.milliseconds<0||!Number.isInteger(result.sparseDeltas)||result.sparseDeltas<0||result.sparseDeltas>2000000)throw Error('Character worker returned malformed geometry or diagnostics.');return result;}
-let sharedCreatorWorker=null; // the worker script is stateless; spawning it per slider tick cost more than the evaluation itself
-export async function evaluateCreatorWorker(input,{context,signal,timeout=30000,WorkerClass}={}){
- if(signal?.aborted)throw Error('Character update cancelled.');
- return new Promise((resolve,reject)=>{const id=crypto.randomUUID(),ownWorker=!!WorkerClass,worker=WorkerClass?new WorkerClass(new URL('./creator-worker.js',import.meta.url),{type:'module'}):(sharedCreatorWorker??=new Worker(new URL('./creator-worker.js',import.meta.url),{type:'module'}));let done=false;const finish=(error,result,poison=false)=>{if(done)return;done=true;clearTimeout(timer);signal?.removeEventListener('abort',cancel);worker.onmessage=null;worker.onerror=null;if(poison||ownWorker){worker.terminate();if(sharedCreatorWorker===worker)sharedCreatorWorker=null;}error?reject(error):resolve(result);},cancel=()=>finish(Error('Character update cancelled.'),null,true),timer=setTimeout(()=>finish(Error('Character update exceeded 30 seconds. Reduce the active shapes.'),null,true),timeout);signal?.addEventListener('abort',cancel,{once:true});worker.onerror=e=>finish(Error(e.message||'Character worker failed.'),null,true);worker.onmessage=e=>{const m=e.data;if(m?.id!==id)return;if(JSON.stringify(m.context)!==JSON.stringify(context))return finish(Error('Character worker revision mismatch.'));if(m.error)return finish(Error(m.error));try{validateCreatorResult(m.result,input.positions.length);finish(null,m.result);}catch(e){finish(e);}};try{worker.postMessage({id,context,input});}catch(e){finish(e,null,true);}});
-}
 export function createDetailedCharacter(definition,{sex='female'}={}){
  validateCreatorDefinition(definition);const recipe=defaultRecipe(sex),group=new THREE.Group();group.name=sex==='female'?'Adult female':'Adult male';
  group.userData={fusion_kind:'character',fusion_id:THREE.MathUtils.generateUUID(),source:'Fusion CC0 adult foundation',fusion_creator:{version:1,definition:bindDefinition(definition),recipe}};
@@ -103,11 +97,12 @@ export function createDetailedCharacter(definition,{sex='female'}={}){
  const body=sourceMesh(definition,result.positions,material),bones=definition.source.bones.map(b=>{const n=new THREE.Bone();n.name=b.name;return n;}),map=new Map(bones.map(b=>[b.name,b]));group.add(body);definition.source.bones.forEach((r,i)=>{const p=landmark(definition.source,result.positions,r);bones[i].position.copy(p);if(r.parent){bones[i].position.sub(landmark(definition.source,result.positions,definition.source.bones.find(b=>b.name===r.parent)));map.get(r.parent).add(bones[i]);}else body.add(bones[i]);});group.updateMatrixWorld(true);body.bind(new THREE.Skeleton(bones));const report=evaluateCreator(group,{result});if(!report.valid)throw Error(report.errors[0].message);return group;
 }
 export function changeCreator(root,recipe,{result,deferAttachments=false}={}){
- const c=root.userData.fusion_creator,old=c.recipe,next=structuredClone(validateRecipe(recipe,c.definition)),body=root.getObjectByName('Body'),geometry=body.geometry;c.recipe=next;
+ const c=root.userData.fusion_creator,old=c.recipe,next=structuredClone(validateRecipe(recipe,c.definition)),body=root.getObjectByName('Body'),geometry=body.geometry,rig={bones:body.skeleton.bones.map(b=>({bone:b,position:b.position.clone(),quaternion:b.quaternion.clone(),scale:b.scale.clone()})),inverses:body.skeleton.boneInverses.map(m=>m.clone())};c.recipe=next;
  try{const report=evaluateCreator(root,{result,deferAttachments});if(!report.valid)throw Error(report.errors[0].message);updateCreatorAppearance(root,{deferAttachments});return report;}
  catch(error){
   c.recipe=old; // A failed result may have cached the same recipe signature.
-  evaluations.delete(root);const restored=evaluateCreator(root);
+  for(const row of rig.bones){row.bone.position.copy(row.position);row.bone.quaternion.copy(row.quaternion);row.bone.scale.copy(row.scale);}body.skeleton.boneInverses=rig.inverses;body.updateWorldMatrix(true,true);body.skeleton.update();
+  evaluations.delete(root);const restored=evaluateCreator(root,{preserveRig:true});
   if(!restored.valid)throw Error(error.message+'; character recovery failed: '+restored.errors.map(e=>e.message).join('; '));
   if(body.geometry!==geometry){const discarded=body.geometry;body.geometry=geometry;discarded.dispose();}
   throw error;

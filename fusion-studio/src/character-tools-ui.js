@@ -1,6 +1,6 @@
 import {GROOM_LIBRARY,browLashGuides,createGroom,combGuide,cutGuide,growGuide,puffGuide,smoothGuide,applyFrizz,applyCurl,applyWave,applyBraid,applyFlyaways,applyWindGravity,simulateHairDynamics,createFurOnMesh,generateStrandField,runGroomNodes,setHairShading,hairToMesh,optimizeGroomLod,exportGroomCache,interpolateChildren} from './hair-groom.js';
 import {applyBoneScale,applyExpressionPreset,EXPRESSION_PRESETS,listBaseMeshes} from './character-lod.js';
-import {registerCharacterLods,characterLodPanel,wireCharacterLods} from './character-lods-ui.js';
+import {registerCharacterLods,characterLodPanel,characterLodSourceLinks,wireCharacterLods} from './character-lods-ui.js';
 import {addSkinLayer,compositeSkinLayers,ensureSkinStack,skinLayerPresets} from './skin-layers.js';
 import {bonesOf} from './rig-paths.js';
 import {deformationTransaction} from './deformation-ui.js';
@@ -22,7 +22,7 @@ export function characterToolsPanel(root){
 <label class="field-label">Bone scale<select id="ct-bone">${boneOpts||'<option value="">No bones</option>'}</select></label>
 <label class="field-label">Scale<input id="ct-bone-s" type="range" min="0.5" max="1.5" step="0.05" value="1"></label>
 <button id="ct-bone-apply" class="full-button" ${bones.length?'':'disabled'}>Apply bone scale</button>
-<button id="ct-lod" class="full-button">Generate LOD copies (1 / 0.5 / 0.25)</button><p class="microcopy">Review compatibility first. The source stays intact; generated levels retain mapped skin, shape and material data.</p>
+<button id="ct-lod" class="full-button">Generate LOD copies (1 / 0.5 / 0.25)</button><p class="microcopy">Review compatibility first. The source stays intact; generated levels retain mapped skin, shape and material data.</p>${characterLodSourceLinks(root)}
 <div class="section-heading">HAIR GROOM</div>
 <label class="field-label">Preset<select id="ct-groom-lib"><option value="short_bob">Short bob</option><option value="long_straight">Long straight</option><option value="eyebrow">Eyebrows</option><option value="eyelash">Eyelashes</option><option value="beard">Beard</option></select></label>
 <button id="ct-groom-load" class="full-button">Load groom onto character</button>
@@ -52,7 +52,7 @@ export function characterToolsPanel(root){
 }
 
 export function wireCharacterTools({editor,run,refresh,notify}){
- if(document.querySelector('#character-lod-panel')){wireCharacterLods(editor,run,refresh);return;}
+ wireCharacterLods(editor,run,refresh);if(document.querySelector('#character-lod-panel'))return;
  const panel=document.querySelector('#character-tools');if(!panel)return;
  const $=s=>panel.querySelector(s);
  const root=()=>editor.selected;const groom=()=>root()?.userData.fusion_groom;const gid=()=>groom()?.guides[0]?.id;

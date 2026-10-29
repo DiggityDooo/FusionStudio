@@ -10,6 +10,8 @@ The long-term goal is a dependable middle workspace for many 3D applications. Th
 
 **Current snapshot:** `0.1.0` · Windows desktop · Electron / Three.js / Rust · local processing
 
+Latest source follow-ups: [October 29 worker and gesture recovery update](fusion-studio/docs/progress/2026-10-29-creator-async-and-github-update.md), [faster image checkpoints and undo recovery](fusion-studio/docs/progress/2026-10-28-image-history-checkpoints.md), [pose-preserving creator refitting](fusion-studio/docs/progress/2026-10-28-creator-rig-refit.md), and [retained-source editing with dense-mesh LOD repair](fusion-studio/docs/progress/2026-10-28-lod-source-workflow-and-queue.md). Overlapping worker requests retain their own replies, and cancelled sliders clear delayed appearance work. The combined build, 1,126 unit tests and desktop recovery checks pass. Earlier measured character commits are approximately 38–41% faster. Body edits retain translated/scaled poses, rebuilding retains earlier copies, and late failures restore the previous undo state. Numeric exchange checks, actual workflows and remaining quality/performance limits accompany the evidence.
+
 [Workflow videos](#watch-real-workflows) · [Features](#work-inside-one-scene) · [File support](#file-support-and-fidelity) · [Run from source](#run-from-source) · [Architecture](fusion-studio/ARCHITECTURE.md) · [Implementation evidence](fusion-studio/docs/muse-implementation-status.md)
 
 ![Fusion Studio: preserved Blender scene of an original optical instrument](fusion-studio/docs/showcase/2026-10-26/native-workspace.png)

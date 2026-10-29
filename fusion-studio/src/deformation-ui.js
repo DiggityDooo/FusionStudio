@@ -5,7 +5,7 @@ export async function deformationTransaction(editor,targetId,change,{afterChange
   if(editor.batching)throw Error('Finish the current scene operation before changing character controls.');
   const root=editor.root.getObjectByProperty('uuid',targetId);if(!root)throw Error('Character is no longer in this scene.');
   if(editor.timeline)editor.timeline.playing=false;
-  editor.ensureHistory();const scene=editor.root,before=structuredClone(editor.serialize()),selected=editor.selected?.uuid,frame=editor.timeline?.frame;
+  editor.ensureHistory();const scene=editor.root,checkpoint=editor.historyCheckpoint?.(),before=checkpoint?null:structuredClone(editor.serialize()),selected=editor.selected?.uuid,frame=editor.timeline?.frame;
   editor.batching=true;
   try{
     if(signal?.aborted)throw Error('Character update cancelled.');
@@ -15,9 +15,9 @@ export async function deformationTransaction(editor,targetId,change,{afterChange
     editor.batching=false;editor.commit();return result;
   }catch(error){
     // Never replace a different project which was opened while a worker finished.
-    if(editor.root===scene){await editor.restore(before);if(editor.timeline&&frame!==undefined)editor.timeline.frame=frame;editor.select(editor.root.getObjectByProperty('uuid',selected)||null);}
+    if(editor.root===scene){if(checkpoint)await checkpoint.restore();else await editor.restore(before);if(editor.timeline&&frame!==undefined)editor.timeline.frame=frame;editor.select(editor.root.getObjectByProperty('uuid',selected)||null);}
     throw error;
-  }finally{editor.batching=false;}
+  }finally{editor.batching=false;checkpoint?.release();}
 }
 const callbacks=new WeakMap();
 let formulaExpanded=false;

@@ -1,9 +1,17 @@
 # Fusion Studio — Implemented vs Remaining
 
 **Source of truth:** `docs/feature-ledger.json` audited against `3d-software-features-and-controls.md`  
-**As of:** 2026-10-28 (usable character LODs, source preservation and animated affine export; 1,088/1,088 unit tests pass)
+**As of:** 2026-10-29 (worker dispatch and gesture recovery; combined build and 1,126/1,126 unit tests pass)
 **Totals:** **860** ledger items · **398 done** · **462 partial** · **0 open** (~46% done, ~54% partial, 0% open)  
 **Goal status:** incomplete — each feature needs behavior-level acceptance; labels alone do not establish completion.
+
+**Latest source update:** [worker dispatch, gesture cancellation and combined verification](2026-10-29-creator-async-and-github-update.md). Concurrent character jobs retain independent replies; cancelled sliders clear delayed appearance work and stop late results. The combined unit suite and actual Electron recovery checks pass. No feature labels were promoted.
+
+**Image-history follow-up:** [faster image checkpoints and atomic scene/history recovery](2026-10-28-image-history-checkpoints.md). Measured completed character edits are approximately 38–41% faster, while saved images remain self-contained and independent. Late commit failures recover the prior undo table and pixel versions. Completed transactions still exceed 100 ms; full realism/performance acceptance remains incomplete.
+
+**Creator refit follow-up:** [joint refitting and pose preservation](2026-10-28-creator-rig-refit.md). Translated/scaled poses survive body changes, legacy reloads and a numeric GLB roundtrip. Both adult presets have actual desktop delivery/render evidence. The earlier measurements retain their original scope/date.
+
+**Earlier local follow-up:** [source editing, retained earlier copies and bounded edge candidates](2026-10-28-lod-source-workflow-and-queue.md). The 196,608-triangle 25% target now completes. Source edits can produce an updated LOD set while retaining artist edits in the earlier one; display/history recovery has regression coverage. The LOD label remains partial and the totals below are unchanged.
 
 **October 28 LOD update:** see [actual scene/export LODs, validation and remaining limits](2026-10-28-character-lods.md). Source characters remain intact beside independently reduced working copies. Preview, undo, save/reopen, GLB/Cycles delivery and posed local Genesis fixtures now have direct evidence. LOD stays partial: reduction budgets, conservative retained surfaces and missing general pose/quality acceptance remain explicit. Earlier [character integrity and publication evidence](2026-10-28-character-integrity-and-github-update.md) remains applicable to that checkpoint. Age/ancestry geometry, professional realism and full roadmap acceptance remain unverified.
 

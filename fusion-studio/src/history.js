@@ -1,8 +1,17 @@
 // Mixed history: channel deltas never serialize mesh buffers. Unmigrated edits
 // retain exact scene snapshots. The baseline is materialized only at a snapshot boundary.
+const checkpointOwner=Symbol('history-checkpoint-owner');
 export class CommandHistory {
   constructor({capture,restore,applyTransform,applyInsertion,applyRig,applyMetadata,onChange=()=>{},limit=200}){Object.assign(this,{capture,restore,applyTransform,applyInsertion,applyRig,applyMetadata,onChange,limit});this.entries=[];this.cursor=0;this.baseline=null;this.pending=new Map();this.insertions=new Map();this.rigs=new Map();this.metadataChanges=new Map();this.restoring=false;}
   reset(){this.entries=[];this.cursor=0;this.baseline=this.capture();this.pending.clear();this.insertions.clear();this.rigs.clear();this.metadataChanges.clear();this.onChange();}
+  checkpoint(){
+    if(this.restoring)throw Error('Finish undo or redo before starting a dependent update.');
+    return {[checkpointOwner]:this,entryObjects:this.entries.slice(),entries:this.entries.map(entry=>({...entry})),cursor:this.cursor,baseline:this.baseline,pending:new Map(this.pending),insertions:new Map(this.insertions),rigs:new Map(this.rigs),metadataChanges:new Map([...this.metadataChanges].map(([id,fields])=>[id,new Map(fields)]))};
+  }
+  restoreCheckpoint(state){
+    if(state?.[checkpointOwner]!==this)throw Error('The history checkpoint belongs to another document.');
+    this.entries=state.entryObjects.slice();for(let i=0;i<this.entries.length;i++){const entry=this.entries[i],saved=state.entries[i];for(const key of Object.keys(entry))if(!Object.hasOwn(saved,key))delete entry[key];Object.assign(entry,saved);}this.cursor=state.cursor;this.baseline=state.baseline;this.pending=new Map(state.pending);this.insertions=new Map(state.insertions);this.rigs=new Map(state.rigs);this.metadataChanges=new Map([...state.metadataChanges].map(([id,fields])=>[id,new Map(fields)]));this.onChange();
+  }
   materialize(){
     if(!this.pending.size&&!this.insertions.size&&!this.rigs.size&&!this.metadataChanges.size)return this.baseline;
     const doc=JSON.parse(this.baseline);

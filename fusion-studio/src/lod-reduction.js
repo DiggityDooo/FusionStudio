@@ -2,14 +2,9 @@
 // exact input vertex: all skin, UV and morph attributes have an explicit remap.
 // Chart/material borders stay fixed. Link/normal tests preserve local topology;
 // this is not a global self-intersection or Hausdorff-distance certificate.
+import {LodCandidates} from './lod-candidates.js';
 export const LOD_LIMITS={vertices:300000,triangles:200000,queue:2000000};
 const edgeKey=(a,b)=>a<b?a+':'+b:b+':'+a;
-class Heap{
- constructor(){this.items=[];}
- less(a,b){return a.cost<b.cost||a.cost===b.cost&&(a.keep<b.keep||a.keep===b.keep&&a.remove<b.remove);}
- push(value){const a=this.items;if(a.length>=LOD_LIMITS.queue)throw Error('LOD candidate budget exceeded; isolate a smaller mesh.');let i=a.length;a.push(value);while(i){const p=(i-1)>>1;if(!this.less(value,a[p]))break;a[i]=a[p];i=p;}a[i]=value;}
- pop(){const a=this.items,first=a[0],last=a.pop();if(a.length){let i=0;while(i*2+1<a.length){let j=i*2+1;if(j+1<a.length&&this.less(a[j+1],a[j]))j++;if(!this.less(a[j],last))break;a[i]=a[j];i=j;}a[i]=last;}return first;}
-}
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],sub=(a,b)=>a.map((v,i)=>v-b[i]);
 export function reduceLod(input,{keep=.5,maxNormalAngle=60}={}){
  const started=performance.now(),{positions,index,materials}=input||{},n=positions?.length/3,count=index?.length/3;
@@ -30,10 +25,11 @@ export function reduceLod(input,{keep=.5,maxNormalAngle=60}={}){
  for(const v of materialSets.keys())if(materialSets[v].size>1)locked[v]=1;
  for(const edge of edges.values())if(edge.faces.length!==2){locked[edge.a]=locked[edge.b]=1;if(edge.faces.length>2)nonManifold++;}
  if(degenerate||nonManifold)warnings.push('Source has degenerate, duplicate or non-manifold regions; affected vertices are protected.');
- const heap=new Heap(),target=Math.max(1,Math.ceil(count*keep)),cos=Math.cos(maxNormalAngle*Math.PI/180);
+ const heap=new LodCandidates(LOD_LIMITS.queue),target=Math.max(1,Math.ceil(count*keep)),cos=Math.cos(maxNormalAngle*Math.PI/180);
  const cost=(a,b,v)=>{const q=quadrics[a].map((x,i)=>x+quadrics[b][i]),[x,y,z]=p[v];return Math.max(0,q[0]*x*x+2*q[1]*x*y+2*q[2]*x*z+2*q[3]*x+q[4]*y*y+2*q[5]*y*z+2*q[6]*y+q[7]*z*z+2*q[8]*z+q[9]);};
  const schedule=(a,b)=>{if(a===b||!active[a]||!active[b]||locked[a]&&locked[b])return;const ca=cost(a,b,a),cb=cost(a,b,b),keep=locked[a]?a:locked[b]?b:ca<cb||ca===cb&&a<b?a:b,remove=keep===a?b:a;heap.push({keep,remove,cost:keep===a?ca:cb,ka:revision[keep],ra:revision[remove]});};
  if(keep<1)for(const {a,b}of edges.values())schedule(a,b);
+ edges.clear();
  const neighbors=v=>{const out=new Set();for(const f of adj[v])for(const id of faces[f])if(id!==v)out.add(id);return out;};
  while(remaining>target&&heap.items.length){
   const row=heap.pop(),a=row.keep,b=row.remove;if(!active[a]||!active[b]||row.ka!==revision[a]||row.ra!==revision[b]||locked[b])continue;const travel=Math.hypot(...sub(p[a],p[b])),radius=Math.max(radii[a],radii[b]+travel);if(radius>maximumDisplacement)continue;
@@ -48,6 +44,7 @@ export function reduceLod(input,{keep=.5,maxNormalAngle=60}={}){
   }
   if(!valid)continue;
   const affected=new Set([...na,...nb,a,b]);
+  for(const other of nb)heap.delete(b,other);
   for(const f of touched){faceKeys.delete([...faces[f]].sort((x,y)=>x-y).join(':'));for(const v of faces[f])adj[v].delete(f);alive[f]=0;}
   for(const [f,t]of patch){faces[f]=t;alive[f]=1;faceKeys.set([...t].sort((x,y)=>x-y).join(':'),f);for(const v of t)adj[v].add(f);}
   remaining-=commonFaces.length;collapses++;active[b]=0;parents[b]=a;radii[a]=radius;maxEndpointTravel=Math.max(maxEndpointTravel,travel);for(let j=0;j<10;j++)quadrics[a][j]+=quadrics[b][j];
@@ -57,5 +54,5 @@ export function reduceLod(input,{keep=.5,maxNormalAngle=60}={}){
  const used=[],map=new Map(),out=[],sourceFaces=[];for(let f=0;f<count;f++)if(alive[f]){sourceFaces.push(f);for(const v of faces[f]){if(!map.has(v)){map.set(v,used.length);used.push(v);}out.push(map.get(v));}}
  const representatives=Uint32Array.from({length:n},(_,i)=>{let v=i;while(parents[v]!==v)v=parents[v];let at=i;while(parents[at]!==v){const next=parents[at];parents[at]=v;at=next;}return map.has(v)?v:0xffffffff;});
  if(remaining>target)warnings.push('Protected borders or topology/normal/displacement limits prevented the requested triangle count.');
- return {sources:Uint32Array.from(used),index:Uint32Array.from(out),faceSources:Uint32Array.from(sourceFaces),representatives,diagnostics:{version:1,method:'endpoint-qem',sourceVertices:n,sourceTriangles:count,outputVertices:used.length,outputTriangles:remaining,targetTriangles:target,achieved:remaining<=target,collapses,protectedVertices:locked.reduce((s,v)=>s+v,0),maxEndpointTravel,maxClusterDisplacementBound:radii.reduce((s,v)=>Math.max(s,v),0),maximumDisplacement,normalLimitDegrees:maxNormalAngle,milliseconds:performance.now()-started,warnings}};
+ return {sources:Uint32Array.from(used),index:Uint32Array.from(out),faceSources:Uint32Array.from(sourceFaces),representatives,diagnostics:{version:1,method:'endpoint-qem',sourceVertices:n,sourceTriangles:count,outputVertices:used.length,outputTriangles:remaining,targetTriangles:target,achieved:remaining<=target,collapses,protectedVertices:locked.reduce((s,v)=>s+v,0),maxEndpointTravel,maxClusterDisplacementBound:radii.reduce((s,v)=>Math.max(s,v),0),maximumDisplacement,normalLimitDegrees:maxNormalAngle,candidateQueue:{version:1,method:'indexed-edges',peakEntries:heap.peak,limit:LOD_LIMITS.queue},milliseconds:performance.now()-started,warnings}};
 }

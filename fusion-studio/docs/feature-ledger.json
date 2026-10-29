@@ -79,7 +79,13 @@
         "tests/remaining-features.test.mjs",
         "src/remaining-features.js",
         "src/scene-foundation.js",
-        "tests/scene-foundation.test.mjs"
+        "tests/scene-foundation.test.mjs",
+        "tests/history-image-checkpoints.test.mjs",
+        "tests/character-creator-recovery.cjs",
+        "src/image-snapshots.js",
+        "src/history-images.js",
+        "src/scene-serialization.js",
+        "docs/progress/2026-10-28-image-history-checkpoints.md"
       ],
       "note": "Named collections with visibility + selection isolation via localView."
     },
@@ -105,7 +111,7 @@
         "src/scene-foundation.js",
         "tests/scene-foundation.test.mjs"
       ],
-      "note": "CommandHistory journal + modifier-stack non-destructive path; undoMeta."
+      "note": "Mixed CommandHistory journal and persistent modifier stacks. Internal image snapshots preserve public pixel isolation, with leased rollback resources and atomic scene/journal restoration after late commit failures and pruning. Insertion replay owns its metadata. Dated evidence records actual limits; this label is not a release-wide or every-operator certification."
     },
     "A1 Reference image planes, background images and blueprints": {
       "status": "done",
@@ -2883,9 +2889,19 @@
         "tests/character-creator.test.mjs",
         "tests/character-creator-ui.cjs",
         "src/creator-data.js",
-        "tests/creator-optics.test.mjs"
+        "tests/creator-optics.test.mjs",
+        "tests/creator-rig-refit.test.mjs",
+        "tests/creator-interactive-performance.cjs",
+        "src/creator-rig-refit.js",
+        "docs/progress/2026-10-28-creator-rig-refit.md",
+        "src/creator-worker-client.js",
+        "src/creator-gesture.js",
+        "tests/creator-worker-client.test.mjs",
+        "tests/creator-gesture.test.mjs",
+        "tests/creator-gesture-ui.cjs",
+        "docs/progress/2026-10-29-creator-async-and-github-update.md"
       ],
-      "note": "Adult body/face/proportion controls and separate skin tones on verified CC0 bases. Age-detail shading does not implement age geometry; ancestry/age control families and the full professional public/private realism matrix remain incomplete."
+      "note": "Adult body/face/proportion controls and separate skin tones on verified CC0 bases. Rest-relative HM08 joint refitting preserves translated/scaled poses through body changes, reload and verified GLB skinning; legacy binds remain as saved. Actual interactive timing limits are recorded. Age-detail shading does not implement age geometry; ancestry/age families and the professional public/private realism matrix remain incomplete."
     },
     "A16 Morph-based customization": {
       "status": "done",
@@ -2992,6 +3008,7 @@
       "evidence": [
         "tests/character-lod.test.mjs",
         "tests/lod-reduction.test.mjs",
+        "tests/lod-candidates.test.mjs",
         "tests/affine-frames.test.mjs",
         "tests/character-lods-ui.cjs",
         "tests/character-lods-private.cjs",
@@ -2999,10 +3016,12 @@
         "src/character-lods.js",
         "src/character-lods-ui.js",
         "src/lod-reduction.js",
+        "src/lod-candidates.js",
         "src/lod-geometry.js",
-        "docs/progress/2026-10-28-character-lods.md"
+        "docs/progress/2026-10-28-character-lods.md",
+        "docs/progress/2026-10-28-lod-source-workflow-and-queue.md"
       ],
-      "note": "Usable independent scene levels replace the discarded stride-sampling prototype. Bounded endpoint-QEM preserves source cages, remaps skin/morph/UV/material attributes, reports unmet targets, and supports cancellable worker generation, preview, undo, reload and GLB/Cycles delivery. Public and posed local Genesis 8 male/female fixtures pass. Partial: no general pose/self-intersection quality certificate, skeleton/groom reduction or complete production acceptance; the 196608-triangle 25% benchmark exceeds the candidate budget. See dated evidence for exact limits."
+      "note": "Usable independent scene levels replace the discarded stride-sampling prototype. Bounded endpoint-QEM preserves source cages and mapped skin/morph/UV/material data, with cancellable workers, preview/history/reload and GLB/Cycles delivery. Source editing and rebuilding retain previous artist-edited sets. Indexed edge candidates repair the former queue failure; the 196608-triangle 25% benchmark now completes with 294014 peak candidates. Public and posed local Genesis 8 fixtures have direct evidence. Partial: no general pose/self-intersection quality certificate, skeleton/groom reduction or full production acceptance; asynchronous timings and unmet ratios remain explicit."
     },
     "A16 Digital double and look-dev workflows": {
       "status": "partial",

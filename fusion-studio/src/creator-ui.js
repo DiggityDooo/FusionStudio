@@ -2,6 +2,7 @@ import {loadCreatorLibrary,createDetailedCharacter,changeCreator,evaluateCreator
 import {loadCreatorSkin} from './creator-appearance.js';
 import {creatorInputs,SKIN_TONES,seededRandomize} from './creator-data.js';
 import {deformationTransaction} from './deformation-ui.js';
+import {runCreatorGesture} from './creator-gesture.js';
 import {enforceJointLimits} from './joint-limits.js';
 import './creator.css';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -49,12 +50,7 @@ export function registerCreator({editor,operators,api,refresh,afterChange=async(
  const endShape=async(apply,signal)=>{const s=editor.creatorShapeSession;if(!s)throw Error('No shape edit is active.');const recipe=apply?finishShapeEditingCopy(s.owner,s.copy):null;editor.meshTools.setMode('object');s.copy.removeFromParent();s.copy.geometry.dispose();s.copy.material.dispose();s.owner.visible=s.visible;editor.creatorShapeSession=null;editor.batching=false;editor.select(s.owner);if(apply)return transact(s.owner.uuid,root=>changeCreator(root,recipe),signal);refresh();};
  operators.register({id:'character.creator_shape_apply',label:'Apply sculpted shape key',undo:'snapshot',execute:(_,p,signal)=>endShape(true,signal)});
  operators.register({id:'character.creator_shape_cancel',label:'Cancel shape edit',undo:'none',execute:()=>endShape(false)});
- operators.register({id:'character.creator_gesture',label:'Adjust character slider',hidden:true,undo:'snapshot',execute:(_,p,signal)=>transact(p.targetId,async root=>{
-  let latest=null,runner=null,error=null,settleTimer=null;const settle=()=>{settleTimer=null;updateCreatorAppearance(root);};
-  const process=async()=>{while(latest){const recipe=latest;latest=null;try{const result=await evaluate(root,recipe,signal);changeCreator(root,recipe,{result,deferAttachments:true});}catch(e){error=e;break;}}clearTimeout(settleTimer);settleTimer=setTimeout(settle,120);}; // attachments rebuild once the gesture pauses, not per tick
-  p.session.preview=recipe=>{clearTimeout(settleTimer);latest=recipe;if(!runner)runner=process().finally(()=>{runner=null;});};p.session.ready=true;
-  const abort=()=>p.session.finish(null);signal.addEventListener('abort',abort,{once:true});try{const final=await p.session.ended;if(!final||signal.aborted)throw Error('Character slider cancelled.');p.session.preview(final);if(runner)await runner;clearTimeout(settleTimer);updateCreatorAppearance(root);if(error)throw error;}finally{signal.removeEventListener('abort',abort);}
- },signal)});
+ operators.register({id:'character.creator_gesture',label:'Adjust character slider',hidden:true,undo:'snapshot',execute:(_,p,signal)=>transact(p.targetId,root=>runCreatorGesture(p.session,{signal,evaluate:(recipe,requestSignal)=>evaluate(root,recipe,requestSignal),apply:(recipe,result)=>changeCreator(root,recipe,{result,deferAttachments:true}),settle:()=>updateCreatorAppearance(root)}),signal)});
 }
 export function wireCreator({editor,operators,run,refresh,activate}){
  const $=s=>document.querySelector(s),root=selected(editor),c=root?.userData.fusion_creator;

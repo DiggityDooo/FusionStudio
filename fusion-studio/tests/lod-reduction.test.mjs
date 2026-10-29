@@ -8,7 +8,7 @@ import {ProjectLoader} from '../src/project-loader.js';
 import {creatorRenderMaterials} from '../src/character-creator.js';
 import {Editor} from '../src/editor.js';
 import {SceneEvaluator} from '../src/evaluation.js';
-import {createCharacterLods} from '../src/character-lods-ui.js';
+import {createCharacterLods,editCharacterLodSource,rebuildCharacterLods,previewCharacterLod,characterLodSourceLinks} from '../src/character-lods-ui.js';
 
 function topology(g){const ids=g.index.array,edges=new Map(),used=new Set();for(let f=0;f<ids.length;f+=3){const t=Array.from(ids.slice(f,f+3));assert.equal(new Set(t).size,3);for(let i=0;i<3;i++){used.add(t[i]);const edge=[t[i],t[(i+1)%3]].sort((a,b)=>a-b).join(':');edges.set(edge,(edges.get(edge)||0)+1);}}return {euler:used.size-edges.size+ids.length/3,boundary:[...edges].filter(([,n])=>n===1).map(([key])=>key),nonManifold:[...edges.values()].filter(n=>n>2).length};}
 function rig(detail=32){
@@ -40,6 +40,11 @@ test('non-indexed copies weld only matching attribute corners and malformed resu
 test('unused source vertices cannot inflate reduction limits and forged diagnostics are rejected',()=>{
  const {g}=rig(16),input=lodInput(g),baseline=reduceLod(input,{keep:.5});const extended={...input,positions:new Float64Array([...input.positions,999999,999999,999999])},result=reduceLod(extended,{keep:.5});assert.equal(result.diagnostics.maximumDisplacement,baseline.diagnostics.maximumDisplacement);assert.equal(result.representatives.at(-1),0xffffffff);
  const forged=reduceLod(input,{keep:.5});forged.diagnostics.maximumDisplacement*=10;assert.throws(()=>remapLodGeometry(g,forged,input),/source limits/);const falseReport=reduceLod(input,{keep:.5});falseReport.diagnostics.achieved=!falseReport.diagnostics.achieved;assert.throws(()=>remapLodGeometry(g,falseReport,input),/source limits/);
+ const falseQueue=reduceLod(input,{keep:.5});falseQueue.diagnostics.candidateQueue.peakEntries=input.index.length+1;assert.throws(()=>remapLodGeometry(g,falseQueue,input),/queue diagnostics/);
+});
+
+test('196608-triangle reduction reaches 25 percent with a queue bounded by current edge candidates',t=>{
+ const g=new T.TorusGeometry(.5,.15,128,768),input=lodInput(g),before=topology(g),result=reduceLod(input,{keep:.25}),out=remapLodGeometry(g,result,input),after=topology(out);assert.equal(result.diagnostics.achieved,true);assert.equal(out.index.count/3,49152);assert.ok(result.diagnostics.candidateQueue.peakEntries<300000);assert.equal(after.euler,before.euler);assert.equal(after.nonManifold,0);assert.equal(after.boundary.length,before.boundary.length);assert.ok(result.diagnostics.maxClusterDisplacementBound<=result.diagnostics.maximumDisplacement);t.diagnostic(JSON.stringify(result.diagnostics));
 });
 test('LOD worker rejects wrong revisions and terminates on cancellation or worker failure',async()=>{
  const context={projectId:'project',objectId:'character',revision:7,inputHash:'hash',requestId:13};let terminated=0;
@@ -54,8 +59,26 @@ test('LOD dependency operation commits once, keeps the retained source and survi
  const {root,g}=rig(32),e=editor(root),cursor=e.journal.cursor,original=Array.from(g.attributes.position.array),group=await createCharacterLods(e,{targetId:root.uuid,levels:[1,.5]},null,{compute});assert.equal(e.journal.cursor,cursor+1);assert.equal(e.root.children.length,2);assert.equal(group.userData.fusion_lod_set.context.objectId,root.uuid);assert.equal(group.userData.fusion_lod_set.context.projectId,e.root.uuid);assert.deepEqual(Array.from(g.attributes.position.array),original);
  await e._undo();assert.equal(e.root.children.length,1);assert.equal(e.root.getObjectByProperty('uuid',root.uuid).visible,true);await e._redo();validateLodSets(e.root);assert.equal(e.root.children.length,2);assert.equal(e.root.getObjectByProperty('uuid',root.uuid).visible,false);
 });
+
+test('source editing and regeneration retain earlier copies and preserve the active level across history and reopen',async()=>{
+ const {root,mesh}=rig(32),e=editor(root),first=await createCharacterLods(e,{targetId:root.uuid,levels:[1,.5]},null,{compute});selectCharacterLod(e.root,first,1);e.commit();const firstId=first.uuid,oldPart=first.children[1].getObjectByName(mesh.name),oldPositions=Array.from(oldPart.geometry.attributes.position.array);oldPart.name='Artist edited copy';e.commit();
+ assert.match(characterLodSourceLinks(root),new RegExp(firstId));const source=await editCharacterLodSource(e,{targetId:firstId});assert.equal(source,root);assert.equal(e.selected,root);assert.equal(root.visible,true);assert.equal(first.visible,false);assert.equal(first.userData.fusion_lod_set.active,-1);
+ const sourcePoint=mesh.geometry.attributes.position.getX(500);mesh.geometry.attributes.position.setX(500,sourcePoint+.005);mesh.morphTargetInfluences[0]=.65;e.commit();selectCharacterLod(e.root,first,1);e.select(first);e.commit();const cursor=e.journal.cursor;
+ const second=await rebuildCharacterLods(e,{targetId:firstId},null,{compute}),id=second.uuid;assert.equal(e.journal.cursor,cursor+1);assert.equal(first.visible,false);assert.equal(second.visible,true);assert.equal(second.userData.fusion_lod_set.active,1);assert.equal(second.userData.fusion_lod_set.regeneratedFrom,firstId);assert.equal(second.userData.fusion_lod_set.sourceObjectId,root.uuid);assert.equal(second.userData.fusion_lod_set.sourceVisible,true);assert.equal(root.visible,false);assert.deepEqual(Array.from(oldPart.geometry.attributes.position.array),oldPositions);assert.equal(oldPart.name,'Artist edited copy');assert.equal(second.children[1].getObjectByName(mesh.name).morphTargetInfluences[0],.65);
+ await e._undo();assert.equal(e.root.getObjectByProperty('uuid',id),undefined);assert.equal(e.root.getObjectByProperty('uuid',firstId).visible,true);await e._redo();assert.equal(e.root.getObjectByProperty('uuid',id).visible,true);const reopened=await new ProjectLoader().parseAsync(JSON.parse(JSON.stringify(e.serialize())));validateLodSets(reopened);assert.equal(reopened.getObjectByProperty('uuid',id).userData.fusion_lod_set.regeneratedFrom,firstId);assert.equal(reopened.getObjectByProperty('uuid',firstId).getObjectByName('Artist edited copy').name,'Artist edited copy');
+});
+
+test('cancelled regeneration and missing or derived source links cannot replace previous LOD edits',async()=>{
+ const {root}=rig(32),e=editor(root),first=await createCharacterLods(e,{targetId:root.uuid,levels:[.5]},null,{compute}),before=JSON.stringify(e.serialize()),cursor=e.journal.cursor,controller=new AbortController();
+ await assert.rejects(rebuildCharacterLods(e,{targetId:first.uuid},controller.signal,{compute:(parts,levels)=>{controller.abort();return compute(parts,levels);}}),/cancelled|changed/);equalDocument(JSON.parse(JSON.stringify(e.serialize())),JSON.parse(before),'cancelled rebuild');assert.equal(e.journal.cursor,cursor);
+ first.userData.fusion_lod_set.sourceObjectId='missing';assert.throws(()=>editCharacterLodSource(e,{targetId:first.uuid}),/source is missing/);assert.throws(()=>rebuildCharacterLods(e,{targetId:first.uuid}),/source is missing/);first.userData.fusion_lod_set.sourceObjectId=first.children[0].uuid;assert.throws(()=>rebuildCharacterLods(e,{targetId:first.uuid}),/derived LOD set/);
+});
+
+test('failed LOD preview and source-edit history commits restore visibility, selection and timeline frame',async()=>{
+ for(const edit of [false,true]){const {root}=rig(32),e=editor(root),set=await createCharacterLods(e,{targetId:root.uuid,levels:[1,.5]},null,{compute}),before=JSON.stringify(e.serialize()),cursor=e.journal.cursor;e.timeline.frame=11;e.commit=()=>{throw Error('Injected display history failure');};await assert.rejects(edit?editCharacterLodSource(e,{targetId:set.uuid}):previewCharacterLod(e,{targetId:set.uuid,index:1}),/display history failure/);equalDocument(JSON.parse(JSON.stringify(e.serialize())),JSON.parse(before),'failed display update');assert.equal(e.selected.uuid,set.uuid);assert.equal(e.journal.cursor,cursor);assert.equal(e.timeline.frame,11);assert.equal(e.batching,false);}
+});
 test('LOD worker cancellation, invalid geometry and failed history commits leave the scene recoverable',async()=>{
- for(const mode of ['cancel','malformed','commit']){const {root}=rig(32),e=editor(root),before=JSON.stringify(e.serialize()),cursor=e.journal.cursor,controller=new AbortController();const job=(parts,levels)=>{const result=compute(parts,levels);if(mode==='cancel')controller.abort();if(mode==='malformed')result[0].levels[0].index[0]=999999;return result;};if(mode==='commit')e.commit=()=>{throw Error('Injected history failure');};
+ for(const mode of ['cancel','malformed','commit','post-commit']){const {root}=rig(32),e=editor(root),before=JSON.stringify(e.serialize()),cursor=e.journal.cursor,controller=new AbortController();const job=(parts,levels)=>{const result=compute(parts,levels);if(mode==='cancel')controller.abort();if(mode==='malformed')result[0].levels[0].index[0]=999999;return result;};if(mode==='commit')e.commit=()=>{throw Error('Injected history failure');};if(mode==='post-commit'){const commit=e.commit.bind(e);e.commit=()=>{commit();throw Error('Injected history failure');};}
   await assert.rejects(createCharacterLods(e,{targetId:root.uuid,levels:[.5]},controller.signal,{compute:job}),/cancelled|changed|malformed|history failure/);equalDocument(JSON.parse(JSON.stringify(e.serialize())),JSON.parse(before),mode);assert.equal(e.journal.cursor,cursor);assert.equal(e.batching,false);
  }
 });
