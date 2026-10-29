@@ -1,11 +1,11 @@
 # Fusion Studio — Implemented vs Remaining
 
 **Source of truth:** `docs/feature-ledger.json` audited against `3d-software-features-and-controls.md`  
-**As of:** 2026-10-28 (character appearance, bump preservation, pose reflection and expression recovery; full discovered suite 1,066/1,066)  
+**As of:** 2026-10-28 (usable character LODs, source preservation and animated affine export; 1,088/1,088 unit tests pass)
 **Totals:** **860** ledger items · **398 done** · **462 partial** · **0 open** (~46% done, ~54% partial, 0% open)  
 **Goal status:** incomplete — each feature needs behavior-level acceptance; labels alone do not establish completion.
 
-**October 28 development update:** see [character integrity, publication evidence and remaining gaps](2026-10-28-character-integrity-and-github-update.md). The full parametric-creator entry was returned to partial because age/ancestry geometry and professional realism remain unverified. LOD generation currently discards returned geometry; its saved counts are not usable scene/export assets. The 1,066 passing unit tests do not establish the missing workflows. A real desktop expression/mirror/save/export check also passes.
+**October 28 LOD update:** see [actual scene/export LODs, validation and remaining limits](2026-10-28-character-lods.md). Source characters remain intact beside independently reduced working copies. Preview, undo, save/reopen, GLB/Cycles delivery and posed local Genesis fixtures now have direct evidence. LOD stays partial: reduction budgets, conservative retained surfaces and missing general pose/quality acceptance remain explicit. Earlier [character integrity and publication evidence](2026-10-28-character-integrity-and-github-update.md) remains applicable to that checkpoint. Age/ancestry geometry, professional realism and full roadmap acceptance remain unverified.
 
 **October 27 repair audit:** see [build, integration and integrity repairs](2026-10-27-review-repairs.md). Six overstated entries were returned to partial. The section-count table reflects the current ledger. Thematic lists retain earlier checkpoint context; zero open labels and done labels do not certify full feature behavior.
 

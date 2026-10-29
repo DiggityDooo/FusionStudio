@@ -21,6 +21,7 @@ export function inspectObject(object){
 export function checkCompatibility(action,stats,context={}){
   const issues=[];
   const add=(severity,title,detail)=>issues.push({severity,title,detail});
+  if(action==='character-lod')add('warning','Generate independent character LOD copies','The original cage, recipes and controllers stay on the retained source. Reduced copies keep endpoint-mapped UVs, material regions, weights, shape keys and remapped local animation clips. Global timeline/controller dependencies and native shader graphs are not transferred. Reduction changes the surface and may stop above the requested ratio to protect borders, topology or normals. Eye and bound strand-hair surfaces remain full resolution. Inspect posing, shapes and shading before export; only the selected preview level is visible.');
   const topology=[...MESH_OPERATIONS,'extrude','delete-face','sculpt','cloth'];
   if(action==='detach-native')add('warning','Native shader and scene data will be detached','A converted copy uses Fusion viewport geometry and generic materials. Original Blender shader graphs, lights, world and camera effects stay with the preserved source.');
   if(stats.nativeBlend&&(topology.includes(action)||['sculpt','extrude','delete-face',...EXPORTS].includes(action)))add('warning','Preserved Blender render data will not follow mesh conversion','Keep the preserved source. The converted working mesh uses approximate viewport materials; native shader graphs and scene presentation are not carried by generic interchange.');

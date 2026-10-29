@@ -14,6 +14,17 @@ import {createIK,IKHandles} from '../src/ik.js';
 import {OperatorRegistry} from '../src/operators.js';
 import {wireDeformation} from '../src/deformation-ui.js';
 const push=url=>({op:'push',url}),scalar=val=>({op:'push',val});
+test('observed legacy mult stages match multiply accumulation without altering source formulas',()=>{
+ const channels=[{id:'output',value:2},{id:'control',value:3}],formulas=[{output:'output',operations:[scalar(4)]},{output:'output',stage:'mult',operations:[push('control'),scalar(.5),{op:'mult'}]},{output:'output',stage:'multiply',operations:[scalar(.25)]}],original=structuredClone(formulas);
+ const report=evaluateFormulas(channels,formulas);assert.equal(report.valid,true,JSON.stringify(report.errors));assert.equal(report.values['output?value'],(2+4)*(3*.5)*.25);assert.deepEqual(formulas,original);const documented=structuredClone(formulas);documented[1].stage='multiply';assert.deepEqual(evaluateFormulas(channels,documented).values,report.values);const invalid=structuredClone(formulas);invalid[1].stage='arbitrary';assert.equal(evaluateFormulas(channels,invalid).valid,false);
+});
+
+test('file-verified unit-scale inputs resolve legacy stages while scale outputs remain explicitly unbound',()=>{
+ const {root,a,b,state}=fixture();a.userData.fusion_dson_rotation.scaleInputs=[{property:'scale/general',value:1,aliases:['parent:#a?scale/general']}];b.userData.fusion_dson_rotation.scaleInputs=[{property:'scale/general',value:1,aliases:['child:#b?scale/general']}];state.formulas.push({output:'child:#b?scale/general',stage:'mult',operations:[push('parent:#a?scale/general')]});
+ const report=evaluateCharacter(root);assert.equal(report.valid,true,JSON.stringify(report.errors));assert.equal(report.values['b?scale/general'],1);assert.ok(report.warnings.some(r=>r.channel==='b?scale/general'));assert.deepEqual(b.scale.toArray(),[1,1,1]);
+ a.scale.x=1.1;const unsupported=evaluateCharacter(root);assert.equal(unsupported.valid,false);assert.ok(unsupported.errors.some(r=>/Unresolved/.test(r.message)));a.scale.x=1;
+ a.userData.fusion_dson_rotation.scaleInputs[0].aliases=['different:#other?scale/general'];assert.equal(evaluateCharacter(root).valid,false);
+});
 function fixture(){
  const root=new THREE.Group(),a=new THREE.Bone(),b=new THREE.Bone();a.name='a';b.name='b';a.add(b);b.position.y=.4;root.add(a);
  for(const bone of [a,b]){bone.userData.fusion_source_quaternion=[0,0,0,1];bone.userData.fusion_dson_rotation={version:1,id:bone.name,order:'XYZ',source:[0,0,0],rest:[0,0,0,1],basis:[0,0,0,1],imported:[0,0,0,1],aliases:[],unitScale:true};}

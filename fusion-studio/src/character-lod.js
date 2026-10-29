@@ -1,28 +1,8 @@
-import * as THREE from 'three';
 import {bonesOf} from './rig-paths.js';
 import {initializeDeformation,evaluateCharacter} from './deformation.js';
 import {changeCreator} from './character-creator.js';
 
-/** Generate simplified LOD meshes by stride-sampling indexed geometry (preview LODs, not production remesh). */
-export function generateCharacterLods(root,{levels=[1,.5,.25]}={}){
- if(!Array.isArray(levels)||!levels.length||levels.length>6||levels.some(l=>!Number.isFinite(l)||l<=0||l>1))throw Error('LOD levels must be 1–6 fractions in (0, 1].');
- const lods=[];
- root.traverse(n=>{
-  if(!n.isMesh||!n.geometry?.attributes.position)return;
-  const group={name:n.name,levels:[]};
-  for(const keep of levels){
-   const g=n.geometry.clone(),index=g.index,pos=g.attributes.position;
-   if(index&&keep<1){const stride=Math.max(1,Math.round(1/keep)),tris=[];
-    for(let i=0;i<index.count;i+=3*stride){if(i+2>=index.count)break;tris.push(index.getX(i),index.getX(i+1),index.getX(i+2));}
-    if(tris.length>=3)g.setIndex(tris);}
-   else if(!index&&keep<1){const stride=Math.max(1,Math.round(1/keep)),count=Math.floor(pos.count/stride)*3;if(count>=3){const arr=new Float32Array(count);for(let i=0;i<count;i++)arr[i]=pos.array[Math.floor(i/3)*stride*3+(i%3)];g.setAttribute('position',new THREE.BufferAttribute(arr,3));}}
-   g.computeVertexNormals();g.computeBoundingBox();group.levels.push({keep,vertices:g.attributes.position.count,triangles:(g.index?.count||g.attributes.position.count)/3,geometry:g});
-  }
-  lods.push(group);
- });
- root.userData.fusion_lods={version:1,levels,parts:lods.map(p=>({name:p.name,levels:p.levels.map(l=>({keep:l.keep,vertices:l.vertices,triangles:l.triangles}))}))};
- return lods;
-}
+export {generateCharacterLods} from './character-lods.js';
 
 export function applyBoneScale(root,scales={}){
  const bones=bonesOf(root);let n=0;

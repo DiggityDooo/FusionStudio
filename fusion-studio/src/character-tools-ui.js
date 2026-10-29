@@ -1,5 +1,6 @@
 import {GROOM_LIBRARY,browLashGuides,createGroom,combGuide,cutGuide,growGuide,puffGuide,smoothGuide,applyFrizz,applyCurl,applyWave,applyBraid,applyFlyaways,applyWindGravity,simulateHairDynamics,createFurOnMesh,generateStrandField,runGroomNodes,setHairShading,hairToMesh,optimizeGroomLod,exportGroomCache,interpolateChildren} from './hair-groom.js';
-import {generateCharacterLods,applyBoneScale,applyExpressionPreset,EXPRESSION_PRESETS,listBaseMeshes} from './character-lod.js';
+import {applyBoneScale,applyExpressionPreset,EXPRESSION_PRESETS,listBaseMeshes} from './character-lod.js';
+import {registerCharacterLods,characterLodPanel,wireCharacterLods} from './character-lods-ui.js';
 import {addSkinLayer,compositeSkinLayers,ensureSkinStack,skinLayerPresets} from './skin-layers.js';
 import {bonesOf} from './rig-paths.js';
 import {deformationTransaction} from './deformation-ui.js';
@@ -8,6 +9,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 
 export function characterToolsPanel(root){
  if(!root)return '';
+ if(root.userData.fusion_lod_set)return characterLodPanel(root);
  const bones=bonesOf(root),groom=root.userData.fusion_groom,bases=listBaseMeshes();
  const boneOpts=bones.map(b=>`<option value="${esc(b.name)}">${esc(b.name)}</option>`).join('');
  const exprOpts=Object.entries(EXPRESSION_PRESETS).map(([id,p])=>`<option value="${esc(id)}">${esc(p.label)}</option>`).join('');
@@ -20,7 +22,7 @@ export function characterToolsPanel(root){
 <label class="field-label">Bone scale<select id="ct-bone">${boneOpts||'<option value="">No bones</option>'}</select></label>
 <label class="field-label">Scale<input id="ct-bone-s" type="range" min="0.5" max="1.5" step="0.05" value="1"></label>
 <button id="ct-bone-apply" class="full-button" ${bones.length?'':'disabled'}>Apply bone scale</button>
-<button id="ct-lod" class="full-button">Generate LODs (1 / 0.5 / 0.25)</button>
+<button id="ct-lod" class="full-button">Generate LOD copies (1 / 0.5 / 0.25)</button><p class="microcopy">Review compatibility first. The source stays intact; generated levels retain mapped skin, shape and material data.</p>
 <div class="section-heading">HAIR GROOM</div>
 <label class="field-label">Preset<select id="ct-groom-lib"><option value="short_bob">Short bob</option><option value="long_straight">Long straight</option><option value="eyebrow">Eyebrows</option><option value="eyelash">Eyelashes</option><option value="beard">Beard</option></select></label>
 <button id="ct-groom-load" class="full-button">Load groom onto character</button>
@@ -50,13 +52,14 @@ export function characterToolsPanel(root){
 }
 
 export function wireCharacterTools({editor,run,refresh,notify}){
+ if(document.querySelector('#character-lod-panel')){wireCharacterLods(editor,run,refresh);return;}
  const panel=document.querySelector('#character-tools');if(!panel)return;
  const $=s=>panel.querySelector(s);
  const root=()=>editor.selected;const groom=()=>root()?.userData.fusion_groom;const gid=()=>groom()?.guides[0]?.id;
  const withGroom=fn=>run(()=>{const r=root(),g=groom();if(!r||!g)throw Error('Load a groom first.');fn(r,g);editor.commit();refresh();});
  $('#ct-expr-apply').onclick=()=>run(async()=>{const r=root();if(!r)throw Error('Select a character.');const n=await editor.operators.run('character.expression',{targetId:r.uuid,name:$('#ct-expr').value,weight:Number($('#ct-expr-w').value)});const current=editor.root.getObjectByProperty('uuid',r.uuid),missing=current?.userData.fusion_expression?.unsupported||[];notify(`Expression applied (${n} bindings).${missing.length?' Unavailable: '+missing.join(', '):''}`);refresh();});
  $('#ct-bone-apply').onclick=()=>run(()=>{const r=root();if(!r)throw Error('Select a character.');const name=$('#ct-bone').value;if(!name)throw Error('No bone selected.');applyBoneScale(r,{[name]:Number($('#ct-bone-s').value)});editor.commit();refresh();});
- $('#ct-lod').onclick=()=>run(()=>{const r=root();if(!r)throw Error('Select a character.');const lods=generateCharacterLods(r);notify(`LOD groups: ${lods.length}`);editor.commit();refresh();});
+ $('#ct-lod').onclick=()=>run(async()=>{const r=root();if(!r)throw Error('Select a character.');const result=await editor.operators.run('character.generate_lods',{targetId:r.uuid});if(result)notify(`Created ${result.children.length} LOD copies; inspect each level and its diagnostics.`);refresh();});
  $('#ct-groom-load').onclick=()=>run(()=>{const r=root();if(!r)throw Error('Select a character.');const key=$('#ct-groom-lib').value;r.userData.fusion_groom=['eyebrow','eyelash','beard'].includes(key)?browLashGuides(key):(GROOM_LIBRARY[key]?.()||createGroom());editor.commit();refresh();});
  $('#ct-comb').onclick=()=>withGroom((_,g)=>combGuide(g,gid(),[0,0,1],.4));
  $('#ct-cut').onclick=()=>withGroom((_,g)=>cutGuide(g,gid(),.7));
@@ -81,7 +84,7 @@ export function wireCharacterTools({editor,run,refresh,notify}){
 }
 
 export function registerCharacterTools(registry,editor,{afterChange=async()=>{}}={}){
- registry.register({id:'character.generate_lods',label:'Generate character LODs',undo:'snapshot',poll:()=>!!editor.selected,execute:(_,p)=>{generateCharacterLods(editor.selected,{levels:p.levels||[1,.5,.25]});editor.commit();}});
+ registerCharacterLods(registry,editor);
  registry.register({id:'character.bone_scale',label:'Bone scale',undo:'snapshot',poll:()=>bonesOf(editor.selected).length>0,execute:(_,p)=>{applyBoneScale(editor.selected,p.scales||{});editor.commit();}});
  registry.register({id:'character.expression',label:'Expression preset',undo:'snapshot',poll:()=>!!editor.selected,execute:(_,p,signal)=>deformationTransaction(editor,p.targetId||editor.selected.uuid,root=>applyExpressionPreset(root,p.name,{weight:p.weight??1}),{signal,afterChange})});
  registry.register({id:'character.groom_load',label:'Load hair groom',undo:'snapshot',poll:()=>!!editor.selected,execute:(_,p)=>{const key=p.preset||'short_bob';editor.selected.userData.fusion_groom=['eyebrow','eyelash','beard'].includes(key)?browLashGuides(key):(GROOM_LIBRARY[key]?.()||createGroom());editor.commit();}});

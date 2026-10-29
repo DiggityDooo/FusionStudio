@@ -1,0 +1,28 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as T from 'three';
+import {affineTrsFrames,prepareAffineExchange} from '../src/affine-frames.js';
+import {Editor} from '../src/editor.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import validator from 'gltf-validator';
+const matrix=f=>new T.Matrix4().compose(new T.Vector3(...f.position),new T.Quaternion(...f.quaternion),new T.Vector3(...f.scale));
+test('affine TRS frames reconstruct shear, reflection, singular and scaled transforms against matrix references',()=>{
+ const samples=[new T.Matrix4(),new T.Matrix4().makeScale(0,0,0),new T.Matrix4().makeScale(-2,0,.3),new T.Matrix4().makeShear(.3,.2,.4,-.1,.2,.1)];let seed=12345;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};for(let i=0;i<100;i++){const e=[...new T.Matrix4().elements];for(const j of [0,1,2,4,5,6,8,9,10])e[j]=(random()-.5)*4;for(const j of [12,13,14])e[j]=(random()-.5)*20;samples.push(new T.Matrix4().fromArray(e));}
+ for(const source of samples){const saved=source.toArray(),result=affineTrsFrames(source),out=matrix(result.frames[0]).multiply(matrix(result.frames[1]));assert.ok(Math.max(...out.elements.map((v,i)=>Math.abs(v-source.elements[i])))<1e-8);assert.deepEqual(source.toArray(),saved);for(const f of result.frames)assert.ok(Math.abs(Math.hypot(...f.quaternion)-1)<1e-12);}
+});
+test('exchange affine frames preserve child motion and reject animation of a fixed matrix',()=>{
+ const root=new T.Group(),parent=new T.Group(),child=new T.Mesh(new T.TorusGeometry(.5,.1,64,128),new T.MeshStandardMaterial());parent.matrix.makeShear(.2,.1,-.3,0,.2,.1);parent.matrixAutoUpdate=false;parent.add(child);root.add(parent);child.position.set(.3,.2,-.1);root.updateMatrixWorld(true);const expected=child.matrixWorld.clone(),clip=new T.AnimationClip('move',1,[new T.VectorKeyframeTrack(child.uuid+'.position',[0,1],[.3,.2,-.1,.5,.4,.2])]);prepareAffineExchange(root,[clip]);assert.ok(Math.max(...child.matrixWorld.elements.map((v,i)=>Math.abs(v-expected.elements[i])))<1e-10);assert.equal(parent.matrixAutoUpdate,true);
+ const fixed=new T.Group();fixed.matrixAutoUpdate=false;root.add(fixed);assert.throws(()=>prepareAffineExchange(root,[new T.AnimationClip('invalid',1,[new T.VectorKeyframeTrack(fixed.uuid+'.position',[0,1],[0,0,0,1,0,0])])]),/fixed matrix/);
+});
+
+test('actual GLB exchange retains visible local motion and affine frames on a detailed mesh',async()=>{
+ const savedReader=globalThis.FileReader;globalThis.FileReader=class{readAsArrayBuffer(blob){blob.arrayBuffer().then(result=>{this.result=result;this.onloadend?.();});}};
+ try{
+  const root=new T.Group(),hidden=new T.Group(),level=new T.Group(),parent=new T.Group(),fixed=new T.Group(),actor=new T.Group(),mesh=new T.Mesh(new T.TorusGeometry(.5,.1,96,256),new T.MeshStandardMaterial());hidden.visible=false;level.userData.fusion_lod_level={version:1,sourceObjectId:hidden.uuid};parent.rotation.set(.2,-.3,.4);parent.scale.set(1.2,.7,1.6);fixed.matrix.makeShear(.2,.1,-.3,0,.2,.1);fixed.matrixAutoUpdate=false;actor.name='Root motion';mesh.name='Detailed animated mesh';actor.add(mesh);fixed.add(actor);parent.add(fixed);level.add(parent);root.add(hidden,level);
+  const projectClip=new T.AnimationClip('Project motion',1,[new T.VectorKeyframeTrack(hidden.uuid+'.position',[0,1],[0,0,0,9,0,0]),new T.VectorKeyframeTrack(actor.uuid+'.position',[0,1],[0,0,0,.5,.2,-.1])]),localClip=new T.AnimationClip('Local detail motion',1,[new T.VectorKeyframeTrack(mesh.uuid+'.position',[0,1],[0,0,0,.1,-.2,.3])]);level.animations=[localClip];
+  const editor=Object.create(Editor.prototype);Object.assign(editor,{root,timeline:{exportClips:()=>[projectClip],lastExportReport:{fullEvaluation:true}}});root.updateMatrixWorld(true);const before=fixed.matrix.toArray(),beforeActor=actor.position.toArray(),beforeTracks=projectClip.tracks.length;
+  const bytes=Uint8Array.from(Buffer.from(await editor.glb(false,{includeAnimations:true}),'base64')),report=await validator.validateBytes(bytes);assert.equal(report.issues.numErrors,0,JSON.stringify(report.issues));const loaded=await new GLTFLoader().parseAsync(bytes.buffer,'');assert.equal(loaded.animations.length,2);assert.equal(projectClip.tracks.length,beforeTracks);assert.deepEqual(fixed.matrix.toArray(),before);assert.equal(fixed.matrixAutoUpdate,false);assert.deepEqual(actor.position.toArray(),beforeActor);assert.equal(loaded.scene.userData.fusion_animation_visibility.omittedTracks,1);assert.equal(loaded.scene.userData.fusion_affine_export.staticFrames,1);
+  const copy=loaded.scene.getObjectByName('Detailed_animated_mesh');assert.ok(copy);const originalMixer=new T.AnimationMixer(root),copyMixer=new T.AnimationMixer(loaded.scene);for(const [mixer,clips]of [[originalMixer,[projectClip,localClip]],[copyMixer,loaded.animations]])for(const clip of clips){const action=mixer.clipAction(clip);action.setLoop(T.LoopOnce,1);action.clampWhenFinished=true;action.play();}
+  for(const time of [0,.37,1]){originalMixer.setTime(time);copyMixer.setTime(time);root.updateMatrixWorld(true);loaded.scene.updateMatrixWorld(true);assert.ok(mesh.getWorldPosition(new T.Vector3()).distanceTo(copy.getWorldPosition(new T.Vector3()))<1e-6);for(const i of [0,1234,12000]){const a=new T.Vector3().fromBufferAttribute(mesh.geometry.attributes.position,i).applyMatrix4(mesh.matrixWorld),b=new T.Vector3().fromBufferAttribute(copy.geometry.attributes.position,i).applyMatrix4(copy.matrixWorld);assert.ok(a.distanceTo(b)<1e-6,`motion at ${time}, vertex ${i}`);}}
+ }finally{globalThis.FileReader=savedReader;}
+});

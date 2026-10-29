@@ -53,7 +53,7 @@ export function evaluateCharacter(root){
     for(const m of state.morphs)if(!applied.has(channelId(m.id))&&report.values[channelId(m.id)]!==undefined)report.warnings.push({channel:m.id,message:'Morph target is absent from the loaded mesh; this control was not applied.'});
     for(const id of report.outputs||[])if(!defined.has(id)&&!applied.has(id)&&!boundRotations.has(id))report.warnings.push({channel:id,message:'Formula output has no supported scene binding; joint transforms and material outputs are not applied for this reference.'});
     report.valid=!report.errors.length;report.complete=report.valid&&!report.warnings.length;report.rotations=proposals.map(p=>({joint:p.bone.name,clamped:!!p.clamped}));report.verifiedRotationFrames=context.bindings.length;
-    if(report.valid){commitRotationProposals(context,proposals,state);for(const [mesh,index,value] of changes)mesh.morphTargetInfluences[index]=value;root.traverse(n=>{if(n.isMesh){n.boundingBox=null;n.boundingSphere=null;}});}
+    if(report.valid){commitRotationProposals(context,proposals,state);for(const [mesh,index,value] of changes)mesh.morphTargetInfluences[index]=value;root.traverse(n=>{if(n.isMesh){if(typeof n.computeBoundingBox==='function'){n.boundingBox=null;n.boundingSphere=null;}else{delete n.boundingBox;delete n.boundingSphere;}}});}
   }catch(error){report={valid:false,complete:false,values:{},errors:[{channel:'character',code:'invalid-deformation',message:error.message}],warnings:[],rotations:[]};}
   state.errors=[...report.errors,...report.warnings];reports.set(root,report);return report;
 }

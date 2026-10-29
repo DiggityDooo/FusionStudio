@@ -18,6 +18,11 @@ function fixture(){
  e.scene.add(e.root);const mesh=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),new THREE.MeshStandardMaterial());e.root.add(mesh);return {e,mesh};
 }
 
+test('project recovery retains authored shadow flags and shared interleaved buffer identities',async()=>{
+ const {e,mesh}=fixture(),array=new Float32Array(mesh.geometry.attributes.position.count*4),buffer=new THREE.InterleavedBuffer(array,4);mesh.geometry.setAttribute('uv1',new THREE.InterleavedBufferAttribute(buffer,2,0));mesh.geometry.setAttribute('uv2',new THREE.InterleavedBufferAttribute(buffer,2,2));mesh.castShadow=false;mesh.receiveShadow=true;const before=JSON.parse(JSON.stringify(e.serialize()));
+ await e.restore(before);assert.deepEqual(JSON.parse(JSON.stringify(e.serialize())),before);const loaded=e.root.children[0];assert.equal(loaded.castShadow,false);assert.equal(loaded.receiveShadow,true);assert.equal(loaded.geometry.attributes.uv1.data,loaded.geometry.attributes.uv2.data);
+});
+
 test('scene-tool settings and collections survive history and project reload; invalid settings keep the live scene',async()=>{
  const {e,mesh}=fixture();e.transform={setSpace(){},setTranslationSnap(){},setRotationSnap(){},setScaleSnap(){}};attachSceneFoundation(e);e.commit();
  const collection=e.foundation.createCollection('Character working copies');e.foundation.assignCollection(mesh,collection.id);

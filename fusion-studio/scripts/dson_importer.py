@@ -501,6 +501,7 @@ def _make_plan(source_path, content_roots, options=None):
         # alias. Equal fragments in different files are never treated as proof.
         for mesh in meshes:
             mesh['rotation_aliases'] = {b['id']: [] for b in mesh['bones']}
+            mesh['scale_aliases'] = {b['id']: {prop: [] for prop in ('scale/x', 'scale/y', 'scale/z', 'scale/general')} for b in mesh['bones']}
         for formula, origin in formula_sources:
             refs = [formula.get('output')] + [op.get('url') for op in formula.get('operations', []) if op.get('op') == 'push' and 'url' in op]
             for ref in refs:
@@ -516,6 +517,8 @@ def _make_plan(source_path, content_roots, options=None):
                     for mesh in meshes:
                         if path == mesh['node_path'] and ident in mesh['rotation_aliases'] and prop in ('rotation/x', 'rotation/y', 'rotation/z'):
                             mesh['rotation_aliases'][ident].append(ref)
+                        if path == mesh['node_path'] and ident in mesh['scale_aliases'] and prop in mesh['scale_aliases'][ident]:
+                            mesh['scale_aliases'][ident][prop].append(ref)
                 except DsonImportError as exc:
                     reader.warning('formula_reference', 'Formula reference remains unresolved: '+str(exc), str(ref))
         if not meshes:
@@ -742,7 +745,10 @@ def import_dson(source_path, content_roots, options=None, on_preflight=None):
                     def xyzw(matrix):
                         q = matrix.to_quaternion().normalized()
                         return [q.x, q.y, q.z, q.w]
-                    arm_data.bones[bone_names[bone['id']]]['fusion_dson_rotation'] = json.dumps({'version': 1, 'id': bone['id'], 'aliases': mesh['rotation_aliases'].get(bone['id'], []), 'order': bone.get('rotation_order', 'XYZ'), 'rest': xyzw(local_rest), 'basis': xyzw(basis), 'source': channels, 'imported': xyzw(predicted), 'unitScale': all(abs(v-1) < 1e-6 for node in mesh['skeleton_nodes'].values() for v in (_xyz(node.get('scale'), 1.0)+(_number(node.get('general_scale'), 1.0),)))}, ensure_ascii=True)
+                    scales = dict(zip(('scale/x', 'scale/y', 'scale/z'), _xyz(bone.get('scale'), 1.0)))
+                    scales['scale/general'] = _number(bone.get('general_scale'), 1.0)
+                    scale_inputs = [{'property': prop, 'value': value, 'aliases': mesh['scale_aliases'].get(bone['id'], {}).get(prop, [])} for prop, value in scales.items()]
+                    arm_data.bones[bone_names[bone['id']]]['fusion_dson_rotation'] = json.dumps({'version': 1, 'id': bone['id'], 'aliases': mesh['rotation_aliases'].get(bone['id'], []), 'scaleInputs': scale_inputs, 'order': bone.get('rotation_order', 'XYZ'), 'rest': xyzw(local_rest), 'basis': xyzw(basis), 'source': channels, 'imported': xyzw(predicted), 'unitScale': all(abs(v-1) < 1e-6 for node in mesh['skeleton_nodes'].values() for v in (_xyz(node.get('scale'), 1.0)+(_number(node.get('general_scale'), 1.0),)))}, ensure_ascii=True)
                 arm.select_set(False)
                 root_id = mesh.get('bone_root_id')
                 root_pose = mesh['_posed'].get(root_id)

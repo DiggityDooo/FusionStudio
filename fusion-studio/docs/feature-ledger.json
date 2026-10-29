@@ -2991,11 +2991,18 @@
       "status": "partial",
       "evidence": [
         "tests/character-lod.test.mjs",
-        "tests/skin-reduce.test.mjs",
-        "src/character-lod.js",
-        "src/character-tools-ui.js"
+        "tests/lod-reduction.test.mjs",
+        "tests/affine-frames.test.mjs",
+        "tests/character-lods-ui.cjs",
+        "tests/character-lods-private.cjs",
+        "tests/lod-performance.mjs",
+        "src/character-lods.js",
+        "src/character-lods-ui.js",
+        "src/lod-reduction.js",
+        "src/lod-geometry.js",
+        "docs/progress/2026-10-28-character-lods.md"
       ],
-      "note": "Unfinished prototype: stride-sampled geometries are returned but discarded by the UI; only counts persist. It does not create usable scene/export LODs, preserve remapped material groups or perform production topology-aware simplification. Full source-preserving rig/morph/UV reduction and workflow acceptance are still required."
+      "note": "Usable independent scene levels replace the discarded stride-sampling prototype. Bounded endpoint-QEM preserves source cages, remaps skin/morph/UV/material attributes, reports unmet targets, and supports cancellable worker generation, preview, undo, reload and GLB/Cycles delivery. Public and posed local Genesis 8 male/female fixtures pass. Partial: no general pose/self-intersection quality certificate, skeleton/groom reduction or complete production acceptance; the 196608-triangle 25% benchmark exceeds the candidate budget. See dated evidence for exact limits."
     },
     "A16 Digital double and look-dev workflows": {
       "status": "partial",

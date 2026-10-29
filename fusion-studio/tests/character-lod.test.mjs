@@ -14,12 +14,12 @@ function skinnedBody(){
   root.add(mesh);return root;
 }
 
-test('generateCharacterLods stride-samples mesh and records metadata',()=>{
+test('generateCharacterLods creates source-independent scene levels and records actual counts',()=>{
   const root=skinnedBody();
   const lods=generateCharacterLods(root,{levels:[1,.5,.25]});
-  assert.equal(lods.length,1);assert.equal(lods[0].levels.length,3);
-  assert.ok(lods[0].levels[0].triangles>=lods[0].levels[2].triangles);
-  assert.equal(root.userData.fusion_lods.parts[0].levels.length,3);
+  assert.equal(lods.children.length,3);assert.equal(lods.userData.fusion_lod_set.levels.length,3);
+  const records=lods.userData.fusion_lod_set.levels;assert.ok(records[0].triangles>=records[2].triangles);
+  assert.equal(root.userData.fusion_lods,undefined);assert.equal(lods.parent,null);assert.notEqual(lods.children[0].getObjectByName('Body').geometry,root.getObjectByName('Body').geometry);
   assert.throws(()=>generateCharacterLods(root,{levels:[0]}),/LOD/i);
 });
 
