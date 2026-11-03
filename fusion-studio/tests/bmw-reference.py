@@ -3,12 +3,11 @@ import bpy, json, sys, time, math
 from pathlib import Path
 from mathutils import Vector
 spec=json.loads(Path(sys.argv[sys.argv.index('--')+1]).read_text())
-bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.context.preferences.filepaths.use_scripts_auto_execute=False
-with bpy.data.libraries.load(spec['source'],link=False) as (src,dst):
-    dst.scenes=src.scenes
-scene=next(s for s in dst.scenes if s.camera)
-bpy.context.window.scene=scene
+# Reference actual saved-file behavior, independently of Fusion's loader.
+# Appending scene datablocks omits file-level settings and active-scene choice.
+bpy.ops.wm.open_mainfile(filepath=spec['source'],load_ui=False,use_scripts=False)
+scene=bpy.context.scene
 scene.view_layers[0].update()
 original={'engine':scene.render.engine,'device':scene.cycles.device,'samples':scene.cycles.samples,'width':scene.render.resolution_x,'height':scene.render.resolution_y,'percentage':scene.render.resolution_percentage,'camera':scene.camera.name,'world':scene.world.name if scene.world else None,'view_transform':scene.view_settings.view_transform,'objects':len(scene.objects)}
 camera=scene.camera;position=camera.matrix_world.translation;target=position+camera.matrix_world.to_quaternion()@Vector((0,0,-1))
