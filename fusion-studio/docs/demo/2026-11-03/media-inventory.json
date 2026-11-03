@@ -17,8 +17,8 @@
     },
     {
       "file": "fusion-studio-rc1-demo.vtt",
-      "bytes": 878,
-      "sha256": "9d14eb67b18754755f81dbfa3fba51cb7c8dffe9703eba7db0d8384eb10e718d"
+      "bytes": 853,
+      "sha256": "02c0ea3b5ea986e2bc48e9c7c909ee2751574201dc51bd0cd0ba5d02aa542832"
     },
     {
       "file": "live-chat.png",
@@ -69,5 +69,5 @@
       "frames": 1
     }
   ],
-  "manifestSha256": "7299ffa10d515d8ed68ed9711a9dba37f2bbb8788dc9162534dadc1f3bbdff18"
+  "manifestSha256": "874f2c245319663e06f2353d7675fda056310a08c8c5812fa4fbfd3d0bc4fb7b"
 }

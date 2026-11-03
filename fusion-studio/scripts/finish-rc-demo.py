@@ -28,7 +28,7 @@ for chapter in manifest['chapters']:
  run(['-y','-loglevel','error','-ss',str(ms/1000*.7),'-i',scratch/(chapter['id']+'.mp4'),'-frames:v','1',scratch/(chapter['id']+'-review.png')])
  elapsed=end
 (scratch/'chapters.txt').write_text('\n'.join(meta)+'\n',encoding='utf-8')
-(out/'fusion-studio-rc1-demo.vtt').write_text('\n'.join(vtt),encoding='utf-8')
+(out/'fusion-studio-rc1-demo.vtt').write_text('\n'.join(vtt),encoding='utf-8',newline='\n')
 video=out/'fusion-studio-rc1-demo.mp4';chaptered=scratch/'chaptered.mp4'
 run(['-y','-loglevel','error','-i',video,'-f','ffmetadata','-i',scratch/'chapters.txt','-map','0:v','-map_metadata','1','-map_chapters','1','-c','copy','-movflags','+faststart',chaptered])
 chaptered.replace(video)
@@ -52,7 +52,7 @@ for file in sorted(out.iterdir()):
  if file.suffix=='.mp4':row.update(width=1920,height=1080,codec='H.264',seconds=duration(file)/1000,decodedAllFrames=True,containerChapters=6)
  media.append(row)
 manifest.update(chaptered=True,captions='fusion-studio-rc1-demo.vtt',sculptTriangles=triangles,media=media)
-(out/'capture-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+(out/'capture-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8',newline='\n')
 inventory=dict(passed=True,purpose='Recorded demonstration evidence; full release gates remain separate',seconds=duration(video)/1000,chapters=6,media=media,manifestSha256=hashlib.sha256((out/'capture-manifest.json').read_bytes()).hexdigest())
-(out/'media-inventory.json').write_text(json.dumps(inventory,indent=2)+'\n')
+(out/'media-inventory.json').write_text(json.dumps(inventory,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps(dict(passed=True,out=str(out),seconds=inventory['seconds'],videoBytes=video.stat().st_size,media=len(media))))

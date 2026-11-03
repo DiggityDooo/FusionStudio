@@ -1,2 +1,6 @@
 # Preserve copied dependency notices and their audited byte hashes.
 /fusion-studio/docs/native-dependencies/** -text
+
+# Canonical bytes for hashed public capture records and captions.
+/fusion-studio/docs/demo/**/*.json text eol=lf
+/fusion-studio/docs/demo/**/*.vtt text eol=lf
