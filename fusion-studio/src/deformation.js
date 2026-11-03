@@ -3,6 +3,7 @@ import {evaluateCreator} from './character-creator.js';
 import {channelId,evaluateOperations,evaluateFormulas} from './formula-engine.js';
 import {prepareRotationContext,evaluateRotationGraph,commitRotationProposals} from './formula-rotations.js';
 import {pathNode} from './rig-paths.js';
+import {appendEvaluatedMeshPositions} from './mesh-evaluation.js';
 export {channelId,evaluateOperations,evaluateFormulas} from './formula-engine.js';
 const LIMITS={vertices:2000000,deltas:8000000};
 const finite=v=>{if(typeof v!=='number'||!Number.isFinite(v))throw Error('Expected a finite scalar');return v;};
@@ -10,11 +11,16 @@ const reports=new WeakMap();
 export const deformationReport=root=>reports.get(root);
 // Apply sparse deltas by original vertex identity, including UV/material duplicates.
 export function deformSparse(base,sourceIds,morphs,values){
-  if(base.length%3||sourceIds.length!==base.length/3||sourceIds.length>LIMITS.vertices)throw Error('Invalid sparse deformation shape');
-  const result=Float32Array.from(base),map=new Map();let deltaCount=0;
-  for(let i=0;i<sourceIds.length;i++){const id=sourceIds[i];if(!Number.isInteger(id)||id<0||id>=LIMITS.vertices)throw Error('Invalid source vertex identity');if(!map.has(id))map.set(id,[]);map.get(id).push(i);}
+  const count=sourceIds?.length;if(!Number.isInteger(count)||count<0||base?.length!==count*3||count>LIMITS.vertices)throw Error('Invalid sparse deformation shape');
+  const result=Float32Array.from(base),next=new Int32Array(count);let deltaCount=0,highest=-1;
+  // Capture each index once. The same storage then becomes reverse links.
+  for(let i=0;i<count;i++){const id=sourceIds[i];if(!Number.isInteger(id)||id<0||id>=LIMITS.vertices)throw Error('Invalid source vertex identity');next[i]=id;highest=Math.max(highest,id);}
+  const dense=highest<Math.max(4096,count*4),first=dense?new Int32Array(highest+1).fill(-1):new Map();
+  for(let i=0;i<count;i++){const id=next[i];if(dense){next[i]=first[id];first[id]=i;}else{next[i]=first.get(id)??-1;first.set(id,i);}}
   for(const m of morphs){const value=finite(values[m.id]??values[channelId(m.id)]??0);deltaCount+=m.deltas.length;if(deltaCount>LIMITS.deltas)throw Error('Sparse delta limit exceeded');
-    for(const row of m.deltas){if(row.length!==4||!Number.isInteger(row[0])||row[0]<0)throw Error('Invalid sparse delta');row.slice(1).forEach(finite);if(value)for(const i of map.get(row[0])||[])for(let j=0;j<3;j++)result[i*3+j]+=row[j+1]*value;}
+    for(const row of m.deltas){if(row?.length!==4||!Number.isInteger(row[0])||row[0]<0)throw Error('Invalid sparse delta');const x=finite(row[1]),y=finite(row[2]),z=finite(row[3]);
+      if(value)for(let i=dense?(row[0]<first.length?first[row[0]]:-1):(first.get(row[0])??-1);i!==-1;i=next[i]){const at=i*3;result[at]+=x*value;result[at+1]+=y*value;result[at+2]+=z*value;}
+    }
   }
   if(result.some(v=>!Number.isFinite(v)))throw Error('Sparse deformation overflow');return result;
 }
@@ -59,10 +65,10 @@ export function evaluateCharacter(root){
 }
 export function setMorph(root,id,value){const state=initializeDeformation(root),c=state?.channels.find(c=>channelId(c.id)===channelId(id));if(!c)throw Error('Morph control is not available');const before=c.value;c.value=Math.min(c.max??Infinity,Math.max(c.min??-Infinity,finite(value)));const report=evaluateCharacter(root);if(!report.valid){c.value=before;throw Error('Character dependency failed: '+report.errors.map(e=>e.message).join('; '));}return report;}
 export function addPoseCorrective(root,{channel,boneId,axis='x',start=0,end=90,strength=1}){const state=initializeDeformation(root),bone=root.getObjectByProperty('uuid',boneId);if(!state||!bone?.isBone||!['x','y','z'].includes(axis)||start===end||![start,end,strength].every(Number.isFinite)||!state.channels.some(c=>channelId(c.id)===channelId(channel)))throw Error('Invalid pose corrective');const before=[...(state.correctives||[])];if(before.length>=2048)throw Error('Pose corrective count exceeds 2,048');(state.correctives??=[]).push({channel,boneId,axis,start,end,strength,order:'XYZ',referenceQuaternion:bone.quaternion.toArray()});const report=evaluateCharacter(root);if(!report.valid){state.correctives=before;throw Error('Invalid corrective dependency: '+report.errors.map(e=>e.message).join('; '));}return report;}
-export function evaluateSceneDeformation(scene,{strict=false}={}){const errors=[];scene.traverse(n=>{if(n.userData.fusion_deformation||n.userData.fusion_creator){const report=evaluateCharacter(n);if(!report.valid)errors.push(...report.errors);}});if(strict&&errors.length)throw Error('Character dependency failed: '+errors.map(e=>e.message).join('; '));}
+export function evaluateSceneDeformation(scene,{strict=false}={}){const errors=[];scene.traverse(n=>{if(n.userData.fusion_deformation||n.userData.fusion_creator||n.userData.dazNative){const report=evaluateCharacter(n);if(!report.valid)errors.push(...report.errors);}});if(strict&&errors.length)throw Error('Character dependency failed: '+errors.map(e=>e.message).join('; '));}
 export function evaluatedCharacterTriangles(root,{maxTriangles=200000}={}){
-  const report=evaluateCharacter(root);if(!report.valid)throw Error('Resolve or pause character dependency errors before garment collision evaluation.');root.updateWorldMatrix(true,false);root.updateMatrixWorld(true);const positions=[],triangles=[],point=new THREE.Vector3();
-  root.traverseVisible(n=>{if(!n.isMesh||root.userData.fusion_creator&&n.userData.fusion_creator_part!=='body')return;const count=n.geometry.attributes.position.count,index=n.geometry.index,faces=(index?.count||count)/3;if(triangles.length/3+faces>maxTriangles)throw Error('Character collision triangle limit exceeded');const offset=positions.length/3;if(n.isSkinnedMesh)n.skeleton.update();for(let i=0;i<count;i++){n.getVertexPosition(i,point);point.applyMatrix4(n.matrixWorld);positions.push(point.x,point.y,point.z);}for(let i=0;i<(index?.count||count);i++)triangles.push(offset+(index?index.getX(i):i));});
+  const report=evaluateCharacter(root);if(!report.valid)throw Error('Resolve or pause character dependency errors before garment collision evaluation.');root.updateWorldMatrix(true,false);root.updateMatrixWorld(true);const positions=[],triangles=[];
+  root.traverseVisible(n=>{if(!n.isMesh||root.userData.fusion_creator&&n.userData.fusion_creator_part!=='body')return;const count=n.geometry.attributes.position.count,index=n.geometry.index,elements=index?.count??count,faces=elements/3;if(!Number.isInteger(faces))throw Error('Character collision requires complete triangle faces');if(!faces)return;if(triangles.length/3+faces>maxTriangles)throw Error('Character collision triangle limit exceeded');const offset=positions.length/3;if(n.isSkinnedMesh)n.skeleton.update();appendEvaluatedMeshPositions(n,positions);for(let i=0;i<elements;i++)triangles.push(offset+(index?index.getX(i):i));});
   return {positions,triangles};
 }
 

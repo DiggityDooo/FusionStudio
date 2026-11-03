@@ -1,7 +1,8 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {_electron}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output'),runtime=path.join(output,'creator-garment-'+Date.now()),sex=process.env.FUSION_CREATOR_SEX||'male';
 (async()=>{
- fs.mkdirSync(runtime,{recursive:true});const app=await _electron.launch({args:[root],env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000}),page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));let phase='create';
+ fs.mkdirSync(runtime,{recursive:true});const app=await _electron.launch({...candidateLaunch(root),env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000}),page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));let phase='create';
  const idle=()=>page.waitForFunction(()=>!fusionOperators.running&&!document.querySelector('#app').classList.contains('busy'),{},{timeout:240000});
  const state=()=>page.evaluate(()=>{const e=fusionEditor,c=e.root.children.find(n=>n.userData.fusion_creator),g=e.root.children.find(n=>n.userData.liveGarment?.fittedSurface);return {cursor:e.journal.cursor,recipe:structuredClone(c.userData.fusion_creator.recipe),character:c.uuid,...g?{id:g.uuid,positions:Array.from(g.children[0].geometry.attributes.position.array),live:structuredClone(g.userData.liveGarment)}:{}};});
  const quality=s=>{assert.ok(s.id,'No garment was created');assert.equal(s.live.diagnostics.converged,true,JSON.stringify(s.live.diagnostics));assert.equal(s.live.metrics.bodyFaceIntersections,0);assert.equal(s.live.metrics.bodyInsideVertices,0);assert.ok(s.live.metrics.seamGapAfter<=.005);};

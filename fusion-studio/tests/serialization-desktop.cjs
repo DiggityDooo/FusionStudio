@@ -1,8 +1,9 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {_electron}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output');
 (async()=>{
  const runtime=path.join(output,'serialization-desktop-'+Date.now());
- const app=await _electron.launch({executablePath:path.join(root,'release-v0.7.0/win-unpacked/Fusion Studio.exe'),env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000});const errors=[];
+ const app=await _electron.launch({...candidateLaunch(root,{packaged:true}),env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000});const errors=[];
  try{
   const page=await app.firstWindow();page.on('pageerror',e=>errors.push(e.message));await page.waitForFunction(()=>window.fusionEditor);
   const record=await page.evaluate(async()=>{

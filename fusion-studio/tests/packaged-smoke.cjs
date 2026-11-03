@@ -8,9 +8,9 @@ const os = require('node:os');
 const path = require('node:path');
 const {_electron} = require('playwright');
 
-const EXE = path.join(__dirname, '../release-v0.1.0/win-unpacked/Fusion Studio.exe');
+const EXE = process.env.FUSION_TEST_EXECUTABLE || path.join(__dirname, '..', require('../package.json').build.directories.output, 'win-unpacked/Fusion Studio.exe');
 
-test('packaged v0.1.0 exe: create, sculpt, cancel, save, export, import-convert', {skip: !fs.existsSync(EXE) && 'release-v0.1.0 package not built', timeout: 600000}, async () => {
+test('packaged candidate exe: create, sculpt, cancel, save, export, import-convert', {skip: !fs.existsSync(EXE) && 'candidate package not built', timeout: 600000}, async () => {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-packaged-'));
   const app = await _electron.launch({executablePath: EXE, args: [], env: {...process.env, FUSION_DATA_DIR: dataDir}});
   const page = await app.firstWindow();

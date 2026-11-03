@@ -20,11 +20,15 @@ export function validateRecipe(r,definition){
  if(!['bald','short','medium','long','wavy','curly','coily'].includes(r.hair.style)||!['none','beard','moustache'].includes(r.hair.facial||'none')||![r.hair.length,r.hair.volume].every(v=>Number.isFinite(v)&&v>=.5&&v<=1.5)||!Number.isFinite(r.hair.offset)||Math.abs(r.hair.offset)>.025||!['nude','underwear','clothed'].includes(r.visibility.clothing)||typeof r.visibility.anatomy!=='boolean')throw Error('Invalid hair fitting or visibility settings.');
  return r;
 }
-const validatedDeltas=new WeakMap(); // sparse target data is immutable once loaded; revalidating 19k-row targets dominated warm evaluations
+const validatedDeltas=new WeakMap(); // Cache duplicate checks only while the source-ID sequence is unchanged.
 export function validateDeltas(deltas,count){
- if(validatedDeltas.get(deltas)===count)return;
- const seen=new Set();for(let i=0;i<deltas.length;i+=4){const id=deltas[i];if(!Number.isInteger(id)||id<0||id>=count||seen.has(id)||!deltas.slice(i+1,i+4).every(v=>Number.isFinite(v)&&Math.abs(v)<=5))throw Error('Sparse shape data contains invalid or duplicate source vertices.');seen.add(id);}
- validatedDeltas.set(deltas,count);
+ const fail=()=>{throw Error('Sparse shape data contains invalid or duplicate source vertices.');};
+ if(!(Array.isArray(deltas)||ArrayBuffer.isView(deltas))||!Number.isInteger(deltas.length)||deltas.length%4||!Number.isInteger(count)||count<0)fail();
+ const prior=validatedDeltas.get(deltas);let sameIds=prior?.count===count&&prior.ids.length===deltas.length/4;
+ for(let i=0;i<deltas.length;i+=4){const id=deltas[i],x=deltas[i+1],y=deltas[i+2],z=deltas[i+3];if(!Number.isInteger(id)||id<0||id>=count||!Number.isFinite(x)||!Number.isFinite(y)||!Number.isFinite(z)||Math.abs(x)>5||Math.abs(y)>5||Math.abs(z)>5)fail();if(sameIds&&prior.ids[i/4]!==id)sameIds=false;}
+ if(sameIds)return;
+ const seen=new Set(),ids=new Uint32Array(deltas.length/4);for(let i=0;i<deltas.length;i+=4){const id=deltas[i];if(seen.has(id))fail();seen.add(id);ids[i/4]=id;}
+ validatedDeltas.set(deltas,{count,ids});
 }
 const blend3=t=>t<=.5?[[0,1-t*2],[1,t*2]]:[[1,2-t*2],[2,t*2-1]];
 const typedSourceCache=new WeakMap(); // worker postMessage clones inputs per tick: typed arrays clone as memcpy, plain JSON arrays clone per element
@@ -45,12 +49,13 @@ export function creatorInputs(definition,recipe){
  return {positions:typed.positions,bodyIds:typed.bodyIds,targets,height:recipe.controls.height};
 }
 export function computeCreator({positions,bodyIds,targets,height}){
- const start=performance.now();const isData=a=>Array.isArray(a)||ArrayBuffer.isView(a);if(!isData(positions)||positions.length%3||positions.length>600000||positions.some(v=>!Number.isFinite(v)||Math.abs(v)>100)||!isData(bodyIds)||!bodyIds.length||bodyIds.length>1200000||bodyIds.some(i=>!Number.isInteger(i)||i<0||i>=positions.length/3)||!Array.isArray(targets)||targets.length>512||!Number.isFinite(height)||height<1.3||height>2.25)throw Error('Invalid character evaluation input.');
+ const start=performance.now();const isData=a=>Array.isArray(a)||ArrayBuffer.isView(a),invalid=()=>{throw Error('Invalid character evaluation input.');};if(!isData(positions)||!Number.isInteger(positions.length)||positions.length%3||positions.length>600000||!isData(bodyIds)||!Number.isInteger(bodyIds.length)||!bodyIds.length||bodyIds.length>1200000||!Array.isArray(targets)||targets.length>512||!Number.isFinite(height)||height<1.3||height>2.25)invalid();
+ for(let i=0;i<positions.length;i++){const v=positions[i];if(!Number.isFinite(v)||Math.abs(v)>100)invalid();}
+ for(let i=0;i<bodyIds.length;i++){const id=bodyIds[i];if(!Number.isInteger(id)||id<0||id>=positions.length/3)invalid();}
  const output=new Float32Array(positions);let count=0;
  for(const target of targets){if(!target||!isData(target.data)||target.data.length%4||!Number.isFinite(target.value)||Math.abs(target.value)>4)throw Error('Missing or invalid character target.');count+=target.data.length/4;if(count>2000000)throw Error('Character evaluation exceeds two million sparse deltas.');validateDeltas(target.data,positions.length/3);for(let i=0;i<target.data.length;i+=4){const v=target.data[i]*3;for(let j=0;j<3;j++)output[v+j]+=target.data[i+j+1]*target.value;}}
  let low=Infinity,high=-Infinity;for(const i of bodyIds){low=Math.min(low,output[i*3+1]);high=Math.max(high,output[i*3+1]);}if(high-low<.1)throw Error('Character height collapsed.');const scale=height/(high-low);
- for(let i=0;i<output.length;i+=3){output[i]*=scale;output[i+1]=(output[i+1]-low)*scale;output[i+2]*=scale;}
- if(output.some(v=>!Number.isFinite(v)||Math.abs(v)>100))throw Error('Character deformation overflow.');
+ for(let i=0;i<output.length;i+=3){output[i]*=scale;output[i+1]=(output[i+1]-low)*scale;output[i+2]*=scale;const x=output[i],y=output[i+1],z=output[i+2];if(!Number.isFinite(x)||!Number.isFinite(y)||!Number.isFinite(z)||Math.abs(x)>100||Math.abs(y)>100||Math.abs(z)>100)throw Error('Character deformation overflow.');}
  return {positions:output,scale,ground:low,milliseconds:performance.now()-start,sparseDeltas:count};
 }
 export function seededRandomize(definition,recipe,{seed=recipe.seed,categories=['Body','Face']}={}){

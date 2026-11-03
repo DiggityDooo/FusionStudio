@@ -46,7 +46,7 @@ test('every brush moves geometry and respects radius', () => {
     const before = new Float32Array(mesh.geometry.attributes.position.array);
     const delta = new THREE.Vector3(0.05, 0.02, 0);
     const hit = sculptGeometry(mesh, planeFamily ? center.clone() : top.clone(), planeFamily ? 0.45 : 0.3, 0.03, brush.id, false, {normal: planeFamily ? zNormal : frontNormal, delta, falloff: 'smooth', layerBase: before});
-    if (brush.id === 'annotate') { assert.equal(hit, 0, 'annotate must never touch geometry'); assert.equal(displacement(mesh, before), 0); continue; }
+    if (brush.id.startsWith('annotate')) { assert.equal(hit, 0, 'annotations must never touch geometry'); assert.equal(displacement(mesh, before), 0); continue; }
     assert.ok(hit > 0, `${brush.id} affected no vertices`);
     if (brush.id === 'mask') assert.ok(Math.max(...mesh.geometry.attributes.mask.array) > 0, 'mask must paint its channel');
     else assert.ok(displacement(mesh, before) > 0, `${brush.id} did not move geometry`);
@@ -61,6 +61,14 @@ test('draw inverts with the invert flag', () => {
   let up = 0, down = 0;
   for (let i = 0; i < pa.count; i++) { if (pa.getY(i) > 0.49) up = Math.max(up, pa.getY(i)); if (pb.getY(i) < 0.51) down = Math.min(down, pb.getY(i)); }
   assert.ok(up > 0.5, 'draw should raise the surface');
+});
+
+test('Thumb Clay has opposed buildup, exact full protection and a bounded footprint on a detailed mesh',()=>{
+ const make=()=>new THREE.Mesh(new THREE.PlaneGeometry(1,1,192,144),new THREE.MeshStandardMaterial()),a=make(),b=make(),masked=make(),before=new Float32Array(a.geometry.attributes.position.array),center=new THREE.Vector3(),opts={normal:new THREE.Vector3(0,0,1),delta:new THREE.Vector3(.01,0,0)};
+ maskAttribute(masked.geometry).array.fill(1);for(const [mesh,invert]of [[a,false],[b,true],[masked,false]])sculptGeometry(mesh,center,.2,.01,'thumb-clay',invert,opts);
+ const pa=a.geometry.attributes.position,pb=b.geometry.attributes.position;let changed=0;
+ for(let i=0;i<pa.count;i++){const radius=Math.hypot(before[i*3],before[i*3+1]);assert.ok(pa.getZ(i)===-pb.getZ(i));if(radius>.2)for(let k=0;k<3;k++)assert.equal(pa.getComponent(i,k),before[i*3+k]);if(pa.getZ(i)>0)changed++;}
+ assert.ok(changed>100);assert.deepEqual(new Float32Array(masked.geometry.attributes.position.array),before);
 });
 
 test('smooth reduces displacement noise', () => {
@@ -301,6 +309,8 @@ test('annotations are scene data with markers and removal', () => {
   assert.equal(removeAnnotation(mesh, entry.id), true);
   assert.equal(mesh.userData.fusion_annotations.length, 0);
   assert.equal(removeAnnotation(mesh, entry.id), false);
+  const keep=addAnnotation(mesh,new THREE.Vector3(),'Retain'),deleted=addAnnotation(mesh,new THREE.Vector3(),'Delete');removeAnnotation(mesh,keep.id);
+  const added=addAnnotation(mesh,new THREE.Vector3(),'Added at same point');assert.notEqual(added.id,deleted.id);removeAnnotation(mesh,added.id);assert.equal(mesh.userData.fusion_annotations[0].id,deleted.id);
   assert.deepEqual(new Float32Array(mesh.geometry.attributes.position.array), before, 'annotations must never modify geometry');
 });
 

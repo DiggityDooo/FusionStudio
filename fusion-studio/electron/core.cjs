@@ -73,7 +73,7 @@ const APPS = [
 // Export action -> output extension (STL is written in millimetres for slicers).
 const EXPORTS={render:'png',blend:'blend',fbx:'fbx',obj:'obj',stl:'stl',ply:'ply',usd:'usdc',usdz:'usdz',abc:'abc'};
 const FORMATS = new Set(['flattenPanels','stack',...Object.keys(meshOperations),...Object.keys(EXPORTS),'glb','subdivide','bevel','decimate','convert','solidify','mirror','remesh','recalculate','uv','boolean','cloth']);
-const IMPORTS = new Set(['.duf','.glb','.gltf','.obj','.fbx','.stl','.ply','.blend','.abc','.usd','.usda','.usdc','.usdz']);
+const IMPORTS = new Set(['.duf','.dsf','.glb','.gltf','.obj','.fbx','.stl','.ply','.blend','.abc','.usd','.usda','.usdc','.usdz']);
 function inside(root, file) {
   const rel=path.relative(path.resolve(root),path.resolve(file));
   return rel!=='' && !rel.startsWith('..'+path.sep) && rel!=='..' && !path.isAbsolute(rel);

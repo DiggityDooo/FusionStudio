@@ -9,7 +9,7 @@ from pathlib import Path
 import bpy
 import bmesh
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from native_scene import capture as capture_native, render_native, settings as render_settings, write_render
+from native_scene import capture as capture_native, render_native, settings as render_settings, write_render, load_scene as load_blend_scene
 from character_materials import apply_character_materials
 from surface_materials import apply_surface_materials, shader_bake
 from lighting import apply_lighting, apply_world_lighting, lightmap_bake
@@ -123,20 +123,34 @@ BMESH_OPERATIONS = {
 }
 
 
+def prepare_blend_interchange(scene):
+    """Bake supported stacks on disposable source data without dropping morphs/rigs."""
+    report={'baked':[], 'warnings':[]}
+    for obj in list(scene.objects):
+        if obj.type!='MESH': continue
+        modifiers=[m for m in obj.modifiers if m.type!='ARMATURE' and m.show_viewport]
+        if not modifiers: continue
+        if obj.data.shape_keys or any(m.type=='ARMATURE' for m in obj.modifiers):
+            report['warnings'].append(f"'{obj.name}' keeps base topology, shape keys and rig; non-armature modifiers are not baked on morph/rig meshes. Use preserved mode for evaluated appearance.")
+            continue
+        evaluated=obj.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        mesh=bpy.data.meshes.new_from_object(evaluated,preserve_all_data_layers=True,depsgraph=bpy.context.evaluated_depsgraph_get())
+        if mesh is None or not mesh.vertices:raise ValueError("Cannot evaluate Blender modifier stack on '"+obj.name+"'. Use preserved mode.")
+        report['baked'].extend({'object':obj.name,'modifier':m.name} for m in modifiers)
+        obj.modifiers.clear();obj.data=mesh
+        bpy.context.view_layer.update()
+    return report
+
+
 def import_model(file, options=None):
     ext = file.suffix.lower()
-    if ext == '.duf':
+    if ext in ('.duf', '.dsf'):
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from dson_importer import import_dson
         options=options or {}
         return import_dson(str(file),options.get('contentRoots',[]),{'morph_values':options.get('morphValues',{}),'pose_values':options.get('poseValues',{}),'import_rig':True})
     if ext == '.blend':
-        # Append data only; never open or run the source blend's scripts.
-        with bpy.data.libraries.load(str(file), link=False) as (src, dst):
-            dst.objects = src.objects
-        for obj in dst.objects:
-            if obj is not None and not obj.get('fusion_studio_helper', False):
-                bpy.context.scene.collection.objects.link(obj)
+        load_blend_scene(file)
         return
     ops = {
         '.glb': bpy.ops.import_scene.gltf, '.gltf': bpy.ops.import_scene.gltf,
@@ -155,7 +169,9 @@ def import_model(file, options=None):
     bumps = bump_plan(file) if ext in ('.glb', '.gltf') else None
     previous_materials = set(bpy.data.materials) if bumps and bumps['materials'] else set()
     previous_actions = set(bpy.data.actions) if timing else set()
-    checked(ops[ext](filepath=str(file), **({'global_scale': .001} if ext == '.stl' else {})), 'Import')
+    # FBX's Blender default adds one frame to every imported action. Fusion's
+    # exchange timeline starts at time zero; retain the source sample times.
+    checked(ops[ext](filepath=str(file), **({'global_scale': .001} if ext == '.stl' else {'anim_offset': 0.0} if ext == '.fbx' else {})), 'Import')
     if bumps is not None:
         result = apply_bump_plan(bumps, set(bpy.data.materials) - previous_materials)
         if options is not None:options['bumpTextures'] = result
@@ -515,6 +531,7 @@ def main(specfile=None):
         dson=None
     else:dson=import_model(Path(spec['input']),options)
     scene=bpy.context.scene
+    blend_interchange=prepare_blend_interchange(scene) if spec['action']=='convert' and Path(spec['input']).suffix.lower()=='.blend' and not native else None
     character_material_report=apply_character_materials(options.get('characterMaterials'))
     surface_material_report=apply_surface_materials(options.get('surfaceMaterials'))
     lighting_report={'applied':0,'meshes':0,'version':1}
@@ -684,7 +701,7 @@ def main(specfile=None):
         if use_selection:
             bpy.ops.object.select_all(action='DESELECT')
             for obj in selected:obj.select_set(True)
-        checked(bpy.ops.export_scene.gltf(filepath=str(output),export_format='GLB',export_yup=True,use_selection=use_selection,export_extras=True,export_attributes=True,export_current_frame=True,export_rest_position_armature=False),'GLB export')
+        checked(bpy.ops.export_scene.gltf(filepath=str(output),export_format='GLB',export_yup=True,use_selection=use_selection,use_active_scene=True,export_extras=True,export_attributes=True,export_current_frame=True,export_rest_position_armature=False),'GLB export')
     if original_options.get('cameras') and action not in ('render','blend'):
         cameras_report=apply_cameras(options)
     report={'blender':bpy.app.version_string,'action':action,'output':str(output),'mesh_count':len(meshes),'vertices':sum(len(o.data.vertices) for o in meshes),'polygons':sum(len(o.data.polygons) for o in meshes)}
@@ -696,6 +713,7 @@ def main(specfile=None):
     if original_options.get('cameras'):report['cameras']=cameras_report
     if action=='stack':report['stack']=stack_report
     if native is not None:report['nativeBlend']=native
+    if blend_interchange is not None:report['blendInterchange']=blend_interchange
     if action=='render':
         report.update(device_report)
         report['lights']=[{'name':o.name,'type':o.data.type,'energy':o.data.energy,'size':getattr(o.data,'size',None),'studio':bool(o.get('fusion_studio_helper'))} for o in bpy.context.scene.objects if o.type=='LIGHT']

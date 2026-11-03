@@ -5,6 +5,7 @@ import {Editor} from '../src/editor.js';
 import {HistoryImages} from '../src/history-images.js';
 import {immutableImageSnapshot,isImmutableImageSnapshot} from '../src/image-snapshots.js';
 import {deformationTransaction} from '../src/deformation-ui.js';
+import {hybridTransaction} from '../src/hybrid.js';
 
 function fixture(){
  const root=new T.Group(),pixels=Uint8Array.from({length:256*256*4},(_,i)=>i*31%256),texture=new T.DataTexture(pixels,256,256),mesh=new T.Mesh(new T.TorusGeometry(.5,.12,64,256),new T.MeshStandardMaterial({map:texture}));texture.needsUpdate=true;root.add(mesh);
@@ -49,6 +50,23 @@ test('post-commit failure restores the old undo journal and pixel versions even 
  await assert.rejects(deformationTransaction(e,id,root=>{root.position.x=1;root.material.map.image.data[0]=99;root.material.map.needsUpdate=true;}),/post-commit failure/);assert.equal(e.root.getObjectByProperty('uuid',id).material.map.image.data[0],12);assert.equal(e.journal.entries.length,entries.length);assert.equal(e.journal.cursor,cursor);assert.equal(e.historyAt,cursor);assert.equal(e.historyImages.pins.size,0);
  assert.ok(e.journal.entries.every((entry,i)=>entry===entries[i]));
  for(const value of undoPixels){await e._undo();assert.equal(e.root.getObjectByProperty('uuid',id).material.map.image.data[0],value);}
+});
+
+test('garment post-commit failure restores the exact scene, undo commands and every pruned texture version',async()=>{
+ const {e,mesh}=fixture();e.commit();for(let value=1;value<=12;value++){mesh.material.map.image.data[0]=value;mesh.material.map.needsUpdate=true;e.commit();}
+ const id=mesh.uuid,before=e.serialize(),entries=e.journal.entries.slice(),cursor=e.journal.cursor,undoPixels=[...entries].reverse().map(row=>e.historyImages.expand(JSON.parse(row.before)).images[0].url.data[0]),commit=e.commit;
+ e.commit=function(){commit.call(this);this.journal.entries.splice(0,this.journal.entries.length-1);this.journal.onChange();throw Error('Injected garment post-commit failure');};
+ await assert.rejects(hybridTransaction(e,()=>{mesh.geometry.attributes.position.setZ(100,.4);mesh.material.map.image.data[0]=99;mesh.material.map.needsUpdate=true;mesh.userData.patternProject={authored:'Changed panels'};e.timeline.frame=42;}),/garment post-commit failure/);
+ assert.deepEqual(e.serialize(),before);assert.equal(e.journal.entries.length,entries.length);assert.equal(e.journal.cursor,cursor);assert.equal(e.historyAt,cursor);assert.ok(e.journal.entries.every((entry,i)=>entry===entries[i]));assert.equal(e.timeline.frame,13);assert.equal(e.selected.uuid,id);assert.equal(e.batching,false);assert.equal(e.historyImages.pins.size,0);
+ for(const value of undoPixels){await e._undo();assert.equal(e.root.getObjectByProperty('uuid',id).material.map.image.data[0],value);}
+});
+
+test('cancelled garment edits preserve uncommitted geometry and pixels; retry commits one complete undoable edit',async()=>{
+ const {e,mesh}=fixture();e.commit();const id=mesh.uuid,cursor=e.journal.cursor,controller=new AbortController();mesh.position.x=.25;mesh.material.map.image.data[0]=67;mesh.material.map.needsUpdate=true;const before=e.serialize();
+ await assert.rejects(hybridTransaction(e,()=>{mesh.position.x=8;mesh.material.map.image.data[0]=99;mesh.material.map.needsUpdate=true;e.historyImages.prune([]);controller.abort();},{signal:controller.signal}),/cancelled/);
+ assert.deepEqual(e.serialize(),before);assert.equal(e.journal.cursor,cursor);assert.equal(e.historyImages.pins.size,0);assert.equal(e.batching,false);
+ await hybridTransaction(e,()=>{const restored=e.root.getObjectByProperty('uuid',id);restored.position.z=.7;restored.material.map.image.data[0]=77;restored.material.map.needsUpdate=true;});assert.equal(e.journal.cursor,cursor+1);assert.equal(e.historyImages.pins.size,0);
+ await e._undo();assert.equal(e.root.getObjectByProperty('uuid',id).position.z,0);assert.equal(e.root.getObjectByProperty('uuid',id).material.map.image.data[0],0);await e._redo();assert.equal(e.root.getObjectByProperty('uuid',id).position.z,.7);assert.equal(e.root.getObjectByProperty('uuid',id).material.map.image.data[0],77);
 });
 
 test('history checkpoints retain command/cache state and reject checkpoints from another document',()=>{

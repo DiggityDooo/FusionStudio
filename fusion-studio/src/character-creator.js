@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {defaultRecipe,validateRecipe,validateDeltas,creatorInputs,computeCreator,SKIN_TONES,mirrorShape} from './creator-data.js';
 import {updateCreatorAttachments,configureSkinPreview} from './creator-appearance.js';
 import {refitCreatorRig} from './creator-rig-refit.js';
+import {expandCreatorShapes} from './creator-shape-buffers.js';
 import {evaluateCreatorWorker,validateCreatorResult} from './creator-worker-client.js';
 export {evaluateCreatorWorker,validateCreatorResult};
 
@@ -51,7 +52,9 @@ export function creatorRoot(node){for(let n=node;n;n=n.parent)if(n.userData.fusi
 function sourceMesh(d,positions,material){
  const s=d.source,unique=new Map(),ids=[],uv=[],index=[];
  for(let corner=0;corner<s.triangles.length;corner++){const source=s.cornerSource[corner],u=s.cornerUV[corner*2],v=s.cornerUV[corner*2+1],key=source+':'+u+':'+v;if(!unique.has(key)){unique.set(key,ids.length);ids.push(source);uv.push(u,v);}index.push(unique.get(key));}
- const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(ids.flatMap(i=>Array.from(positions.slice(i*3,i*3+3))),3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setAttribute('_fusion_source_vertex',new THREE.Uint16BufferAttribute(ids,1));g.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(ids.flatMap(i=>s.skinIndex.slice(i*4,i*4+4)),4));g.setAttribute('skinWeight',new THREE.Float32BufferAttribute(ids.flatMap(i=>s.skinWeight.slice(i*4,i*4+4)),4));g.setIndex(index);
+ // All permitted source IDs (<200,000) are exact in Float32. Unlike Uint32
+ // vertex attributes, that wider channel also remains valid glTF exchange.
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(ids.flatMap(i=>Array.from(positions.slice(i*3,i*3+3))),3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setAttribute('_fusion_source_vertex',new (ids.some(id=>id>65535)?THREE.Float32BufferAttribute:THREE.Uint16BufferAttribute)(ids,1));g.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(ids.flatMap(i=>s.skinIndex.slice(i*4,i*4+4)),4));g.setAttribute('skinWeight',new THREE.Float32BufferAttribute(ids.flatMap(i=>s.skinWeight.slice(i*4,i*4+4)),4));g.setIndex(index);
  const body=new THREE.SkinnedMesh(g,material);body.name='Body';body.userData={fusion_creator_part:'body',fusion_kind:'body'};body.castShadow=true;body.receiveShadow=true;return body;
 }
 function landmark(s,positions,bone){const p=V();for(const id of bone.landmarks)p.add(V().fromArray(positions,id*3));return p.divideScalar(bone.landmarks.length);}
@@ -70,7 +73,8 @@ function updateBody(root,result,{preserveRig=false,previousPositions}={}){
  // Authored targets remain actual relative shape keys for generic exchange.
  // Body controls change the retained cage; authored shapes do not get baked twice.
  g.morphAttributes.position=[];body.morphTargetDictionary={};body.morphTargetInfluences=[];
- for(const shape of root.userData.fusion_creator.recipe.shapes){const values=new Float32Array(p.count*3),delta=new Map();for(let i=0;i<shape.deltas.length;i+=4)delta.set(shape.deltas[i],shape.deltas.slice(i+1,i+4).map(v=>v*result.scale));for(let i=0;i<map.count;i++){const d=delta.get(map.getX(i));if(d)values.set(d,i*3);}const a=new THREE.BufferAttribute(values,3);a.name=shape.id;body.morphTargetDictionary[shape.id]=g.morphAttributes.position.length;g.morphAttributes.position.push(a);body.morphTargetInfluences.push(shape.value);}g.morphTargetsRelative=true;
+ const shapes=root.userData.fusion_creator.recipe.shapes,shapeBuffers=expandCreatorShapes(ids,rp.length/3,shapes,result.scale);
+ for(let i=0;i<shapes.length;i++){const shape=shapes[i],a=new THREE.BufferAttribute(shapeBuffers[i],3);a.name=shape.id;body.morphTargetDictionary[shape.id]=g.morphAttributes.position.length;g.morphAttributes.position.push(a);body.morphTargetInfluences.push(shape.value);}g.morphTargetsRelative=true;
  // result already includes authored shapes. Remove their position contribution
  // from the cage before Three adds the live influences.
  for(let i=0;i<g.morphAttributes.position.length;i++){const a=g.morphAttributes.position[i].array,w=body.morphTargetInfluences[i];for(let j=0;j<p.array.length;j++)p.array[j]-=a[j]*w;}if(!g.morphAttributes.position.length)delete g.morphAttributes.position;p.needsUpdate=true;

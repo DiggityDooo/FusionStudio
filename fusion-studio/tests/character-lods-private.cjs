@@ -1,10 +1,11 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 // Local installed Genesis bases only. No content or generated files are bundled.
 const {_electron}=require('playwright'),{Engine}=require('../electron/core.cjs'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),runtime=path.join(root,'test-output','character-lods-private-'+Date.now()),content='C:\\Users\\Public\\Documents\\My DAZ 3D Library',sha=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 (async()=>{
  fs.mkdirSync(runtime,{recursive:true});const engine=new Engine(path.join(runtime,'conversion'),path.join(root,'scripts','blender_worker.py')),fixtures=[];
  try{for(const sex of ['Female','Male']){const source=path.join(content,'People','Genesis 8 '+sex,'Genesis 8 Basic '+sex+'.duf'),before={sha:sha(source),mtime:fs.statSync(source).mtimeMs};const result=await engine.run({action:'convert',source,name:'Local Genesis 8 '+sex,params:{contentRoots:[content]}});assert.equal(result.metadata.dson.ok,true);fixtures.push({sex,source,before,file:result.output,convertedHash:sha(result.output)});}}finally{engine.close();}
- const app=await _electron.launch({args:[root],env:{...process.env,FUSION_DATA_DIR:path.join(runtime,'app')},timeout:60000}),page=await app.firstWindow(),errors=[],reports=[];page.on('pageerror',e=>errors.push(e.message));let phase='startup';
+ const app=await _electron.launch({...candidateLaunch(root),env:{...process.env,FUSION_DATA_DIR:path.join(runtime,'app')},timeout:60000}),page=await app.firstWindow(),errors=[],reports=[];page.on('pageerror',e=>errors.push(e.message));let phase='startup';
  const idle=()=>page.waitForFunction(()=>!fusionOperators.running&&!document.querySelector('#app').classList.contains('busy'),null,{timeout:240000});
  try{
   await page.waitForFunction(()=>window.fusionOperators,null,{timeout:60000});if(await page.locator('#recovery-skip').count())await page.locator('#recovery-skip').click();

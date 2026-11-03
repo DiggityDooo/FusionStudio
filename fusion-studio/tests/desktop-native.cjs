@@ -1,7 +1,8 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {_electron:electron}=require('playwright');const assert=require('node:assert/strict');const path=require('node:path'),fs=require('node:fs'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
 (async()=>{
- const output=path.join(root,'test-output'),packaged=process.argv.includes('--packaged');const args=packaged?{executablePath:path.join(root,'release-v0.3.0','win-unpacked','Fusion Studio.exe')}:{args:[root]};
+ const output=path.join(root,'test-output'),packaged=process.argv.includes('--packaged')||!!process.env.FUSION_TEST_EXECUTABLE;const args=candidateLaunch(root,{packaged});
  const app=await electron.launch({...args,env:{...process.env,FUSION_DATA_DIR:path.join(output,'native-desktop-'+Date.now())},timeout:30000});const page=await app.firstWindow();const errors=[];page.on('pageerror',e=>errors.push(e.message));
  try{
   await page.waitForFunction(()=>window.fusionEditor?.root.children.length>0);

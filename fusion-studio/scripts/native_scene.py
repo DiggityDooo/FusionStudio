@@ -23,12 +23,13 @@ from pathlib import Path
 from mathutils import Matrix, Vector
 
 def load_scene(file):
-    with bpy.data.libraries.load(str(file), link=False) as (src, dst):
-        dst.scenes = src.scenes
-    scenes = [s for s in dst.scenes if s]
-    if not scenes: raise ValueError('The Blender file contains no scene.')
-    scene = next((s for s in scenes if s.camera), scenes[0])
-    bpy.context.window.scene = scene
+    # Isolated background process; never restore UI or execute source scripts.
+    # Opening retains the saved active scene and avoids appending orphaned or
+    # prototype objects into the visible scene. No source file is saved here.
+    bpy.ops.wm.open_mainfile(filepath=str(file),load_ui=False,use_scripts=False)
+    bpy.context.preferences.filepaths.use_scripts_auto_execute=False
+    scene=bpy.context.scene
+    if scene is None: raise ValueError('The Blender file contains no active scene.')
     bpy.context.view_layer.update()
     return scene
 

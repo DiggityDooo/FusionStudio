@@ -1,8 +1,8 @@
 # Fusion Studio — Work Log and Requirements Record
 
-Last updated: October 26, 2026
+Last updated: November 3, 2026
 
-Current release label: **v0.0** (package/application version **0.0.0**), set at the user's request on October 26, 2026 for the current source snapshot, previously 0.19.0. The UI, new-project application metadata, npm lockfile and future package output path use this baseline. Previous packaged releases and historical evidence remain intact; **0.18.0** remains the most recent previously packaged milestone. This labeling change creates no new installer/package and does not mark outstanding acceptance work complete.
+Current candidate: **0.19.0-rc.1**, verified for documented subsets. Earlier labels and evidence below retain their recorded scope/date. Original assets, installed hosts and prior releases remain preserved; full roadmap acceptance remains incomplete. See [candidate report](fusion-studio/docs/releases/2026-11-03-rc-report.md) and [live connections](fusion-studio/docs/CONNECTIONS.md).
 
 Earlier sections retain historical results; the latest record supersedes older descriptions of missing topology, morph/formula, modifier-stack, advanced-pattern, authored joint-limit, pose-library and weight-editing foundations.
 

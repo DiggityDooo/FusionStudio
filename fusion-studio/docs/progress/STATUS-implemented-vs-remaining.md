@@ -1,7 +1,9 @@
 # Fusion Studio — Implemented vs Remaining
 
 **Source of truth:** `docs/feature-ledger.json` audited against `3d-software-features-and-controls.md`  
-**As of:** 2026-10-29 (worker dispatch and gesture recovery; combined build and 1,126/1,126 unit tests pass)
+**Current candidate:** [November 3 release report](../releases/2026-11-03-rc-report.md), [live model/MCP evidence](../verification/2026-11-03-live-connections.json), and [recorded demo](../demo/2026-11-03/README.md). Current default gate: 1,191 passes; packaged import matrix: 44 cases. This does not promote broad feature-ledger labels.
+
+**Historical roadmap checkpoint:** 2026-10-29 (worker dispatch and gesture recovery; combined build and 1,126/1,126 unit tests pass)
 **Totals:** **860** ledger items · **398 done** · **462 partial** · **0 open** (~46% done, ~54% partial, 0% open)  
 **Goal status:** incomplete — each feature needs behavior-level acceptance; labels alone do not establish completion.
 

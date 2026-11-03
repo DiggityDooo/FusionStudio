@@ -48,6 +48,23 @@ test('gesture previews defer attachment rebuilds until the settled update',()=>{
 test('sparse evaluator follows reference arithmetic and rejects duplicate/non-finite data',()=>{
  const input={positions:[0,0,0,0,2,0,1,1,0],bodyIds:[0,1,2],height:2,targets:[{data:[2,.1,0,.2],value:.5}]},r=computeCreator(input);assert.ok(Math.abs(r.positions[6]-1.05)<1e-6);assert.ok(Math.abs(r.positions[8]-.1)<1e-6);assert.deepEqual(input.positions,[0,0,0,0,2,0,1,1,0]);assert.throws(()=>computeCreator({...input,targets:[{data:[2,.1,0,.2,2,0,0,0],value:1}]}),/duplicate/);assert.throws(()=>computeCreator({...input,targets:[{data:[9,0,0,0],value:1}]}),/invalid/);assert.throws(()=>computeCreator({...input,height:NaN}),/Invalid/);
 });
+
+test('cached detailed sparse targets reject mutated indices, duplicate IDs and invalid displacements',()=>{
+ const source=creatorInputs(definition,defaultRecipe()),target=source.targets.find(t=>t.data.length>=8),before=source.positions.slice();
+ for(const arrayType of [Array,Float32Array])for(const mutate of [data=>{data[0]=source.positions.length/3;},data=>{data[0]=.5;},data=>{data[4]=data[0];},data=>{data[1]=6;},data=>{data[2]=NaN;},data=>{data[3]=Infinity;}]){
+  const data=arrayType.from(target.data),input={...source,targets:[{data,value:.01}]};computeCreator(input);mutate(data);assert.throws(()=>computeCreator(input),/invalid or duplicate/);assert.deepEqual(source.positions,before);
+ }
+ const data=Array.from(target.data),input={...source,targets:[{data,value:.01}]};computeCreator(input);data.push(...data.slice(0,4));assert.throws(()=>computeCreator(input),/invalid or duplicate/);
+});
+
+test('valid edits to cached detailed sparse coordinates and source IDs match fresh target buffers',()=>{
+ const source=creatorInputs(definition,defaultRecipe()),target=source.targets.find(t=>t.data.length>=8);
+ for(const arrayType of [Array,Float32Array]){
+  const data=arrayType.from(target.data),input={...source,targets:[{data,value:.01}]};computeCreator(input);
+  data[1]+=.01;assert.deepEqual(computeCreator(input).positions,computeCreator({...input,targets:[{data:arrayType.from(data),value:.01}]}).positions);
+  [data[0],data[4]]=[data[4],data[0]];assert.deepEqual(computeCreator(input).positions,computeCreator({...input,targets:[{data:arrayType.from(data),value:.01}]}).positions);
+ }
+});
 test('seeded presets respect category locks and symmetry without coupling skin to geometry',()=>{
  const r=defaultRecipe();r.locks=['nose','weight'];const a=seededRandomize(definition,r,{seed:42}),b=seededRandomize(definition,r,{seed:42});assert.deepEqual(a,b);assert.equal(a.controls.weight,r.controls.weight);assert.ok(Object.keys(a.controls).every(id=>!id.startsWith('nose/')));const one=computeCreator(creatorInputs(definition,a));a.appearance.tone=23;assert.deepEqual(computeCreator(creatorInputs(definition,a)).positions,one.positions);a.family='other';assert.throws(()=>validateRecipe(a,definition),/family/);
 });

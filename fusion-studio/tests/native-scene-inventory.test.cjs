@@ -5,6 +5,9 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const {isolatedEnv} = require('../electron/core.cjs');
+const TEMP_ROOT = path.join(__dirname, '../test-output/tmp');
+fs.mkdirSync(TEMP_ROOT, {recursive: true});
 
 const hashFile = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const verdictOf = (run, prefix) => {
@@ -17,12 +20,12 @@ const BLENDER = 'C:/Program Files/Blender Foundation/Blender 5.2/blender.exe';
 
 function runBlender(work, mode) {
   const script = path.join(__dirname, 'native-inventory.py');
-  const run = spawnSync(BLENDER, ['-b', '--factory-startup', '--python-exit-code', '1', '-P', script, '--', mode, work], {encoding: 'utf8', timeout: 240000});
+  const run = spawnSync(BLENDER, ['-b', '--factory-startup', '--disable-autoexec', '--python-exit-code', '1', '-P', script, '--', mode, work], {encoding: 'utf8', timeout: 240000, env: isolatedEnv(work), windowsHide: true});
   return run;
 }
 
 test('preserved .blend source cage reopens with identical ordered hierarchy', {skip: !fs.existsSync(BLENDER) && 'Blender 5.2 not installed'}, () => {
-  const work = fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-cage-'));
+  const work = fs.mkdtempSync(path.join(TEMP_ROOT, 'fusion-cage-'));
   const build = runBlender(work, 'build');
   assert.equal(build.status, 0, (build.stdout || '').slice(-1500) + (build.stderr || '').slice(-1000));
   const builtLine = (build.stdout || '').split(/\r?\n/).find(l => l.startsWith('{"built"'));
@@ -38,7 +41,7 @@ test('preserved .blend source cage reopens with identical ordered hierarchy', {s
 });
 
 test('authored shape-key, material, transform, UV, camera and armature edits on a copied .blend preserve unrelated native data', {skip: !fs.existsSync(BLENDER) && 'Blender 5.2 not installed'}, () => {
-  const work = fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-cage-edit-'));
+  const work = fs.mkdtempSync(path.join(TEMP_ROOT, 'fusion-cage-edit-'));
   const build = runBlender(work, 'editbuild');
   assert.equal(build.status, 0, (build.stdout || '').slice(-1500) + (build.stderr || '').slice(-1000));
   const originalHash = hashFile(path.join(work, 'fixture.blend'));

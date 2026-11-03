@@ -1,16 +1,17 @@
-const {app,BrowserWindow,ipcMain,dialog,shell}=require('electron');
+const {app,BrowserWindow,ipcMain,dialog,shell,screen,safeStorage}=require('electron');
 const fs=require('node:fs');const path=require('node:path');const {spawn}=require('node:child_process');
 const {APPS,Engine,inside,saveProject,validateProject,listProjects,isolatedEnv,uniqueDir,slug,writeNew}=require('./core.cjs');
 const {AssetCatalog}=require('./assets.cjs');const {preflightDson}=require('./dson.cjs');
 const {GeometryEngine}=require('./geometry.cjs');
+const {localWindowPlacement}=require('./window-placement.cjs');
 const geometry=new GeometryEngine(path.join(__dirname.replace('app.asar','app.asar.unpacked'),'../native/fusion_geometry.node'));
 const root=path.resolve(process.env.FUSION_DATA_DIR || (app.isPackaged ? path.join(path.dirname(app.getPath('exe')),'Fusion Data') : path.join(__dirname,'..','runtime-v2')));
 fs.mkdirSync(root,{recursive:true});app.setPath('userData',path.join(root,'app-profile'));app.setPath('logs',path.join(root,'logs'));app.setPath('crashDumps',path.join(root,'crashes'));
 app.setAppUserModelId('local.fusion.studio');
-let win;let engine;const catalog=new AssetCatalog();const nativeSources=new Set();
+let win;let engine;let connections;const catalog=new AssetCatalog();const nativeSources=new Set();
 const chosenImports=new Set();
 const owned=file=>{if(typeof file!=='string'||!inside(root,file)||!fs.existsSync(file))throw Error('File is outside this workspace.');const real=fs.realpathSync(file);if(!inside(fs.realpathSync(root),real))throw Error('External links are not allowed.');return real;};
-app.whenReady().then(()=>{
+app.whenReady().then(async()=>{
   const worker=path.join(app.getAppPath().replace(/app\.asar$/,'app.asar.unpacked'),'scripts','blender_worker.py');
   engine=new Engine(root,worker,job=>{if(win&&!win.isDestroyed())win.webContents.send('job-update',job);});
   const dsonScript=path.join(app.getAppPath().replace(/app\.asar$/,'app.asar.unpacked'),'scripts','dson_importer.py');
@@ -18,11 +19,15 @@ app.whenReady().then(()=>{
   ipcMain.handle('assets',()=>catalog.scan());
   ipcMain.handle('asset-preview',(_,id)=>catalog.preview(id));
   ipcMain.handle('add-library',async()=>{const r=await dialog.showOpenDialog(win,{title:'Add your asset library',properties:['openDirectory']});if(r.canceled)return null;catalog.addRoot(r.filePaths[0]);return catalog.scan();});
+  const inspectedDson=new Map();
+  const inspectDson=async(source,targetSource)=>{if(targetSource&&!nativeSources.has(targetSource))throw Error('Load the target native asset before inspecting a preset.');const report=await preflightDson(root,dsonScript,source,catalog.roots.map(r=>r.directory),targetSource);inspectedDson.set(report.source,report);return report;};
+  ipcMain.handle('dson-preset',(_,source,sha)=>{const report=inspectedDson.get(source),expected=report?.dependencies.find(d=>d.path===source)?.sha256;if(!report?.preset||!expected||expected!==sha||require('node:crypto').createHash('sha256').update(fs.readFileSync(source)).digest('hex')!==expected)throw Error('Preset changed or was not inspected. Choose it again.');return report;});
+  ipcMain.handle('dson-texture',(_,source,file)=>{const report=inspectedDson.get(source);if(!report?.preset?.materials.some(m=>m.texture===file)||!['.png','.jpg','.jpeg','.webp'].includes(path.extname(file).toLowerCase()))throw Error('Texture was not authorized by preset inspection.');const stat=fs.statSync(file);if(!stat.isFile()||stat.size>64*1024*1024)throw Error('Preset texture is missing or exceeds 64 MiB.');return 'data:image/'+(path.extname(file).toLowerCase()==='.png'?'png':path.extname(file).toLowerCase()==='.webp'?'webp':'jpeg')+';base64,'+fs.readFileSync(file).toString('base64');});
   const importNative=async(source,morphs={})=>{nativeSources.add(source);const converted=await engine.run({action:'convert',source,name:path.basename(source,path.extname(source)),scale:1,params:{contentRoots:catalog.roots.map(r=>r.directory),morphValues:morphs}});return {...converted,native:converted.metadata?.dson,source};};
-  ipcMain.handle('inspect-asset',(_,id)=>{const asset=catalog.get(id);return asset.extension==='.duf'?preflightDson(root,dsonScript,asset.path,catalog.roots.map(r=>r.directory)):['.glb','.gltf'].includes(asset.extension)?engine.validation.run({file:asset.path}):null;});
-  ipcMain.handle('load-asset',async(_,id,morphs,options={})=>{const asset=catalog.get(id);if(asset.extension==='.duf')return importNative(asset.path,morphs);if(!asset.loadable)throw Error('This native format does not yet have an in-app engine adapter. It is cataloged but cannot be opened here.');return engine.run({action:'convert',source:asset.path,name:asset.name,scale:options.scale??1,params:{gltfHash:options.gltfHash}});});
+  ipcMain.handle('inspect-asset',(_,id,targetSource)=>{const asset=catalog.get(id);return ['.duf','.dsf'].includes(asset.extension)?inspectDson(asset.path,targetSource):asset.extension==='.obj'?require('./source-capsule.cjs').capsuleForFile(asset.path):['.glb','.gltf'].includes(asset.extension)?engine.validation.run({file:asset.path}):null;});
+  ipcMain.handle('load-asset',async(_,id,morphs,options={})=>{const asset=catalog.get(id);if(['.duf','.dsf'].includes(asset.extension))return importNative(asset.path,morphs);if(!asset.loadable)throw Error('This native format does not yet have an in-app engine adapter. It is cataloged but cannot be opened here.');return engine.run({action:'convert',source:asset.path,name:asset.name,scale:options.scale??1,params:{gltfHash:options.gltfHash}});});
   ipcMain.handle('apply-native',(_,source,morphs)=>{if(!nativeSources.has(source))throw Error('Load this native character through the asset library first.');return importNative(source,morphs);});
-  const allowProjectSources=doc=>{const visit=node=>{const source=node.userData?.nativeSource;if(typeof source==='string'&&path.extname(source).toLowerCase()==='.duf'&&fs.existsSync(source))nativeSources.add(source);for(const child of node.children||[])visit(child);};visit(doc.scene.object);return doc;};
+  const allowProjectSources=doc=>{const visit=node=>{const source=node.userData?.nativeSource;if(typeof source==='string'&&['.duf','.dsf'].includes(path.extname(source).toLowerCase())&&fs.existsSync(source))nativeSources.add(source);for(const child of node.children||[])visit(child);};visit(doc.scene.object);return doc;};
   ipcMain.handle('save',(_,doc)=>saveProject(root,doc));
   const presetJson=input=>{const data=JSON.stringify(input);if(!data||Buffer.byteLength(data)>2*1024*1024||input?.format!=='fusion.morph-preset'||input.version!==1||!Array.isArray(input.controls)||input.controls.length>16384)throw Error('Choose a valid Fusion morph preset below 2 MiB.');return data;};
   ipcMain.handle('save-morph-preset',(_,preset)=>{const data=presetJson(preset),dir=uniqueDir(path.join(root,'presets'),preset.name),file=path.join(dir,slug(preset.name)+'.fusion-morph.json');writeNew(root,file,data);return {path:file};});
@@ -33,11 +38,11 @@ app.whenReady().then(()=>{
   ipcMain.handle('recent',()=>listProjects(root));
   ipcMain.handle('load-recent',(_,file)=>allowProjectSources(validateProject(JSON.parse(fs.readFileSync(owned(file),'utf8')))));
   ipcMain.handle('open',async()=>{const r=await dialog.showOpenDialog(win,{title:'Open a Fusion project',filters:[{name:'Fusion Studio',extensions:['fusion']}],properties:['openFile']});if(r.canceled)return null;return allowProjectSources(validateProject(JSON.parse(fs.readFileSync(r.filePaths[0],'utf8'))));});
-  ipcMain.handle('choose-import',async()=>{const r=await dialog.showOpenDialog(win,{title:'Import a model — source files stay unchanged',filters:[{name:'3D models and native DAZ assets',extensions:['duf','glb','gltf','obj','fbx','stl','ply','blend','abc','usd','usda','usdc','usdz']}],properties:['openFile']});if(r.canceled)return null;chosenImports.add(r.filePaths[0]);return {path:r.filePaths[0],name:path.basename(r.filePaths[0]),extension:path.extname(r.filePaths[0]).toLowerCase()};});
-  ipcMain.handle('inspect-file',(_,source)=>{if(!chosenImports.has(source))throw Error('Choose an import file first.');const ext=path.extname(source).toLowerCase();return ext==='.duf'?preflightDson(root,dsonScript,source,catalog.roots.map(r=>r.directory)):['.glb','.gltf'].includes(ext)?engine.validation.run({file:source}):null;});
+  ipcMain.handle('choose-import',async()=>{const r=await dialog.showOpenDialog(win,{title:'Import a model — source files stay unchanged',filters:[{name:'3D models and native DAZ assets',extensions:['duf','dsf','glb','gltf','obj','fbx','stl','ply','blend','abc','usd','usda','usdc','usdz']}],properties:['openFile']});if(r.canceled)return null;chosenImports.add(r.filePaths[0]);return {path:r.filePaths[0],name:path.basename(r.filePaths[0]),extension:path.extname(r.filePaths[0]).toLowerCase()};});
+  ipcMain.handle('inspect-file',(_,source,targetSource)=>{if(!chosenImports.has(source))throw Error('Choose an import file first.');const ext=path.extname(source).toLowerCase();return ['.duf','.dsf'].includes(ext)?inspectDson(source,targetSource):ext==='.obj'?require('./source-capsule.cjs').capsuleForFile(source):['.glb','.gltf'].includes(ext)?engine.validation.run({file:source}):null;});
   ipcMain.handle('validate-gltf',async(_,data,context)=>{const result=await engine.validation.run({data,context});const dir=uniqueDir(path.join(root,'inspections'),'glTF'),reportPath=writeNew(root,path.join(dir,'validation.json'),JSON.stringify(result,null,2));return {...result,reportPath};});
   ipcMain.handle('export-gltf',(_,spec)=>engine.exportGltf(spec));
-  ipcMain.handle('job',(_,spec)=>{if(spec.action==='convert'&&!chosenImports.has(spec.source))throw Error('Select the import file through the file picker first.');if(spec.action==='convert'&&path.extname(spec.source).toLowerCase()==='.duf')return importNative(spec.source);return engine.run(spec);});
+  ipcMain.handle('job',(_,spec)=>{if(spec.action==='convert'&&!chosenImports.has(spec.source))throw Error('Select the import file through the file picker first.');if(spec.action==='convert'&&['.duf','.dsf'].includes(path.extname(spec.source).toLowerCase()))return importNative(spec.source);return engine.run(spec);});
   ipcMain.handle('geometry',(_,method,request)=>geometry.run(method,request));
   ipcMain.handle('cancel',async()=>{const nativeActive=!!geometry.active,stopped=geometry.close(),validation=engine.validation.close(),result=engine.cancel();await Promise.all([stopped,validation]);return nativeActive||result;});
   ipcMain.handle('reveal',(_,file)=>{shell.showItemInFolder(owned(file));return true;});
@@ -50,10 +55,11 @@ app.whenReady().then(()=>{
   // Viewport preview of a chosen or saved environment; only HDR/EXR files up to 512 MB are read.
   ipcMain.handle('environment',(_,file)=>{if(typeof file!=='string'||!path.isAbsolute(file)||!['.hdr','.exr'].includes(path.extname(file).toLowerCase()))throw Error('Choose an .hdr or .exr environment image.');const stat=fs.statSync(file);if(!stat.isFile()||stat.size>512*1024*1024)throw Error('Environment image is missing or larger than 512 MB.');return fs.readFileSync(file);});
   ipcMain.handle('image',(_,file)=>{const p=owned(file);if(path.extname(p)!=='.png')throw Error('Only render previews are allowed.');return 'data:image/png;base64,'+fs.readFileSync(p).toString('base64');});
-  win=new BrowserWindow({width:1600,height:1000,minWidth:1180,minHeight:750,backgroundColor:'#303030',title:'Fusion Studio',autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
+  win=new BrowserWindow({width:1600,height:1000,minWidth:1180,minHeight:750,...localWindowPlacement(path.join(app.getAppPath(),'window-placement.local.json'),screen),backgroundColor:'#303030',title:'Fusion Studio',autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
   win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',event=>event.preventDefault());
+  connections=await require('./connections-main.cjs').registerConnections({app,ipcMain,safeStorage,getWindow:()=>win,root});
   win.loadFile(path.join(__dirname,'..','dist','index.html'));
 });
 app.on('window-all-closed',()=>{engine?.close();app.quit();});
 
-app.on('before-quit',()=>{geometry.close();engine?.close();});
+app.on('before-quit',()=>{connections?.close();geometry.close();engine?.close();});
