@@ -18,7 +18,7 @@ node scripts/check-repository.cjs
 node --test tests/model-connections.test.cjs tests/scene-foundation.test.mjs tests/scene-units.test.mjs tests/deformation.test.mjs tests/formulas.test.mjs tests/sculpt.test.mjs tests/animation.test.mjs
 ```
 
-This 83-test subset covers core scene/geometry behavior and deterministic HTTP adapter fixtures. CI uses Windows and Node.js 22. Repository checks validate curated public links, Git-index inclusion, license consistency, generated/private artifact exclusions and obvious credential patterns. They are bounded hygiene checks, not a complete secret or security audit.
+This 82-test subset covers core scene/geometry behavior and deterministic HTTP adapter fixtures. CI uses Windows and Node.js 22. Repository checks validate curated public links, Git-index inclusion, license consistency, generated/private artifact exclusions and obvious credential patterns. They are bounded hygiene checks, not a complete secret or security audit.
 
 ## Full desktop release gates
 

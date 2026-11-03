@@ -179,7 +179,7 @@ Some integration suites require the local native module, a supported Blender bui
 
 The current implementation ledger records **31–80 ms warm character previews** and approximately **55 FPS orbit** on its detailed local scene. Completed edits still take about **0.5–0.7 seconds**, including history capture. Sculpt kernel measurements of approximately **8.2 ms per dab at 190k triangles** exclude rendering, upload, and history; they are not end-to-end interaction guarantees. These are recorded test-PC results, not portable hardware specifications.
 
-Current demo has [machine-readable capture evidence](fusion-studio/docs/demo/2026-11-03/capture-manifest.json) and [media verification](fusion-studio/docs/demo/2026-11-03/media-inventory.json). [Testing guide](fusion-studio/docs/TESTING.md) distinguishes 83 portable CI checks from full native/desktop/import acceptance.
+Current demo has [machine-readable capture evidence](fusion-studio/docs/demo/2026-11-03/capture-manifest.json) and [media verification](fusion-studio/docs/demo/2026-11-03/media-inventory.json). [Testing guide](fusion-studio/docs/TESTING.md) distinguishes 82 portable CI checks from full native/desktop/import acceptance.
 
 ## Development status
 
