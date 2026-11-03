@@ -92,7 +92,7 @@
     "appId": "local.fusion.studio",
     "productName": "Fusion Studio",
     "directories": {
-      "output": "release-hackathon-20261103-rc1"
+      "output": "release-hackathon-20261103-rc1-final"
     },
     "files": [
       "dist/**",
