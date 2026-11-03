@@ -1,0 +1,36 @@
+{
+  "started": "2026-11-03T14:30:20.839Z",
+  "provider": "local Ollama",
+  "serverVersion": "0.40.13",
+  "model": "phi3:mini",
+  "digest": "4f222292793889a9a40a020799cfd28d53f3e01af25d48e06c5e708610fc47e9",
+  "adapters": [
+    {
+      "adapter": "ollama",
+      "prompt": "In one short sentence, explain why a 3D editor should preserve original imported files.",
+      "reply": "A 3D editor should preserve original imported files to ensure that the original data remains unaltered and retains its integrity for future revisions or backup purposes.",
+      "passed": true
+    },
+    {
+      "adapter": "openai-compatible",
+      "prompt": "In one short sentence, explain why a 3D editor should preserve original imported files.",
+      "reply": "A 3D editor should preserve original imported files to allow for flexibility in making changes and revisions without fear of losing the initial reference material.",
+      "passed": true
+    }
+  ],
+  "mcp": [
+    "official Inspector discovery: seven tools",
+    "all seven tools through independent CLI; visible primitive/transform/undo/redo",
+    "authentication and Origin rejection"
+  ],
+  "checks": [
+    "real generation cancellation and clear",
+    "profiles survive actual app restart",
+    "real server missing-model response and profile deletion"
+  ],
+  "cloudProvidersVerified": false,
+  "asarSha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8",
+  "inspectorVersion": "2.13.0",
+  "passed": true,
+  "completed": "2026-11-03T14:31:10.215Z"
+}

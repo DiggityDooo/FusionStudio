@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "purpose": "Recorded demonstration evidence; full release gates remain separate",
+  "seconds": 113.57,
+  "chapters": 6,
+  "media": [
+    {
+      "file": "fusion-studio-rc1-demo.mp4",
+      "bytes": 2759069,
+      "sha256": "2e451ce2c44def72b9c36c6072ebbe2ec984fe21f9ac16011cd7e8411e95d6de",
+      "width": 1920,
+      "height": 1080,
+      "codec": "H.264",
+      "seconds": 113.57,
+      "decodedAllFrames": true,
+      "containerChapters": 6
+    },
+    {
+      "file": "fusion-studio-rc1-demo.vtt",
+      "bytes": 878,
+      "sha256": "6073a0793b33a6c8cdf538ebbe00af2aadfd301c6807de04ea9c09ba4b7ae36b"
+    },
+    {
+      "file": "live-chat.png",
+      "bytes": 188074,
+      "sha256": "43549350eef837ee49c5e023a2cbac07e05ad7c8966405f45777ec5db40960c0",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "mcp-edit.png",
+      "bytes": 196726,
+      "sha256": "725d067f25a0e71070252be7ff335d85e3cf1d14212a238d392bc2f6e36be160",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "native-render.png",
+      "bytes": 344159,
+      "sha256": "6922d3a5f52d4ac5a8501541d185297a40a02aa084fc3098a3a5122a251e8c1d",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "native-workspace.png",
+      "bytes": 348066,
+      "sha256": "7c6f41c89df2a50d54b9d552af6b59ddd8708fb40817c972b98bdc6f427ff813",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    },
+    {
+      "file": "preview.gif",
+      "bytes": 411019,
+      "sha256": "2d3e1f814c7e82c042ec2d75491d329bbedd4c8ada9dd0dca20f2213b37234c1",
+      "width": 640,
+      "height": 360,
+      "frames": 80
+    },
+    {
+      "file": "sculpt-history.png",
+      "bytes": 314000,
+      "sha256": "21fa827e6744312a38e9ea3c02cd6d03a24957ffacd41f605e80714d07d5067b",
+      "width": 1920,
+      "height": 960,
+      "frames": 1
+    }
+  ],
+  "manifestSha256": "9315c6f4ce592985184b00be1b4acefddda0080a9dec38e265bf77bff7c81b4d"
+}
