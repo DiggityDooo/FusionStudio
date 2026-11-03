@@ -1,0 +1,22 @@
+{
+  "name": "fusion-launch-film",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "capture": "node scripts/capture.cjs",
+    "prepare": "node scripts/prepare.mjs",
+    "studio": "remotion studio src/index.jsx",
+    "preview": "node scripts/render.mjs --preview",
+    "render": "node scripts/render.mjs",
+    "check": "node scripts/check.mjs",
+    "verify": "python scripts/verify.py"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.540",
+    "@remotion/media": "4.0.540",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.540"
+  }
+}
