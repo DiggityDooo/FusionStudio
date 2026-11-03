@@ -1,6 +1,6 @@
 # Contributing to Fusion Studio
 
-Start with [current scope](README.md), [architecture](fusion-studio/ARCHITECTURE.md), [tests](fusion-studio/docs/TESTING.md) and [format limits](fusion-studio/docs/releases/2026-11-03-rc-guide.md). Candidate source lives on `codex/overnight-rc1` until reviewed into `main`.
+Start with [current scope](README.md), [architecture](fusion-studio/ARCHITECTURE.md), [tests](fusion-studio/docs/TESTING.md) and [format limits](fusion-studio/docs/releases/2026-11-03-rc-guide.md). Use `codex/` branches for feature/candidate work; `main` holds reviewed source. Candidate history remains available on `codex/overnight-rc1`.
 
 ## Development
 
