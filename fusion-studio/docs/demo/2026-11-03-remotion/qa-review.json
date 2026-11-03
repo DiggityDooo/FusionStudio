@@ -1,0 +1,124 @@
+{
+  "passed": true,
+  "reviewer": "Codex",
+  "reviewedAt": "2026-11-03T19:08:55.801Z",
+  "videoSha256": "e059d2518827c7dde67a7bcb62d9645d1ae0a41f0fad080fc93ad2b36ee8b0d4",
+  "reviewed": [
+    {
+      "file": "blender-end.png",
+      "sha256": "72abb74b45dddf0a969c7a3448d39f857d07253409ae306f1cc146569805f6b6"
+    },
+    {
+      "file": "blender-middle.png",
+      "sha256": "fe421f92722a1377d7bf405ae2049162c3e9c868424358e5fb50b95aaef5792e"
+    },
+    {
+      "file": "blender-start.png",
+      "sha256": "e5181f64209314f67768b572d44ba5574308cb6d115652915f4da55bfcbd821a"
+    },
+    {
+      "file": "chat-end.png",
+      "sha256": "b249fcd2d0c554c938b1b246c650932bd182c3cbefa93480a87b6d728b63cdb0"
+    },
+    {
+      "file": "chat-middle.png",
+      "sha256": "cdc1abb64573cd5632062b13cfac3d4ab2891734bf11db2e913401f01eec5321"
+    },
+    {
+      "file": "chat-start.png",
+      "sha256": "41acc67e5084570d999f19c0b07175d33de478e7460fd3df4dbb10481ead1e4d"
+    },
+    {
+      "file": "daz-end.png",
+      "sha256": "86e2918d65c18d32c992f405ba537071dde70abdb0642304f3248794d50864fc"
+    },
+    {
+      "file": "daz-middle.png",
+      "sha256": "4f610d34881320a584bbffb2581fc2a0c63d4d3be953153b0b3c26a7314f1678"
+    },
+    {
+      "file": "daz-start.png",
+      "sha256": "883bdf107ac13fcdd61b98edef3d48f5a91e2f068fd36b418508a1a4dfa2a823"
+    },
+    {
+      "file": "edit-end.png",
+      "sha256": "17fad298cbc062a2d696fdfdcaddae3d4c8f4f963730b69a6a0a3ab8b7f85307"
+    },
+    {
+      "file": "edit-middle.png",
+      "sha256": "112a777180274042a4983e7a054b5ce3fcade91cb4c2319bb4813abc1f386a66"
+    },
+    {
+      "file": "edit-start.png",
+      "sha256": "e16ce80a4859a231a79b2b659e4552f319d59f8cb98e84b60100041d37b674f6"
+    },
+    {
+      "file": "finish-end.png",
+      "sha256": "7ade6ff204f99a45636f66537a209bb79b6fea5b622f39fea6225fd7412e05d4"
+    },
+    {
+      "file": "finish-middle.png",
+      "sha256": "61655538c4c655b62fd0f0870ffb9ff7beba484080d9d5aa40114d229a9fc43e"
+    },
+    {
+      "file": "finish-start.png",
+      "sha256": "73d508ca947fed6382491cb49a00bcf949b328a3b13407fc3646cf8fe4efe7b2"
+    },
+    {
+      "file": "hook-end.png",
+      "sha256": "708cd75118acc2438019953079da949ff71a99b04ab091693ee4acf1c1484bb0"
+    },
+    {
+      "file": "hook-middle.png",
+      "sha256": "d3ca0bb8cce6cd55cfd0f0e9d161a968b40299d09764f18deb38b0fea9b7ed0f"
+    },
+    {
+      "file": "hook-start.png",
+      "sha256": "54d68d350f3659c05b2feef0203323d5a70ab3bf56fb7ce55cc39b015b2da140"
+    },
+    {
+      "file": "mcp-end.png",
+      "sha256": "b8cfb26584df5287bacc1e551f35ebf7a8e18b1e9d59f1704489d38b09526a08"
+    },
+    {
+      "file": "mcp-middle.png",
+      "sha256": "7dda5502060cd194ff4190e8bd0b73aaa9c9d4bbab8038f7c1b446aa8d8c11a9"
+    },
+    {
+      "file": "mcp-start.png",
+      "sha256": "893230c917ce17ea0ccd0b356cda7d08f5f3978a2d9dd45f876eeab4a79acf22"
+    },
+    {
+      "file": "transition-blender.jpg",
+      "sha256": "b7c524d3f9e1c2d6a61758a163bf2b78dd93ebc521780c572ee9693b1611932d"
+    },
+    {
+      "file": "transition-chat.jpg",
+      "sha256": "6184133377d0219b73bccc4c80e06cbb305a9fea81897a607083abfd48b7cd2e"
+    },
+    {
+      "file": "transition-daz.jpg",
+      "sha256": "695d1c5b06ca8cdbc276a54e93db068dbf42b3f817863ec25ae8baa0e0b5566e"
+    },
+    {
+      "file": "transition-edit.jpg",
+      "sha256": "281456ad2f42e9f7ce12f83d56aeb580b27cee014a47b60ac38a6a9ab806cd68"
+    },
+    {
+      "file": "transition-finish.jpg",
+      "sha256": "1f0b78be5c1cffcd52eaee96d9f585344d3e175a5961afcbd4c3bf0ef24ebb88"
+    },
+    {
+      "file": "transition-mcp.jpg",
+      "sha256": "3576cd9bf1372d86053acf76c850764108ac92a2a5c036d8821f0fdd3291ee71"
+    }
+  ],
+  "observations": [
+    "21 actual full-resolution start/middle/end stills inspected",
+    "Six 16-frame transition strips inspected",
+    "Compatibility reviews readable; waits shortened and labeled",
+    "Bookend montage intentionally crops real outputs; main workflow shots contain actual app",
+    "No model credentials or personal file paths exposed in inspected frames",
+    "DAZ preset demonstrates supported color-channel subset; legacy texture shader parity excluded"
+  ]
+}

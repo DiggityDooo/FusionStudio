@@ -1,0 +1,790 @@
+{
+  "workflow": {
+    "url": "https://github.com/chacha95/demo-video-creator",
+    "revision": "7947a8b4ee9b18c056945b16911bd229d9606251",
+    "renderer": "Remotion 4.0.540",
+    "adaptations": [
+      "120 seconds",
+      "music and captions, no narration",
+      "frame-driven React instead of HyperFrames",
+      "restrained motion"
+    ]
+  },
+  "film": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationInFrames": 3600,
+    "version": "0.19.0-rc.1"
+  },
+  "story": [
+    {
+      "id": "hook",
+      "from": 0,
+      "to": 183,
+      "tag": "FUSION STUDIO",
+      "title": "Your assets.\nOne workspace.",
+      "caption": "Import. Edit. Render. Keep control.",
+      "clips": [],
+      "tone": "dark"
+    },
+    {
+      "id": "blender",
+      "from": 183,
+      "to": 831,
+      "tag": "01 / BLENDER",
+      "title": "Keep the original.",
+      "caption": "Review conversion limits. Choose editable data or preserved rendering.",
+      "clips": [
+        {
+          "asset": "blend-edit",
+          "frames": 265
+        },
+        {
+          "asset": "blend-preserve",
+          "frames": 147
+        },
+        {
+          "asset": "native-render",
+          "frames": 236
+        }
+      ],
+      "tone": "dark"
+    },
+    {
+      "id": "daz",
+      "from": 831,
+      "to": 1551,
+      "tag": "02 / DAZ",
+      "title": "Bring your library.",
+      "caption": "Real .duf import. Mesh, rig, materials. A compatible preset, recovered.",
+      "clips": [
+        {
+          "asset": "daz-import",
+          "frames": 330
+        },
+        {
+          "asset": "daz-preset",
+          "frames": 390
+        }
+      ],
+      "tone": "light"
+    },
+    {
+      "id": "edit",
+      "from": 1551,
+      "to": 2343,
+      "tag": "03 / EDIT + RECOVER",
+      "title": "Make it yours.",
+      "caption": "Sculpt. Undo. Redo. Save, reopen and export editable geometry.",
+      "clips": [
+        {
+          "asset": "sculpt",
+          "frames": 426
+        },
+        {
+          "asset": "save",
+          "frames": 366
+        }
+      ],
+      "tone": "dark"
+    },
+    {
+      "id": "chat",
+      "from": 2343,
+      "to": 2811,
+      "tag": "04 / YOUR MODEL",
+      "title": "A conversation. Locally.",
+      "caption": "Real Phi-3 through Ollama. Chat sends entered messages; it does not edit scenes.",
+      "clips": [
+        {
+          "asset": "chat",
+          "frames": 468
+        }
+      ],
+      "tone": "dark"
+    },
+    {
+      "id": "mcp",
+      "from": 2811,
+      "to": 3351,
+      "tag": "05 / EXTERNAL MCP",
+      "title": "Connect. With control.",
+      "caption": "Authenticated external client. Add, transform, undo and redo.",
+      "clips": [
+        {
+          "asset": "mcp",
+          "frames": 540
+        }
+      ],
+      "tone": "light"
+    },
+    {
+      "id": "finish",
+      "from": 3351,
+      "to": 3600,
+      "tag": "FUSION STUDIO / 0.19.0-rc.1",
+      "title": "Build to edit.",
+      "caption": "github.com/DiggityDooo/FusionStudio",
+      "clips": [],
+      "tone": "dark"
+    }
+  ],
+  "captions": [
+    [
+      0,
+      183,
+      "Your assets. One workspace."
+    ],
+    [
+      183,
+      448,
+      "Review Blender conversion limits before import."
+    ],
+    [
+      448,
+      595,
+      "Editable working data. Original source retained."
+    ],
+    [
+      595,
+      831,
+      "Preserved rendering uses native camera, shaders and lights."
+    ],
+    [
+      831,
+      1161,
+      "Import a real DAZ .duf clothing asset."
+    ],
+    [
+      1161,
+      1311,
+      "Apply a compatible material preset to selected asset."
+    ],
+    [
+      1311,
+      1551,
+      "Undo and redo recover material state."
+    ],
+    [
+      1551,
+      1764,
+      "A real sculpt stroke changes mesh geometry."
+    ],
+    [
+      1764,
+      1977,
+      "Undo and redo restore exact numeric geometry."
+    ],
+    [
+      1977,
+      2160,
+      "Save and reopen editable Fusion project."
+    ],
+    [
+      2160,
+      2343,
+      "Export a validated GLB working copy."
+    ],
+    [
+      2343,
+      2577,
+      "Test your own local model connection."
+    ],
+    [
+      2577,
+      2811,
+      "Real Phi-3 response. Conversational chat only."
+    ],
+    [
+      2811,
+      2991,
+      "An authenticated external MCP client inspects scene."
+    ],
+    [
+      2991,
+      3171,
+      "Add a primitive and change its transform."
+    ],
+    [
+      3171,
+      3351,
+      "Shared history supports undo and redo."
+    ],
+    [
+      3351,
+      3600,
+      "Fusion Studio 0.19.0-rc.1. Music: Secret — ESPRIT 空想."
+    ]
+  ],
+  "assets": {
+    "blend-edit": {
+      "file": "media/blend-edit.mp4",
+      "sha256": "4f3c06071ca536711d3f04806c2eb24398939303ec68addf6c8cb8f3b998edc6",
+      "seconds": 8.97,
+      "frames": 269,
+      "width": 1920,
+      "height": 960,
+      "editorialCuts": [
+        {
+          "source": "blend-edit-review",
+          "start": 0,
+          "end": 4.6
+        },
+        {
+          "source": "blend-edit",
+          "start": 12.5
+        }
+      ],
+      "waitingTimeShortened": true
+    },
+    "blend-preserve": {
+      "file": "media/blend-preserve.mp4",
+      "sha256": "ce9d775a00f043bf752c8e022d4d277b76140e735aefc47b0e844d1a92c20b92",
+      "seconds": 6.17,
+      "frames": 185,
+      "width": 1920,
+      "height": 960,
+      "editorialCuts": [
+        {
+          "source": "blend-preserve-review",
+          "start": 0,
+          "end": 2.3
+        },
+        {
+          "source": "blend-preserve",
+          "start": 4.5
+        }
+      ],
+      "waitingTimeShortened": true
+    },
+    "native-render": {
+      "file": "media/native-render.mp4",
+      "sha256": "4b1f675b4361a142792e49cdc576ad70b3e0219611f57e95d1f630655c517982",
+      "seconds": 8.67,
+      "frames": 260,
+      "width": 1920,
+      "height": 960,
+      "editorialCuts": [
+        {
+          "source": "native-render",
+          "start": 0,
+          "end": 1.5
+        },
+        {
+          "source": "native-render",
+          "start": 22
+        }
+      ],
+      "waitingTimeShortened": true
+    },
+    "daz-import": {
+      "file": "media/daz-import.mp4",
+      "sha256": "065fa2064774b261dfc5df07e4f4bcf39b5e716c400f0c07bfa3ec4361e18dfc",
+      "seconds": 6.63,
+      "frames": 199,
+      "width": 1920,
+      "height": 960,
+      "editorialCuts": [
+        {
+          "source": "daz-import",
+          "start": 2.5,
+          "end": 4.5
+        },
+        {
+          "source": "daz-import",
+          "start": 10.5
+        }
+      ],
+      "waitingTimeShortened": true
+    },
+    "daz-preset": {
+      "file": "media/daz-preset.mp4",
+      "sha256": "f4d496039c10beeaacd4bcf69079bd0fd8ed63e39559ed7a97f86a00fc916306",
+      "seconds": 17.37,
+      "frames": 521,
+      "width": 1920,
+      "height": 960
+    },
+    "sculpt": {
+      "file": "media/sculpt.mp4",
+      "sha256": "50b458475f7e3e08e844c43c27607ae59d9aca532b56947a2a1adf7835c89a92",
+      "seconds": 17.77,
+      "frames": 533,
+      "width": 1920,
+      "height": 960
+    },
+    "save": {
+      "file": "media/save.mp4",
+      "sha256": "fb768bb13b179dae3b68f1a580e0ff813d7c19b1cc41a1c37e3b7192c1184ea9",
+      "seconds": 12.03,
+      "frames": 361,
+      "width": 1920,
+      "height": 960
+    },
+    "chat": {
+      "file": "media/chat.mp4",
+      "sha256": "24f9144959a5f1a42a6b5f83ced14fc64a06abfad17fd068ad4080fa2feb68be",
+      "seconds": 11.87,
+      "frames": 356,
+      "width": 1920,
+      "height": 960,
+      "editorialCuts": [
+        {
+          "source": "chat",
+          "start": 6.5
+        }
+      ],
+      "waitingTimeShortened": true
+    },
+    "mcp": {
+      "file": "media/mcp.mp4",
+      "sha256": "f5e2d8f1316462efb5656535c16e3369cedb78b59124057d64837c02e93d0737",
+      "seconds": 14.13,
+      "frames": 424,
+      "width": 1920,
+      "height": 960
+    },
+    "blend-edit-review": {
+      "file": "media/blend-edit-review.mp4",
+      "sha256": "18254ca0c414bfbe6c7ee759fb2397e13b9f5e6877cddaa26657c7583aafdc11",
+      "seconds": 6.27,
+      "frames": 188,
+      "width": 1920,
+      "height": 960
+    },
+    "blend-preserve-review": {
+      "file": "media/blend-preserve-review.mp4",
+      "sha256": "21e964dab8a6e1faa5ea20b3d24eaed2b893651f5eb6215217308172dc426b70",
+      "seconds": 6.37,
+      "frames": 191,
+      "width": 1920,
+      "height": 960
+    }
+  },
+  "music": {
+    "title": "Secret",
+    "artist": "ESPRIT 空想",
+    "sourceSha256": "d8c606d4c8e6b6cf7f32fc7527665a3b8957193557d246ace91e3b3973fce312",
+    "masterSha256": "54b444882be870abb750ce5419c0859d699baa55c17398261c1b0779e8015bcf",
+    "excerpt": {
+      "startSeconds": 0,
+      "seconds": 120,
+      "playbackRate": 1,
+      "fadeInSeconds": 1,
+      "fadeOutSeconds": 3
+    },
+    "analysis": {
+      "estimatedBpm": 99.99999999999953,
+      "periodFrames": 18.000000000000085,
+      "phaseFrames": 2.5,
+      "method": "PCM energy-onset autocorrelation; constant beat grid",
+      "beats": [
+        3,
+        21,
+        39,
+        57,
+        75,
+        93,
+        111,
+        129,
+        147,
+        165,
+        183,
+        201,
+        219,
+        237,
+        255,
+        273,
+        291,
+        309,
+        327,
+        345,
+        363,
+        381,
+        399,
+        417,
+        435,
+        453,
+        471,
+        489,
+        507,
+        525,
+        543,
+        561,
+        579,
+        597,
+        615,
+        633,
+        651,
+        669,
+        687,
+        705,
+        723,
+        741,
+        759,
+        777,
+        795,
+        813,
+        831,
+        849,
+        867,
+        885,
+        903,
+        921,
+        939,
+        957,
+        975,
+        993,
+        1011,
+        1029,
+        1047,
+        1065,
+        1083,
+        1101,
+        1119,
+        1137,
+        1155,
+        1173,
+        1191,
+        1209,
+        1227,
+        1245,
+        1263,
+        1281,
+        1299,
+        1317,
+        1335,
+        1353,
+        1371,
+        1389,
+        1407,
+        1425,
+        1443,
+        1461,
+        1479,
+        1497,
+        1515,
+        1533,
+        1551,
+        1569,
+        1587,
+        1605,
+        1623,
+        1641,
+        1659,
+        1677,
+        1695,
+        1713,
+        1731,
+        1749,
+        1767,
+        1785,
+        1803,
+        1821,
+        1839,
+        1857,
+        1875,
+        1893,
+        1911,
+        1929,
+        1947,
+        1965,
+        1983,
+        2001,
+        2019,
+        2037,
+        2055,
+        2073,
+        2091,
+        2109,
+        2127,
+        2145,
+        2163,
+        2181,
+        2199,
+        2217,
+        2235,
+        2253,
+        2271,
+        2289,
+        2307,
+        2325,
+        2343,
+        2361,
+        2379,
+        2397,
+        2415,
+        2433,
+        2451,
+        2469,
+        2487,
+        2505,
+        2523,
+        2541,
+        2559,
+        2577,
+        2595,
+        2613,
+        2631,
+        2649,
+        2667,
+        2685,
+        2703,
+        2721,
+        2739,
+        2757,
+        2775,
+        2793,
+        2811,
+        2829,
+        2847,
+        2865,
+        2883,
+        2901,
+        2919,
+        2937,
+        2955,
+        2973,
+        2991,
+        3009,
+        3027,
+        3045,
+        3063,
+        3081,
+        3099,
+        3117,
+        3135,
+        3153,
+        3171,
+        3189,
+        3207,
+        3225,
+        3243,
+        3261,
+        3279,
+        3297,
+        3315,
+        3333,
+        3351,
+        3369,
+        3387,
+        3405,
+        3423,
+        3441,
+        3459,
+        3477,
+        3495,
+        3513,
+        3531,
+        3549,
+        3567,
+        3585
+      ]
+    }
+  },
+  "capture": {
+    "captured": "2026-11-03T18:45:53.506Z",
+    "application": "Fusion Studio 0.19.0-rc.1",
+    "method": "Actual packaged Electron pixels via CDP; only file picker paths automated. Frame timestamps retained locally. No simulated responses or UI.",
+    "sources": [
+      {
+        "file": "fusion-optical-instrument.blend",
+        "sha256": "f0658b660b15451ab32b7c1dd8877caab03fdd9c7a5de3c7b1cc51f06f440450",
+        "origin": "Original procedural fixture"
+      },
+      {
+        "file": "aster-stoneware.glb",
+        "sha256": "18911c163868e47b19ad72b7294c0e3e6f95258948b92d6c469ded9e0e737a7d",
+        "origin": "Original procedural fixture"
+      },
+      {
+        "file": "Basic Wear MuscleShirt.duf",
+        "sha256": "21dd5e2ca074e502ce7453258c83b55fa159f2013de558207af768aef403f379",
+        "origin": "Installed local DAZ library"
+      },
+      {
+        "file": "Basic Wear MuscleShirt Black 3Delight.duf",
+        "sha256": "43cb5a2cc29bed9b7b44ed1b182a849515542ea6d30b4c002863920ed4ad442f",
+        "origin": "Installed local DAZ library"
+      }
+    ],
+    "clips": [
+      {
+        "id": "blend-edit",
+        "file": "blend-edit.mp4",
+        "sha256": "af8488898e0ea2ac2755311324bcbc8f5deb24e31870372e7843787aaa190449",
+        "capturedFrames": 265,
+        "sourceSeconds": 16.48901391029358,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "blend-preserve",
+        "file": "blend-preserve.mp4",
+        "sha256": "222029eec7c9b6ec1f2490236fca501eb149c53b65561dd3b40fb8fef9feaa5b",
+        "capturedFrames": 132,
+        "sourceSeconds": 7.9456939697265625,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "native-render",
+        "file": "native-render.mp4",
+        "sha256": "b9b786365397c2a924a3e767449acefad2032b2bf0de146074d91acb76165b04",
+        "capturedFrames": 322,
+        "sourceSeconds": 28.753289937973022,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "daz-import",
+        "file": "daz-import.mp4",
+        "sha256": "82cadb8a6d3297c04760b76325cdbc5501fe89db4499e3a63c6baf13e44e74d9",
+        "capturedFrames": 226,
+        "sourceSeconds": 14.723567962646484,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "daz-preset",
+        "file": "daz-preset.mp4",
+        "sha256": "f4d496039c10beeaacd4bcf69079bd0fd8ed63e39559ed7a97f86a00fc916306",
+        "capturedFrames": 253,
+        "sourceSeconds": 16.96980905532837,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "sculpt",
+        "file": "sculpt.mp4",
+        "sha256": "50b458475f7e3e08e844c43c27607ae59d9aca532b56947a2a1adf7835c89a92",
+        "capturedFrames": 284,
+        "sourceSeconds": 17.378669023513794,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "save",
+        "file": "save.mp4",
+        "sha256": "fb768bb13b179dae3b68f1a580e0ff813d7c19b1cc41a1c37e3b7192c1184ea9",
+        "capturedFrames": 185,
+        "sourceSeconds": 11.654700994491577,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "chat",
+        "file": "chat.mp4",
+        "sha256": "51663424016663e15cc4a30c7b0308a5713ed90955231ec9ca5be6cb17c8c61c",
+        "capturedFrames": 399,
+        "sourceSeconds": 17.95245599746704,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "mcp",
+        "file": "mcp.mp4",
+        "sha256": "f5e2d8f1316462efb5656535c16e3369cedb78b59124057d64837c02e93d0737",
+        "capturedFrames": 297,
+        "sourceSeconds": 13.702878952026367,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "blend-edit-review",
+        "file": "blend-edit-review.mp4",
+        "sha256": "18254ca0c414bfbe6c7ee759fb2397e13b9f5e6877cddaa26657c7583aafdc11",
+        "capturedFrames": 131,
+        "sourceSeconds": 5.870720148086548,
+        "width": 1920,
+        "height": 960
+      },
+      {
+        "id": "blend-preserve-review",
+        "file": "blend-preserve-review.mp4",
+        "sha256": "21e964dab8a6e1faa5ea20b3d24eaed2b893651f5eb6215217308172dc426b70",
+        "capturedFrames": 135,
+        "sourceSeconds": 5.9430999755859375,
+        "width": 1920,
+        "height": 960
+      }
+    ],
+    "checks": [
+      "Blender interchange import supplies editable mesh data",
+      "Preserved native attachment and actual Cycles OptiX render; source unchanged",
+      "Actual DAZ mesh and rig; compatible material preset; pixel-exact texture recovery and bounded material color drift",
+      "Pointer-driven sculpt; exact canonical geometry hashes before/after undo and redo",
+      "Save/reopen exact sculpted geometry and actual GLB export",
+      "Real local Ollama Phi-3 test and response",
+      "External official SDK client: inspect/add/transform/undo/redo with revision checks",
+      "Separate fresh Blender compatibility reviews captured at readable duration"
+    ],
+    "passed": true,
+    "asarSha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8",
+    "daz": {
+      "vertices": 16010,
+      "bones": 24
+    },
+    "materialRecovery": {
+      "colorTolerance": 0.00001,
+      "maxColorError": 0.000001016770861173022,
+      "texturePixelsExact": true
+    },
+    "exported": [
+      {
+        "file": "fusion-optical-instrumentblend.glb",
+        "bytes": 1442372,
+        "sha256": "09a141bf07fbc87b7043d0996221a44155bb2153de925601a889b394222c1ba4"
+      },
+      {
+        "file": "fusion-optical-instrumentblend.glb",
+        "bytes": 1446624,
+        "sha256": "88a2ded6eea11ddab78e50c74222a2cfa1cd035e0b28cf5fc26c8b2d74666fa3"
+      },
+      {
+        "file": "Basic Wear MuscleShirt.glb",
+        "bytes": 5338636,
+        "sha256": "845334d0813f2636884c667292d3699150e3bc848a9271dbc5267129e28bb80f"
+      },
+      {
+        "file": "aster-stonewareglb.glb",
+        "bytes": 3764328,
+        "sha256": "6792f7201c84174764f0a8abb3fe664a48705a0134fcd8753a114aaf19838699"
+      },
+      {
+        "file": "aster-stoneware.glb",
+        "bytes": 3761352,
+        "sha256": "18911c163868e47b19ad72b7294c0e3e6f95258948b92d6c469ded9e0e737a7d"
+      },
+      {
+        "file": "Fusion launch - editable study.glb",
+        "bytes": 3765672,
+        "sha256": "6b0f331ccec7ab1bd9b919be9b040cabda164b354a79ebaee96ac315e6b79e01"
+      },
+      {
+        "file": "input.glb",
+        "bytes": 368,
+        "sha256": "67efabf6925c5baf6275a9288f018b4f095d2eb16842ec991a4bb5c8f870fcff"
+      }
+    ],
+    "liveModel": {
+      "provider": "local Ollama",
+      "model": "phi3:mini",
+      "reply": "To maintain the integrity of detailed digital assets for future reference and analysis.",
+      "simulated": false
+    },
+    "completed": "2026-11-03T18:49:07.908Z"
+  },
+  "fontHashes": [
+    {
+      "file": "regular.ttf",
+      "sha256": "704eada12961a27fd271f7d3b09e2066520e758390c1776744eff430fee30f6e"
+    },
+    {
+      "file": "semibold.ttf",
+      "sha256": "6c3fd894b19950b10c34bf64069ef821eaf2f58f959146306fee5b367472e501"
+    }
+  ],
+  "preparedSha256": "9a2162311b5050fb28c26c1a9ac767bd464c96fe764e0a5680c71d720209387f"
+}

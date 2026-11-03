@@ -30,3 +30,23 @@ jobs:
         run: node --test tests/model-connections.test.cjs tests/scene-foundation.test.mjs tests/scene-units.test.mjs tests/deformation.test.mjs tests/formulas.test.mjs tests/sculpt.test.mjs tests/animation.test.mjs
       # Full default/native/desktop/import gates require installed Blender,
       # compiled native core and local fixtures. This job does not replace them.
+  video-source:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: fusion-studio/videos/fusion-launch
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: fusion-studio/videos/fusion-launch/package-lock.json
+      - name: Install isolated pinned video dependencies
+        run: npm ci --ignore-scripts
+      - name: Check timeline and caption coverage
+        run: npm run check
+      # Full media render uses local captured footage and user-supplied music.

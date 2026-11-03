@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "manifestFile": "provenance.json",
+  "manifestSha256": "b1829d2ccaa320b51f30f11c1cfe83ae19aa0076db7194a8eb541a9a5e44b3ec",
+  "seconds": 120,
+  "frames": 3600,
+  "media": [
+    {
+      "file": "fusion-launch.mp4",
+      "bytes": 32040213,
+      "sha256": "e059d2518827c7dde67a7bcb62d9645d1ae0a41f0fad080fc93ad2b36ee8b0d4"
+    },
+    {
+      "file": "fusion-launch.vtt",
+      "bytes": 1297,
+      "sha256": "0f60022885b38e576ed6beea7b9756bfa72793587792c27580bdc73c384dec0c"
+    },
+    {
+      "file": "poster.png",
+      "bytes": 773917,
+      "sha256": "450250abd6cbdb6b8e2b35448d7c48d2d4c59dbcdf6e2471504498071747a82a"
+    },
+    {
+      "file": "preview.gif",
+      "bytes": 2287228,
+      "sha256": "bcf551c589d1203e82effa51c36ea82008f0c996c40307b7551d1b617f74180d"
+    },
+    {
+      "file": "contact-sheet.jpg",
+      "bytes": 255804,
+      "sha256": "95a0a81774c3ed0fe0117a98856997cc3057655fe3afa1f4d75a40bb2bc11725"
+    },
+    {
+      "file": "determinism.json",
+      "bytes": 778,
+      "sha256": "a476b0abc6f2805903b307d0202afebc15ac85b7dc17af1cd757e3825e37bdd8"
+    },
+    {
+      "file": "verification.json",
+      "bytes": 2323,
+      "sha256": "6706c91ebd48bae263dff9b915580b5817fe2244cf1bd3ca402bfb09be407a86"
+    },
+    {
+      "file": "qa-review.json",
+      "bytes": 4166,
+      "sha256": "1bc105ef3c65cae6881b5b0707ca3765d8ba3479a929925043f6a5e682c2814f"
+    },
+    {
+      "file": "export-validation.json",
+      "bytes": 706,
+      "sha256": "c929c70aad3d74a509af3bdcb26c4dff3464b39a32602213d915d5956ba9ab12"
+    },
+    {
+      "file": "qa/transition-blender.jpg",
+      "bytes": 236095,
+      "sha256": "b7c524d3f9e1c2d6a61758a163bf2b78dd93ebc521780c572ee9693b1611932d"
+    },
+    {
+      "file": "qa/transition-chat.jpg",
+      "bytes": 208128,
+      "sha256": "6184133377d0219b73bccc4c80e06cbb305a9fea81897a607083abfd48b7cd2e"
+    },
+    {
+      "file": "qa/transition-daz.jpg",
+      "bytes": 233874,
+      "sha256": "695d1c5b06ca8cdbc276a54e93db068dbf42b3f817863ec25ae8baa0e0b5566e"
+    },
+    {
+      "file": "qa/transition-edit.jpg",
+      "bytes": 275209,
+      "sha256": "281456ad2f42e9f7ce12f83d56aeb580b27cee014a47b60ac38a6a9ab806cd68"
+    },
+    {
+      "file": "qa/transition-finish.jpg",
+      "bytes": 279606,
+      "sha256": "1f0b78be5c1cffcd52eaee96d9f585344d3e175a5961afcbd4c3bf0ef24ebb88"
+    },
+    {
+      "file": "qa/transition-mcp.jpg",
+      "bytes": 241853,
+      "sha256": "3576cd9bf1372d86053acf76c850764108ac92a2a5c036d8821f0fdd3291ee71"
+    }
+  ]
+}

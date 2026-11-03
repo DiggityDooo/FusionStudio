@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "technicalChecksPassed": true,
+  "preview": false,
+  "frames": 3600,
+  "seconds": 120,
+  "width": 1920,
+  "height": 1080,
+  "decodedAllFrames": true,
+  "videoCodec": "H.264",
+  "audio": {
+    "input_i": "-14.07",
+    "input_tp": "-4.15",
+    "input_lra": "5.00",
+    "input_thresh": "-24.16",
+    "output_i": "-12.84",
+    "output_tp": "-1.27",
+    "output_lra": "3.70",
+    "output_thresh": "-22.88",
+    "normalization_type": "dynamic",
+    "target_offset": "-1.16"
+  },
+  "decodedAudioSeconds": 120,
+  "captionCues": 17,
+  "transitionStrips": 6,
+  "shotStills": 21,
+  "visualReview": "Codex inspected 21 full-resolution shot stills and six 16-frame transition strips",
+  "deterministicFrames": {
+    "passed": true,
+    "independentPairs": 6
+  },
+  "captureChecks": [
+    "Blender interchange import supplies editable mesh data",
+    "Preserved native attachment and actual Cycles OptiX render; source unchanged",
+    "Actual DAZ mesh and rig; compatible material preset; pixel-exact texture recovery and bounded material color drift",
+    "Pointer-driven sculpt; exact canonical geometry hashes before/after undo and redo",
+    "Save/reopen exact sculpted geometry and actual GLB export",
+    "Real local Ollama Phi-3 test and response",
+    "External official SDK client: inspect/add/transform/undo/redo with revision checks",
+    "Separate fresh Blender compatibility reviews captured at readable duration"
+  ],
+  "sha256": "e059d2518827c7dde67a7bcb62d9645d1ae0a41f0fad080fc93ad2b36ee8b0d4",
+  "completed": "2026-11-03T19:10:06.951Z",
+  "containerChapters": 7,
+  "musicCutChecks": [
+    {
+      "scene": "blender",
+      "frame": 183,
+      "beatErrorFrames": 0
+    },
+    {
+      "scene": "daz",
+      "frame": 831,
+      "beatErrorFrames": 0
+    },
+    {
+      "scene": "edit",
+      "frame": 1551,
+      "beatErrorFrames": 0
+    },
+    {
+      "scene": "chat",
+      "frame": 2343,
+      "beatErrorFrames": 0
+    },
+    {
+      "scene": "mcp",
+      "frame": 2811,
+      "beatErrorFrames": 0
+    },
+    {
+      "scene": "finish",
+      "frame": 3351,
+      "beatErrorFrames": 0
+    }
+  ],
+  "preservation": {
+    "oldDemoUnchanged": true,
+    "frozenAppUnchanged": true,
+    "existingNotesUnchanged": true
+  },
+  "exportValidation": {
+    "files": 7,
+    "errors": 0,
+    "warnings": 0
+  }
+}
