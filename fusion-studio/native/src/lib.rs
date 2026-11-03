@@ -9,6 +9,10 @@ mod material_solver;
 mod material_sparse;
 mod material_preconditioner;
 mod placement;
+#[cfg(test)]
+mod garment_trace;
+#[cfg(test)]
+mod self_contact_tests;
 // Original, bounded geometry/cloth foundation. Units are meters and seconds.
 mod bvh;
 use napi_derive::napi;
@@ -129,6 +133,7 @@ fn drape(mut req:Drape)->Result<serde_json::Value,String>{
  let mut face_supports=face_support::Supports::new();
  let mut support_cache=material_solver::SupportCache::new(n);let mut warm_starts=0usize;let mut cold_restarts=0usize;
  let mut motion_trace=None;let mut phase_times=[0f64;5];
+ #[cfg(test)] let mut stage_trace=garment_trace::Trace::new();
  for step in 0..req.steps{
   if physical.is_some()&&step+1==req.steps{motion_trace=Some(material::MotionTrace::new(&p));}
   for (i,c) in seams.iter_mut().enumerate(){c.rest=seam_rest[i]*(1.-((step+1) as f64/40.).min(1.));}
@@ -141,10 +146,12 @@ fn drape(mut req:Drape)->Result<serde_json::Value,String>{
    // Otherwise changing the iteration count can leave the last fabric solve
    // inside a body or cloth layer until a timestep that will never run.
    let contact_pass=iteration%3==0||iteration+1==req.iterations;
+   #[cfg(test)] stage_trace.record("before constraints",step,iteration,req.iterations,&p,&structural);
    let mut phase_started=std::time::Instant::now();
    if let (Some(m),Some(mass))=(physical,&surface_mass){let normals:Vec<_>=p.iter().map(|&v|if v[1]<=req.thickness+1e-7{Some([0.,1.,0.])}else if let (Some(s),Some(t))=(&req.triangle_collider,&contact_tree){contact::support_normal(v,s,t,req.thickness)}else{None}).collect();if let Some(body)=&req.triangle_collider{face_supports.prune(&p,body,req.thickness);}let contact_planes=face_supports.list();let solved=material_solver::project_cached(&mut p,&predicted,&w,mass,dt,&fabric,m,&hinges,&seams,&normals,&contact_planes,sparse_solver.as_mut(),Some(&mut support_cache))?;if solved.warm_start{warm_starts+=1;}cold_restarts+=solved.cold_restarts;linear_iterations+=solved.linear_iterations;contact_active_set_iterations+=solved.active_set_iterations;if !solved.active_set_converged{unconverged_contact_sets+=1;}linear_residual=solved.relative_residual;linear_absolute_residual=solved.absolute_residual;if solved.stalled{stalled_projections+=1;}}else{if fabric.is_empty(){for c in &mut structural{solve(c,&mut p,&w,dt)}}else{for t in &mut fabric{t.solve(&mut p,&w,compliance,dt)}}for c in &mut bending{solve(c,&mut p,&w,dt)}for c in &mut seams{solve(c,&mut p,&w,dt)}}
    if physical.is_some(){phase_times[0]+=phase_started.elapsed().as_secs_f64()*1000.;phase_started=std::time::Instant::now();}
    if let Some(trace)=&mut motion_trace{trace.record(0,&p);}
+   #[cfg(test)] stage_trace.record("material bend seams",step,iteration,req.iterations,&p,&structural);
    for i in 0..n{if w[i]==0.{continue}let(next,count)=project_point(p[i],&req.colliders,&tree,req.thickness);p[i]=next;contacts+=count;if p[i][1]<req.thickness{p[i][1]=req.thickness;}}
    // Include triangle interiors: vertex-only tests miss a torso passing through a face.
    for t in &req.faces{
@@ -153,12 +160,15 @@ fn drape(mut req:Drape)->Result<serde_json::Value,String>{
    }
    for e in &structural{let inv=w[e.a]+w[e.b];if inv==0.{continue}let center=mul(add(p[e.a],p[e.b]),0.5);let(next,count)=project_point(center,&req.colliders,&tree,req.thickness);if count>0{let delta=mul(sub(next,center),2./inv);p[e.a]=add(p[e.a],mul(delta,w[e.a]));p[e.b]=add(p[e.b],mul(delta,w[e.b]));contacts+=count;}}
    if physical.is_some(){phase_times[1]+=phase_started.elapsed().as_secs_f64()*1000.;phase_started=std::time::Instant::now();}
+   #[cfg(test)] stage_trace.record("floor and proxies",step,iteration,req.iterations,&p,&structural);
    if let (Some(surface),Some(tree))=(&req.triangle_collider,&contact_tree){for i in 0..n{if w[i]>0.{let(next,count)=if physical.is_some(){contact::project_physical(old[i],p[i],surface,tree,req.thickness,req.friction)}else{contact::project(old[i],p[i],surface,tree,req.thickness,req.friction)};p[i]=next;contacts+=count;}}}
    if physical.is_some(){phase_times[2]+=phase_started.elapsed().as_secs_f64()*1000.;phase_started=std::time::Instant::now();}
    if let Some(trace)=&mut motion_trace{trace.record(1,&p);}
+   #[cfg(test)] stage_trace.record("body vertices",step,iteration,req.iterations,&p,&structural);
    if req.solid_contact&&contact_pass{if let (Some(surface),Some(tree))=(&req.triangle_collider,&contact_tree){if physical.is_some(){face_supports.discover(&p,&req.faces,surface,tree,req.thickness)?;}face_contacts+=if physical.is_some(){contact::project_physical_faces(&mut p,&req.faces,&w,surface,tree,req.thickness)}else{contact::project_faces(&mut p,&req.faces,&w,surface,tree,req.thickness)};}}
    if physical.is_some(){phase_times[3]+=phase_started.elapsed().as_secs_f64()*1000.;phase_started=std::time::Instant::now();}
    if let Some(trace)=&mut motion_trace{trace.record(2,&p);}
+   #[cfg(test)] stage_trace.record("body faces",step,iteration,req.iterations,&p,&structural);
    if req.triangle_self_collision&&iteration+1==req.iterations{contacts+=contact::self_project_faces(&mut p,&old,&req.faces,&w,&sewn_roots,req.thickness*2.)?;}
    if req.triangle_self_collision&&contact_pass{contacts+=contact::self_project(&mut p,&old,&req.faces,&w,req.thickness*2.,&excluded);contacts+=contact::edge_project(&mut p,&old,&cloth_edges,&w,req.thickness*2.,&excluded);}
    // Vertex separation is a preview approximation, not triangle-level self collision.
@@ -169,6 +179,7 @@ fn drape(mut req:Drape)->Result<serde_json::Value,String>{
    }
    if physical.is_some(){phase_times[4]+=phase_started.elapsed().as_secs_f64()*1000.;}
    if let Some(trace)=&mut motion_trace{trace.record(3,&p);}
+   #[cfg(test)] stage_trace.record("self contacts",step,iteration,req.iterations,&p,&structural);
   }
   for i in 0..n{velocities[i]=mul(sub(p[i],old[i]),1./dt);if !valid(p[i]){return Err("Cloth diverged; reduce pattern strain".into())}}
  }

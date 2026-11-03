@@ -60,8 +60,11 @@ pub fn project_faces(p:&mut[V],faces:&[[usize;3]],w:&[f64],s:&Surface,tree:&Tree
 pub fn project_physical_faces(p:&mut[V],faces:&[[usize;3]],w:&[f64],s:&Surface,tree:&Tree,h:f64)->usize{
  project_faces_mode(p,faces,w,s,tree,h,true)
 }
+// Earlier contact responses move this triangle. Cached intersection barycentrics
+// still identify material points, but their world coordinates must be evaluated
+// again before projection; reusing old points applies already-cleared hits twice.
 fn project_faces_mode(p:&mut[V],faces:&[[usize;3]],w:&[f64],s:&Surface,tree:&Tree,h:f64,physical:bool)->usize{
- let mut ids=Vec::new();let mut count=0;for t in faces{let tri=t.map(|i|p[i]);let(lo,hi)=bounds(tri.into_iter());tree.query(lo,hi,h,&mut ids);let mut applied=0;for &i in &ids{let body=s.triangles[i].map(|j|s.positions[j]);for (point,bary) in if physical{face_hits_fast(t.map(|j|p[j]),body)}else{face_hits(t.map(|j|p[j]),body)}{let inv=(0..3).map(|j|w[t[j]]*bary[j]*bary[j]).sum::<f64>();if inv<1e-12{continue}let(target,hit)=solid_project(point,s,tree,h);if !hit{continue}let delta=sub(target,point);for j in 0..3{p[t[j]]=add(p[t[j]],mul(delta,w[t[j]]*bary[j]/inv));}count+=1;applied+=1;}if applied>=6{break}}}count
+ let mut ids=Vec::new();let mut count=0;for t in faces{let tri=t.map(|i|p[i]);let(lo,hi)=bounds(tri.into_iter());tree.query(lo,hi,h,&mut ids);let mut applied=0;for &i in &ids{let body=s.triangles[i].map(|j|s.positions[j]);for (_,bary) in if physical{face_hits_fast(t.map(|j|p[j]),body)}else{face_hits(t.map(|j|p[j]),body)}{let inv=(0..3).map(|j|w[t[j]]*bary[j]*bary[j]).sum::<f64>();if inv<1e-12{continue}let current=(0..3).fold([0.;3],|sum,j|add(sum,mul(p[t[j]],bary[j])));let(target,hit)=solid_project(current,s,tree,h);if !hit{continue}let delta=sub(target,current);for j in 0..3{p[t[j]]=add(p[t[j]],mul(delta,w[t[j]]*bary[j]/inv));}count+=1;applied+=1;}if applied>=6{break}}}count
 }
 pub fn validate(s:&Surface)->Result<(),String>{if s.positions.len()>200000||s.triangles.len()>250000||s.positions.iter().any(|&p|!valid(p))||s.triangles.iter().flatten().any(|&i|i>=s.positions.len()){return Err("Invalid triangle collider or collider budget exceeded".into())}if let Some(old)=&s.previous_positions{if old.len()!=s.positions.len()||old.iter().any(|&p|!valid(p)){return Err("Previous collider topology does not match".into())}}Ok(())}
 pub(super) fn closest(p:V,a:V,b:V,c:V)->(V,[f64;3]){
@@ -80,19 +83,22 @@ fn crossing_roots(p:V,q:V,old:[V;3],new:[V;3])->Vec<f64>{
  let mut roots=Vec::new();for interval in cuts.windows(2){let(mut lo,mut hi)=(interval[0],interval[1]);let mut vlo=value(lo);let vhi=value(hi);if vlo.abs()<1e-12{roots.push(lo);}if vlo*vhi<0.{for _ in 0..45{let mid=(lo+hi)*0.5;let vm=value(mid);if vlo*vm>0.{lo=mid;vlo=vm;}else{hi=mid;}}roots.push((lo+hi)*0.5);}if vhi.abs()<1e-12{roots.push(hi);}}roots
 }
 fn swept(p:V,q:V,old:[V;3],new:[V;3])->Option<([f64;3],V)>{for t in crossing_roots(p,q,old,new){let tri=[lerp(old[0],new[0],t),lerp(old[1],new[1],t),lerp(old[2],new[2],t)];let v=lerp(p,q,t);let(pt,w)=closest(v,tri[0],tri[1],tri[2]);if norm(sub(v,pt))<1e-7{let n=cross(sub(tri[1],tri[0]),sub(tri[2],tri[0]));if norm(n)>1e-12{let normal=mul(n,1./norm(n));let sign=if dot(sub(p,old[0]),normal)<0.{-1.}else{1.};return Some((w,mul(normal,sign)))}}}None}
-pub fn project(p:V,q:V,s:&Surface,tree:&Tree,h:f64,friction:f64)->(V,usize){project_mode(p,q,s,tree,h,friction,false)}
-pub fn project_physical(p:V,q:V,s:&Surface,tree:&Tree,h:f64,friction:f64)->(V,usize){project_mode(p,q,s,tree,h,friction,true)}
-fn project_mode(p:V,q:V,s:&Surface,tree:&Tree,h:f64,friction:f64,physical:bool)->(V,usize){let mut out=q;let mut hits=0;let mut candidates=Vec::new();tree.query(p,q,h,&mut candidates);let old=s.previous_positions.as_ref().unwrap_or(&s.positions);for i in candidates{let t=s.triangles[i];let tri=t.map(|v|s.positions[v]);let prev=t.map(|v|old[v]);let(pt,bary)=closest(out,tri[0],tri[1],tri[2]);let delta=sub(out,pt);let distance=norm(delta);let hit=if let Some((w,n))=swept(p,out,prev,tri){let target=add(add(mul(tri[0],w[0]),mul(tri[1],w[1])),mul(tri[2],w[2]));Some((target,n,w))}else if distance<h{let n=if distance>1e-10{mul(delta,1./distance)}else{let cross=cross(sub(tri[1],tri[0]),sub(tri[2],tri[0]));if norm(cross)<1e-12{continue}mul(cross,1./norm(cross))};Some((pt,n,bary))}else{None};if let Some((point,n,bary))=hit{// A swept hit fixes the normal coordinate at the final contact plane.
+pub fn project(p:V,q:V,s:&Surface,tree:&Tree,h:f64,friction:f64)->(V,usize){project_mode(p,q,s,tree,h,friction)}
+pub fn project_physical(p:V,q:V,s:&Surface,tree:&Tree,h:f64,friction:f64)->(V,usize){project_mode(p,q,s,tree,h,friction)}
+fn project_mode(p:V,q:V,s:&Surface,tree:&Tree,h:f64,friction:f64)->(V,usize){let mut out=q;let mut hits=0;let mut candidates=Vec::new();tree.query(p,q,h,&mut candidates);let old=s.previous_positions.as_ref().unwrap_or(&s.positions);for i in candidates{let t=s.triangles[i];let tri=t.map(|v|s.positions[v]);let prev=t.map(|v|old[v]);let(pt,bary)=closest(out,tri[0],tri[1],tri[2]);let delta=sub(out,pt);let distance=norm(delta);let hit=if let Some((w,n))=swept(p,out,prev,tri){let target=add(add(mul(tri[0],w[0]),mul(tri[1],w[1])),mul(tri[2],w[2]));Some((target,n,w))}else if distance<h{let n=if distance>1e-10{mul(delta,1./distance)}else{let cross=cross(sub(tri[1],tri[0]),sub(tri[2],tri[0]));if norm(cross)<1e-12{continue}mul(cross,1./norm(cross))};Some((pt,n,bary))}else{None};if let Some((point,n,bary))=hit{// A swept hit fixes the normal coordinate at the final contact plane.
  // Preserve end-of-step tangential motion; snapping to the impact barycentric
- // point makes frictionless oblique contacts artificially sticky.
- let desired=if physical{add(out,mul(n,h-dot(sub(out,point),n)))}else{add(point,mul(n,h))};let motion=if physical{(0..3).fold([0.;3],|a,j|add(a,mul(sub(tri[j],prev[j]),bary[j])))}else{[0.;3]};let velocity=sub(sub(desired,p),motion);let tangent=sub(velocity,mul(n,dot(velocity,n)));let factor=if physical{(friction*dot(sub(desired,out),n).abs()/norm(tangent).max(1e-12)).min(1.)}else{friction};out=sub(desired,mul(tangent,factor));hits+=1;}}(out,hits)}
+ // point makes frictionless oblique contacts artificially sticky. Both
+ // solvers bound relative tangential friction by the normal correction.
+ let desired=add(out,mul(n,h-dot(sub(out,point),n)));let motion=(0..3).fold([0.;3],|a,j|add(a,mul(sub(tri[j],prev[j]),bary[j])));let velocity=sub(sub(desired,p),motion);let tangent=sub(velocity,mul(n,dot(velocity,n)));let factor=(friction*dot(sub(desired,out),n).abs()/norm(tangent).max(1e-12)).min(1.);out=sub(desired,mul(tangent,factor));hits+=1;}}(out,hits)}
 // A local contact frame is sufficient for a tangent support in the coupled
 // solve. Existing swept and solid projections still enforce final geometry.
 pub fn support_normal(p:V,s:&Surface,tree:&Tree,h:f64)->Option<V>{let mut ids=Vec::new();tree.query(p,p,h*1.06+1e-7,&mut ids);let mut best=h*1.06+1e-7;let mut normal=None;for i in ids{let t=s.triangles[i];let point=closest(p,s.positions[t[0]],s.positions[t[1]],s.positions[t[2]]).0;let d=sub(p,point);let distance=norm(d);if distance>1e-10&&distance<best{best=distance;normal=Some(mul(d,1./distance));}}normal}
 pub fn penetrations(p:&[V],s:&Surface,tree:&Tree,h:f64)->usize{p.iter().filter(|&&q|{let mut ids=Vec::new();tree.query(q,q,h,&mut ids);ids.iter().any(|&i|{let t=s.triangles[i];norm(sub(q,closest(q,s.positions[t[0]],s.positions[t[1]],s.positions[t[2]]).0))<h*0.9})}).count()}
+// Swept self-contact constrains normal separation only. Snapping to the
+// impact barycentric point also removes unconstrained end-of-step sliding.
 pub fn self_project(p:&mut[V],old:&[V],faces:&[[usize;3]],w:&[f64],h:f64,excluded:&HashSet<(usize,usize)>)->usize{
  let s=Surface{positions:p.to_vec(),triangles:faces.to_vec(),previous_positions:Some(old.to_vec())};let tree=Tree::new(&s);let mut ids=Vec::new();let mut count=0;
- for i in 0..p.len(){tree.query(old[i],p[i],h,&mut ids);for &f in &ids{let t=faces[f];if t.contains(&i)||t.iter().any(|&j|excluded.contains(&(i.min(j),i.max(j)))){continue}let tri=t.map(|v|p[v]);let prev=t.map(|v|old[v]);let(point,bary)=closest(p[i],tri[0],tri[1],tri[2]);let d=sub(p[i],point);let len=norm(d);let hit=if let Some((b,n))=swept(old[i],p[i],prev,tri){let target=add(add(mul(tri[0],b[0]),mul(tri[1],b[1])),mul(tri[2],b[2]));Some((sub(add(target,mul(n,h)),p[i]),b))}else if len<h&&len>1e-10{Some((mul(d,(h-len)/len),bary))}else{None};if let Some((delta,b))=hit{let mass=w[i]+(0..3).map(|j|w[t[j]]*b[j]*b[j]).sum::<f64>();if mass==0.{continue}p[i]=add(p[i],mul(delta,w[i]/mass));for j in 0..3{p[t[j]]=sub(p[t[j]],mul(delta,w[t[j]]*b[j]/mass));}count+=1;}}
+ for i in 0..p.len(){tree.query(old[i],p[i],h,&mut ids);for &f in &ids{let t=faces[f];if t.contains(&i)||t.iter().any(|&j|excluded.contains(&(i.min(j),i.max(j)))){continue}let tri=t.map(|v|p[v]);let prev=t.map(|v|old[v]);let(point,bary)=closest(p[i],tri[0],tri[1],tri[2]);let d=sub(p[i],point);let len=norm(d);let hit=if let Some((b,n))=swept(old[i],p[i],prev,tri){let target=add(add(mul(tri[0],b[0]),mul(tri[1],b[1])),mul(tri[2],b[2]));Some((mul(n,h-dot(sub(p[i],target),n)),b))}else if len<h&&len>1e-10{Some((mul(d,(h-len)/len),bary))}else{None};if let Some((delta,b))=hit{let mass=w[i]+(0..3).map(|j|w[t[j]]*b[j]*b[j]).sum::<f64>();if mass==0.{continue}p[i]=add(p[i],mul(delta,w[i]/mass));for j in 0..3{p[t[j]]=sub(p[t[j]],mul(delta,w[t[j]]*b[j]/mass));}count+=1;}}
  }count
 }
 // A distance neighbourhood may suppress vertex/edge clearance constraints,
@@ -121,15 +127,49 @@ pub fn self_project_faces(p:&mut[V],old:&[V],faces:&[[usize;3]],w:&[f64],roots:&
  }Ok(count)
 }
 pub(super) fn segment_pair(a:V,b:V,c:V,d:V)->(V,V,f64,f64){let u=sub(b,a);let v=sub(d,c);let r=sub(a,c);let aa=dot(u,u);let bb=dot(u,v);let cc=dot(v,v);let dd=dot(u,r);let ee=dot(v,r);let det=aa*cc-bb*bb;let mut s=if det>1e-20{((bb*ee-cc*dd)/det).clamp(0.,1.)}else{0.};let t=if cc>1e-20{((bb*s+ee)/cc).clamp(0.,1.)}else{0.};if aa>1e-20{s=((bb*t-dd)/aa).clamp(0.,1.);}(lerp(a,b,s),lerp(c,d,t),s,t)}
+// At a non-parallel swept edge intersection, the cross product defines the
+// normal. Previous material-point separation orients it, but also contains free
+// sliding and must not itself be used as the normal. Near-parallel contacts use
+// its component perpendicular to the longer edge; fully degenerate frames keep
+// the prior deterministic fallback rather than claiming complete CCD coverage.
+fn swept_edge_normal(a:V,b:V,previous:V)->Option<V>{
+ let cross=cross(a,b);let size=norm(cross);let side=dot(previous,cross);
+ if size>1e-12&&side.abs()>size*1e-12{return Some(mul(cross,side.signum()/size))}
+ let tangent=if dot(a,a)>=dot(b,b){a}else{b};let length2=dot(tangent,tangent);
+ let radial=if length2>1e-20{sub(previous,mul(tangent,dot(previous,tangent)/length2))}else{previous};
+ let normal=if norm(radial)>1e-10{radial}else{previous};let size=norm(normal);
+ if size>1e-10{Some(mul(normal,1./size))}else{None}
+}
 pub fn edge_project(p:&mut[V],old:&[V],edges:&[[usize;2]],w:&[f64],h:f64,excluded:&HashSet<(usize,usize)>)->usize{
  let s=Surface{positions:p.to_vec(),triangles:edges.iter().map(|e|[e[0],e[1],e[1]]).collect(),previous_positions:Some(old.to_vec())};let tree=Tree::new(&s);let mut ids=Vec::new();let mut count=0;
  for (i,e) in edges.iter().enumerate(){let(lo,hi)=bounds([old[e[0]],old[e[1]],p[e[0]],p[e[1]]].into_iter());tree.query(lo,hi,h,&mut ids);for &j in &ids{if j<=i{continue}let b=edges[j];if e.iter().any(|a|b.contains(a))||e.iter().any(|&a|b.iter().any(|&b|excluded.contains(&(a.min(b),a.max(b))))){continue}
   let(aq,bq,mut u,mut v)=segment_pair(p[e[0]],p[e[1]],p[b[0]],p[b[1]]);let diff=sub(aq,bq);let len=norm(diff);let mut delta=if len>1e-10&&len<h{Some(mul(diff,(h-len)/len))}else{None};
-  if delta.is_none(){for t in crossing_roots(old[e[0]],p[e[0]],[old[e[1]],old[b[0]],old[b[1]]],[p[e[1]],p[b[0]],p[b[1]]]){let(a,bp,x,y)=segment_pair(lerp(old[e[0]],p[e[0]],t),lerp(old[e[1]],p[e[1]],t),lerp(old[b[0]],p[b[0]],t),lerp(old[b[1]],p[b[1]],t));if norm(sub(a,bp))<1e-7{let normal=sub(lerp(old[e[0]],old[e[1]],x),lerp(old[b[0]],old[b[1]],y));if norm(normal)>1e-10{u=x;v=y;delta=Some(sub(mul(normal,h/norm(normal)),sub(lerp(p[e[0]],p[e[1]],u),lerp(p[b[0]],p[b[1]],v))));break}}}}
+  if delta.is_none(){for t in crossing_roots(old[e[0]],p[e[0]],[old[e[1]],old[b[0]],old[b[1]]],[p[e[1]],p[b[0]],p[b[1]]]){let(a,bp,x,y)=segment_pair(lerp(old[e[0]],p[e[0]],t),lerp(old[e[1]],p[e[1]],t),lerp(old[b[0]],p[b[0]],t),lerp(old[b[1]],p[b[1]],t));if norm(sub(a,bp))<1e-7{let previous=sub(lerp(old[e[0]],old[e[1]],x),lerp(old[b[0]],old[b[1]],y));let edge_a=sub(lerp(old[e[1]],p[e[1]],t),lerp(old[e[0]],p[e[0]],t));let edge_b=sub(lerp(old[b[1]],p[b[1]],t),lerp(old[b[0]],p[b[0]],t));if let Some(normal)=swept_edge_normal(edge_a,edge_b,previous){u=x;v=y;let gap=sub(lerp(p[e[0]],p[e[1]],u),lerp(p[b[0]],p[b[1]],v));delta=Some(mul(normal,h-dot(gap,normal)));break}}}}
   if let Some(d)=delta{let k=[1.-u,u,-(1.-v),-v];let ids=[e[0],e[1],b[0],b[1]];let mass=(0..4).map(|j|w[ids[j]]*k[j]*k[j]).sum::<f64>();if mass>0.{for j in 0..4{p[ids[j]]=add(p[ids[j]],mul(d,w[ids[j]]*k[j]/mass));}count+=1;}}
  }}count
 }
 #[cfg(test)]mod tests{use super::*;
+ #[test]fn swept_edge_normal_frames_are_finite_and_perpendicular_to_parallel_sliding(){
+  for (a,b) in [([2.,0.,0.],[4.,0.,1e-14]),([0.;3],[4.,0.,0.]),([0.,2.,0.],[1e-14,4.,0.])]{
+   let previous=[0.3,-1.,0.2];let n=swept_edge_normal(a,b,previous).unwrap();let tangent=if norm(a)>norm(b){a}else{b};
+   assert!((norm(n)-1.).abs()<1e-12&&n.iter().all(|v|v.is_finite()));
+   assert!(dot(n,tangent).abs()<1e-12);assert!(dot(n,previous)>0.);
+  }
+  assert!(swept_edge_normal([0.;3],[0.;3],[0.;3]).is_none());
+  assert_eq!(swept_edge_normal([1.,0.,0.],[2.,0.,0.],[1.,0.,0.]),Some([1.,0.,0.]),"Retain the explicit undefined-frame fallback, not a complete-CCD claim");
+ }
+ #[test]fn cleared_body_face_material_point_is_not_projected_again_from_a_stale_hit(){
+  // Closed tetrahedron with a large, flat y=0 top. Only one body face can hit
+  // the cloth. Its two cached edge intersections share the moving vertex.
+  let s=Surface{positions:vec![[-4.,0.,-4.],[4.,0.,-4.],[0.,0.,4.],[0.,-4.,0.]],triangles:vec![[0,1,2],[0,3,1],[1,3,2],[2,3,0]],previous_positions:None};
+  let tree=Tree::new(&s);let original=vec![[-0.4,0.02,-0.4],[0.4,0.02,-0.4],[0.,-0.02,0.4]];
+  for physical in [false,true]{
+   let mut p=original.clone();let hits=project_faces_mode(&mut p,&[[0,1,2]],&[0.,0.,1.],&s,&tree,0.003,physical);
+   assert_eq!(p[0],original[0]);assert_eq!(p[1],original[1]);
+   assert_eq!(hits,1,"The second cached material point is already clear: {p:?}");
+   assert!((p[2][1]-(-0.02+0.003*1.05/0.5)).abs()<1e-12,"Contact must use the current material point: {p:?}");
+  }
+ }
  #[test]fn nonadjacent_face_recovery_resolves_crossings_and_keeps_pins(){
   let old=vec![[-1.,-1.,0.],[1.,-1.,0.],[0.,1.,0.],[0.,-0.5,1.],[0.5,-0.5,1.],[0.,0.5,1.]];let mut p=old.clone();p[3][2]=-0.25;let faces=[[0,1,2],[3,4,5]];let w=[0.,0.,0.,1.,1.,1.];let roots=[0,1,2,3,4,5];assert!(!face_hits(p[..3].try_into().unwrap(),p[3..].try_into().unwrap()).is_empty());
   let mut hits=0;for _ in 0..8{hits+=self_project_faces(&mut p,&old,&faces,&w,&roots,0.006).unwrap();}assert!(hits>0);assert!(face_hits(p[..3].try_into().unwrap(),p[3..].try_into().unwrap()).is_empty());assert_eq!(&p[..3],&old[..3]);assert!(p.iter().all(|&v|valid(v)));
@@ -145,6 +185,10 @@ pub fn edge_project(p:&mut[V],old:&[V],edges:&[[usize;2]],w:&[f64],h:f64,exclude
  }
  #[test]fn coulomb_displacement_is_bounded_by_normal_contact(){let s=Surface{positions:vec![[-1.,0.,-1.],[1.,0.,-1.],[0.,0.,1.]],triangles:vec![[0,1,2]],previous_positions:None};let tree=Tree::new(&s);let(p,n)=project_physical([0.,0.003,0.],[0.01,0.001,0.],&s,&tree,0.003,0.5);assert!(n>0);assert!((p[0]-0.009).abs()<1e-10);assert!((p[1]-0.003).abs()<1e-10);let(q,n)=project_physical([0.,0.004,0.],[0.01,0.004,0.],&s,&tree,0.003,0.5);assert_eq!(n,0);assert_eq!(q,[0.01,0.004,0.]);}
 
+ #[test]fn preview_friction_cannot_remove_motion_without_enough_normal_contact(){let s=Surface{positions:vec![[-1.,0.,-1.],[1.,0.,-1.],[0.,0.,1.]],triangles:vec![[0,1,2]],previous_positions:None};let tree=Tree::new(&s);let(p,hits)=project([0.,0.003,0.],[0.01,0.001,0.],&s,&tree,0.003,0.5);assert!(hits>0);assert!((p[0]-0.009).abs()<1e-10,"friction exceeded mu times the 2 mm normal correction: {p:?}");assert!((p[1]-0.003).abs()<1e-10);}
+
+ #[test]fn preview_swept_contact_preserves_end_step_tangent_before_applying_friction(){let s=Surface{positions:vec![[-2.,0.,-2.],[2.,0.,-2.],[0.,0.,2.]],triangles:vec![[0,1,2]],previous_positions:None};let tree=Tree::new(&s);for friction in [0.,0.25,0.5]{let(p,hits)=project([0.,1.,0.],[0.3,-1.,0.2],&s,&tree,0.003,friction);let retained=(1.-friction*1.003/f64::hypot(0.3,0.2)).max(0.);assert!(hits>0);assert!((p[0]-0.3*retained).abs()<1e-12,"preview contact lost tangent at friction {friction}: {p:?}");assert!((p[1]-0.003).abs()<1e-12);assert!((p[2]-0.2*retained).abs()<1e-12);}}
+ #[test]fn preview_and_physical_friction_follow_body_relative_tangent(){let new=vec![[-1.,0.,-1.],[1.,0.,-1.],[0.,0.,1.]];let old=new.iter().map(|&p|sub(p,[0.02,0.,0.])).collect();let s=Surface{positions:new,triangles:vec![[0,1,2]],previous_positions:Some(old)};let tree=Tree::new(&s);for project in [project,project_physical]{let(p,hits)=project([0.,0.003,0.],[0.,0.001,0.],&s,&tree,0.003,0.5);assert!(hits>0);assert!((p[0]-0.001).abs()<1e-10);assert!((p[1]-0.003).abs()<1e-10);}}
  #[test]fn physical_swept_contact_keeps_frictionless_tangential_motion(){let s=Surface{positions:vec![[-2.,0.,-2.],[2.,0.,-2.],[0.,0.,2.]],triangles:vec![[0,1,2]],previous_positions:None};let tree=Tree::new(&s);let(p,hits)=project_physical([0.,1.,0.],[0.3,-1.,0.2],&s,&tree,0.003,0.);assert!(hits>0);assert!((p[0]-0.3).abs()<1e-12);assert!((p[1]-0.003).abs()<1e-12);assert!((p[2]-0.2).abs()<1e-12);}
  #[test]fn catches_fast_vertex_crossing(){let s=Surface{positions:vec![[-1.,0.,-1.],[1.,0.,-1.],[0.,0.,1.]],triangles:vec![[0,1,2]],previous_positions:None};let tree=Tree::new(&s);let(p,n)=project([0.,2.,0.],[0.,-2.,0.],&s,&tree,0.003,0.);assert!(n>0&&p[1]>=0.0029);}
  #[test]fn moving_triangle_crosses_stationary_point(){let old=[[-1.,-1.,-1.],[1.,-1.,-1.],[0.,-1.,1.]];let new=old.map(|p|add(p,[0.,2.,0.]));assert!(swept([0.,0.,0.],[0.,0.,0.],old,new).is_some());}
