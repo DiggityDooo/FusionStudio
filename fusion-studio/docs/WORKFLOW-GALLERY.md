@@ -1,9 +1,9 @@
 # Recorded Fusion workflows
 
-Current gallery: [November 3 packaged candidate](demo/2026-11-03/README.md). Includes captioned 1080p video, representative screenshots, source/package hashes, capture assertions and decoded-media verification.
+Current gallery: [Two-minute Remotion film](demo/2026-11-03-remotion/README.md), with Secret by ESPRIT 空想, captions, source/package hashes, fresh capture assertions, full decoding and independent frame checks.
 
-[![Watch current demo](demo/2026-11-03/native-workspace.png)](demo/2026-11-03/fusion-studio-rc1-demo.mp4)
+[![Watch current demo](demo/2026-11-03-remotion/poster.png)](demo/2026-11-03-remotion/fusion-launch.mp4)
 
-Demonstrates preserved Blender import/render, detailed sculpt and undo/redo, save/reopen/export, real local model chat and external MCP edits. Original procedural fixtures only; private content stays local.
+Demonstrates Blender editable/preserved modes, local DAZ mesh/rig and supported preset recovery, sculpt and undo/redo, save/reopen/export, real local model chat and external MCP edits. Private source assets remain local. [Editable video tooling](../videos/fusion-launch/README.md) includes pinned dependencies and reproduction commands. [Original 86-second silent demo](demo/2026-11-03/README.md) retains its original evidence and procedural-only footage.
 
 [Release acceptance](releases/2026-11-03-rc-report.md) separately covers 44 import cases and packaged male/female garment workflows. [Live checks](verification/2026-11-03-live-connections.json) identify actual provider and independent Inspector version. Earlier recordings and reports retain their original dates and are not substituted for current demo.

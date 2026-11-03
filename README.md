@@ -34,9 +34,11 @@ Keeping an original beside an edited mesh is useful preservation; it does not ma
 
 ## Watch real workflows
 
-**Current packaged app, recorded November 3, 2026.** [Watch captioned 1080p H.264 demo](fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.mp4), or read [chapters, provenance and capture evidence](fusion-studio/docs/demo/2026-11-03/README.md). Source assets are original procedural fixtures; no private DAZ or paid content appears.
+**Two-minute Remotion film, recorded November 3, 2026.** [Watch 1080p demo with ESPRIT’s “Secret”](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4), or read [chapters, limits and verification](fusion-studio/docs/demo/2026-11-03-remotion/README.md). Actual packaged Blender/DAZ imports, sculpt/history/save, local model chat and external MCP. Private DAZ source files and original music input remain local.
 
-![Short preview of actual packaged workflows](fusion-studio/docs/demo/2026-11-03/preview.gif)
+![Short preview of Remotion film](fusion-studio/docs/demo/2026-11-03-remotion/preview.gif)
+
+[Original 86-second silent verification demo](fusion-studio/docs/demo/2026-11-03/README.md) remains available with original evidence.
 
 [![Watch current Fusion Studio demo](fusion-studio/docs/demo/2026-11-03/native-render.png)](fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.mp4)
 

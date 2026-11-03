@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "independentPairs": [
+    {
+      "frame": 1400,
+      "pixelSha256": "02ac65340f61e7f4e25378b2fa1296e68746c48e6643c24f2f11617b294a4399"
+    },
+    {
+      "frame": 1850,
+      "pixelSha256": "07278174c513198c09cfd241bba67ba0383c122ef595fd8d0e41fd1de11143f7"
+    },
+    {
+      "frame": 2630,
+      "pixelSha256": "527d266aa5748cec163278ea38ef372e33216e498d954812a3b77d457e56408f"
+    },
+    {
+      "frame": 3200,
+      "pixelSha256": "e465893a706e764020b85e406bc05261676efdba2b256492d1c296a7937f69b3"
+    },
+    {
+      "frame": 700,
+      "pixelSha256": "2628379124e7878490f0b0395306cd8f1674387de964d0ac8903b6f183a2e4ca"
+    },
+    {
+      "frame": 95,
+      "pixelSha256": "553efcb86fdd15cf7bddc8067b7da9f47e4298f6ef6a7cc815ebbffd75792e5c"
+    }
+  ]
+}

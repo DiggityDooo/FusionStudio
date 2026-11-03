@@ -13,6 +13,8 @@ npm run preview
 npm run prepare -- --capture local/capture --music 'C:/Music/Secret.flac'
 npm run render
 npm run verify
+# After inspecting shot stills / transition strips and recording local/qa-review.json:
+npm run finalize
 ```
 
 Capture validates source hashes and actual operations, then records readable compatibility reviews in separate fresh session. Preparation imports footage, installed Windows fonts, captions and private music. Lifecycle markers drive trims for new captures; fallback cut windows are locked to inspected source hashes. Waiting-time edits are documented in provenance and labeled in film. `--preview` produces visibly marked silent picture review only. Final rendering rejects missing music. Assets, audio and captures stay local; only sanitized evidence and approved film exports belong in Git.

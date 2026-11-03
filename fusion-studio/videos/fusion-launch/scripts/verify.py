@@ -25,6 +25,7 @@ assert re.search(r'Video: h264',decoded.stderr)
 assert re.search(r'30 fps',decoded.stderr)
 assert 'Duration: 00:02:00.00' in decoded.stderr
 audio=None
+audio_seconds=None
 if not preview:
  assert prepared['music'],'Required music missing'
  assert re.search(r'Audio: aac',decoded.stderr)
@@ -32,6 +33,10 @@ if not preview:
  audio=json.loads(mix.stderr[mix.stderr.rfind('{'):mix.stderr.rfind('}')+1])
  assert abs(float(audio['input_i'])+14)<=.5,audio
  assert float(audio['input_tp'])<=-1,audio
+ pcm=subprocess.run([str(ffmpeg),'-hide_banner','-loglevel','error','-i',str(video),'-map','0:a:0','-ar','48000','-ac','2','-f','s16le','-'],capture_output=True)
+ assert pcm.returncode==0
+ audio_seconds=len(pcm.stdout)/(48000*2*2)
+ assert abs(audio_seconds-120)<=1/30,audio_seconds
 for scene in prepared['story']:
  for label,frame in [('start',scene['from']+18),('middle',(scene['from']+scene['to'])//2),('end',scene['to']-18)]:
   run(['-y','-loglevel','error','-i',video,'-vf',f'select=eq(n\\,{frame})','-frames:v','1',qa/f"{scene['id']}-{label}.png"])
@@ -55,6 +60,6 @@ assert caption.startswith('WEBVTT\n') and caption.count(' --> ')==len(prepared['
 for i,(start,end,text) in enumerate(prepared['cues']):
  assert 0<=start<end<=3600
  if i:assert start==prepared['cues'][i-1][1]
-report={'passed':False,'technicalChecksPassed':True,'preview':preview,'frames':frames,'seconds':120,'width':1920,'height':1080,'decodedAllFrames':True,'videoCodec':'H.264','audio':audio,'captionCues':len(prepared['cues']),'transitionStrips':6,'shotStills':21,'visualReview':'pending human/agent image inspection','deterministicFrames':'pending independent still comparison','captureChecks':prepared['capture']['checks'],'sha256':digest(video)}
+report={'passed':False,'technicalChecksPassed':True,'preview':preview,'frames':frames,'seconds':120,'width':1920,'height':1080,'decodedAllFrames':True,'videoCodec':'H.264','audio':audio,'decodedAudioSeconds':audio_seconds,'captionCues':len(prepared['cues']),'transitionStrips':6,'shotStills':21,'visualReview':'pending human/agent image inspection','deterministicFrames':'pending independent still comparison','captureChecks':prepared['capture']['checks'],'sha256':digest(video)}
 (out/('picture-verification.json' if preview else 'verification.json')).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps(report))

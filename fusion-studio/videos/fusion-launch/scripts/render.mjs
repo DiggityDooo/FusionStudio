@@ -14,7 +14,7 @@ if(still>=0){const frame=Number(process.argv[still+1]);await renderStill({...opt
 else{
  let last=-1;
  const file=preview?'fusion-launch-picture-preview.mp4':'fusion-launch.mp4';
- await renderMedia({...options,codec:'h264',audioCodec:'aac',audioBitrate:'192k',pixelFormat:'yuv420p',crf:18,outputLocation:path.join(output,file),overwrite:true,onProgress:p=>{const percent=Math.floor(p.progress*100/10)*10;if(percent!==last){last=percent;console.log(`Rendering ${percent}%`);}}});
+ await renderMedia({...options,codec:'h264',audioCodec:'aac',audioBitrate:'192k',pixelFormat:'yuv420p',crf:18,outputLocation:preview?path.join(output,file):path.join(workspace,'local/remotion-render.mp4'),overwrite:true,onProgress:p=>{const percent=Math.floor(p.progress*100/10)*10;if(percent!==last){last=percent;console.log(`Rendering ${percent}%`);}}});
  await renderStill({...options,frame:95,output:path.join(output,'poster.png')});
  if(!preview)await import('./chapter.mjs');
  json(path.join(workspace,'local/render.json'),{completed:new Date().toISOString(),preview,file,frames:3600,seconds:120,renderer:'Remotion 4.0.540'});

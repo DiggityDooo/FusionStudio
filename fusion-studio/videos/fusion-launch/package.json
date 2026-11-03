@@ -10,7 +10,8 @@
     "preview": "node scripts/render.mjs --preview",
     "render": "node scripts/render.mjs",
     "check": "node scripts/check.mjs",
-    "verify": "python scripts/verify.py"
+    "verify": "python scripts/verify.py",
+    "finalize": "node scripts/finalize.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.540",
