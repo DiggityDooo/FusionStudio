@@ -1,25 +1,25 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:17.200
+00:00:00.000 --> 00:00:11.270
 01 / Preserve the original
 Original optical instrument .blend | compatibility review | protected native rendering
 
-00:00:17.200 --> 00:00:44.830
+00:00:11.270 --> 00:00:30.640
 02 / Render inside Fusion
 Cycles OptiX | original camera, shaders and lighting | rendered live, source unchanged
 
-00:00:44.830 --> 00:01:01.830
+00:00:30.640 --> 00:00:42.670
 03 / Edit, undo and redo
 156,672-triangle original mesh | real pointer sculpting | numeric state checked
 
-00:01:01.830 --> 00:01:22.660
+00:00:42.670 --> 00:00:55.340
 04 / Save, reopen and export
 Editable Fusion project | exact reopened geometry | validated GLB export
 
-00:01:22.660 --> 00:01:41.390
+00:00:55.340 --> 00:01:14.110
 05 / Talk to your own model
 Real local Phi-3 via Ollama | entered conversation only | chat does not edit the scene
 
-00:01:41.390 --> 00:01:53.560
+00:01:14.110 --> 00:01:26.310
 06 / Connect an external MCP client
 Authenticated local MCP | approved scene edits | shared operators and undo

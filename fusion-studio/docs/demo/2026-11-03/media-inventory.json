@@ -1,45 +1,45 @@
 {
   "passed": true,
   "purpose": "Recorded demonstration evidence; full release gates remain separate",
-  "seconds": 113.57,
+  "seconds": 86.31,
   "chapters": 6,
   "media": [
     {
       "file": "fusion-studio-rc1-demo.mp4",
-      "bytes": 2759069,
-      "sha256": "2e451ce2c44def72b9c36c6072ebbe2ec984fe21f9ac16011cd7e8411e95d6de",
+      "bytes": 2109284,
+      "sha256": "a164f93562387b15e755f39b08722105d1afd9fcbd9003b11bbca9adfff49ba4",
       "width": 1920,
       "height": 1080,
       "codec": "H.264",
-      "seconds": 113.57,
+      "seconds": 86.31,
       "decodedAllFrames": true,
       "containerChapters": 6
     },
     {
       "file": "fusion-studio-rc1-demo.vtt",
       "bytes": 878,
-      "sha256": "6073a0793b33a6c8cdf538ebbe00af2aadfd301c6807de04ea9c09ba4b7ae36b"
+      "sha256": "9d14eb67b18754755f81dbfa3fba51cb7c8dffe9703eba7db0d8384eb10e718d"
     },
     {
       "file": "live-chat.png",
-      "bytes": 188074,
-      "sha256": "43549350eef837ee49c5e023a2cbac07e05ad7c8966405f45777ec5db40960c0",
+      "bytes": 186762,
+      "sha256": "bd614bc4b3a207f12cdca22af12b075b5ff38282b43ed6e14d54d08bb6149ae5",
       "width": 1920,
       "height": 960,
       "frames": 1
     },
     {
       "file": "mcp-edit.png",
-      "bytes": 196726,
-      "sha256": "725d067f25a0e71070252be7ff335d85e3cf1d14212a238d392bc2f6e36be160",
+      "bytes": 260221,
+      "sha256": "9c52dcad3681942c4ee2a517cb45863a522d6d37953e48b60c2e41b441ff8b93",
       "width": 1920,
       "height": 960,
       "frames": 1
     },
     {
       "file": "native-render.png",
-      "bytes": 344159,
-      "sha256": "6922d3a5f52d4ac5a8501541d185297a40a02aa084fc3098a3a5122a251e8c1d",
+      "bytes": 344164,
+      "sha256": "820d574a7457efd6a35bd294fedc89042a96dbbe1a5581b9302f27becbca757c",
       "width": 1920,
       "height": 960,
       "frames": 1
@@ -54,20 +54,20 @@
     },
     {
       "file": "preview.gif",
-      "bytes": 411019,
-      "sha256": "2d3e1f814c7e82c042ec2d75491d329bbedd4c8ada9dd0dca20f2213b37234c1",
+      "bytes": 431511,
+      "sha256": "b16499bf94751e1141a83ac930b57a757933c843e6b47bc11a8912c2199bcf04",
       "width": 640,
       "height": 360,
       "frames": 80
     },
     {
       "file": "sculpt-history.png",
-      "bytes": 314000,
-      "sha256": "21fa827e6744312a38e9ea3c02cd6d03a24957ffacd41f605e80714d07d5067b",
+      "bytes": 314007,
+      "sha256": "f9fecd996826374c3b8a880fe98c9e77c6e10a5008c770c8a476a05efeea85a4",
       "width": 1920,
       "height": 960,
       "frames": 1
     }
   ],
-  "manifestSha256": "9315c6f4ce592985184b00be1b4acefddda0080a9dec38e265bf77bff7c81b4d"
+  "manifestSha256": "7299ffa10d515d8ed68ed9711a9dba37f2bbb8788dc9162534dadc1f3bbdff18"
 }
