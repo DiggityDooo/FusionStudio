@@ -42,11 +42,11 @@ function runWorker(work, input, voxel) {
   const spec = {directory: work, output: path.join(work, 'out.glb'), action: 'stack', input, params: {stack: [{id: 'r1', action: 'remesh', enabled: true, params: {voxel}}]}};
   const specFile = path.join(work, 'job.json');
   fs.writeFileSync(specFile, JSON.stringify(spec));
-  return spawnSync(BLENDER, ['-b', '--factory-startup', '--python-exit-code', '1', '-P', WORKER, '--', specFile], {encoding: 'utf8', timeout: 240000});
+  return spawnSync(BLENDER, ['-b', '--factory-startup', '--disable-autoexec', '--python-exit-code', '1', '-P', WORKER, '--', specFile], {encoding: 'utf8', timeout: 240000, env: require('../electron/core.cjs').isolatedEnv(work), windowsHide: true});
 }
 
 test('voxel remesh reports a grid estimate and refuses over-budget grids before running', {skip: !fs.existsSync(BLENDER) && 'Blender 5.2 not installed'}, () => {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-remesh-'));
+  const temp = path.join(__dirname, '../test-output/tmp'); fs.mkdirSync(temp, {recursive: true}); const root = fs.mkdtempSync(path.join(temp, 'fusion-remesh-'));
   const input = path.join(root, 'cube.glb');
   cubeGlb(input);
   const inputHash = hashFile(input);
