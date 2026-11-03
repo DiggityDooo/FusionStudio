@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "capture": "node scripts/capture.cjs",
+    "capture": "node scripts/capture-all.cjs",
     "prepare": "node scripts/prepare.mjs",
     "studio": "remotion studio src/index.jsx",
     "preview": "node scripts/render.mjs --preview",

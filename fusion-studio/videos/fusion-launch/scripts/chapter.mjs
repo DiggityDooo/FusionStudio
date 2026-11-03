@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {workspace,output,run} from './common.mjs';
+const prepared=JSON.parse(fs.readFileSync(path.join(workspace,'public/prepared.json')));
+const original=path.join(workspace,'local/remotion-render.mp4'),final=path.join(output,'fusion-launch.mp4');
+if(!final.startsWith(output+path.sep)||!original.startsWith(workspace+path.sep))throw Error('Invalid output scope');
+fs.copyFileSync(final,original);
+const metadata=path.join(workspace,'local/chapters.txt');
+fs.writeFileSync(metadata,';FFMETADATA1\n'+prepared.story.map(s=>`[CHAPTER]\nTIMEBASE=1/30000\nSTART=${s.from*1000}\nEND=${s.to*1000}\ntitle=${s.title.replaceAll('\n',' ')}\n`).join(''));
+run(['-y','-loglevel','error','-i',original,'-i',metadata,'-map','0','-map_metadata','1','-map_chapters','1','-c','copy','-movflags','+faststart',final]);
+console.log('Seven container chapters added without re-encoding');

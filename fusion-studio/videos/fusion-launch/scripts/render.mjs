@@ -16,6 +16,7 @@ else{
  const file=preview?'fusion-launch-picture-preview.mp4':'fusion-launch.mp4';
  await renderMedia({...options,codec:'h264',audioCodec:'aac',audioBitrate:'192k',pixelFormat:'yuv420p',crf:18,outputLocation:path.join(output,file),overwrite:true,onProgress:p=>{const percent=Math.floor(p.progress*100/10)*10;if(percent!==last){last=percent;console.log(`Rendering ${percent}%`);}}});
  await renderStill({...options,frame:95,output:path.join(output,'poster.png')});
+ if(!preview)await import('./chapter.mjs');
  json(path.join(workspace,'local/render.json'),{completed:new Date().toISOString(),preview,file,frames:3600,seconds:120,renderer:'Remotion 4.0.540'});
  console.log(JSON.stringify({rendered:true,file,preview}));
 }

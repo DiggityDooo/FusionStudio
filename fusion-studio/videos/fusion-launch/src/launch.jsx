@@ -15,7 +15,7 @@ function Footage({asset,frames,hero=false}){
  const drift=interpolate(frame,[0,frames],[1,1.018],{extrapolateRight:'clamp'});
  return <div className={hero?'hero-footage':'footage'} style={{transform:`scale(${drift})`}}>
   <Video src={staticFile(`media/${asset}.mp4`)} muted trimBefore={trim} playbackRate={rate} />
-  {!hero&&<span className="capture-badge">ACTUAL FUSION CAPTURE{rate>1.08?` / ${rate.toFixed(1)}× PLAYBACK`:''}</span>}
+  {!hero&&<span className="capture-badge">ACTUAL FUSION CAPTURE{meta.waitingTimeShortened?' / WAITS SHORTENED':''}{rate>1.08?` / ${rate.toFixed(1)}× PLAYBACK`:''}</span>}
  </div>;
 }
 function Montage({frames}){

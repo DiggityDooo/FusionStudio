@@ -9,8 +9,19 @@ const receipt=JSON.parse(fs.readFileSync(path.join(capture,'capture.json')));
 assert.equal(receipt.passed,true,'Capture must pass');
 assert.equal(receipt.asarSha256,'49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8','Frozen app must match');
 const pub=path.join(workspace,'public');fs.mkdirSync(path.join(pub,'media'),{recursive:true});fs.mkdirSync(path.join(pub,'fonts'),{recursive:true});
-const assets={};
-for(const row of receipt.clips){const file=path.join(capture,row.file);assert.equal(hash(file),row.sha256,'Capture hash mismatch: '+row.id);const dest=path.join(pub,'media',row.id+'.mp4');fs.copyFileSync(file,dest);const seconds=duration(dest);assets[row.id]={file:'media/'+row.id+'.mp4',sha256:hash(dest),seconds,frames:Math.round(seconds*30),width:1920,height:960};}
+const assets={},source=id=>{const row=receipt.clips.find(c=>c.id===id);assert.ok(row,'Missing capture '+id);const file=path.join(capture,row.file);assert.equal(hash(file),row.sha256,'Capture hash mismatch: '+id);return file;};
+const edits={
+ 'blend-edit':[{source:'blend-edit-review',start:0,end:4.6},{source:'blend-edit',start:12.5}],
+ 'blend-preserve':[{source:'blend-preserve-review',start:0,end:2.3},{source:'blend-preserve',start:4.5}],
+ 'native-render':[{source:'native-render',start:0,end:1.5},{source:'native-render',start:22}],
+ 'daz-import':[{source:'daz-import',start:2.5,end:4.5},{source:'daz-import',start:10.5}],
+ 'chat':[{source:'chat',start:6.5}]
+};
+const reviewed=JSON.parse(fs.readFileSync(path.join(workspace,'src/reviewed-cut-sources.json')));
+for(const id of ['blend-edit','blend-preserve','daz-import']){const clip=receipt.clips.find(c=>c.id===id),events=Object.fromEntries((clip.events||[]).map(e=>[e.name,e.seconds]));if(events.compatibility!==undefined&&events.framed!==undefined)edits[id]=[{source:id,start:Math.max(0,events.compatibility-.15),end:events.conversion+.15},{source:id,start:Math.max(events.conversion+.2,events.framed-.15)}];}
+for(const [id,event]of [['native-render','render-ready'],['chat','connected']]){const clip=receipt.clips.find(c=>c.id===id),at=clip.events?.find(e=>e.name===event)?.seconds;if(at!==undefined)edits[id]=id==='native-render'?[{source:id,start:0,end:1.5},{source:id,start:Math.max(1.6,at-.15)}]:[{source:id,start:Math.max(0,at-.15)}];}
+for(const cuts of Object.values(edits))for(const c of cuts){const row=receipt.clips.find(r=>r.id===c.source);assert.ok(row);if(!row.events?.length)assert.equal(row.sha256,reviewed[c.source],'New source requires fresh event markers or reviewed cut map');assert.ok(c.start<duration(source(c.source)));}
+for(const row of receipt.clips){const file=source(row.id),dest=path.join(pub,'media',row.id+'.mp4');const cuts=edits[row.id];if(cuts){const inputs=cuts.flatMap(c=>['-i',source(c.source)]),filters=cuts.map((c,i)=>`[${i}:v]trim=start=${c.start}${c.end?':end='+c.end:''},setpts=PTS-STARTPTS[v${i}]`).join(';')+';'+cuts.map((_,i)=>`[v${i}]`).join('')+`concat=n=${cuts.length}:v=1:a=0,fps=30[out]`;run(['-y','-loglevel','error',...inputs,'-filter_complex',filters,'-map','[out]','-c:v','libx264','-crf','17','-preset','fast','-pix_fmt','yuv420p','-an',dest]);}else fs.copyFileSync(file,dest);const seconds=duration(dest);assets[row.id]={file:'media/'+row.id+'.mp4',sha256:hash(dest),seconds,frames:Math.round(seconds*30),width:1920,height:960,...(cuts?{editorialCuts:cuts,waitingTimeShortened:true}:{})};}
 for(const [a,b]of [['segoeui.ttf','regular.ttf'],['seguisb.ttf','semibold.ttf']])fs.copyFileSync(path.join(process.env.SystemRoot,'Fonts',a),path.join(pub,'fonts',b));
 let music=null,beats=[];
 const musicArg=option('--music'),previous=path.join(workspace,'local/music-input.json');
@@ -41,5 +52,5 @@ const prepared={film,workflow,assets,music,story,cues:captions,capture:receipt};
 fs.mkdirSync(output,{recursive:true});
 const stamp=f=>{let ms=Math.round(f/30*1000),h=Math.floor(ms/3600000);ms%=3600000;const m=Math.floor(ms/60000);ms%=60000;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(Math.floor(ms/1000)).padStart(2,'0')}.${String(ms%1000).padStart(3,'0')}`;};
 fs.writeFileSync(path.join(output,'fusion-launch.vtt'),'WEBVTT\n\n'+captions.map(([a,b,t])=>`${stamp(a)} --> ${stamp(b)}\n${t}\n`).join('\n'));
-json(path.join(output,'provenance.json'),{workflow,film,story,captions,music:music?{...music,masterSha256:music.masterSha256}:null,capture:receipt,fontHashes:fs.readdirSync(path.join(pub,'fonts')).map(file=>({file,sha256:hash(path.join(pub,'fonts',file))})),preparedSha256:hash(path.join(pub,'prepared.json'))});
+json(path.join(output,'provenance.json'),{workflow,film,story,captions,assets,music:music?{...music,masterSha256:music.masterSha256}:null,capture:receipt,fontHashes:fs.readdirSync(path.join(pub,'fonts')).map(file=>({file,sha256:hash(path.join(pub,'fonts',file))})),preparedSha256:hash(path.join(pub,'prepared.json'))});
 console.log(JSON.stringify({prepared:true,clips:Object.keys(assets).length,musicReady:!!music,seconds:120,estimatedBpm:music?.analysis.estimatedBpm,output}));
