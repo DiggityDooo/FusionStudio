@@ -55,6 +55,25 @@ async function gltfDependencies(file) {
   return deps;
 }
 
+async function objDependencies(file) {
+  const path=require('node:path'),deps=[],seen=new Set();
+  const tokens=s=>{const matches=[...s.matchAll(/"([^"]*)"|'([^']*)'|(\S+)/g)],comment=matches.findIndex(m=>m[3]?.startsWith('#'));return (comment<0?matches:matches.slice(0,comment)).map(m=>m[1]??m[2]??m[3]);};
+  const dependency=async(locator,base,role)=>{const resolved=path.resolve(base,locator),key=role+':'+resolved;if(seen.has(key))return;seen.add(key);const item={id:key,originalLocator:locator,role,status:'missing'};try{const stat=fs.statSync(resolved);if(!stat.isFile())throw Error('Not a file');item.sha256=await sha256File(resolved);item.byteLength=stat.size;item.status='found';}catch{}deps.push(item);return item.status==='found'?resolved:null;};
+  if(fs.statSync(file).size>64*1024*1024)return [{id:'obj-inventory-limit',originalLocator:file,role:'inventory',status:'unverified'}];
+  for(const line of fs.readFileSync(file,'utf8').split(/\r?\n/)){
+    const match=line.match(/^\s*mtllib\s+(.+?)\s*$/i);if(!match)continue;
+    const raw=match[1],names=fs.existsSync(path.resolve(path.dirname(file),raw))?[raw]:tokens(raw);
+    for(const name of names){const material=await dependency(name,path.dirname(file),'material-library');if(!material||fs.statSync(material).size>8*1024*1024)continue;
+      for(const entry of fs.readFileSync(material,'utf8').split(/\r?\n/)){
+        const texture=entry.match(/^\s*(?:map_\w+|bump|norm|disp|decal)\s+(.+?)\s*$/i);if(!texture)continue;const values=tokens(texture[1]);let i=0;
+        while(values[i]?.startsWith('-')){const option=values[i++];if(['-s','-o','-t'].includes(option)){for(let n=0;n<3&&i<values.length&&Number.isFinite(Number(values[i]));n++)i++;}else i+=option==='-mm'?2:1;}
+        const locator=values.slice(i).join(' ');if(locator)await dependency(locator,path.dirname(material),'texture');
+      }
+    }
+  }
+  return deps;
+}
+
 async function capsuleForFile(file) {
   const stat = fs.statSync(file);
   const fd = fs.openSync(file, 'r');
@@ -92,6 +111,11 @@ async function capsuleForFile(file) {
       if (deps.some(d => d.status === 'missing')) capsule.completeness = 'missing-dependencies';
     }
   }
+  if(require('node:path').extname(file).toLowerCase()==='.obj'){
+    capsule.dependencies=await objDependencies(file);
+    if(capsule.dependencies.some(d=>d.status==='missing'))capsule.completeness='missing-dependencies';
+    else if(capsule.dependencies.some(d=>d.status==='unverified'))capsule.completeness='partial-dependencies';
+  }
   return capsule;
 }
 
@@ -112,12 +136,13 @@ function withDsonInventory(capsule, dson) {
   const deps = Array.isArray(dson.dependencies) ? dson.dependencies : [];
   if (deps.length) capsule.dependencies = deps.map((d, i) => ({
     id: String(d.path || 'dependency-' + i), originalLocator: String(d.path || ''),
-    role: String(d.kind || 'dependency'), status: 'found',
+    role: String(d.kind || 'dependency'), status: d.status === 'missing' ? 'missing' : 'found',
     ...(d.sha256 ? {sha256: d.sha256} : {}), ...(Number.isFinite(d.bytes) ? {byteLength: d.bytes} : {}),
   }));
   if (Array.isArray(dson.unsupported_fields) && dson.unsupported_fields.length)
     capsule.unsupportedFields = dson.unsupported_fields.map(String);
+  if(capsule.dependencies.some(d=>d.status==='missing'))capsule.completeness='missing-dependencies';
   return capsule;
 }
 
-module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File, copyOriginal, withDsonInventory, gltfDependencies};
+module.exports = {ADAPTERS, adapterForName, capsuleForFile, sha256File, copyOriginal, withDsonInventory, gltfDependencies, objDependencies};

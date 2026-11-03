@@ -13,7 +13,7 @@ const DEFAULT_ROOTS=[
  ['Projects',path.join(USER_DOCS,'Reallusion','DataLink')],
  ['Marvelous',path.join(PUBLIC_DOCS,'Marvelous Designer')],
 ];
-const NATIVE=new Set(['.duf','.ccavatar','.iavatar','.ccproject','.zprj','.zpac']);
+const NATIVE=new Set(['.duf','.dsf','.ccavatar','.iavatar','.ccproject','.zprj','.zpac']);
 class AssetCatalog{
  constructor(){this.roots=DEFAULT_ROOTS.filter(([,dir])=>fs.existsSync(dir)).map(([vendor,directory])=>({vendor,directory}));this.assets=[];this.allowed=new Map();}
  async scan(){

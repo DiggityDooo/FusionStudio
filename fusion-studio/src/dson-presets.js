@@ -1,0 +1,56 @@
+import * as THREE from 'three';
+import {initializeDeformation,evaluateCharacter,channelId} from './deformation.js';
+import {prepareRotationContext} from './formula-rotations.js';
+import {deformationTransaction} from './deformation-ui.js';
+import {projectJointQuaternion} from './joint-limits.js';
+const family=s=>[...String(s||'').matchAll(/Genesis(?:[ _]?8(?:[._ ]?1)?[ _]?(?:Female|Male)|[ _]?9|[ _]?3[ _]?(?:Female|Male)|[ _]?2[ _]?(?:Female|Male))?/gi)].map(m=>m[0].toLowerCase().replace(/[^a-z0-9]/g,''));
+const metadata=(raw)=>typeof raw==='string'?JSON.parse(raw):raw;
+function geometryId(mesh,root){for(let n=mesh;n&&n!==root.parent;n=n.parent)if(n.userData.dson_geometry_id)return n.userData.dson_geometry_id;return null;}
+function sameSource(a,b,report){if(typeof a!=='string')return false;const normalize=value=>{let decoded;try{decoded=decodeURIComponent(value);}catch{decoded=value;}const i=decoded.lastIndexOf('#');return (i<0?decoded:decoded.slice(0,i)).replaceAll('\\','/').toLowerCase()+(i<0?'':decoded.slice(i));},candidates=[a];if(a.startsWith('/'))for(const root of report.content_roots||[])candidates.push(String(root).replace(/[\\/]$/,'')+a);return candidates.some(c=>normalize(c)===normalize(b));}
+export function dsonOwner(selected,scene){for(let n=selected;n&&n!==scene;n=n.parent)if(n.userData.dazNative)return n;return null;}
+function controls(root){const previous=root.userData.fusion_deformation;try{const state=initializeDeformation(root);if(state?.identityErrors?.length)throw Error(state.identityErrors[0].message);return (state?.channels||[]).map(c=>({...c,morphKey:state.morphs.find(m=>channelId(m.id)===channelId(c.id))?.key}));}finally{if(!previous)delete root.userData.fusion_deformation;}}
+function plan(root,report){
+ if(!root?.userData.dazNative||!report?.ok||!report.preset)throw Error('Select an imported DAZ asset before applying this preset.');
+ const preset=report.preset,actual=new Set([root.userData.nativeSource,...(root.userData.dazNative.meshes||[]).map(m=>m.node)].flatMap(family));
+ if(preset.kind!=='material'&&!preset.families.length)throw Error('Preset does not declare a verifiable source family; automatic cross-family application is unavailable.');
+ if(preset.families.length&&!preset.families.some(f=>actual.has(f)))throw Error('Preset source family does not match the selected asset.');
+ if(root.userData.fusion_ik?.some(c=>c.enabled))throw Error('Disable active IK controls before applying a native preset.');
+ if(report.target_source&&String(report.target_source).replaceAll('\\','/').toLowerCase()!==String(root.userData.nativeSource).replaceAll('\\','/').toLowerCase())throw Error('Preset inspection belongs to a different source asset. Inspect it again for this target.');
+ const available=[...controls(root)],changes=[],ignored=[];
+ for(const extra of preset.extra_morphs||[]){const existing=available.find(c=>channelId(c.id)===channelId(extra.id));if(existing&&!sameSource(existing.sourceId,extra.key,report)&&!sameSource(existing.morphKey,extra.key,report))throw Error('Loaded control belongs to a different source asset: '+extra.id);if(!existing)available.push({id:extra.id,min:extra.min,max:extra.max,sourceId:extra.key});}
+ for(const c of preset.controls){const matches=available.filter(a=>channelId(a.id)===channelId(c.id));if(matches.length!==1){if(c.value===0){ignored.push(c.id);continue;}throw Error('Required preset control is not loaded or is ambiguous: '+c.id);}const target=matches[0];if(c.value<(target.min??-Infinity)||c.value>(target.max??Infinity))throw Error('Preset value exceeds source slider bounds: '+c.id);changes.push({id:target.id,value:c.value});}
+ const rotations=[];if(preset.rotations.length){const context=prepareRotationContext(root),byJoint=new Map();for(const record of preset.rotations){const matches=context.bindings.filter(b=>b.m.id===record.joint);if(matches.length!==1)throw Error('Preset joint has no unique verified source rotation frame: '+record.joint);const b=matches[0],item=byJoint.get(record.joint)||{binding:b,angles:{...b.source}};item.angles[record.axis]=record.degrees;byJoint.set(record.joint,item);}for(const {binding:b,angles} of byJoint.values()){const rotation=new THREE.Quaternion().setFromEuler(new THREE.Euler(...['x','y','z'].map(a=>angles[a]*Math.PI/180),b.order)),quaternion=b.rest.clone().multiply(b.basis).multiply(rotation).multiply(b.basis.clone().invert()).normalize(),bounded=projectJointQuaternion(root,b.bone,quaternion);if(bounded.correction)throw Error('Preset exceeds authored joint limits: '+b.m.id);rotations.push({bone:b.bone,quaternion});}}
+ const materials=[];for(const m of preset.materials){const matches=[];root.traverse(mesh=>{if(!mesh.isMesh)return;[].concat(mesh.material||[]).forEach((material,index)=>{if(material.userData?.dson_material_group===m.group)matches.push({mesh,index,material});});});if(!matches.length)throw Error('Preset material group is absent or lacks source identity: '+m.group);if(new Set(matches.map(r=>r.material.userData.dson_geometry_id||geometryId(r.mesh,root))).size>1)throw Error('Preset material group is ambiguous across source geometries: '+m.group);materials.push({record:m,matches});}
+ if(!changes.length&&!rotations.length&&!materials.length)throw Error('Preset has no applicable values in this asset.');
+ return {controls:changes,rotations,materials,ignored};
+}
+export function inspectDsonPreset(root,report){try{const p=plan(root,report);return {compatible:true,controls:p.controls.length,joints:p.rotations.length,materialGroups:p.materials.length,ignored:p.ignored,errors:[]};}catch(error){return {compatible:false,controls:0,joints:0,materialGroups:0,ignored:[],errors:[error.message]};}}
+function installMorphs(root,extras=[]){
+ let state=initializeDeformation(root);if(!extras.length)return state;
+ state??=(root.userData.fusion_deformation={version:1,channels:[],morphs:[],formulas:[],correctives:[],errors:[]});
+ for(const extra of extras){const priorMorph=state.morphs.find(m=>channelId(m.id)===channelId(extra.id));if(priorMorph){let bound=false;root.traverse(mesh=>{if(mesh.isMesh&&geometryId(mesh,root)===extra.geometryId&&mesh.morphTargetDictionary?.[priorMorph.targetName||priorMorph.label||priorMorph.id]!==undefined)bound=true;});if(bound)continue;}
+  const name='dson:'+extra.key,meshes=[];root.traverse(mesh=>{if(mesh.isMesh&&geometryId(mesh,root)===extra.geometryId)meshes.push(mesh);});if(!meshes.length)throw Error('Requested morph geometry is absent: '+extra.geometryId);
+  for(const mesh of meshes){const old=mesh.geometry,ids=old.attributes._fusion_source_vertex;if(!ids||ids.count!==old.attributes.position.count)throw Error('Morph application requires retained source vertex IDs. Reimport this DAZ asset.');const sparse=new Map(extra.deltas.map(r=>[r[0],r.slice(1).map(v=>v/100)])),positions=new Float32Array(ids.count*3);for(let i=0;i<ids.count;i++){const id=ids.getX(i);if(!Number.isInteger(id)||id<0||id>=extra.vertexCount)throw Error('Morph source vertex mapping is incompatible.');const delta=sparse.get(id)||[0,0,0];for(let a=0;a<3;a++)positions[i*3+a]=delta[a]+(old.morphTargetsRelative?0:old.attributes.position.getComponent(i,a));}
+   const geometry=old.clone(),attribute=new THREE.BufferAttribute(positions,3);attribute.name=name;geometry.morphAttributes.position=[...(geometry.morphAttributes.position||[]),attribute];
+   if(geometry.morphAttributes.normal?.length){const posed=geometry.clone(),values=Float32Array.from(old.attributes.position.array);for(let i=0;i<values.length;i++)values[i]=old.morphTargetsRelative?values[i]+positions[i]:positions[i];posed.setAttribute('position',new THREE.BufferAttribute(values,3));posed.computeVertexNormals();const valuesN=Float32Array.from(posed.attributes.normal.array);if(old.morphTargetsRelative)for(let i=0;i<valuesN.length;i++)valuesN[i]-=old.attributes.normal.array[i];const normal=new THREE.BufferAttribute(valuesN,3);normal.name=name;geometry.morphAttributes.normal=[...geometry.morphAttributes.normal,normal];posed.dispose();}
+   const index=mesh.morphTargetInfluences?.length||0;mesh.geometry=geometry;mesh.morphTargetDictionary={...mesh.morphTargetDictionary,[name]:index};mesh.morphTargetInfluences=[...(mesh.morphTargetInfluences||[]),0];mesh.boundingBox=mesh.boundingSphere=null;
+  }
+  const channel=state.channels.find(c=>channelId(c.id)===channelId(extra.id));if(channel)channel.sourceId=extra.key;else state.channels.push({id:extra.id,sourceId:extra.key,label:extra.label,value:0,default:0,min:extra.min,max:extra.max});const binding={id:extra.id,label:extra.label,targetName:name,amplitude:1};if(priorMorph)Object.assign(priorMorph,binding);else state.morphs.push(binding);
+ }
+ return state;
+}
+export function registerDsonPresets({editor,operators,api,afterChange=async()=>{}}){
+ operators.register({id:'character.dson_preset',label:'Apply DAZ preset',hidden:true,undo:'snapshot',execute:async(_,p,signal)=>{
+  const report=await api.dsonPreset(p.source,p.sha256),root=editor.root.getObjectByProperty('uuid',p.targetId);plan(root,report);const textures=new Map(),created=[];let committed=false;
+  try{
+   for(const m of report.preset.materials)if(m.texture&&!textures.has(m.texture)){const data=await api.dsonTexture(report.source,m.texture),texture=await new THREE.TextureLoader().loadAsync(data);texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;textures.set(m.texture,texture);}
+   const result=await deformationTransaction(editor,p.targetId,owner=>{const proposed=plan(owner,report),state=installMorphs(owner,report.preset.extra_morphs);
+    for(const c of proposed.controls)state.channels.find(v=>v.id===c.id).value=c.value;
+    for(const r of proposed.rotations)r.bone.quaternion.copy(r.quaternion);
+    for(const {record:m,matches} of proposed.materials)for(const {mesh,index,material} of matches){const copy=material.clone(),provided=m.provided||['color','opacity','roughness','metallic','texture'];created.push(copy);if(provided.includes('color'))copy.color.setRGB(...m.color,THREE.LinearSRGBColorSpace);if(provided.includes('opacity')){copy.opacity=m.opacity;copy.transparent=copy.transparent||!!copy.alphaMap||m.opacity<1;}if(provided.includes('roughness'))copy.roughness=Math.max(0,Math.min(1,m.roughness));if(provided.includes('metallic'))copy.metalness=Math.max(0,Math.min(1,m.metallic));if(provided.includes('texture'))copy.map=m.texture?textures.get(m.texture):null;copy.needsUpdate=true;if(Array.isArray(mesh.material)){mesh.material=[...mesh.material];mesh.material[index]=copy;}else mesh.material=copy;}
+    const evaluated=evaluateCharacter(owner);if(!evaluated.valid)throw Error('Preset dependency evaluation failed: '+evaluated.errors.map(e=>e.message).join('; '));owner.updateWorldMatrix(true,true);owner.traverse(n=>{if(n.isSkinnedMesh)n.skeleton.update();});
+    const history=owner.userData.fusion_dson_presets??=[];history.push({source:report.source,sha256:p.sha256,kind:report.document_kind});if(history.length>32)history.shift();return {controls:proposed.controls.length,joints:proposed.rotations.length,materialGroups:proposed.materials.length};
+   },{signal,afterChange});committed=true;return result;
+  }finally{if(!committed){for(const t of textures.values())t.dispose();for(const m of created)m.dispose();}}
+ }});
+}

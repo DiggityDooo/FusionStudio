@@ -125,7 +125,7 @@ BMESH_OPERATIONS = {
 
 def import_model(file, options=None):
     ext = file.suffix.lower()
-    if ext == '.duf':
+    if ext in ('.duf', '.dsf'):
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from dson_importer import import_dson
         options=options or {}
@@ -155,7 +155,9 @@ def import_model(file, options=None):
     bumps = bump_plan(file) if ext in ('.glb', '.gltf') else None
     previous_materials = set(bpy.data.materials) if bumps and bumps['materials'] else set()
     previous_actions = set(bpy.data.actions) if timing else set()
-    checked(ops[ext](filepath=str(file), **({'global_scale': .001} if ext == '.stl' else {})), 'Import')
+    # FBX's Blender default adds one frame to every imported action. Fusion's
+    # exchange timeline starts at time zero; retain the source sample times.
+    checked(ops[ext](filepath=str(file), **({'global_scale': .001} if ext == '.stl' else {'anim_offset': 0.0} if ext == '.fbx' else {})), 'Import')
     if bumps is not None:
         result = apply_bump_plan(bumps, set(bpy.data.materials) - previous_materials)
         if options is not None:options['bumpTextures'] = result

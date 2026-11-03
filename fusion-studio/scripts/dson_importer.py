@@ -128,6 +128,7 @@ class _Reader:
             if candidate.is_file() and self._allowed(candidate):
                 self.dependencies.setdefault(str(candidate), {'path': str(candidate), 'kind': 'resource'})
                 return candidate
+        self.dependencies.setdefault('missing:'+raw, {'path': raw, 'kind': 'resource', 'status': 'missing'})
         raise DsonImportError('Missing or disallowed referenced file: ' + raw)
 
     def document(self, path):
@@ -260,6 +261,143 @@ def _material_plan(reader, source_doc, mesh):
             mesh['uvs'], mesh['uv_overrides'] = [], {}
 
 
+def _preset_payload(reader, doc):
+    """Decode static presets as data; target matching and transactions stay in Fusion."""
+    source_type = doc.get('asset_info', {}).get('type', '')
+    kind = next((kind for kind in ('pose', 'shape', 'material') if source_type in ('preset_'+kind, 'preset_hierarchical_'+kind)), None)
+    if not kind:
+        raise DsonImportError('Unsupported DSON preset type: '+str(source_type))
+    scene = doc.get('scene', {})
+    identity = unquote(str(doc.get('asset_info', {}).get('id', reader.source.as_posix())))
+    families = []
+    family_pattern = r'Genesis(?:[ _]?8(?:[._ ]?1)?[ _]?(?:Female|Male)|[ _]?9|[ _]?3[ _]?(?:Female|Male)|[ _]?2[ _]?(?:Female|Male))?'
+    for value in [identity, reader.source.as_posix()] + [str(n.get('url', '')) for n in scene.get('nodes', [])]:
+        matches = re.findall(family_pattern, unquote(value), re.IGNORECASE)
+        for family in matches:
+            key = re.sub(r'[^a-z0-9]', '', family.lower())
+            if key not in families:
+                families.append(key)
+    payload = {'kind': kind, 'families': families, 'rotations': [], 'controls': [], 'materials': []}
+    material_values = {}
+    for record in scene.get('animations', []):
+        uri = unquote(str(record.get('url', '')))
+        keys = record.get('keys', [])
+        if not keys or any(not isinstance(row, list) or len(row) < 2 for row in keys):
+            raise DsonImportError('Preset contains malformed channel keys')
+        if any(row[1] != keys[0][1] for row in keys[1:]):
+            raise DsonImportError('Animated presets need timeline import; static preset application cannot discard keyframes')
+        address, _, prop = uri.partition('?')
+        prop = prop.removesuffix('/value')
+        target = address.split('#')[-1] if '#' in address else address.removeprefix('name://@selection').split('/')[-1]
+        target = target.rstrip(':')
+        value = keys[0][1]
+        if kind == 'material':
+            group = target.removeprefix('materials/')
+            channel = prop.split('/channels/')[-1] if '/channels/' in prop else prop
+            material_values.setdefault(group, {})[channel] = value
+        elif prop.startswith('rotation/') and kind == 'pose':
+            axis = prop.split('/')[-1]
+            if axis not in 'xyz' or len(axis) != 1 or not target:
+                raise DsonImportError('Invalid preset joint rotation address')
+            payload['rotations'].append({'joint': target, 'axis': axis, 'degrees': _number(value)})
+        elif prop == 'value' and '#' in address:
+            payload['controls'].append({'id': target, 'value': _number(value), 'source': uri})
+        elif prop.startswith('translation/') and _number(value) == 0:
+            continue
+        elif (prop.startswith('scale/') or prop == 'general_scale') and _number(value) == 1:
+            continue
+        else:
+            reader.unsupported_field('preset_channel:'+prop, 'Preset channel is not applied: '+uri)
+    if kind == 'material':
+        images = {str(i.get('id')): i for i in doc.get('image_library', [])}
+        for instance in scene.get('materials', []):
+            mat_path, definition = reader.asset(instance.get('url', ''), reader.source, 'material_library')
+            base_channels = _channels(definition)
+            base_channels.update(_channels(instance))
+            for group in instance.get('groups', []):
+                channels = copy.deepcopy(base_channels)
+                for name, value in material_values.get(group, {}).items():
+                    channels.setdefault(name, {})['current_value'] = value
+                base = channels.get('Base Color', channels.get('diffuse', {}))
+                color = base.get('current_value', base.get('value', [0.65]*3))
+                if not isinstance(color, list) or len(color) not in (3, 4):
+                    raise DsonImportError('Preset base color must contain three or four numbers')
+                color = [_number(v) for v in color[:3]]
+                opacity = _number(channels.get('Cutout Opacity', channels.get('opacity')), 1)
+                texture = base.get('image_file')
+                if not texture and base.get('image'):
+                    image = images.get(_fragment(base['image']), {})
+                    maps = image.get('map', [])
+                    texture = maps[0].get('url') if maps else None
+                texture = str(reader.file(texture, mat_path)) if texture else None
+                provided = []
+                for field, names in [('color', ('Base Color', 'diffuse')), ('opacity', ('Cutout Opacity', 'opacity')), ('roughness', ('Glossy Roughness', 'roughness')), ('metallic', ('Metallic Weight',))]:
+                    if any(name in channels for name in names):
+                        provided.append(field)
+                if 'image_file' in base or 'image' in base:
+                    provided.append('texture')
+                payload['materials'].append({'group': group, 'provided': provided, 'color': color, 'opacity': opacity, 'roughness': _number(channels.get('Glossy Roughness', channels.get('roughness')), 0.5), 'metallic': _number(channels.get('Metallic Weight'), 0), 'texture': texture})
+        reader.unsupported_field('preset_shader_layers', 'Material preset uses supported base color/texture, opacity, roughness and metallic values; native shader layers and additional texture channels remain unsupported.')
+    if not any(payload[k] for k in ('rotations', 'controls', 'materials')):
+        raise DsonImportError('Preset contains no supported static values')
+    if len(payload['rotations']) + len(payload['controls']) + len(payload['materials']) > 16384:
+        raise DsonImportError('Preset exceeds 16,384 supported values')
+    return payload
+
+
+def _preset_morphs(reader, preset, target_source):
+    """Resolve only explicitly requested controls inside selected geometry's Morphs tree."""
+    target_report, target_meshes = _make_plan(target_source, reader.roots)
+    if not target_report['ok']:
+        raise DsonImportError('Preset target preflight failed: '+'; '.join(target_report['errors']))
+    known = {m['id'] for mesh in target_meshes for m in mesh['morphs']}
+    wanted = {c['id'] for c in preset['controls'] if c['value'] != 0 and c['id'] not in known}
+    if not wanted:
+        return []
+    if len(wanted) > 64:
+        raise DsonImportError('Preset requests more than 64 additional morphs')
+    matches = {ident: [] for ident in wanted}
+    scanned = 0
+    for folder in dict.fromkeys(mesh['geometry_path'].parent / 'Morphs' for mesh in target_meshes):
+        if not folder.is_dir():
+            continue
+        for candidate in folder.rglob('*.dsf'):
+            scanned += 1
+            if scanned > 100000:
+                raise DsonImportError('Requested preset morph lookup exceeds 100,000 filenames')
+            if candidate.stem not in wanted:
+                continue
+            candidate = candidate.resolve(strict=True)
+            if not any(candidate.is_relative_to(r) for r in reader.roots):
+                raise DsonImportError('Preset morph lies outside explicit content roots')
+            _, definition = reader.asset(str('/'+candidate.relative_to(next(r for r in reader.roots if candidate.is_relative_to(r))).as_posix())+'#'+candidate.stem, reader.source, 'modifier_library')
+            if definition.get('morph'):
+                matches[candidate.stem].append(candidate)
+    uris = []
+    for ident, candidates in matches.items():
+        if len(candidates) > 1:
+            raise DsonImportError('Requested morph ID is ambiguous in selected source family: '+ident)
+        if candidates:
+            candidate = candidates[0]
+            content_root = next(r for r in reader.roots if candidate.is_relative_to(r))
+            uris.append('/'+candidate.relative_to(content_root).as_posix()+'#'+ident)
+    if not uris:
+        return []
+    checked, meshes = _make_plan(target_source, reader.roots, {'additional_morphs': uris})
+    if not checked['ok']:
+        raise DsonImportError('Requested morph validation failed: '+'; '.join(checked['errors']))
+    result = []
+    for mesh in meshes:
+        for morph in mesh['morphs']:
+            if morph['id'] in wanted:
+                result.append({k: morph[k] for k in ('id', 'key', 'label', 'min', 'max', 'deltas')} | {'geometryId': mesh['geometry']['id'], 'vertexCount': len(mesh['vertices'])})
+    for dependency in checked['dependencies']:
+        reader.dependencies[dependency['path']] = dependency
+    if result:
+        reader.unsupported_field('preset_morph_erc', 'Additional requested base-resolution morphs are loaded from the selected source family. Unloaded ERC/joint corrections and DAZ HD evaluation remain unsupported.')
+    return result
+
+
 def _make_plan(source_path, content_roots, options=None):
     options = dict(options or {})
     content_roots = list(content_roots or [])
@@ -270,6 +408,24 @@ def _make_plan(source_path, content_roots, options=None):
         doc = reader.document(reader.source)
         report['source'] = str(reader.source)
         report['format_version'] = doc.get('file_version')
+        report['document_kind'] = 'standalone'
+        if str(doc.get('asset_info', {}).get('type', '')).startswith('preset_'):
+            report['document_kind'] = 'unsupported'
+            preset = _preset_payload(reader, doc)
+            if options.get('target_source') and preset['controls']:
+                preset['extra_morphs'] = _preset_morphs(reader, preset, options['target_source'])
+                report['target_source'] = str(Path(options['target_source']).resolve(strict=True))
+            report['document_kind'] = preset['kind']+'_preset'
+            report['preset'] = preset
+            report['target_requirements'] = {'selection_required': True, 'families': preset['families'], 'joints': sorted({r['joint'] for r in preset['rotations']}), 'controls': [c['id'] for c in preset['controls']], 'material_groups': [m['group'] for m in preset['materials']]}
+            report['dependencies'] = list(reader.dependencies.values())
+            report['unsupported_fields'] = sorted(reader.unsupported)
+            report['warning_details'] = reader.warnings
+            report['warnings'] = [w['message'] for w in reader.warnings]
+            report['ok'] = not (options.get('require_full_fidelity') and reader.unsupported)
+            if not report['ok']:
+                report['errors'].append('Full fidelity requested, but unsupported preset fields are present')
+            return report, []
         scene = doc.get('scene', {})
         scene_nodes = scene.get('nodes', [])
         if not scene_nodes and doc.get('geometry_library'):
@@ -613,6 +769,8 @@ def import_dson(source_path, content_roots, options=None, on_preflight=None):
     """
     options = dict(options or {})
     report, meshes = _make_plan(source_path, content_roots, options)
+    if report.get('preset'):
+        raise DsonImportError('Apply this preset to a compatible selected DAZ asset; it is not standalone geometry', report)
     print('DSON_PREFLIGHT ' + json.dumps(report, ensure_ascii=True))
     if on_preflight:
         on_preflight(copy.deepcopy(report))
@@ -661,6 +819,8 @@ def import_dson(source_path, content_roots, options=None, on_preflight=None):
             face_groups.data.foreach_set('value', mesh['face_group_indices'])
             for material in mesh['materials']:
                 mat = bpy.data.materials.new(material['name'])
+                mat['dson_material_group'] = material['name']
+                mat['dson_geometry_id'] = mesh['geometry']['id']
                 resources.append(('material', mat))
                 mat.diffuse_color = material['color']
                 mat.use_nodes = True
@@ -738,7 +898,9 @@ def import_dson(source_path, content_roots, options=None, on_preflight=None):
                     parent_rest = arm_data.bones[bone_names[parent]].matrix_local.to_3x3() if parent in bone_names else Matrix.Identity(3)
                     orient = Euler(tuple(math.radians(v) for v in _xyz(bone.get('orientation'))), 'XYZ').to_matrix()
                     basis = rest.inverted() @ conversion.to_3x3().normalized() @ orient
-                    local_rest = parent_rest.inverted() @ rest
+                    # glTF applies Blender Z-up -> Y-up at the root joint;
+                    # descendants already express rotation in their parent frame.
+                    local_rest = parent_rest.inverted() @ rest if parent in bone_names else conversion.to_3x3().normalized().inverted() @ rest
                     channels = _xyz(bone.get('rotation'))
                     channel_matrix = Euler(tuple(math.radians(v) for v in channels), bone.get('rotation_order', 'XYZ')).to_matrix()
                     predicted = local_rest @ basis @ channel_matrix @ basis.inverted()
@@ -841,11 +1003,12 @@ if __name__ == '__main__':
     parser.add_argument('--preflight', dest='preflight_source')
     parser.add_argument('--roots', help='JSON array of explicit content-root paths')
     parser.add_argument('--content-root', action='append')
+    parser.add_argument('--preset-target')
     args = parser.parse_args()
     source = args.preflight_source or args.source
     roots = json.loads(args.roots) if args.roots else args.content_root
     if not source or not isinstance(roots, list) or not roots:
         parser.error('Provide --preflight SOURCE --roots JSON_ARRAY, or SOURCE --content-root ROOT')
-    result = preflight_dson(source, roots)
+    result = preflight_dson(source, roots, {'target_source': args.preset_target} if args.preset_target else None)
     print(json.dumps(result, indent=2))
     raise SystemExit(0 if result['ok'] else 1)
