@@ -1,18 +1,20 @@
 import React from 'react';
-import {AbsoluteFill,Sequence,staticFile,useCurrentFrame,interpolate,Easing} from 'remotion';
+import {AbsoluteFill,Sequence,staticFile,useCurrentFrame,interpolate,Easing,delayRender,continueRender,cancelRender} from 'remotion';
 import {Video,Audio} from '@remotion/media';
 import {film,scenes as nominalScenes,cues as nominalCues} from './story.mjs';
 import prepared from '../public/prepared.json';
 import './style.css';
 const scenes=prepared.story||nominalScenes,cues=prepared.cues||nominalCues;
+const fontHandle=delayRender('Load captured Windows fonts');
+Promise.all([['regular.ttf','400'],['semibold.ttf','600']].map(async([file,weight])=>{const font=await new FontFace('Fusion Sans',`url("${staticFile('fonts/'+file)}")`,{weight}).load();document.fonts.add(font);})).then(()=>continueRender(fontHandle)).catch(cancelRender);
 
 const ease=Easing.bezier(.16,1,.3,1);
 const enter=(f,d=20)=>interpolate(f,[0,d],[0,1],{extrapolateLeft:'clamp',extrapolateRight:'clamp',easing:ease});
 function Footage({asset,frames,hero=false}){
- const frame=useCurrentFrame(),meta=prepared.assets[asset],rate=meta.frames/frames;
+ const frame=useCurrentFrame(),meta=prepared.assets[asset],trim=hero&&asset==='native-render'?Math.max(0,meta.frames-120):hero&&asset==='daz-preset'?Math.max(0,meta.frames-150):0,rate=(meta.frames-trim)/frames;
  const drift=interpolate(frame,[0,frames],[1,1.018],{extrapolateRight:'clamp'});
  return <div className={hero?'hero-footage':'footage'} style={{transform:`scale(${drift})`}}>
-  <Video src={staticFile(`media/${asset}.mp4`)} muted playbackRate={rate} />
+  <Video src={staticFile(`media/${asset}.mp4`)} muted trimBefore={trim} playbackRate={rate} />
   {!hero&&<span className="capture-badge">ACTUAL FUSION CAPTURE{rate>1.08?` / ${rate.toFixed(1)}× PLAYBACK`:''}</span>}
  </div>;
 }

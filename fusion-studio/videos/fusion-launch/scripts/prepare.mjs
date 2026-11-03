@@ -35,7 +35,8 @@ if(input){
 }
 const story=structuredClone(scenes),captions=structuredClone(cues);
 for(let i=1;i<story.length;i++){const nominal=scenes[i].from,nearest=beats.reduce((a,b)=>Math.abs(b-nominal)<Math.abs(a-nominal)?b:a,nominal+10000);if(Math.abs(nearest-nominal)<=15){story[i].from=nearest;story[i-1].to=nearest;}}
-for(let i=0;i<story.length;i++){const s=story[i],original=scenes[i],ratio=(s.to-s.from)/(original.to-original.from);let n=0;for(const [j,c]of s.clips.entries()){c.frames=j===s.clips.length-1?s.to-s.from-n:Math.round(c.frames*ratio);n+=c.frames;}for(const cue of captions)if(cue[0]>=original.from&&cue[0]<original.to){const oldFrom=cue[0],oldTo=cue[1];cue[0]=s.from+Math.round((oldFrom-original.from)*ratio);cue[1]=s.from+Math.round((oldTo-original.from)*ratio);}}
+for(let i=0;i<story.length;i++){const s=story[i],original=scenes[i],ratio=(s.to-s.from)/(original.to-original.from);let n=0;for(const [j,c]of s.clips.entries()){c.frames=j===s.clips.length-1?s.to-s.from-n:Math.round(c.frames*ratio);n+=c.frames;}}
+for(let i=0;i<cues.length;i++){const [a,b,t]=cues[i],index=scenes.findIndex(s=>a>=s.from&&a<s.to),s=story[index],old=scenes[index],ratio=(s.to-s.from)/(old.to-old.from);captions[i]=[s.from+Math.round((a-old.from)*ratio),s.from+Math.round((b-old.from)*ratio),t];}
 const prepared={film,workflow,assets,music,story,cues:captions,capture:receipt};json(path.join(pub,'prepared.json'),prepared);
 fs.mkdirSync(output,{recursive:true});
 const stamp=f=>{let ms=Math.round(f/30*1000),h=Math.floor(ms/3600000);ms%=3600000;const m=Math.floor(ms/60000);ms%=60000;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(Math.floor(ms/1000)).padStart(2,'0')}.${String(ms%1000).padStart(3,'0')}`;};

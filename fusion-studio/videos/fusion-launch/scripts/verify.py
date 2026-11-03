@@ -55,6 +55,6 @@ assert caption.startswith('WEBVTT\n') and caption.count(' --> ')==len(prepared['
 for i,(start,end,text) in enumerate(prepared['cues']):
  assert 0<=start<end<=3600
  if i:assert start==prepared['cues'][i-1][1]
-report={'passed':True,'preview':preview,'frames':frames,'seconds':120,'width':1920,'height':1080,'decodedAllFrames':True,'videoCodec':'H.264','audio':audio,'captionCues':len(prepared['cues']),'transitionStrips':6,'shotStills':21,'visualReview':'pending human/agent image inspection','deterministicFrames':'pending independent still comparison','captureChecks':prepared['capture']['checks'],'sha256':digest(video)}
+report={'passed':False,'technicalChecksPassed':True,'preview':preview,'frames':frames,'seconds':120,'width':1920,'height':1080,'decodedAllFrames':True,'videoCodec':'H.264','audio':audio,'captionCues':len(prepared['cues']),'transitionStrips':6,'shotStills':21,'visualReview':'pending human/agent image inspection','deterministicFrames':'pending independent still comparison','captureChecks':prepared['capture']['checks'],'sha256':digest(video)}
 (out/('picture-verification.json' if preview else 'verification.json')).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps(report))

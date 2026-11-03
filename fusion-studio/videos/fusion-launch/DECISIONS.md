@@ -5,3 +5,4 @@
 - Frozen 0.19.0-rc.1 packaged app supplies capture. Private DAZ source and audio remain local. No runtime dependency changes.
 - Original 86-second demo remains unchanged. Picture preview is explicitly marked while required music is absent. Final render requires supplied local audio; no substitute soundtrack.
 - Source capture timestamps and playback rates remain in evidence; sped-up shots identify playback rate. No claims about real-time conversion/inference speed.
+- DAZ black 3Delight preset exposes supported color channel in current reader. Its legacy black-texture shader channels are not reconstructed; original texture remains. Film demonstrates compatible transaction and recovery, not full 3Delight appearance parity. Texture recovery is pixel-exact; observed maximum linear-color roundtrip error is 1.017e-6 (capture bound 1e-5).

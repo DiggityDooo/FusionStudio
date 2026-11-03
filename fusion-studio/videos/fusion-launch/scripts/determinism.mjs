@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {bundle} from '@remotion/bundler';
+import {renderStill,selectComposition} from '@remotion/renderer';
+import {spawnSync} from 'node:child_process';
+import {workspace,json,output} from './common.mjs';
+const serveUrl=await bundle({entryPoint:path.join(workspace,'src/index.jsx'),publicDir:path.join(workspace,'public')});
+const inputProps={preview:false},composition=await selectComposition({serveUrl,id:'FusionLaunch',inputProps});
+const dir=path.join(workspace,'local/determinism');fs.mkdirSync(dir,{recursive:true});
+const frames=[95,700,1400,1850,2630,3200];
+for(const frame of frames)for(const repeat of ['a','b'])await renderStill({serveUrl,composition,inputProps,frame,output:path.join(dir,`${frame}-${repeat}.png`),chromiumOptions:{gl:'angle'}});
+const check=spawnSync('python',['-c',"from PIL import Image;from pathlib import Path;import hashlib,json;d=Path(__import__('sys').argv[1]);rows=[]\nfor p in sorted(d.glob('*-a.png')):\n a=Image.open(p).convert('RGBA').tobytes();b=Image.open(d/(p.stem[:-1]+'b.png')).convert('RGBA').tobytes();assert a==b,p.name;rows.append({'frame':int(p.stem.split('-')[0]),'pixelSha256':hashlib.sha256(a).hexdigest()})\nprint(json.dumps({'passed':True,'independentPairs':rows}))",dir],{encoding:'utf8',windowsHide:true});
+if(check.status!==0)throw Error(check.stderr);const report=JSON.parse(check.stdout);json(path.join(output,'determinism.json'),report);console.log(JSON.stringify(report));

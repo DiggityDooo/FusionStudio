@@ -1,0 +1,5 @@
+# Reference and adaptation
+
+Reference: published English demo from demo-video-creator at pinned revision. Downloaded to ignored scratch for inspection; footage is not reused. Duration 39.78 seconds. A 0.25 scene-change detector finds large palette/content changes at 7.000 and 25.367 seconds; this detector does not identify every animated editorial cut. Inspected nine-frame whole-film contact sheet. Observed output comparison, real UI proof, generous type margins, restrained warm/paper palette and product end card.
+
+User-directed changes: 120 seconds, Fusion graphite/gold, music and captions instead of narration, Remotion instead of HyperFrames. Seven main sections permit readable import compatibility and undo evidence. Camera push is 1.8% per shot, capped below reference's busy zoom treatment. Every transition receives a 16-frame strip; every section receives beginning/middle/end stills. Source clips retain their own motion and measured timing. Music grid is estimated from supplied PCM onset energy, with cut snapping limited to half-second around planned boundaries; exact endpoint remains frame 3600.

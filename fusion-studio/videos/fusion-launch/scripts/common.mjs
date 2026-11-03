@@ -11,4 +11,4 @@ export const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).dige
 export const run=(args,options={})=>execFileSync(ffmpeg,['-hide_banner',...args],{windowsHide:true,maxBuffer:16*1024*1024,...options});
 export const json=(p,value)=>{fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,JSON.stringify(value,null,2)+'\n');};
 export const details=args=>{const r=spawnSync(ffmpeg,['-hide_banner',...args],{windowsHide:true,encoding:'utf8',maxBuffer:16*1024*1024});if(r.status!==0)throw Error(r.stderr||r.error?.message);return r.stderr;};
-export const duration=p=>{try{run(['-i',p]);}catch(e){const m=String(e.stderr).match(/Duration: (\d+):(\d+):(\d+\.\d+)/);if(m)return +m[1]*3600+ +m[2]*60+ +m[3];throw e;}throw Error('Expected duration metadata');};
+export const duration=p=>{const r=spawnSync(ffmpeg,['-hide_banner','-i',p],{windowsHide:true,encoding:'utf8'});const m=String(r.stderr).match(/Duration: (\d+):(\d+):(\d+\.\d+)/);if(m)return +m[1]*3600+ +m[2]*60+ +m[3];throw Error('Cannot read media duration');};
