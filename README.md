@@ -6,15 +6,15 @@ Fusion Studio is a Windows desktop application for moving supported 3D work betw
 
 The long-term goal is a dependable middle workspace for many 3D applications. The current application implements specific, tested paths toward that goal. It does **not** claim that every native format can already be edited or converted without loss.
 
-**October 28 development update:** usable character LOD copies with retained source characters, cancellable reduction, preview selection, undo, project reload and GLB/Cycles delivery. The update also repairs verified legacy DSON formula inputs, shared-buffer/shadow persistence, and animated export through static affine parent frames. See the [current implementation status](fusion-studio/docs/progress/STATUS-implemented-vs-remaining.md), [LOD evidence and limits](fusion-studio/docs/progress/2026-10-28-character-lods.md), and [earlier character integrity changes](fusion-studio/docs/progress/2026-10-28-character-integrity-and-github-update.md). Source remains version 0.1.0; archived downloadable releases are unchanged. Professional character realism, general native-format fidelity, and the full roadmap remain unfinished.
+**November 3 candidate — `0.19.0-rc.1`:** supported editable imports, static DAZ presets, shared edit/history/save workflows, user model chat and authenticated local MCP. [Release report](fusion-studio/docs/releases/2026-11-03-rc-report.md) records **1,191 default parallel passes**, **47 native passes** (two opt-in diagnostics ignored), and **44 packaged import cases across 42 source files**. Candidate is verified for documented subsets; full native parity and broader roadmap remain unfinished.
 
-**Current snapshot:** `0.1.0` · Windows desktop · Electron / Three.js / Rust · local processing
+**Current snapshot:** `0.19.0-rc.1` · Windows x64 · Electron / Three.js / Rust · installed Blender 5.2
 
-Latest source follow-ups: [October 29 worker and gesture recovery update](fusion-studio/docs/progress/2026-10-29-creator-async-and-github-update.md), [faster image checkpoints and undo recovery](fusion-studio/docs/progress/2026-10-28-image-history-checkpoints.md), [pose-preserving creator refitting](fusion-studio/docs/progress/2026-10-28-creator-rig-refit.md), and [retained-source editing with dense-mesh LOD repair](fusion-studio/docs/progress/2026-10-28-lod-source-workflow-and-queue.md). Overlapping worker requests retain their own replies, and cancelled sliders clear delayed appearance work. The combined build, 1,126 unit tests and desktop recovery checks pass. Earlier measured character commits are approximately 38–41% faster. Body edits retain translated/scaled poses, rebuilding retains earlier copies, and late failures restore the previous undo state. Numeric exchange checks, actual workflows and remaining quality/performance limits accompany the evidence.
+**Live connections verified:** actual local `phi3:mini` replies through native Ollama and compatible API; official MCP Inspector invokes all seven tools against packaged app. Cancellation, app restart, missing-model errors, authentication and Origin rejection pass. [Connections guide](fusion-studio/docs/CONNECTIONS.md) states scope; cloud providers remain unverified. Internal chat is conversational; external MCP clients can perform explicitly enabled scene edits.
 
-[Workflow videos](#watch-real-workflows) · [Features](#work-inside-one-scene) · [File support](#file-support-and-fidelity) · [Run from source](#run-from-source) · [Architecture](fusion-studio/ARCHITECTURE.md) · [Implementation evidence](fusion-studio/docs/muse-implementation-status.md)
+[Recorded demo](#watch-real-workflows) · [Quickstart](fusion-studio/docs/releases/2026-11-03-rc-guide.md) · [File support](#file-support-and-fidelity) · [Connections](fusion-studio/docs/CONNECTIONS.md) · [Tests](fusion-studio/docs/TESTING.md) · [Contributing](CONTRIBUTING.md)
 
-![Fusion Studio: preserved Blender scene of an original optical instrument](fusion-studio/docs/showcase/2026-10-26/native-workspace.png)
+![Fusion Studio: preserved Blender scene of an original optical instrument](fusion-studio/docs/demo/2026-11-03/native-workspace.png)
 
 *A detailed, original optical instrument imported from Blender. The viewport is an evaluated representation; the native scene is retained separately for supported rendering. Screenshot from the actual application.*
 
@@ -34,37 +34,19 @@ Keeping an original beside an edited mesh is useful preservation; it does not ma
 
 ## Watch real workflows
 
-These are **1920 × 1080 H.264 MP4 recordings**, captured from the running Electron application on October 26, 2026. Click a preview to open its video file on GitHub. The [full gallery](fusion-studio/docs/WORKFLOW-GALLERY.md) includes individual screenshots, chapter descriptions, provenance, and reproduction instructions.
+**Current packaged app, recorded November 3, 2026.** [Watch captioned 1080p H.264 demo](fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.mp4), or read [chapters, provenance and capture evidence](fusion-studio/docs/demo/2026-11-03/README.md). Source assets are original procedural fixtures; no private DAZ or paid content appears.
 
-![Short silent reel from Fusion's recorded workflows](fusion-studio/docs/showcase/2026-10-26/workflow-reel.gif)
+![Short preview of actual packaged workflows](fusion-studio/docs/demo/2026-11-03/preview.gif)
 
-*A short silent preview; complete chaptered MP4 recordings follow.*
+[![Watch current Fusion Studio demo](fusion-studio/docs/demo/2026-11-03/native-render.png)](fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.mp4)
 
-### Native Blender scene → compatibility review → Cycles render
+1. Import original optical-instrument .blend, review compatibility, retain native scene and render through Cycles OptiX. Source SHA-256 stays unchanged.
+2. Sculpt original **156,672-triangle** stoneware mesh through actual pointer gestures. Undo/redo restore checked numeric geometry.
+3. Save/reopen editable project and export real validated GLB.
+4. Chat with installed local Phi-3 through Ollama; no automatic scene-agent claim.
+5. Use external MCP client to inspect, add cube, transform, undo and redo through Fusion operators.
 
-[![Watch the preserved Blender scene workflow](fusion-studio/docs/showcase/2026-10-26/optical-instrument-render.png)](fusion-studio/docs/showcase/2026-10-26/native-workflow.mp4)
-
-[**Watch the native-scene workflow — MP4**](fusion-studio/docs/showcase/2026-10-26/native-workflow.mp4)
-
-Import an original, multi-part optical instrument; review the preserved-scene import mode; inspect it in Fusion; and render its retained camera, lighting, and materials with Cycles OptiX. The capture verifies that the source `.blend` SHA-256 remains unchanged after import and rendering. This demonstrates native **rendering preservation**, not arbitrary lossless native editing.
-
-### Detailed mesh → sculpt → undo / redo → refine
-
-[![Watch sculpting on the detailed stoneware study](fusion-studio/docs/showcase/2026-10-26/sculpt-detail.png)](fusion-studio/docs/showcase/2026-10-26/sculpt-workflow.mp4)
-
-[**Watch the sculpting workflow — MP4**](fusion-studio/docs/showcase/2026-10-26/sculpt-workflow.mp4)
-
-Work on an original **156,672-triangle** stoneware mesh with real Draw Sharp and Smooth strokes, inspect the surface, and recover edits through undo/redo. The recording harness checks the numeric vertex positions against the baseline and edited state. It does not certify every sculpt brush or topology operation.
-
-### Adult character → appearance → pose → custom shape key → saved recipe
-
-[![Watch the character design workflow](fusion-studio/docs/showcase/2026-10-26/character-portrait.png)](fusion-studio/docs/showcase/2026-10-26/character-workflow.mp4)
-
-[**Watch the character workflow — MP4**](fusion-studio/docs/showcase/2026-10-26/character-workflow.mp4)
-
-Create an adult character from the verified CC0 starter foundation, adjust body and face controls, change skin tone without changing facial structure, fit short hair, adjust greying, and apply contrapposto. Sculpt a custom cheek-contour shape on the neutral editing copy, mix its influence, keyframe it, and save the editable recipe. The harness reopens the project and checks recipe equality. The fully clothed capture uses the current **coverage preview shell**, not a production-fitted garment.
-
-All featured assets are original procedural fixtures or verified CC0 starter content. The media does not use the owner's private Genesis characters or paid asset libraries. Titles are added outside the app image; viewport helper boxes are hidden for framing. No AI-generated interface, synthetic render replacement, or vendor UI is presented as Fusion.
+[English captions](fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.vtt) · [Gallery index](fusion-studio/docs/WORKFLOW-GALLERY.md). Chapter banners sit outside unchanged app pixels; UI input and OS file-picker paths are automated. Replies and renders are real. [Release evidence](fusion-studio/docs/releases/2026-11-03-rc-report.md) separately covers male/female character → garment → pose → save/reopen → render. Video demonstrates specific paths; it does not certify every tool or universal lossless conversion.
 
 ## Work inside one scene
 
@@ -83,6 +65,7 @@ All featured assets are original procedural fixtures or verified CC0 starter con
 | **Animation** | Object, bone, IK, and morph keys; playback; supported imported clips and evaluated animation export | Export may sample evaluated motion rather than reproduce a proprietary dependency graph |
 | **Rendering** | Installed Blender worker, Cycles CPU/CUDA/OptiX, protected native Blender rendering, retained character material sidecars | Requires a supported Blender installation and a working device; preview and final shaders can differ |
 | **Interchange** | Direct supported DSON reading, glTF validation, source/dependency records, export reports and optional MikkTSpace tangents | Feature support is reported per route; a supported suffix is not a fidelity guarantee |
+| **Models & MCP** | User profiles, two chat adapters, cancellation, encrypted keys; seven authenticated localhost tools | Live local Phi-3/Inspector verified; cloud providers, automatic scene agent and external MCP-server client remain deferred |
 
 ### Sculpting toolkit
 
@@ -108,14 +91,14 @@ Imported compatible DAZ content uses its own source identities. Morphs, weights,
 
 Fusion connects bodies, poses, editable pattern documents, evaluated garments, and render finishing. Linked changes can grade and re-drape a garment inside the same dependency transaction. Diagnostics expose seam gaps, strain, penetration, and mesh quality; an unconverged garment should remain visibly unconverged.
 
-Current limits matter: difficult female shirt fits remain unacceptable in recorded fixtures; extreme raised-arm poses can exceed the offline drape budget and roll back; long hair has no body/garment collision. The gallery deliberately does not present those workflows as production-ready cloth.
+Current packaged male/female workflows pass recorded gates. Fit remains fixture-dependent: short drapes can report unconverged seams/strain, extreme poses can exhaust offline budgets and roll back, and long hair has no body/garment collision. Production layered/animated cloth and fabric calibration remain unfinished.
 
 ## File support and fidelity
 
 | Format | Current route | What to expect |
 | --- | --- | --- |
 | **`.blend`** | Preserved native scene for supported rendering, plus evaluated viewport; separate editable interchange mode | Original-file protection and source attachment are distinct from editable conversions. New converted `.blend` output does not imply preservation of every original graph, rig, modifier, or native feature. |
-| **DAZ `.duf` with `.dsf` dependencies** | Direct read-only DSON importer for supported mesh, UV, sparse morph, rig/skin, pose, and formula data | Unsupported operations/features are reported. `.dsf` is used as dependency data; a registry entry does not imply every `.dsf` is a standalone importable scene. HD systems, exact proprietary deformation, and shaders remain limited. |
+| **DAZ `.duf` / `.dsf`** | Direct supported standalone DSON import plus static pose/shape/material presets on compatible selected targets | 16 local files/presets tested, including standalone DSF. Source-family/property/joint/material checks reject incompatible targets. HD/grafts, strand hair, general ERC and exact proprietary deformation/shaders remain limited. |
 | **`.glb` / `.gltf`** | Validated exchange, scene inspection, resources/dependencies and export reports | Useful editable interchange for the declared subset. GLB is not the authoritative store for a native project's complete semantics. |
 | **`.obj`, `.fbx`, `.stl`, `.ply`** | Installed Blender conversion routes | Geometry/rig/material capability varies by format and host. Review units, axes, topology, materials, animation, and export reports. |
 | **USD / USDZ, Alembic** | Worker routes and capability records exist | Composition/layer, cache, and roundtrip fidelity are not yet qualified for general use. Do not assume editable native semantics. |
@@ -128,7 +111,7 @@ The adapter registry is versioned, but dependency discovery and portable source-
 
 ## Run from source
 
-The current development environment uses **Windows, Node.js 24, Python 3, and Blender 5.2**. Blender supplies background conversion, modifier, UV, and rendering jobs. Rust/native features require a matching built native module. Browser mode provides the editor canvas, not desktop file/engine access.
+Verified desktop environment uses **Windows x64, Node.js 22.23.2, Python 3, and Blender 5.2.0 LTS**. Blender supplies background conversion, modifier, UV, and rendering jobs. Rust/native features require matching built native module. Browser mode provides editor canvas without desktop file/engine access. See [quickstart](fusion-studio/docs/releases/2026-11-03-rc-guide.md) and [contributing](CONTRIBUTING.md).
 
 ```powershell
 cd fusion-studio
@@ -196,11 +179,11 @@ Some integration suites require the local native module, a supported Blender bui
 
 The current implementation ledger records **31–80 ms warm character previews** and approximately **55 FPS orbit** on its detailed local scene. Completed edits still take about **0.5–0.7 seconds**, including history capture. Sculpt kernel measurements of approximately **8.2 ms per dab at 190k triangles** exclude rendering, upload, and history; they are not end-to-end interaction guarantees. These are recorded test-PC results, not portable hardware specifications.
 
-The new gallery has its own [machine-readable capture evidence](fusion-studio/docs/showcase/2026-10-26/capture-manifest.json). It records which actions were actually checked for the published media rather than treating screenshots as test results.
+Current demo has [machine-readable capture evidence](fusion-studio/docs/demo/2026-11-03/capture-manifest.json) and [media verification](fusion-studio/docs/demo/2026-11-03/media-inventory.json). [Testing guide](fusion-studio/docs/TESTING.md) distinguishes 83 portable CI checks from full native/desktop/import acceptance.
 
 ## Development status
 
-The current `0.1.0` Windows directory build is a development release. The packaged-executable smoke workflow is recorded in the [implementation status](fusion-studio/docs/muse-implementation-status.md). Earlier v0.0 and packaged releases remain preserved; the Fusion project schema stays at version 2.
+Current `0.19.0-rc.1` is a local Windows candidate for documented subsets. [Release report](fusion-studio/docs/releases/2026-11-03-rc-report.md) includes executable/ASAR hashes, gates, original-file preservation and limits. Portable build remains local; no binary release publication or hackathon submission is implied by source updates. Earlier builds remain preserved; Fusion project schema stays at version 2.
 
 Active priorities include:
 
@@ -218,3 +201,5 @@ See the [implementation ledger](fusion-studio/docs/muse-implementation-status.md
 Original Fusion Studio code is [MIT-licensed](fusion-studio/LICENSE). Third-party components retain their own licenses and notices. Verified CC0 starter assets have separate provenance; commercial runtimes, proprietary decompiler output, private characters, and paid assets are not part of that license or the application distribution.
 
 Blender is an external installed processing dependency. Fusion is independently developed and is not endorsed by Blender, DAZ, Reallusion, Marvelous Designer, or Maxon. Review [DEPENDENCIES.md](fusion-studio/docs/DEPENDENCIES.md) and the recorded native/runtime notice limitations before distributing a build.
+
+[Repository license](LICENSE) · [Security/data boundaries](SECURITY.md) · [Contribution workflow](CONTRIBUTING.md). Source lives in `fusion-studio/src` and `fusion-studio/electron`; tests/evidence in `fusion-studio/tests` and `fusion-studio/docs`. `CursorWork` holds separate research utilities outside app package.

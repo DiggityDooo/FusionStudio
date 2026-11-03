@@ -1,6 +1,6 @@
 # Fusion Studio
 
-Current package/source snapshot: **0.1.0**. The later Muse implementation checkpoint produced and smoke-tested `release-v0.1.0/win-unpacked/Fusion Studio.exe`; it remains a development build with open fidelity, character, garment and performance gates. The earlier user-defined v0.0 baseline and archived releases remain preserved. Document schema remains 2. See the [current implementation ledger](docs/muse-implementation-status.md).
+Current candidate: **0.19.0-rc.1**. [Overview](../README.md), [quickstart](docs/releases/2026-11-03-rc-guide.md), [release report](docs/releases/2026-11-03-rc-report.md), [connections](docs/CONNECTIONS.md) and [testing](docs/TESTING.md) describe verified scope. Default gate: 1,191 passes; packaged import matrix: 44 cases. Document schema remains 2. Version-specific paragraphs below retain historical context.
 
 Start with the [full app overview](../README.md) for the file-preservation purpose, detailed current capabilities, format support, setup and architecture. The [workflow gallery](docs/WORKFLOW-GALLERY.md) contains new full-resolution screenshots, captioned 1080p MP4 recordings and evidence from the running application. Version-specific paragraphs below are historical checkpoints; references to “current v0.0” describe that earlier snapshot.
 
@@ -10,9 +10,11 @@ The standing brief prioritizes the excellence of the integrated character → ga
 
 ## Launch
 
-The **Character Creator is available in the current v0.0 source** under Character → Create female / Create male. It includes body/face controls, neutral shape-key sculpting, skin tones, fitted hairstyle previews and artistic poses. It is still undergoing portrait, private-library, clothing and performance acceptance; it is not in the preserved 0.18.0 package. [Scope and current limits](docs/progress/2026-10-23-character-creator.md).
+The **Character Creator is available in current candidate** under Character → Create female / Create male. Packaged body-edit, garment, pose, history, reopen and render workflows pass. Portrait realism, general private-library parity, production cloth and broad performance remain unfinished. [Current limits](docs/releases/2026-11-03-rc-report.md).
 
-The **current v0.0 source** also includes pre-import glTF validation, F3 **Inspect scene glTF / GLB compatibility**, direct validated GLB export reports, and the Export Scene option **Generate missing MikkTSpace tangents for GLB normal maps**. These changes are available by running `npm run build` then `npm start` in this folder. They are not part of the preserved 0.18.0 package. See [evidence and remaining work](docs/progress/2026-10-18-reusable-interchange.md).
+Current candidate includes pre-import glTF validation, direct validated GLB exports, optional MikkTSpace tangents, compatible DSON presets, local model chat and authenticated MCP. Run `npm run build` then `npm start`, or launch complete candidate `win-unpacked` folder.
+
+## Historical milestones
 
 To run the earlier packaged **0.18.0** release, double-click **Launch Fusion Studio 0.18.0.lnk** in the parent workspace, or run `release-v0.18.0/win-unpacked/Fusion Studio.exe`. That archived package does not contain the current v0.0 source changes. Keep the complete `win-unpacked` folder together. Earlier applications and launchers are preserved; the 0.1 guide is `README-v0.1.md`.
 
