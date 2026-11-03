@@ -125,10 +125,10 @@ export async function hybridTransaction(editor,run,{signal=editor.operators?.run
   if(editor.batching)throw Error('Finish the current scene operation before changing the garment.');
   if(signal?.aborted)throw Error('Garment update cancelled.');
   if(editor.timeline)editor.timeline.playing=false;
-  editor.ensureHistory();const scene=editor.root,before=structuredClone(editor.serialize()),selected=editor.selected?.uuid,frame=editor.timeline?.frame;editor.batching=true;
+  editor.ensureHistory();const scene=editor.root,checkpoint=editor.historyCheckpoint?.(),before=checkpoint?null:structuredClone(editor.serialize()),selected=editor.selected?.uuid,frame=editor.timeline?.frame;editor.batching=true;
   try{const result=await run();if(editor.root!==scene)throw Error('Scene changed during garment evaluation.');if(signal?.aborted)throw Error('Garment update cancelled.');editor.batching=false;editor.commit();return result;}
-  catch(error){if(editor.root===scene){await editor.restore(before);if(editor.timeline&&frame!==undefined)editor.timeline.frame=frame;editor.select(editor.root.getObjectByProperty('uuid',selected)||null);}throw error;}
-  finally{editor.batching=false;}
+  catch(error){if(editor.root===scene){if(checkpoint)await checkpoint.restore();else await editor.restore(before);if(editor.timeline&&frame!==undefined)editor.timeline.frame=frame;editor.select(editor.root.getObjectByProperty('uuid',selected)||null);}throw error;}
+  finally{editor.batching=false;checkpoint?.release();}
 }
 export async function createHybrid(editor,api){
   return hybridTransaction(editor,async()=>{

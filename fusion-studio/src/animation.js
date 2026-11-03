@@ -155,7 +155,7 @@ export function onionFrames(frame,{before=2,after=2}={}){
  const frames=[];for(let i=before;i>=1;i--)frames.push(frame-i);frames.push(frame);for(let i=1;i<=after;i++)frames.push(frame+i);return frames;
 }
 
-export function animEvents(root){return root.userData.fusion_anim_events||=[];}
+export function animEvents(root){return root.userData.fusion_anim_events||[];}
 export function addAnimEvent(root,{frame,name,payload=null}={}){
  if(!Number.isInteger(frame)||frame<1)throw Error('Event frame must be ≥ 1.');
  const label=String(name||'').trim().slice(0,64);if(!label)throw Error('Event name required.');

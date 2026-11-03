@@ -8,6 +8,13 @@ function editorWith(mesh){
  const root=new THREE.Group();root.add(mesh);return {root,selected:mesh,commit(){},change(){}};
 }
 
+test('event inspection and timeline evaluation preserve event-free detailed scenes without inventing saved metadata',async()=>{
+ const mesh=new THREE.Mesh(new THREE.TorusGeometry(.5,.12,64,256),new THREE.MeshStandardMaterial()),editor=editorWith(mesh),timeline=new Timeline(editor),before=JSON.stringify(editor.root.toJSON());
+ assert.ok(mesh.geometry.index.count/3>=32768);assert.deepEqual(eventsAt(editor.root,1),[]);timeline.evaluate(1);timeline.evaluate(17,{notify:false});timeline.evaluate(1);assert.equal(JSON.stringify(editor.root.toJSON()),before);assert.equal(Object.hasOwn(editor.root.userData,'fusion_anim_events'),false);
+ const event=addAnimEvent(editor.root,{frame:7,name:'Foot contact',payload:{side:'left'}}),authored=JSON.stringify(editor.root.toJSON()),seen=[];timeline.onEvent(value=>seen.push(value));timeline.evaluate(7);assert.deepEqual(seen,[event]);assert.equal(JSON.stringify(editor.root.toJSON()),authored);
+ const restored=await new THREE.ObjectLoader().parseAsync(editor.root.toJSON());assert.deepEqual(eventsAt(restored,7),[event]);assert.equal(JSON.stringify(restored.userData),JSON.stringify(editor.root.userData));
+});
+
 test('interpolation modes ease and stepped hold',()=>{
  assert.equal(ease(0,'linear'),0);assert.equal(ease(1,'linear'),1);assert.equal(ease(.5,'linear'),.5);
  assert.ok(ease(.5,'spline')>.49&&ease(.5,'spline')<.51);assert.equal(ease(.4,'stepped'),0);assert.equal(ease(.9,'constant'),0);
