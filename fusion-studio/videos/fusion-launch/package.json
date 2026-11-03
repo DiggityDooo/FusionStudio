@@ -11,7 +11,8 @@
     "render": "node scripts/render.mjs",
     "check": "node scripts/check.mjs",
     "verify": "python scripts/verify.py",
-    "finalize": "node scripts/finalize.mjs"
+    "finalize": "node scripts/finalize.mjs",
+    "capture:outputs": "node scripts/capture-outputs.cjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.540",

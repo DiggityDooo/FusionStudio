@@ -6,6 +6,7 @@ Isolated Remotion 4.0.540 / React 19.3.1 workspace. Windows, Node 22, local pack
 npm ci
 npm run check
 npm run capture
+npm run capture:outputs
 npm run prepare -- --capture local/capture
 npm run studio
 npm run preview
@@ -16,6 +17,8 @@ npm run verify
 # After inspecting shot stills / transition strips and recording local/qa-review.json:
 npm run finalize
 ```
+
+Output capture records 450 fresh packaged-app viewport frames with deterministic orbit poses, plus verified native render and sculpt export. It uses last successful full capture, recorded in local/last-capture.json; FUSION_CAPTURE_RUN can select another verified capture folder.
 
 Capture validates source hashes and actual operations, then records readable compatibility reviews in separate fresh session. Preparation imports footage, installed Windows fonts, captions and private music. Lifecycle markers drive trims for new captures; fallback cut windows are locked to inspected source hashes. Waiting-time edits are documented in provenance and labeled in film. `--preview` produces visibly marked silent picture review only. Final rendering rejects missing music. Assets, audio and captures stay local; only sanitized evidence and approved film exports belong in Git.
 
