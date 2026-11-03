@@ -1,9 +1,10 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {_electron}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {detailedGltf,glb,externalFixture}=require('./gltf-fixtures.cjs');
 const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output'),runtime=path.join(output,'gltf-validation-'+Date.now());
 (async()=>{
  fs.mkdirSync(runtime,{recursive:true});const fixture=externalFixture(path.join(runtime,'input')),bad=path.join(runtime,'bad.glb'),f=detailedGltf();f.json.accessors[0].count+=10;fs.writeFileSync(bad,glb(f.json,f.bin));
- const original=fs.readFileSync(fixture.file),buffer=fs.readFileSync(fixture.resource),app=await _electron.launch({args:[root],env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000}),page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));let phase='launch';
+ const original=fs.readFileSync(fixture.file),buffer=fs.readFileSync(fixture.resource),app=await _electron.launch({...candidateLaunch(root),env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000}),page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));let phase='launch';
  const idle=()=>page.waitForFunction(()=>!fusionOperators.running&&!document.querySelector('#app').classList.contains('busy'),{},{timeout:120000});
  const state=()=>page.evaluate(async()=>{const e=fusionEditor,d=JSON.stringify(e.serialize()),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(d))),x=>x.toString(16).padStart(2,'0')).join('');return {hash,cursor:e.journal.cursor,entries:e.journal.entries.length,frame:e.timeline.frame};});
  const choose=async file=>{await app.evaluate(({dialog},file)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[file]});},file);await page.locator('#file-menu').click();await page.getByRole('button',{name:'Import Model',exact:true}).click();};

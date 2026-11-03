@@ -1,8 +1,9 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {_electron}=require('playwright'),assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
 const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output');
 (async()=>{
- const packaged=process.argv.includes('--packaged'),runtime=path.join(output,'pattern-ui-'+Date.now());
- const app=await _electron.launch({...packaged?{executablePath:path.join(root,'release-v0.7.0/win-unpacked/Fusion Studio.exe')}:{args:[root]},env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000});const page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const packaged=process.argv.includes('--packaged')||!!process.env.FUSION_TEST_EXECUTABLE,runtime=path.join(output,'pattern-ui-'+Date.now());
+ const app=await _electron.launch({...candidateLaunch(root,{packaged}),env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000});const page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  try{
   await page.waitForFunction(()=>window.fusionOperators);await page.evaluate(()=>fusionEditor.template('blank'));await page.locator('[data-workspace="Clothing"]').click();
   await page.locator('#pattern-designer').click();await page.getByRole('dialog',{name:'Pattern & Sewing Editor'}).waitFor();await page.waitForFunction(()=>!fusionOperators.running);

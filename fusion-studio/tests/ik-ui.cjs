@@ -1,8 +1,9 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {_electron}=require('playwright'),assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
 const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output');
 (async()=>{
- const packaged=process.argv.includes('--packaged'),runtime=path.join(output,'ik-ui-'+Date.now());
- const app=await _electron.launch({...packaged?{executablePath:path.join(root,'release-v0.7.0/win-unpacked/Fusion Studio.exe')}:{args:[root]},env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000});const page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='log')console.log('renderer',m.text());});
+ const packaged=process.argv.includes('--packaged')||!!process.env.FUSION_TEST_EXECUTABLE,runtime=path.join(output,'ik-ui-'+Date.now());
+ const app=await _electron.launch({...candidateLaunch(root,{packaged}),env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000});const page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='log')console.log('renderer',m.text());});
  const idle=()=>page.waitForFunction(()=>!fusionOperators.running);
  const field=async(kind,axis,value)=>{const f=page.getByRole('spinbutton',{name:`IK ${kind} ${axis}`,exact:true});await f.fill(String(value));await f.press('Tab');await idle();};
  try{

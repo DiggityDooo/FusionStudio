@@ -1,15 +1,16 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {execFileSync}=require('node:child_process');
 const {_electron}=require('playwright'),assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
 const {Engine}=require('../electron/core.cjs');
 const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output'),runtime=path.join(output,'native-scene-ui-'+Date.now());
 const engine=new Engine(runtime,path.join(root,'scripts/blender_worker.py'));
 (async()=>{
- const packaged=process.argv.includes('--packaged');const app=await _electron.launch({...packaged?{executablePath:path.join(root,'release-v0.7.0/win-unpacked/Fusion Studio.exe')}:{args:[root]},env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000}),page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const packaged=process.argv.includes('--packaged')||!!process.env.FUSION_TEST_EXECUTABLE;const app=await _electron.launch({...candidateLaunch(root,{packaged}),env:{...process.env,FUSION_DATA_DIR:runtime},timeout:30000}),page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  try{
   await page.waitForFunction(()=>window.fusionEditor&&window.fusionOperators);
   await page.evaluate(()=>fusionEditor.template('blank'));
   await app.evaluate(({dialog},file)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[file]});},path.resolve(root,'../BMW27_2.blend/bmw27/bmw27_cpu.blend'));
-  await page.locator('#import-model').click();await page.locator('#confirm-import').waitFor();assert.match(await page.getByRole('dialog').textContent(),/preserved render scene/);await page.locator('#confirm-import').click();await page.waitForFunction(()=>fusionEditor.selected?.userData.nativeBlend&&!document.querySelector('#app').classList.contains('busy'),{},{timeout:120000});
+  await page.locator('#import-model').click();await page.locator('#confirm-import').waitFor();assert.match(await page.getByRole('dialog').textContent(),/Preserved mode embeds the native Blender rendering scene/);await page.locator('#confirm-import').click();await page.waitForFunction(()=>fusionEditor.selected?.userData.nativeBlend&&!document.querySelector('#app').classList.contains('busy'),{},{timeout:120000});
   await page.locator('[data-workspace="Rendering"]').click();await page.locator('#render-device').selectOption('OPTIX');
   await page.evaluate(()=>{window.nativeRenderResult=null;window.nativeRenderError=null;fusionOperators.run('render.image').then(r=>window.nativeRenderResult=r).catch(e=>window.nativeRenderError=e.message);});await page.waitForFunction(()=>window.nativeRenderResult||window.nativeRenderError,{},{timeout:120000});assert.equal(await page.evaluate(()=>window.nativeRenderError),null);const before=await page.evaluate(()=>({result:nativeRenderResult.metadata,output:nativeRenderResult.output}));assert.equal(before.result.backend,'OPTIX');assert.equal(before.result.additional_meshes,0);await page.locator('#close-modal').click();
   await page.evaluate(async()=>{const e=fusionEditor;window.nativeOwner=e.root.children[0];const ball=await e.primitive('sphere');ball.position.set(0,1,0);ball.scale.setScalar(1.2);ball.material.color.set('#20c050');e.commit();});

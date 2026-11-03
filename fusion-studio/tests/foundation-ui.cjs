@@ -1,8 +1,9 @@
+const {candidateLaunch}=require('./candidate-launch.cjs');
 const {_electron}=require('playwright'),assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
 const root=path.resolve(__dirname,'..'),output=path.join(root,'test-output');
 (async()=>{
- const packaged=process.argv.includes('--packaged');const runtime=path.join(output,'foundation-ui-'+Date.now()),env={...process.env,FUSION_DATA_DIR:runtime};let app;const errors=[];
- const launch=async()=>{app=await _electron.launch({...packaged?{executablePath:path.join(root,'release-v0.7.0/win-unpacked/Fusion Studio.exe')}:{args:[root]},env,timeout:30000});const page=await app.firstWindow();page.on('pageerror',e=>errors.push(e.message));await page.waitForFunction(()=>window.fusionAreas&&window.fusionEditor);if(await page.locator('#recovery-skip').count())await page.locator('#recovery-skip').click();return page;};
+ const packaged=process.argv.includes('--packaged')||!!process.env.FUSION_TEST_EXECUTABLE;const runtime=path.join(output,'foundation-ui-'+Date.now()),env={...process.env,FUSION_DATA_DIR:runtime};let app;const errors=[];
+ const launch=async()=>{app=await _electron.launch({...candidateLaunch(root,{packaged}),env,timeout:30000});const page=await app.firstWindow();page.on('pageerror',e=>errors.push(e.message));await page.waitForFunction(()=>window.fusionAreas&&window.fusionEditor);if(await page.locator('#recovery-skip').count())await page.locator('#recovery-skip').click();return page;};
  try{
   let page=await launch();await page.evaluate(()=>fusionEditor.template('blank'));
   await page.locator('[data-primitive="cube"]').click();await page.waitForFunction(()=>fusionEditor.root.children.length===1&&!fusionOperators.running);
