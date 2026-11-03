@@ -14,6 +14,16 @@ function editor(){
 }
 const provenance=()=>({sourceCapsule:{schema:1,sourceId:'source-detailed',sha256:'a'.repeat(64),originalName:'detailed.glb',dependencies:[{id:'skin.png',status:'found',sha256:'b'.repeat(64)}]},sourceOriginalPath:'C:/private-originals/detailed.glb'});
 
+test('framing large imported scenes keeps the whole bounding volume clear of viewport fog',()=>{
+ const e=editor();e.frame=Editor.prototype.frame;e.scene.fog=new THREE.Fog('#3b3b3b',22,65);e.camera.position.set(5,4,6);
+ for(const scale of [1,75,300,1]){
+  e.root.clear();const mesh=new THREE.Mesh(new THREE.BoxGeometry(scale,scale*.3,scale*.7));mesh.position.set(1000,-50,200);e.root.add(mesh);const before=JSON.stringify(e.serialize());e.frame(mesh);
+  const box=new THREE.Box3().setFromObject(mesh);for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z])assert.ok(e.camera.position.distanceTo(new THREE.Vector3(x,y,z))<e.scene.fog.near,'Framed surface must remain visible before fog begins');
+  assert.equal(JSON.stringify(e.serialize()),before,'Framing remains display-only');
+ }
+ assert.equal(e.scene.fog.near,22);assert.equal(e.scene.fog.far,65);
+});
+
 test('native controls are committed during import so first export and reopen remain observational',async()=>{
  const json=structuredClone(fixtureData.json),node=json.nodes.find(n=>n.mesh!==undefined);node.extras={dson_deformation:JSON.stringify({version:1,channels:[{id:'ReferencedControl',value:0,min:0,max:1}],morphs:[],formulas:[]})};
  const e=editor(),group=await e.importGLB(glb(json,fixtureData.bin).toString('base64'),'Native controls',null,{metadata:{dazNative:{properties:[]}}});assert.equal(group.userData.fusion_deformation.channels[0].id,'ReferencedControl');
