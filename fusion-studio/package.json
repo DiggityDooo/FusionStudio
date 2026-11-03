@@ -1,6 +1,6 @@
 {
   "name": "fusion-studio",
-  "version": "0.1.0",
+  "version": "0.19.0-rc.1",
   "description": "An integrated modeling, character, clothing, animation and rendering workspace",
   "author": "Fusion Studio",
   "private": true,
@@ -76,9 +76,11 @@
     "showcase": "node tests/showcase.cjs && node tests/workflow-showcase.cjs && python scripts/make-showcase-gif.py"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
     "gltf-validator": "2.0.0-dev.3.10",
     "lucide": "1.56.0",
-    "three": "0.186.1"
+    "three": "0.186.1",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "electron": "44.7.0",
@@ -90,7 +92,7 @@
     "appId": "local.fusion.studio",
     "productName": "Fusion Studio",
     "directories": {
-      "output": "release-v0.1.0"
+      "output": "release-hackathon-20261103-rc1"
     },
     "files": [
       "dist/**",
@@ -105,6 +107,7 @@
       "scripts/cameras.py",
       "scripts/dson_importer.py",
       "package.json",
+      "window-placement.local.json",
       "LICENSE",
       "docs/DEPENDENCIES.md",
       "docs/dependency-evaluations/**",
