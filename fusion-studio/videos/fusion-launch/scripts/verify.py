@@ -6,7 +6,7 @@ from PIL import Image,ImageDraw
 workspace=Path(__file__).resolve().parent.parent
 app=workspace.parent.parent
 out=app/'docs/demo/2026-11-03-remotion'
-qa=workspace/'local/qa-pascal'
+qa=workspace/'local/qa-launch'
 qa.mkdir(parents=True,exist_ok=True)
 ffmpeg=Path(os.environ.get('FUSION_MEDIA_FFMPEG',str(app/'test-output/media-tools/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe')))
 preview='--preview' in sys.argv

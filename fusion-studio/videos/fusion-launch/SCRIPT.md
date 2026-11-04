@@ -1,15 +1,15 @@
-# Two-minute picture script — Pascal cadence revision
+# Two-minute launch trailer
 
-Music and English captions, no narration. Secret by ESPRIT 空想 plays first 120 seconds at original speed. Single source manifest owns shots, trims, words and chapters.
+Secret by ESPRIT 空想, first 120 seconds at original speed. English headings and VTT context; no narration. Story manifest owns every shot, source range and cut.
 
-| Time | Flow | Proof |
+| Time | Sequence | Treatment |
 |---|---|---|
-| 0–21.7 | Results first; nine short shots | Native Cycles image, fresh Blender/DAZ/sculpt-output orbits, two-asset comparison and editable working copy |
-| 21.7–36.1 | Source: Blender | Read compatibility limits, choose editable or preserved mode, see actual native render |
-| 36.1–54.1 | Asset: DAZ | Actual MuscleShirt import; mesh, rig, textures; supported preset property transaction and recovery |
-| 54.1–75.7 | Geometry: edit and recover | Pointer-driven sculpt, exact undo/redo, save/reopen, validated GLB |
-| 75.7–86.5 | Conversation | Live local Ollama/Phi-3 connection and actual reply; chat remains conversational |
-| 86.5–99.7 | Control | Separate external MCP client inspects, adds primitive, transforms, undoes and redoes |
-| 99.7–120 | Result recap and invitation | Sculpted output, library asset, preserved render; version, repository and music credit |
+| 0–14.5 | Your assets. Unleashed. | Full-frame hero, .BLEND/.DUF/.GLB hits, fan-out cards, workspace reveal |
+| 14.5–36.1 | Blender | Short compatibility close-up, editable working copy, preserved scene and native render, side-by-side comparison |
+| 36.1–50.5 | DAZ | Garment import, moving mesh/texture/rig result, supported preset transaction and recovery |
+| 50.5–75.7 | Create | Real sculpt stroke, contrasting undo accent, redo, save/reopen, GLB export, output reveal |
+| 75.7–86.5 | Local model | Large type hit, actual Ollama question and Phi-3 response |
+| 86.5–102.1 | MCP | Inspect/add, transform, undo, redo; short action-specific edits |
+| 102.1–120 | Keep creating | Asset fan, native render, library and sculpt output, final brand/repository/music credit |
 
-DAZ clip certifies supported color properties and history; legacy black 3Delight texture shader reconstruction remains excluded. Visible shirt retains original texture. No claim that internal chat performs MCP edits. Output montage uses distinct assets, never presents them as results of one prompt. No public-download or universal-fidelity claim.
+DAZ clip certifies supported preset property transaction, not legacy black-texture shader parity. Internal chat remains conversational; separate external MCP client performs scene changes. Panel frames, text animation, light sweeps and punch-ins are editorial graphics around actual captured pixels. UI detail crops and accelerated segments are labeled. Source operation order remains intact.

@@ -17,3 +17,5 @@ Final picture review fixes: sculpt undo/redo captions aligned to source frames 3
 
 - Final visual audit: 43 full-resolution chapter/shot stills and 24 sixteen-frame strips passed. All 21 editorial cuts follow measured beat grid; three source wait cuts retain authentic import population. Current film replaced in place per user direction.
 - Windows remux: final render completed but in-process chapter output open failed. Standalone remux after renderer exit passed. Package render command now sequences separate Node processes; render:chapters supports recovery without re-rendering frames.
+
+- User rejected previous cut as insufficiently flashy. Rebuilt as 39-shot launch trailer with masked large type, fan-out asset cards, diagonal light reveals, native/editable split comparisons, focused UI push-ins and paper-white undo accents. Real footage and operation order retained; 120-second soundtrack scope unchanged. Pascal proportions no longer control opening duration after explicit user feedback.

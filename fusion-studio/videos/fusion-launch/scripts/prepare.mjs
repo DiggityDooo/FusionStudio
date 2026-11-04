@@ -45,7 +45,7 @@ if(input){
  for(let lag=12;lag<=30;lag+=.05){let score=0;for(let i=31;i<flux.length;i++){const p=i-lag,j=Math.floor(p),v=flux[j]+(flux[j+1]-flux[j])*(p-j);score+=flux[i]*v;}if(score>best.score)best={score,period:lag,phase:0};}
  let phaseScore=-Infinity;for(let phase=0;phase<best.period;phase+=.25){let sum=0;for(let p=phase;p<3600-1;p+=best.period){const j=Math.round(p);sum+=flux[j];}if(sum>phaseScore){phaseScore=sum;best.phase=phase;}}
  for(let p=best.phase;p<3600;p+=best.period)beats.push(Math.round(p));
- music={title:'Secret',artist:'ESPRIT ç©ºæƒ³',sourceSha256:hash(source),masterSha256:hash(master),excerpt:{startSeconds:0,seconds:120,playbackRate:1,fadeInSeconds:1,fadeOutSeconds:3},analysis:{estimatedBpm:1800/best.period,periodFrames:best.period,phaseFrames:best.phase,method:'PCM energy-onset autocorrelation; constant beat grid',beats}};
+ music={title:'Secret',artist:'ESPRIT 空想',sourceSha256:hash(source),masterSha256:hash(master),excerpt:{startSeconds:0,seconds:120,playbackRate:1,fadeInSeconds:1,fadeOutSeconds:3},analysis:{estimatedBpm:1800/best.period,periodFrames:best.period,phaseFrames:best.phase,method:'PCM energy-onset autocorrelation; constant beat grid',beats}};
  json(previous,{path:source});
 }
 const story=structuredClone(scenes),captions=structuredClone(cues);

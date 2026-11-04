@@ -6,8 +6,10 @@
   "scripts": {
     "capture": "node scripts/capture-all.cjs",
     "prepare": "node scripts/prepare.mjs",
+    "prepare:edit": "node scripts/sync-edit.mjs",
     "studio": "remotion studio src/index.jsx",
     "preview": "node scripts/render.mjs --preview",
+    "preview:direction": "node scripts/render.mjs --teaser",
     "render": "node scripts/render.mjs && node scripts/chapter.mjs",
     "render:chapters": "node scripts/chapter.mjs",
     "check": "node scripts/check.mjs",

@@ -11,3 +11,7 @@ Fusion keeps user-approved 120 seconds and continuous Secret recording, without 
 Caption words reach full opacity within ten frames; no typewriter effect. Live output camera covers 0.8 radians over 150 source frames, constant angular speed. No additional camera drift overlays those moving renders. Native still gets 1.5% push; full workflow UI remains stable for legibility. Hard cuts preserve reference's visual continuity; no repeated fade-to-black between sections. Final invitation uses gentle four-pixel drift.
 
 Evidence: three fresh packaged-app orbit captures, original verified workflow clips, original 1920×1080 native Cycles output, source/asset hashes, every-shot and section stills, and sixteen-frame strips at all editorial/internal source cuts. Exact edit and caption times live in single story.mjs manifest, copied into provenance.
+
+## Launch revision after user feedback
+
+User rejected the measured reference adaptation as insufficiently flashy. Current creative direction prioritizes a launch trailer: 39 shots and 38 music-grid cuts; 14.5-second opening, 87.6-second workflow sequence, 17.9-second closing. Headlines and panels carry visible motion. Selected source ranges include before/after action states; detail crops and speed badges disclose editorial treatment. Original reference measurements above remain provenance for earlier direction, rather than a constraint on current pacing.
