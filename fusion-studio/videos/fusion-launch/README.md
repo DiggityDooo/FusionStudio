@@ -36,3 +36,17 @@ Workflow: [demo-video-creator](https://github.com/chacha95/demo-video-creator/tr
 Current edition follows user feedback requesting a flashy launch demo: 39 shots, oversized masked type, fan-out asset cards, split comparisons, light sweeps, focused UI push-ins and paper-white undo accents. First 24.1 seconds can be rendered quickly with `npm run preview:direction`. All cuts receive review strips; QA lives in local/qa-launch. `npm run prepare:edit` syncs editorial changes after checking prepared media and music hashes, without re-encoding source footage. Full preparation remains required when changing captures or music.
 
 Final render and chapter remux run in separate processes to release Windows render handles before writing delivery MP4. If only chapter packaging fails, retain completed `local/remotion-render.mp4` and run `npm run render:chapters`; then verify final output before finalizing.
+
+## Continuous workflow recording
+
+Separate from the cinematic trailer, `capture:workflow` drives one visible packaged-app session through DAZ import, compatibility review, framing/orbit/wireframe, numeric transform, undo/redo, save/reopen, validated GLB export, lighting and actual Cycles rendering. One CDP start/stop retains native timestamps and all waits. No source trims or speed changes; one Remotion video element adds a caption bar below the complete 1920 × 960 app capture. Output is 1920 × 1080 at 30 fps, silent. Gold pointer is a recording annotation. Only native file-picker paths and Explorer reveal are automated outside Fusion controls.
+
+```powershell
+npm run capture:workflow -- --rehearse
+npm run capture:workflow -- --leave-open
+# Capture writes its receipt before leaving Fusion open; render in another shell:
+npm run render:workflow
+npm run verify:workflow
+```
+
+Requires installed `Vehicles/Steam Powered Carriage/SteamPoweredCarriage Objects/SPowered Trunk.duf` matching `src/catalogue.json`; `FUSION_DAZ_LIBRARY` overrides library root. Private sources, fresh app data, raw frames and timestamp logs remain under ignored `local/`. Rendering rejects rehearsal receipts. Failed takes retain local evidence and never become public footage. Gallery and final delivery report describe observed conversion limits; this walkthrough does not extend release certification.

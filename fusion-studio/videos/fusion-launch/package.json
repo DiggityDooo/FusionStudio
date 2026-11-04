@@ -17,7 +17,10 @@
     "finalize": "node scripts/finalize.mjs",
     "capture:outputs": "node scripts/capture-outputs.cjs",
     "capture:variety": "node scripts/capture-variety.cjs",
-    "capture:catalogue": "node scripts/capture-variety.cjs --catalogue"
+    "capture:catalogue": "node scripts/capture-variety.cjs --catalogue",
+    "capture:workflow": "node scripts/capture-workflow.cjs",
+    "render:workflow": "node scripts/workflow.mjs",
+    "verify:workflow": "python scripts/verify-workflow.py"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.540",
