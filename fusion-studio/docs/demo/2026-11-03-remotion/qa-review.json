@@ -1,124 +1,284 @@
 {
   "passed": true,
   "reviewer": "Codex",
-  "reviewedAt": "2026-11-03T19:08:55.801Z",
-  "videoSha256": "e059d2518827c7dde67a7bcb62d9645d1ae0a41f0fad080fc93ad2b36ee8b0d4",
+  "reviewedAt": "2026-11-04T00:46:35.988Z",
+  "videoSha256": "e7e207a9514ca338ce829dc067e4525ee526b9dd979138dbef2874b73746d4e2",
   "reviewed": [
     {
-      "file": "blender-end.png",
-      "sha256": "72abb74b45dddf0a969c7a3448d39f857d07253409ae306f1cc146569805f6b6"
-    },
-    {
-      "file": "blender-middle.png",
-      "sha256": "fe421f92722a1377d7bf405ae2049162c3e9c868424358e5fb50b95aaef5792e"
-    },
-    {
-      "file": "blender-start.png",
-      "sha256": "e5181f64209314f67768b572d44ba5574308cb6d115652915f4da55bfcbd821a"
-    },
-    {
-      "file": "chat-end.png",
-      "sha256": "b249fcd2d0c554c938b1b246c650932bd182c3cbefa93480a87b6d728b63cdb0"
-    },
-    {
-      "file": "chat-middle.png",
-      "sha256": "cdc1abb64573cd5632062b13cfac3d4ab2891734bf11db2e913401f01eec5321"
-    },
-    {
-      "file": "chat-start.png",
-      "sha256": "41acc67e5084570d999f19c0b07175d33de478e7460fd3df4dbb10481ead1e4d"
-    },
-    {
-      "file": "daz-end.png",
-      "sha256": "86e2918d65c18d32c992f405ba537071dde70abdb0642304f3248794d50864fc"
-    },
-    {
-      "file": "daz-middle.png",
-      "sha256": "4f610d34881320a584bbffb2581fc2a0c63d4d3be953153b0b3c26a7314f1678"
-    },
-    {
-      "file": "daz-start.png",
-      "sha256": "883bdf107ac13fcdd61b98edef3d48f5a91e2f068fd36b418508a1a4dfa2a823"
-    },
-    {
-      "file": "edit-end.png",
-      "sha256": "17fad298cbc062a2d696fdfdcaddae3d4c8f4f963730b69a6a0a3ab8b7f85307"
-    },
-    {
-      "file": "edit-middle.png",
-      "sha256": "112a777180274042a4983e7a054b5ce3fcade91cb4c2319bb4813abc1f386a66"
-    },
-    {
-      "file": "edit-start.png",
-      "sha256": "e16ce80a4859a231a79b2b659e4552f319d59f8cb98e84b60100041d37b674f6"
-    },
-    {
-      "file": "finish-end.png",
-      "sha256": "7ade6ff204f99a45636f66537a209bb79b6fea5b622f39fea6225fd7412e05d4"
-    },
-    {
-      "file": "finish-middle.png",
-      "sha256": "61655538c4c655b62fd0f0870ffb9ff7beba484080d9d5aa40114d229a9fc43e"
-    },
-    {
-      "file": "finish-start.png",
-      "sha256": "73d508ca947fed6382491cb49a00bcf949b328a3b13407fc3646cf8fe4efe7b2"
-    },
-    {
-      "file": "hook-end.png",
-      "sha256": "708cd75118acc2438019953079da949ff71a99b04ab091693ee4acf1c1484bb0"
+      "file": "hook-start.png",
+      "sha256": "7e2df284161759ed53fd6452f1131168e0abec0cfd89412519a1cee06fa20133"
     },
     {
       "file": "hook-middle.png",
-      "sha256": "d3ca0bb8cce6cd55cfd0f0e9d161a968b40299d09764f18deb38b0fea9b7ed0f"
+      "sha256": "e3eb62ac96dc1fd0998aca7f3bca6c30a5f0a4624377320af9500919c615e187"
     },
     {
-      "file": "hook-start.png",
-      "sha256": "54d68d350f3659c05b2feef0203323d5a70ab3bf56fb7ce55cc39b015b2da140"
+      "file": "hook-end.png",
+      "sha256": "da2cfb1244a89ad4982bdbfad0d39e430c86d1bd0de0714dfdbe0bc48b886c7c"
     },
     {
-      "file": "mcp-end.png",
-      "sha256": "b8cfb26584df5287bacc1e551f35ebf7a8e18b1e9d59f1704489d38b09526a08"
+      "file": "blender-start.png",
+      "sha256": "5868153777be1ccdf3242cbc0a1e46630717b6cc3fee9e4be784057f33f7cff9"
     },
     {
-      "file": "mcp-middle.png",
-      "sha256": "7dda5502060cd194ff4190e8bd0b73aaa9c9d4bbab8038f7c1b446aa8d8c11a9"
+      "file": "blender-middle.png",
+      "sha256": "88df088b258fd8ab5dfd6591e4497a7cf57f23b9213770c066427be94af86d60"
+    },
+    {
+      "file": "blender-end.png",
+      "sha256": "5fb5725ca77dcb137e940cb80b3a43db61b5129afbfd7efded43d63fc8259b80"
+    },
+    {
+      "file": "daz-start.png",
+      "sha256": "ce1c830b51c90691642eaf1eadeddab6269029b8755f9c3f22b22a8934de84b8"
+    },
+    {
+      "file": "daz-middle.png",
+      "sha256": "e709e100faee1ecd0618cd1b439a4c23b202e64be55e8f424aeb456326260fd0"
+    },
+    {
+      "file": "daz-end.png",
+      "sha256": "c7c88e5f76584f4bb8e5553e9bb049f8e77ed4881bcc10996846c2eb9eddbe51"
+    },
+    {
+      "file": "edit-start.png",
+      "sha256": "a3675570c4633892d005d0435a28241b2b4a938d2fa3358b6ce739c2ff7b70e6"
+    },
+    {
+      "file": "edit-middle.png",
+      "sha256": "8b60b4b9bdbcc03c9f91aa50834aa7202a8231f3f9dadf79439974afd54676db"
+    },
+    {
+      "file": "edit-end.png",
+      "sha256": "279f5855309f427f065784b11ddf33979cb6d830c001d121aab922068d501a27"
+    },
+    {
+      "file": "chat-start.png",
+      "sha256": "ef9c269e8b72ba5be1de67c4c09efed4b0615852a7eda1d95ea0a1aa03f62b99"
+    },
+    {
+      "file": "chat-middle.png",
+      "sha256": "adecb9dcb3a74fbeed5e490b8455263e72220790f8ef2cdd2d1c2dc9cbf87947"
+    },
+    {
+      "file": "chat-end.png",
+      "sha256": "e20b1ccc0751d9fbdfff8ccb1732a1f2f6a94b5a9983aa47590336b2770d4bf5"
     },
     {
       "file": "mcp-start.png",
-      "sha256": "893230c917ce17ea0ccd0b356cda7d08f5f3978a2d9dd45f876eeab4a79acf22"
+      "sha256": "10a524f8b760626a81aaec8b8a4e09b177281dc92952ef479403f8c45548df20"
     },
     {
-      "file": "transition-blender.jpg",
-      "sha256": "b7c524d3f9e1c2d6a61758a163bf2b78dd93ebc521780c572ee9693b1611932d"
+      "file": "mcp-middle.png",
+      "sha256": "fa40b5ea5f5c12b19f2a70af9682251ce37a6a2bc653da38deecb07c820a010d"
     },
     {
-      "file": "transition-chat.jpg",
-      "sha256": "6184133377d0219b73bccc4c80e06cbb305a9fea81897a607083abfd48b7cd2e"
+      "file": "mcp-end.png",
+      "sha256": "c3a8dd3f80eca9d74eb8b6f52a805231d543807302d0da3c95fad2eaadef17d9"
     },
     {
-      "file": "transition-daz.jpg",
-      "sha256": "695d1c5b06ca8cdbc276a54e93db068dbf42b3f817863ec25ae8baa0e0b5566e"
+      "file": "finish-start.png",
+      "sha256": "9411c4937b22930069b301427bb15d66d09e4d9af87e803b1e2a1351f99ffb84"
     },
     {
-      "file": "transition-edit.jpg",
-      "sha256": "281456ad2f42e9f7ce12f83d56aeb580b27cee014a47b60ac38a6a9ab806cd68"
+      "file": "finish-middle.png",
+      "sha256": "897b81b104615298910067e03380d380c8dfa89bce029074d40bcd419081b439"
     },
     {
-      "file": "transition-finish.jpg",
-      "sha256": "1f0b78be5c1cffcd52eaee96d9f585344d3e175a5961afcbd4c3bf0ef24ebb88"
+      "file": "finish-end.png",
+      "sha256": "399c1d6f6e2bc419cba6455550b27e9cc81ec34702a55f3d11512a84ac3ea9b0"
     },
     {
-      "file": "transition-mcp.jpg",
-      "sha256": "3576cd9bf1372d86053acf76c850764108ac92a2a5c036d8821f0fdd3291ee71"
+      "file": "shot-native-open.png",
+      "sha256": "81e91aabb24b6c8cfdca57629b20e9f99ccc7c7370c7b8ea5a835d7400585236"
+    },
+    {
+      "file": "shot-optics-open.png",
+      "sha256": "d039d393683230f21e51e421e884153b8a5c5373722dfc047e26e55d0d8ce375"
+    },
+    {
+      "file": "shot-garment-open.png",
+      "sha256": "ad6b76baa94d4e34d800185b9b71fe04f86e1b737ef983dbfff8098fdb1a7720"
+    },
+    {
+      "file": "shot-sculpt-open.png",
+      "sha256": "530612781e1d5716983c80b2e10950a58ae236da4c74c6264b414593e8a43c5d"
+    },
+    {
+      "file": "shot-optics-return.png",
+      "sha256": "a31706498e89e1e5d743de7cec979f5e2697c9355ca45f19ba5f1b666dac9cfd"
+    },
+    {
+      "file": "shot-outputs-pair.png",
+      "sha256": "f5cf10bf8c72c173a79c112fc49370da35ae4f231f83f2497cf1ffe635fc4365"
+    },
+    {
+      "file": "shot-native-return.png",
+      "sha256": "9467f5d99473f62f42e4afd1d3ad2614977f1dc76c94993716592321e5922098"
+    },
+    {
+      "file": "shot-working-copy.png",
+      "sha256": "e605858fcd1bd4730f249a3dcfc78ce0ef35eb51ff43f82b625dcdc55efa5f8e"
+    },
+    {
+      "file": "shot-opener-payoff.png",
+      "sha256": "19291071f6ed9748965793161e1354923ef498890d134f95561914523825b469"
+    },
+    {
+      "file": "shot-blender-edit.png",
+      "sha256": "c03e4e68b3590c7914c18bb4449d705893699c3deffb123af2ecdba8c0fb00d5"
+    },
+    {
+      "file": "shot-blender-preserve.png",
+      "sha256": "3fe2c4d3a962bc4099f193ecaefcbc2e4fa5d270edb76fadd2bc9edaaa0feb33"
+    },
+    {
+      "file": "shot-blender-render.png",
+      "sha256": "fe85f799266f8d356b601f68b41cabb89ff9425ea6c4a21c52b1340c2f43d9d2"
+    },
+    {
+      "file": "shot-daz-load.png",
+      "sha256": "0d809ce0a1c9b04c7786f6ff65886e0ac06f020900dd75c170cae2ec5f90611f"
+    },
+    {
+      "file": "shot-daz-material.png",
+      "sha256": "8db33124ca7980908fa84eff0c65d5132fbde1e6cd2de1f6e3545cca8af05ad8"
+    },
+    {
+      "file": "shot-sculpt-change.png",
+      "sha256": "bfd2de4dfd5339bfd1ebcbd84a7c1ba86b87827c7d9ba3e9566b9f6b636dd064"
+    },
+    {
+      "file": "shot-save-export.png",
+      "sha256": "168b1ecd77cfe305a83bb9cea24d02879b8758f464b49d4a5e9e9e3ee89468c3"
+    },
+    {
+      "file": "shot-local-chat.png",
+      "sha256": "adecb9dcb3a74fbeed5e490b8455263e72220790f8ef2cdd2d1c2dc9cbf87947"
+    },
+    {
+      "file": "shot-mcp-operations.png",
+      "sha256": "fa40b5ea5f5c12b19f2a70af9682251ce37a6a2bc653da38deecb07c820a010d"
+    },
+    {
+      "file": "shot-final-geometry.png",
+      "sha256": "89efd17abc2a112899f5d930f6b5d70783dc66e31bbb6debb76a8ab4ba5770c5"
+    },
+    {
+      "file": "shot-final-library.png",
+      "sha256": "e4462b78d1da2796b4c295194e1551232aa7db7312c45d9ce51974cae336458b"
+    },
+    {
+      "file": "shot-final-render.png",
+      "sha256": "9d063b27e282b9e870936560c86cac0e0b7f00011dd592aed5b98c8d6eb14513"
+    },
+    {
+      "file": "shot-invitation.png",
+      "sha256": "0144d207bed0d887b93efe38b7adb7a5c2179b4e2b12676f91b0a4f9e8211289"
+    },
+    {
+      "file": "transition-optics-open.jpg",
+      "sha256": "0a8847b57709183782e595d55c88c03c236513d9c31276e1680db9ede8afde42"
+    },
+    {
+      "file": "transition-garment-open.jpg",
+      "sha256": "c0853dd3f8b5646ee53ca5323a3f7bba7862ebecec6c0da7845d025c408d9b65"
+    },
+    {
+      "file": "transition-sculpt-open.jpg",
+      "sha256": "da5c4a59918949d28e152ef786cf666f61afcf58f3dca7e5df9fa2414bf3086f"
+    },
+    {
+      "file": "transition-optics-return.jpg",
+      "sha256": "840a2ca84aad18b2a424e21eb08edd904e57a8ecf3deb28ec87e035201a4ee72"
+    },
+    {
+      "file": "transition-outputs-pair.jpg",
+      "sha256": "8ee9d0f81ebc40d748e0cb923ab64f18b3ae67242bbfd6ff271bfd21112e30a3"
+    },
+    {
+      "file": "transition-native-return.jpg",
+      "sha256": "413c01fe5fa46ee05f628aca7cb04993269d2974b82edc478095f8f584c14922"
+    },
+    {
+      "file": "transition-working-copy.jpg",
+      "sha256": "a1defe35372a5b885b65d4a2b26f360768520614746bb2743837cd1071a7d626"
+    },
+    {
+      "file": "transition-opener-payoff.jpg",
+      "sha256": "8247e611c2ae5c0fa430bdd20ed60186813a4d87ff8b7a7b229d5ea355801665"
+    },
+    {
+      "file": "transition-blender-edit.jpg",
+      "sha256": "c92c6ef3e651ccc749ec867700b4ec3118923936dd662a79552227569f7692af"
+    },
+    {
+      "file": "transition-blender-preserve.jpg",
+      "sha256": "8289d9cdf76fa695dfe09918c91c9769815c61985b301da051b3bcb3000467fa"
+    },
+    {
+      "file": "transition-blender-render.jpg",
+      "sha256": "eb60e26dd428f851e58cb7d9df2d8c8d77578742414ee2b61c1c3782ca85cea7"
+    },
+    {
+      "file": "transition-daz-load.jpg",
+      "sha256": "a59c41faaa7e39d02d153d514efd05c023edbd2ddc85bc97dd1cbb9a5f97e467"
+    },
+    {
+      "file": "transition-daz-material.jpg",
+      "sha256": "96decf8e29ae02431e6b2c1228c6ed45456acdf4c364919b61d37c035baef9a9"
+    },
+    {
+      "file": "transition-sculpt-change.jpg",
+      "sha256": "3620ae31bd792f4a17f7a00fce91fbb031f47ac25a08557f06e6f1ca575c21ce"
+    },
+    {
+      "file": "transition-save-export.jpg",
+      "sha256": "e36291cc379fbdf950122002e90c471f86e09f36d66906222465c3a94fbcfda9"
+    },
+    {
+      "file": "transition-local-chat.jpg",
+      "sha256": "fb659bc326458213f1feb0873e42177f4674f8ffabe2f0904df577d9c3b1694a"
+    },
+    {
+      "file": "transition-mcp-operations.jpg",
+      "sha256": "01e66dd215246cb05ffd30f38ba60b69742a5076f8a876cbadea73ea1e6192b4"
+    },
+    {
+      "file": "transition-final-geometry.jpg",
+      "sha256": "79b63ed745188dd8ee05800790e4d38254f4c05123f18f677798e46266d558ab"
+    },
+    {
+      "file": "transition-final-library.jpg",
+      "sha256": "a28329452d0b860d18e4587650206eb4ccac2f7522784d961273228dfe53cc12"
+    },
+    {
+      "file": "transition-final-render.jpg",
+      "sha256": "b6a7f8ec30b4c2a909e928df4973d03466d3c82cff83afd24fd21a450b0a9725"
+    },
+    {
+      "file": "transition-invitation.jpg",
+      "sha256": "683f65ab472b964cace52667c916156be0bd8f5d1ea052ea013512493f0d8088"
+    },
+    {
+      "file": "transition-blender-edit-source-cut.jpg",
+      "sha256": "d89a183dafd88ebe534891672cbab635ff0cf317883b1b0c373c12fcc29f6222"
+    },
+    {
+      "file": "transition-blender-preserve-source-cut.jpg",
+      "sha256": "30ee8bce7119d1594b10b8a966f473637d3511fa4e62db19a8626dbb9e0ddc37"
+    },
+    {
+      "file": "transition-daz-load-source-cut.jpg",
+      "sha256": "c3f850cc5bffb773f8ce5e63d9d11a63fc17a7ac261b3b60866cd24679c31a89"
     }
   ],
   "observations": [
-    "21 actual full-resolution start/middle/end stills inspected",
-    "Six 16-frame transition strips inspected",
-    "Compatibility reviews readable; waits shortened and labeled",
-    "Bookend montage intentionally crops real outputs; main workflow shots contain actual app",
-    "No model credentials or personal file paths exposed in inspected frames",
-    "DAZ preset demonstrates supported color-channel subset; legacy texture shader parity excluded"
+    "Inspected all 43 full-resolution chapter and shot stills plus all 24 sixteen-frame strips from final MP4.",
+    "Nine short output shots lead into stable complete workflow controls, followed by four output/invitation shots. Captions fit and remain legible; ten-frame text settling is intentional.",
+    "Hard cuts contain no black flash or composited overlap. Viewport orbit frames progress consistently. Three labeled wait cuts retain brief authentic import population frames.",
+    "Blender editable and preserved-native modes remain explicitly distinguished. Native render image uses restrained editorial drift.",
+    "DAZ material captions describe supported color transaction and legacy shader limit; garment remains white. Chat identifies conversational scope. Sculpt and MCP undo/redo captions follow measured source action timing.",
+    "Inspected frames contain no credentials or personal source paths. Closing repository/version and music credit fit within frame."
   ]
 }
