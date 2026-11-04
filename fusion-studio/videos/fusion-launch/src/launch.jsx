@@ -2,6 +2,7 @@ import React,{useLayoutEffect} from 'react';
 import {AbsoluteFill,Sequence,Img,staticFile,useCurrentFrame,interpolate,Easing,delayRender,continueRender,cancelRender} from 'remotion';
 import {Video,Audio} from '@remotion/media';
 import prepared from '../public/prepared.json';
+import {screenCamera} from './camera.mjs';
 import './style.css';
 const handle=delayRender('Load verified fonts');
 Promise.all([['regular.ttf','400'],['semibold.ttf','600']].map(async([file,weight])=>{const font=await new FontFace('Fusion Sans',`url("${staticFile('fonts/'+file)}")`,{weight}).load();document.fonts.add(font);})).then(()=>continueRender(handle)).catch(cancelRender);
@@ -25,8 +26,8 @@ function Stack({clip,frame}){
 function Screen({clip,frame}){
  const meta=prepared.assets[clip.asset],rate=((clip.sourceOut??meta.frames)-(clip.sourceIn||0))/clip.frames;
  const zoom=clip.focus==='chat'?1.25:clip.focus==='dialog'?1.12:clip.focus?1.1:1;
- const focus=ramp(frame,18,Math.min(clip.frames-3,60),1,zoom),entry=ramp(frame,0,20,0,1);
- return <><div className="screen" style={{transform:`translateY(${(1-entry)*95}px) scale(${.96+.04*entry})`,opacity:1}}><div className="screen-rail"><i/><i/><i/><span>FUSION STUDIO</span><b>ACTUAL CAPTURE{rate>1.08?` / ${rate.toFixed(1)}×`:''}</b></div><div className="screen-content"><div className="screen-zoom" style={{transform:`scale(${focus})`,transformOrigin:clip.focus==='chat'?'52% 38%':'52% 48%'}}><Media clip={clip} fit="contain"/></div></div></div><div className="action-label" data-qa="action-label"><span className="live-dot"/>{clip.label}{clip.focus?' / DETAIL CROP':''}</div></>;
+ const focus=ramp(frame,18,Math.min(clip.frames-3,60),1,zoom),entry=ramp(frame,0,20,0,1),camera=clip.camera&&screenCamera(frame,clip.camera);
+ return <><div className="screen" style={{transform:`translateY(${(1-entry)*95}px) scale(${.96+.04*entry})`,opacity:1}}><div className="screen-rail"><i/><i/><i/><span>FUSION STUDIO</span><b>ACTUAL CAPTURE{rate>1.08?` / ${rate.toFixed(1)}×`:''}</b></div><div className="screen-content"><div className="screen-zoom" style={camera?{transform:camera.transform,transformOrigin:'0 0'}:{transform:`scale(${focus})`,transformOrigin:'52% 48%'}}><Media clip={clip} fit="contain"/></div></div></div><div className="action-label" data-qa="action-label"><span className="live-dot"/>{clip.label}{clip.focus||camera?' / DETAIL CROP':''}</div></>;
 }
 function Shot({clip,scene,preview}){
  const frame=useCurrentFrame(),globalFrame=clip.from+frame,cue=prepared.cues.find(([a,b])=>globalFrame>=a&&globalFrame<b),type=clip.layout;

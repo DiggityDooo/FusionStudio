@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {scenes,shots,cues,film,workflow} from '../src/story.mjs';
+import {screenCamera} from '../src/camera.mjs';
 assert.equal(film.durationInFrames,3600);assert.equal(film.fps,30);
 assert.equal(scenes[0].from,0);assert.equal(scenes.at(-1).to,3600);
 for(const [i,s]of scenes.entries()){if(i)assert.equal(s.from,scenes[i-1].to);assert.ok(s.to>s.from);if(s.clips.length)assert.equal(s.clips.reduce((n,c)=>n+c.frames,0),s.to-s.from);}
@@ -17,4 +18,12 @@ assert.ok(shots.filter(s=>s.scene==='hook').every(s=>s.frames<=108),'Opening hol
 assert.ok(shots.some(s=>s.asset==='bmw-orbit')&&shots.some(s=>s.asset==='hair-orbit'),'Montage includes varied imported assets');
 assert.ok(shots.filter(s=>/wire$/.test(s.asset)).length>=2,'Montage includes real wireframe views');
 for(const shot of shots)if(shot.cards){assert.equal(shot.cards.length,3);assert.equal(new Set(shot.cards.map(c=>c[0])).size,3);}
+for(const shot of shots.filter(s=>s.camera)){
+ assert.ok(shot.camera.length>=2);assert.equal(shot.camera[0].frame,0);
+ for(const [i,key]of shot.camera.entries()){assert.ok(key.zoom>=1&&key.x>=0&&key.x<=1&&key.y>=0&&key.y<=1&&key.frame<shot.frames);if(i)assert.ok(key.frame>shot.camera[i-1].frame);}
+ for(let f=0;f<shot.frames;f++){const c=screenCamera(f,shot.camera);assert.ok(c.x*c.zoom>=.5-1e-8&&(1-c.x)*c.zoom>=.5-1e-8&&c.y*c.zoom>=.5-1e-8&&(1-c.y)*c.zoom>=.5-1e-8,'Camera exposes empty edge');}
+}
+const typing=shots.find(s=>s.id==='chat-ask'),reply=shots.find(s=>s.id==='chat-response');
+assert.ok(screenCamera(20,typing.camera).zoom>=2.8,'Prompt readable before typing');
+assert.ok(screenCamera(60,reply.camera).y<.32,'Reply stays centered on conversation');
 console.log(JSON.stringify({passed:true,frames:3600,seconds:120,scenes:scenes.length,shots:shots.length,cues:cues.length,pinnedDependencies:true}));

@@ -32,14 +32,14 @@ export const scenes=[
   {id:'sculpt-stroke',asset:'sculpt',frames:216,sourceIn:0,sourceOut:329,layout:'ui',headline:['MAKE YOUR MARK.'],label:'REAL SCULPT STROKE',focus:'viewport',words:[[0,'A real stroke. Changed geometry.']]},
   {id:'sculpt-undo',asset:'sculpt',frames:72,sourceIn:310,sourceOut:398,layout:'ui',headline:['UNDO.'],label:'EXACT GEOMETRY RECOVERY',focus:'viewport',light:true,words:[[0,'Undo. Exact geometry restored.']]},
   {id:'sculpt-redo',asset:'sculpt',frames:72,sourceIn:385,sourceOut:493,layout:'ui',headline:['REDO.'],label:'RECOVER THE SCULPT',focus:'viewport',words:[[0,'Redo. Recover the sculpt.']]},
-  {id:'save-reopen',asset:'save',frames:144,sourceIn:0,sourceOut:180,layout:'ui',headline:['SAVE IT. KEEP IT.'],label:'SAVE / REOPEN',focus:'viewport',words:[[0,'Save. Reopen the same geometry.']]},
+  {id:'save-reopen',asset:'save',frames:144,sourceIn:0,sourceOut:180,layout:'ui',headline:['SAVE IT. KEEP IT.'],label:'SAVE / REOPEN',camera:[{frame:0,zoom:1.8,x:.8,y:.28},{frame:18,zoom:2.7,x:.83,y:.185},{frame:48,zoom:2.7,x:.83,y:.185},{frame:92,zoom:1.1,x:.5,y:.5}],words:[[0,'Save. Reopen the same geometry.']]},
   {id:'glb-export',asset:'save',frames:144,sourceIn:180,sourceOut:361,layout:'ui',headline:['TAKE IT WITH YOU.'],label:'VALIDATED GLB EXPORT',focus:'dialog',words:[[0,'Export your editable GLB working copy.']]},
   {id:'sculpt-payoff',asset:'sculpt-orbit',frames:72,sourceIn:20,sourceOut:140,layout:'format',headline:['YOURS TO BUILD.'],label:'SCULPTED GLB OUTPUT',words:[[0,'Yours to build.']]}
  ]},
  {id:'chat',from:2271,to:2595,tag:'04 / CONNECT',title:'Your local model',clips:[
   {id:'chat-hit',asset:'chat',frames:36,sourceIn:170,sourceOut:220,layout:'type',headline:['YOUR MODEL.','YOUR MACHINE.'],words:[[0,'Your model. Your machine.']]},
-  {id:'chat-ask',asset:'chat',frames:144,sourceIn:0,sourceOut:240,layout:'ui',headline:['START A CONVERSATION.'],label:'LOCAL OLLAMA / PHI-3',focus:'chat',words:[[0,'Chat with your local Ollama model.']]},
-  {id:'chat-response',asset:'chat',frames:144,sourceIn:240,sourceOut:356,layout:'ui',headline:['REAL RESPONSE.'],label:'CONVERSATIONAL CHAT',focus:'chat',words:[[0,'A real response. Conversational chat.']]}
+  {id:'chat-ask',asset:'chat',frames:144,sourceIn:45,sourceOut:180,layout:'ui',headline:['START A CONVERSATION.'],label:'LOCAL OLLAMA / PHI-3',camera:[{frame:0,zoom:1.4,x:.59,y:.52},{frame:18,zoom:2.8,x:.59,y:.52},{frame:114,zoom:2.8,x:.59,y:.52},{frame:143,zoom:2.8,x:.59,y:.29}],words:[[0,'Chat with your local Ollama model.']]},
+  {id:'chat-response',asset:'chat',frames:144,sourceIn:180,sourceOut:356,layout:'ui',headline:['REAL RESPONSE.'],label:'CONVERSATIONAL CHAT',camera:[{frame:0,zoom:2.8,x:.59,y:.29},{frame:143,zoom:2.85,x:.59,y:.29}],words:[[0,'A real response. Conversational chat.']]}
  ]},
  {id:'mcp',from:2595,to:3063,tag:'05 / CONTROL',title:'Connected workflows',clips:[
   {id:'mcp-hit',asset:'mcp',frames:36,sourceOut:66,layout:'type',headline:['CONNECTED.'],words:[[0,'Connect external tools through MCP.']]},
