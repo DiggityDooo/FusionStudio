@@ -1,416 +1,522 @@
 {
   "passed": true,
   "reviewer": "Codex",
-  "reviewedAt": "2026-11-04T07:55:04.612Z",
-  "videoSha256": "ae3c84719a1abaec8b76627eeb0f7fa54f23ce8cf176f3404e0fe23de5447b8a",
+  "reviewedAt": "2026-11-04T08:38:31.270Z",
+  "videoSha256": "a9e1b276fa1fc86f4e341b272f9f5748d8277d686d163d69496a80c04d7fb50e",
   "reviewed": [
     {
       "file": "hook-start.png",
-      "sha256": "1774371792f37cb3f4627a16c3b2657283ea9b92f6b97ce324f3d767878140eb"
+      "sha256": "234a3db2b51cc34c9b96e5ab5cb871ee85e8291b7c12825c35a9387f5408e8db",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "hook-middle.png",
-      "sha256": "05be2a5349878ed836a9638e5cdf27b5db9f4aecb31f2902ef4f192fc78a81a1"
+      "sha256": "52883e5da3bc58334afb8a639015dcf416a860ccd99c38daad2c9344be0c8ed3",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "hook-end.png",
-      "sha256": "f9941063f28e7217dfb9aa38e9fea42fdcb2c92269061fb1b1ec966547516af5"
+      "sha256": "826b880f0669b78c1a703240d4a45e7238be149d081f3b118ca20886b784231f",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "blender-start.png",
-      "sha256": "4e6f4aabdbde3817651eda92e1fd31c106ecd860a2b0b1e99a07340ee92169ca"
+      "sha256": "5a8c5aa225a7e4c7740743c15d8145c20bee179e0bbee26761be45e9dfaf364b",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "blender-middle.png",
-      "sha256": "0147bc33f1b067dd40af213ed1fa5c59278a8a64a8609f93a6b683504a2c84a3"
+      "sha256": "0147bc33f1b067dd40af213ed1fa5c59278a8a64a8609f93a6b683504a2c84a3",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "blender-end.png",
-      "sha256": "47c27f2a4a6965348bc0e3c52fe6091cf198da731efce6db2d1de6d9dc7e27fa"
+      "sha256": "47c27f2a4a6965348bc0e3c52fe6091cf198da731efce6db2d1de6d9dc7e27fa",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "daz-start.png",
-      "sha256": "2c7dabcbb2df8d9b5e49c7ec8c83b03ef95cac01fa3cc51e1dcae53bb0ab22c8"
+      "sha256": "a32445be430a8f0aa99a5957f96f0ff56cfcbb00f21e0035957e566d72c7205d",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "daz-middle.png",
-      "sha256": "28c57b85d0c493fa8ad5bd5b9a455ba10b3ca09c92734566ccc79b80085e929d"
+      "sha256": "28c57b85d0c493fa8ad5bd5b9a455ba10b3ca09c92734566ccc79b80085e929d",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "daz-end.png",
-      "sha256": "c4ec80a03df857e011f4949ea60f8805bf935e89298a53e98307b3fc6e0bae5a"
+      "sha256": "50c2269a9cd2f00be1a0595bb9158660ce0d88148941566bb61ec3d59a80315b",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "edit-start.png",
-      "sha256": "3a4b7b0c2e7776c8015f1e5a3ae82867bba5a2372675b063f15e95d69da157f5"
+      "sha256": "d405ef407e5148ae36c91d31b41ec017cbe0b48e306aef5284efadb49a9c477a",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "edit-middle.png",
-      "sha256": "472b222775595db9ae44f759dd01ee224632837c6075ca24a63661519f9bb4a9"
+      "sha256": "7ed71f1bc3418569e8281989b32605b899c8567c490f2ea0d5d1b98c48c16d2b",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "edit-end.png",
-      "sha256": "661584b96535fbae65981888469d36993358975e9ef662d8f4ed8cb848bd577a"
+      "sha256": "e7eb1416445a55925994c48e2393940e6ce5744a49ac228cf82be3d70cd7941f",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "chat-start.png",
-      "sha256": "1d08a2a14bb958416d41bda98c5c7ac7a187eedbe06f9d8cdd7992a62074abac"
+      "sha256": "1d08a2a14bb958416d41bda98c5c7ac7a187eedbe06f9d8cdd7992a62074abac",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "chat-middle.png",
-      "sha256": "3db2747c2a676afff6bba4d7f27c791e1404100532f49fefa123f6191a9b1410"
+      "sha256": "3db2747c2a676afff6bba4d7f27c791e1404100532f49fefa123f6191a9b1410",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "chat-end.png",
-      "sha256": "f3fa1025eeba0d63e75fb2fb3d198600137f00abb830b3f99f8fdc407e7ee16f"
+      "sha256": "f3fa1025eeba0d63e75fb2fb3d198600137f00abb830b3f99f8fdc407e7ee16f",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "mcp-start.png",
-      "sha256": "fb699e4f56728fc4fd094a8927cfed28e43f12fed64cc73c0da2cac81b0ce973"
+      "sha256": "fb699e4f56728fc4fd094a8927cfed28e43f12fed64cc73c0da2cac81b0ce973",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "mcp-middle.png",
-      "sha256": "6c4dfebd4959ce4130fb53ce187366655cd5b98e6f7a6e5af1326c798ba3851d"
+      "sha256": "6c4dfebd4959ce4130fb53ce187366655cd5b98e6f7a6e5af1326c798ba3851d",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "mcp-end.png",
-      "sha256": "76653fc7c94b0beaa8bce10010a54539733b71c0023fb9b6147b04c5132008b1"
+      "sha256": "6b020b5c4880af185899815ad66cea45b093fbdbcbfd6f23b7bedf025ea47d1a",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "finish-start.png",
-      "sha256": "73295eb8620b42dec5d95f638a3d35a33d53cc7f58ade4bf8b0f05bbb7b7824a"
+      "sha256": "f0281e83904d80ab96cdde77bee13fa1c82645455c0250693bdb4af4a47ddead",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "finish-middle.png",
-      "sha256": "d3e75e11f7772466ea5f95112388095b23b03e8a852938a044563dfcf06ab0ef"
+      "sha256": "7c220c16993659bf10d639e327af2c54c3f1b0bde8b0f63052e2d2bdf3589b05",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "finish-end.png",
-      "sha256": "02ceec350cca9bcbf0f2c658d6aaefecf8b7227bbc74b62dd7b77281ad0c4bd3"
+      "sha256": "3cce9d1ded20c3eb8a432f6960fae8f41cb0ed6649c88dc63f39fd421616547a",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-hero.png",
-      "sha256": "2fb3e20bdbd41c08ebdeff0cc203298ae5d826713b9ae199aa3823076e9b72f9"
+      "sha256": "312989dd07961ef54bff60a5ef3a3d1e6068f1b3430309e92fb6b4645d3f24e9",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-blend-hit.png",
-      "sha256": "2a63d8f364ea77d23f88478cf00298ad876a7f491b95fb0bc880ad521961238c"
+      "sha256": "fd07888c7a80184ad99ee173b21196ea37ec977d435148af0a7b34e661343ee5",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-daz-hit.png",
-      "sha256": "889503da37342676ef350b6a396a8f4f554279f462aa57f9f7f18e3757c21cb3"
+      "sha256": "363ce3c442d0fd6ff67ff49d9b19618562b3cb6a026045311cb2ce2abe04890b",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-mesh-hit.png",
-      "sha256": "37f27643a0f5c76470c0f658f6e545754262b36ce70bf9e6fb7d8964a3778bff"
+      "sha256": "7024082b1186159d8c25581d8d40f572cf7e1baf6c623ffc43b1f1d9fa46f2e6",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-all-together.png",
-      "sha256": "c9297ef976e9a2a51698dbd1ae2b40a71ffb38afcbffd54c77b808e756569ceb"
+      "sha256": "c9297ef976e9a2a51698dbd1ae2b40a71ffb38afcbffd54c77b808e756569ceb",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-workspace-reveal.png",
-      "sha256": "a17069b6d640b4079d35ed51af6055d7fa25b1773db69c460ea7522b8cda758e"
+      "sha256": "141c803412b1144c243192aacca89c07aa7ce7bb7d507626da9d1539842f324e",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-unlock.png",
-      "sha256": "4e6f4aabdbde3817651eda92e1fd31c106ecd860a2b0b1e99a07340ee92169ca"
+      "sha256": "5a8c5aa225a7e4c7740743c15d8145c20bee179e0bbee26761be45e9dfaf364b",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-review.png",
-      "sha256": "38e83d908b72d2dfedf103b57b5941380b91af01f85c3a1b23e97eb6ea1d8e3b"
+      "sha256": "42dde7c559e47d83b57a908b2e00e85000dc8d2899fac5596eb4df5a95faff85",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-editable.png",
-      "sha256": "73537d09949bc9bccc4dd012febc198dc22976520caa3952b31b457d54747bff"
+      "sha256": "43be92ca8b1b7c2dc84c3409e3013e15ce89b9d620a4db57aa6ca56273a609cf",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-native-hit.png",
-      "sha256": "fce2510a96f412871da5404f020afcca13ff4a48047c5bca6e91725b802edd70"
+      "sha256": "959fce7aabd54fdf64cad76cd04484409a5352d26a113041aa3d10569e7dcfe9",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-native-scene.png",
-      "sha256": "b6896235d511392f46ccb0be0df8650ca4711124fc2a42ecfaf0bad2d02ac64a"
+      "sha256": "45324006c1203c785fb93b3909bab56b8c0b800d8599710aa5bd09cb860e6171",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-native-render.png",
-      "sha256": "88df5fdadefb9fa64219922e574afb6650c8f1df94349fdaa40457f06d46e244"
+      "sha256": "de51741ce3dd93b41968ae678afd2c9d6ed6bdb4cb103fcfb7f84ae229f12cba",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-two-modes.png",
-      "sha256": "8f5ec4b86bbe9feab3a26f51bb4624e0b4f6aaf200bc547279ff10a1b9897c26"
+      "sha256": "8f5ec4b86bbe9feab3a26f51bb4624e0b4f6aaf200bc547279ff10a1b9897c26",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-library-hit.png",
-      "sha256": "2c7dabcbb2df8d9b5e49c7ec8c83b03ef95cac01fa3cc51e1dcae53bb0ab22c8"
+      "sha256": "a32445be430a8f0aa99a5957f96f0ff56cfcbb00f21e0035957e566d72c7205d",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-daz-import.png",
-      "sha256": "8449d354a1b468f71a015ac6510a771d1e37519233e0b26022b97c7bb166f6f7"
+      "sha256": "8449d354a1b468f71a015ac6510a771d1e37519233e0b26022b97c7bb166f6f7",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-daz-mesh.png",
-      "sha256": "b1e8b2f98bbcc2b40acede5902285e3024e21fa46bd4545f63fb2d19dc6995fc"
+      "sha256": "915ac21ac4e7dde5522d6aeb3ddcf9548d13d14e5886960c599954ff46b1c020",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-daz-material.png",
-      "sha256": "244c71604ec3c5a972816accd3efb165e706f0a582ea5138397b339b2c075d0f"
+      "sha256": "244c71604ec3c5a972816accd3efb165e706f0a582ea5138397b339b2c075d0f",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-daz-recovery.png",
-      "sha256": "cfeb21caea28863aa7490b7d039b106010c22ec6e80064a1bcf27e8cad11a80e"
+      "sha256": "13594405630647c090be7a885c02a8d1f4d6338c68b5ff0eda7c4d63bc897d35",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-shape-hit.png",
-      "sha256": "3a4b7b0c2e7776c8015f1e5a3ae82867bba5a2372675b063f15e95d69da157f5"
+      "sha256": "d405ef407e5148ae36c91d31b41ec017cbe0b48e306aef5284efadb49a9c477a",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-sculpt-stroke.png",
-      "sha256": "997c443e0588d61f3fec03eb505bd3c247957582d2408320f8c02312f2618c69"
+      "sha256": "97c520f4373745f42c58ce9c7fbc90cca582c285285aee3af32e3b104ce65775",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-sculpt-undo.png",
-      "sha256": "09a1b0aef43c7cfab2ab8de40779af9a532a157714f30510943e9087a88fcc26"
+      "sha256": "09a1b0aef43c7cfab2ab8de40779af9a532a157714f30510943e9087a88fcc26",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-sculpt-redo.png",
-      "sha256": "807326090b8218090f3ab57ddf2867a6550195a1a70f5c00785bb765d15f9256"
+      "sha256": "4941cb4cfa5fd58b0c0dc21d0b14cf83e662a8340f03db5fa5e3590052113888",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-save-reopen.png",
-      "sha256": "da0d07b68a44d5d3695c89e7ec87f522f4364f6e08ca6c13e0f593645ed18d44"
+      "sha256": "9200018138dbf97f8edab31ce53a8d9eb5e5e239dcd54e67460f4445504a9113",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-glb-export.png",
-      "sha256": "8c542bc887ed2596c320bc0b376cdcecdb6e0c3ab6237ba4eec32116e0ed42ae"
+      "sha256": "8c542bc887ed2596c320bc0b376cdcecdb6e0c3ab6237ba4eec32116e0ed42ae",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-sculpt-payoff.png",
-      "sha256": "3c1a7e4fbb1fd4b05f3de39d1010bbbebda52cfaac8361bf5d78829c4ad9d3f9"
+      "sha256": "ead418607c9189a22e50c4f2129f271748f95acb067bc68085c19bcbbd8b12b6",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-chat-hit.png",
-      "sha256": "1d08a2a14bb958416d41bda98c5c7ac7a187eedbe06f9d8cdd7992a62074abac"
+      "sha256": "1d08a2a14bb958416d41bda98c5c7ac7a187eedbe06f9d8cdd7992a62074abac",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-chat-ask.png",
-      "sha256": "42fb09f4bc97756858263983806abf2675f226b845cf52969ed5c60a71795a9a"
+      "sha256": "42fb09f4bc97756858263983806abf2675f226b845cf52969ed5c60a71795a9a",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-chat-response.png",
-      "sha256": "2f8561529a802c8fd5acf7fe92a604b19108cabb4b50e3bca074683192fee839"
+      "sha256": "2f8561529a802c8fd5acf7fe92a604b19108cabb4b50e3bca074683192fee839",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-mcp-hit.png",
-      "sha256": "fb699e4f56728fc4fd094a8927cfed28e43f12fed64cc73c0da2cac81b0ce973"
+      "sha256": "fb699e4f56728fc4fd094a8927cfed28e43f12fed64cc73c0da2cac81b0ce973",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-mcp-add.png",
-      "sha256": "a7385432ec7006a0cf715cbfa5e5cf654739ca58b7fec3e65ac4568f0ce49251"
+      "sha256": "a7385432ec7006a0cf715cbfa5e5cf654739ca58b7fec3e65ac4568f0ce49251",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-mcp-transform.png",
-      "sha256": "7229e2dd37e201cb5c8d897ba4e12323be451d3728c2be8ae1d20ea90bdd89aa"
+      "sha256": "7229e2dd37e201cb5c8d897ba4e12323be451d3728c2be8ae1d20ea90bdd89aa",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-mcp-undo.png",
-      "sha256": "f0b3c0b3964425e155a08eef1a368c1d469e16ebd3558c693b639ecb6e376451"
+      "sha256": "20df2469552294b91aad2d45592b967ca8a6c9135a562eee42402c45c99433a9",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-mcp-redo.png",
-      "sha256": "3278fa1171a96c7b08f7fcf417dc46494fecee7223c3ecdde3cfa270a2fe30f8"
+      "sha256": "3278fa1171a96c7b08f7fcf417dc46494fecee7223c3ecdde3cfa270a2fe30f8",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-mcp-payoff.png",
-      "sha256": "1830b4d8ecc57b961cbfc283027ed61d40debd1a254fe88a81e3042e12ffffdf"
+      "sha256": "1830b4d8ecc57b961cbfc283027ed61d40debd1a254fe88a81e3042e12ffffdf",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "shot-results-stack.png",
-      "sha256": "562d954e60d320792382a78982c96b3ed1fe0a81016e5fed47e441ce3f566d0e"
+      "sha256": "99cfea2133391408f179943ae59ace9a286504ed273a7e178695a1f2df437939",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-render-payoff.png",
-      "sha256": "fa25a6586a9443a5cf7ab81335f12c906cbf6a81ace233c5a41794b5efc22cce"
+      "sha256": "d67b47df8b93f846cbe26cf503a5045ac2ef6ef3200ef7fac3d73e1f684c11e6",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-library-payoff.png",
-      "sha256": "068a5ee3299890a548a64fa8e0f33720036ba3cdbcd139b379ae231bc2a35a13"
+      "sha256": "7aabbefb8dec3ce973d749dce3ae74d152a8a96a14c4af8fd72bc85f41494a09",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-create-payoff.png",
-      "sha256": "2a825978a322e2822e04521eda6a258473c593f9160d5e6496c44be086146c98"
+      "sha256": "df8cce784af7df0b7e67ae8a6321fcd3ff864ab8d5ee995b5079f94633540397",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "shot-invitation.png",
-      "sha256": "0e0b37c3dec08ff0f11f53f704ff3e7be6ab2f1bd9088a5be64bc42e045aa45a"
+      "sha256": "30b1891fad9598312a032153e7370fdf9c4c17299d4b2d1d97b7e579f182c027",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-blend-hit.jpg",
-      "sha256": "1d2c610f12f6ed51f2390a5b6bc108a1b7997bf73d5524dc567ce3a967a14b39"
+      "sha256": "55f40157c3d934099d4e38630cab7105e3162c5668bc2ce08642248cd889aa39",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-daz-hit.jpg",
-      "sha256": "ac3e6810e5806ccb94bd4cc84bdea1e933a19f446f74750eafa876ed50b8b82d"
+      "sha256": "3d473764d4ba90ddd345ae3a1c92bc9bce53ddf5e3bdddd6e708b2a5611e2b20",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-mesh-hit.jpg",
-      "sha256": "6d983746841de727a5b5a8fa8f39051c20b10fead11fc0b779a31b45be43f277"
+      "sha256": "9a2fec8c6ebee839daccd711fda1e777b09e5b482b4eeee718248f991441948a",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-all-together.jpg",
-      "sha256": "5f073a94e5e878c451b1bcc8a9dc42b1ac105eb4d9f51dd2127f43171bc6da24"
+      "sha256": "e19531f3fdd65f64fb85166e2e4f89bacd1c649f77948147edfe070eff07d99f",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-workspace-reveal.jpg",
-      "sha256": "32d8a2f7766f9802c92151de4153736405eb1c28cfb78333fe7e1597344b6b5d"
+      "sha256": "32d8a2f7766f9802c92151de4153736405eb1c28cfb78333fe7e1597344b6b5d",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-unlock.jpg",
-      "sha256": "9ce980ce15fadf9e9c4887da633f6cabe12750ca57674009ed479ade23471130"
+      "sha256": "20af2f41b6ea6ab7a90aa7015d8ae68e19bea9a91568d4e19af582f5c7b61647",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-review.jpg",
-      "sha256": "5531369264477c0e4ed60d39a0a65ba2f06828474a3c5e117b11132879caf310"
+      "sha256": "196f13822634655bf7f6d9eb3925aa532a268d97d66dae5b90f0621b4ad472e1",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-editable.jpg",
-      "sha256": "99b2214f4fd622b1722a82ef5337922fac2c3eed47ee54f6874923711b20c1ff"
+      "sha256": "9abca230e62f6dc7af9caa3ac3d9d5e4f194a9841a95daad6eb760d1f14122f8",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-native-hit.jpg",
-      "sha256": "a6e9ec717d143972af202bac286e5357fcd54be06be7ebaf9c1573fe0f19efc6"
+      "sha256": "ff3fc3715dc4059abaedb6d82ab19f08cb03db935439e82dd384e21f6a301ef8",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-native-scene.jpg",
-      "sha256": "22d74bad622135cab8f9f1072984dddfc3150bcc9db3973c2e930390bffc6f38"
+      "sha256": "b0a8f75d6fe5adad675f9f51b0947d9367b7226a3a02b12dd3bf6f9dc865bea6",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-native-render.jpg",
-      "sha256": "65a216cd7d7c6133590e096a472996f5801407c9502119e33e48ccdb6fa1fe3b"
+      "sha256": "f9ac7d63eab53d807c0ae6bf72db8885dc8b3e0dbff2eb420d4d657d5577b3b6",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-two-modes.jpg",
-      "sha256": "098b1a491ca1d292379bcd595f82fbd751ab673f8ebf6a5ff05b478e7b361097"
+      "sha256": "df47df5d2c83d7a311735f4e55d1812d3f56cc53db281c2eb65b616a9e71c651",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-library-hit.jpg",
-      "sha256": "aef34bfcd0954db6f854e4748393099ca1d5614a4ee94ec052077435336d5c43"
+      "sha256": "5e47bfb45a9c08e4db173b253d5d53ec1876f3f672f274d67657a29c35b8197a",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-daz-import.jpg",
-      "sha256": "0b2430bfdc8b46a5612d7c32e61d672b2a60f2f1c3dd2e62a96613bf3aab003c"
+      "sha256": "9363b0f03af4b14133580fee233e373c3bf7eb4efe44e3ca774c59fcc7df7ded",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-daz-mesh.jpg",
-      "sha256": "a883664058ff60467f204c0bbb7da6fe57c710b4bd87ea346b05b79fd57f88cd"
+      "sha256": "2420c564705b2a2e22b1bf0f12ff58ab8199f3704b1bb8e056bd280f0bc38de5",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-daz-material.jpg",
-      "sha256": "c97f42bd374847d31ad96ee9f1af0d53028fec54a84f32f0b9d509a5fa5a8a1e"
+      "sha256": "4c0b5789e0c5bd2504b6509e5cabb95ed4ff3c3228d321fb336f8dca7bf04ccf",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-daz-recovery.jpg",
-      "sha256": "f392568ff274ece7b717ce884a7b6b8ba0fef516ff7ce112f39b99682a32046f"
+      "sha256": "f392568ff274ece7b717ce884a7b6b8ba0fef516ff7ce112f39b99682a32046f",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-shape-hit.jpg",
-      "sha256": "a4fb6d855fa8632730050f81687fcc3f72b975b2d78bab7bac98bb3db666d3f5"
+      "sha256": "4ef2305df186d4d424faedc952a83ddede9b50f226ee3189faa54b4f8bf1e919",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-sculpt-stroke.jpg",
-      "sha256": "47aeecbdf63c4fda578d359a25cb0ba6571aca633e53b32136fe99899bdce3fd"
+      "sha256": "3c33fb911c1a578625a869c8d6d0c33b3d986b09204c99c29da6c92ef5d9fa57",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-sculpt-undo.jpg",
-      "sha256": "29d53761096bf897bad5a395139bf3913043c06b32bd24c6d201e86fe7e8ee7c"
+      "sha256": "bd8a186a234d560c1338af731c2ff3fa78bf5a63c110803054ef9f35ca5509e3",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-sculpt-redo.jpg",
-      "sha256": "d82ed4417f4da8c14e8025ff5159fab4473a65f2367f2729f62fa0617732db32"
+      "sha256": "d82ed4417f4da8c14e8025ff5159fab4473a65f2367f2729f62fa0617732db32",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-save-reopen.jpg",
-      "sha256": "8c8859785a7637a0ce9ab4af50295934d7ac72925fa196320bc78e3c04da81d8"
+      "sha256": "bd451092cd247e0e4b9fe45d3066d6ce38c111d532d4eff611a6752a72db5c7e",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-glb-export.jpg",
-      "sha256": "6a60691b706eada4cd26caba7f18c030130d18b885b146f7e87df05e4f3921c9"
+      "sha256": "976ea75e7f4f542d6c0720b35264f24c5c34938a45b37756b976055810ed744f",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-sculpt-payoff.jpg",
-      "sha256": "c7e8f4b67bd1418635ba3157ece4a42852afbcef3eb894c60fc0b30a6e086098"
+      "sha256": "3deac0c17cbcbea353f113c697d8c066f51e727ce4fad4827c89985e41fefd9f",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-chat-hit.jpg",
-      "sha256": "37b92aa4e94c165193a23b667af148799d23c863c020f38cda1ef6b66df8c932"
+      "sha256": "926166f2ad8ae7902b2184977cd81afe551109a0a707c1285da9e2468c082c10",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-chat-ask.jpg",
-      "sha256": "54cf4d519bcd36b5755994d3e4ed0075a584077c7e11b5e01b2f50634b96e9ce"
+      "sha256": "54cf4d519bcd36b5755994d3e4ed0075a584077c7e11b5e01b2f50634b96e9ce",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-chat-response.jpg",
-      "sha256": "7a3a41297244d033b2398d8ad01746a76bd2cf55da0a793203cba2add377df5a"
+      "sha256": "7a3a41297244d033b2398d8ad01746a76bd2cf55da0a793203cba2add377df5a",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-mcp-hit.jpg",
-      "sha256": "744a5a5a89e6b7883e1e4fb0b8824394a40a5e6fe0eedf03da2b57dca74abd3b"
+      "sha256": "744a5a5a89e6b7883e1e4fb0b8824394a40a5e6fe0eedf03da2b57dca74abd3b",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-mcp-add.jpg",
-      "sha256": "214ffdf773c44939ab795ef25dfb494ffd1d24b44d6031b164d05bc7ea8ef9b1"
+      "sha256": "214ffdf773c44939ab795ef25dfb494ffd1d24b44d6031b164d05bc7ea8ef9b1",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-mcp-transform.jpg",
-      "sha256": "e8f13d3410f5423468d6a583e286ff62316f0ec51d7f77441e4f47197a2d00f1"
+      "sha256": "e8f13d3410f5423468d6a583e286ff62316f0ec51d7f77441e4f47197a2d00f1",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-mcp-undo.jpg",
-      "sha256": "18faa0fd2f199f078d530f4e3fec5070dcd252d3492f11157511ba8d5d60200a"
+      "sha256": "4883828e390a54cc747668862869af57709fa42d4e698c75856c7aa3c0065fa7",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-mcp-redo.jpg",
-      "sha256": "3675bbf8f79d67b53bdd8f8ee872a8e41e998e09686a265b3c208fc44ef1e3ff"
+      "sha256": "2fcba3caf1cd0e7f00b567428acb92aca7b013dcdf4bb8455e82bdffa1c410db",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-mcp-payoff.jpg",
-      "sha256": "6a78b0466f877f7e308cd07d1aaf81d67e85e5a72a67120c3dd9f25b5107be13"
+      "sha256": "6a78b0466f877f7e308cd07d1aaf81d67e85e5a72a67120c3dd9f25b5107be13",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-results-stack.jpg",
-      "sha256": "2b6119505e1f4facf2d6911ab77acfdabb614077d2989a88e52441650dec2454"
+      "sha256": "9516387d1e286191124b3fd32805a32f9a064c07ce4b7dd48d6c583f3b0e1160",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-render-payoff.jpg",
-      "sha256": "ab4a2996badc283bb05ffdb92c060e162e7c9313997d94f130b51f85ac7c4672"
+      "sha256": "7820d4fceefc7c956392b2fffe9f237458df2977d37fc7bca8e128db1b212cbc",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-library-payoff.jpg",
-      "sha256": "e75218a68896750fb63f2f0f753d796ce225231980cd807929dd85e24f4af7d1"
+      "sha256": "b247ec211320400a5b862e25e6490615f5fb444d1f98a7dff730be28c2dc3707",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-create-payoff.jpg",
-      "sha256": "5b454670a5a3d7c52119b2b05d19175abf77d9f1ec725c80e03d548a02179af9"
+      "sha256": "6ab3215a82321c4e6fe429a11de4b17604079162fc54f7956a9a600b459eaba0",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-invitation.jpg",
-      "sha256": "fa867ba568fb7cef566efdac42fe9208f660384a87b93077697ce122c4bb6d51"
+      "sha256": "2725bfa8d0288ce0264825626c1110088467c63e9b92d6e938baa3e1cb6748fa",
+      "method": "Visually inspected in asset-variety pass"
     },
     {
       "file": "transition-native-scene-source-cut.jpg",
-      "sha256": "e995991cfa7642a9758d1a8ed9334fe34f47da9e5aabf9964df0b40b5248e112"
+      "sha256": "e995991cfa7642a9758d1a8ed9334fe34f47da9e5aabf9964df0b40b5248e112",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     },
     {
       "file": "transition-daz-import-source-cut.jpg",
-      "sha256": "29707dc2d00ad871a2ecf43bbd673148faec17f64c4544694ed8639cccd13711"
+      "sha256": "29707dc2d00ad871a2ecf43bbd673148faec17f64c4544694ed8639cccd13711",
+      "method": "Exact SHA-256 match to prior visually reviewed evidence"
     }
   ],
+  "carryForward": {
+    "commit": "0972e0e921f36e24224a250c61f5d57cc3e0da4b",
+    "sha256": "fdd17112f4a87719f1219dbd0816915cd75d2234b97d8f5857971d187b3a2342",
+    "images": 33,
+    "method": "Exact file SHA-256 comparison to prior 100-image visual audit"
+  },
+  "newlyInspected": 67,
   "observations": [
-    "Inspected all 60 full-resolution shot stills and all 40 sixteen-frame transition strips from final video hash.",
-    "Animated headings, captions, full UI panels, labelled detail crops, split view, card stacks and closing credits stay within frame.",
-    "UI footage remains visible at shot entrances; title masks and panel movement are intentional.",
-    "Native scene and editable copy are distinguished. Preset footage discloses legacy shader limits; chat remains conversational.",
-    "Sculpt and MCP recovery cuts retain actual before-and-after changes; two internal source cuts omit waits and remain disclosed in provenance.",
-    "No exposed credentials or personal filesystem paths observed in reviewed frames."
+    "Inspected all 67 new or re-encoded stills and sixteen-frame strips. Carried forward 33 exact prior reviewed file hashes. Combined coverage: 60 full-resolution stills and 40 transition strips.",
+    "BMW shaded and elevated wireframe views, DAZ mesh-hair rear detail, optics wireframe and new closing cards retain readable headings and smooth camera progression.",
+    "Intentional card overlap and title reveal masks retained; no blank transition flashes or exposed personal paths observed.",
+    "Original material approximations remain visible and disclosed; native shader equivalence not claimed.",
+    "Workflow timing and before-and-after recovery states remain unchanged."
   ]
 }

@@ -2,28 +2,28 @@
   "passed": true,
   "independentPairs": [
     {
-      "frame": 1400,
-      "pixelSha256": "f05deeb9bb93872ac84122d7da34c6ef80b2f28c0ca9eb231543929ad64a8c1f"
+      "frame": 95,
+      "pixelSha256": "9535b7c52b3bd5c23ae42cfcff9ae8939731971e708f1b6831dbb8d07a3a665d"
+    },
+    {
+      "frame": 160,
+      "pixelSha256": "bf89546a8b41d546955ad9b0fa0a5b6f298ce61d24cc15fdc761c5c5817ddf12"
+    },
+    {
+      "frame": 201,
+      "pixelSha256": "2f63cd86c71d3b783fef9398d56b8fdaae7549ca2221483b4cda1614b7b6e36e"
     },
     {
       "frame": 1850,
       "pixelSha256": "bdbd7510364fed0a5b3b1bed61dc534c4e5179b18420287b59c3f8017a6a3452"
     },
     {
-      "frame": 2630,
-      "pixelSha256": "afa9c1787a7eb3c41135b7689d6bc7323f130167113684692337417056efc4e1"
+      "frame": 3100,
+      "pixelSha256": "8ddfbb8b33e300169fa7ad0210268f9fa911374b00885fb4476a2309975cdd3c"
     },
     {
-      "frame": 3200,
-      "pixelSha256": "967779d529bcbb8bc92dc2e5783efc40e881cacf41772fafef710115cbd9ede9"
-    },
-    {
-      "frame": 700,
-      "pixelSha256": "5ccf242275ee37a8a97b796d34c79ad2fc387c3201fdcd05de70648b9d85e838"
-    },
-    {
-      "frame": 95,
-      "pixelSha256": "3582ef8e0dd64e676790ac633749821b08c943bfcff36885344db681425c0231"
+      "frame": 3380,
+      "pixelSha256": "d1887e54a953a9e4dbc24933e0b93e908334d36d1b835862dacf37c884e23c07"
     }
   ]
 }

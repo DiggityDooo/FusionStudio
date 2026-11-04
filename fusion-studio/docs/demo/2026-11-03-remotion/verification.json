@@ -25,7 +25,7 @@
   "transitionStrips": 40,
   "shotStills": 60,
   "textBounds": "DOM overflow and composition-bound checks run on rendered frames",
-  "visualReview": "Codex inspected 60 full-resolution stills and 40 sixteen-frame transition strips",
+  "visualReview": "Codex inspected 67 new or re-encoded images; 33 exact prior reviewed SHA-256 hashes carried forward. Combined coverage: 60 full-resolution stills and 40 sixteen-frame strips.",
   "deterministicFrames": {
     "passed": true,
     "independentPairs": 6
@@ -40,8 +40,15 @@
     "External official SDK client: inspect/add/transform/undo/redo with revision checks",
     "Separate fresh Blender compatibility reviews captured at readable duration"
   ],
-  "sha256": "ae3c84719a1abaec8b76627eeb0f7fa54f23ce8cf176f3404e0fe23de5447b8a",
-  "completed": "2026-11-04T07:55:10.079Z",
+  "sha256": "a9e1b276fa1fc86f4e341b272f9f5748d8277d686d163d69496a80c04d7fb50e",
+  "completed": "2026-11-04T08:38:38.183Z",
+  "additionalCaptureChecks": [
+    "Frozen ASAR unchanged",
+    "BMW and DAZ source hashes match acceptance inventory",
+    "Four fresh imports retain visible geometry",
+    "Wireframe uses actual app toggle",
+    "600 distinct camera poses rendered from actual viewport"
+  ],
   "containerChapters": 7,
   "musicCutChecks": [
     {
