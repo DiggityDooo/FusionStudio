@@ -11,6 +11,7 @@ const find=name=>{const file=files.find(p=>path.basename(p)===name);assert.ok(fi
 const mesh=find('Fusion launch - editable study.glb'),native=find('Fusion character study.png');
 const capture=JSON.parse(fs.readFileSync(path.join(prior,'capture.json')));assert.ok(capture.passed);assert.ok(capture.exported.some(e=>e.sha256===hash(mesh)));
 const blend=path.join(root,'test-output/github-showcase/fixtures/fusion-optical-instrument.blend');
+assert.equal(hash(blend),capture.sources.find(s=>s.file===path.basename(blend)).sha256);
 const garment=JSON.parse(fs.readFileSync(path.join(root,'test-output/rc-20261103/dson-manifest.json'))).fixtures.find(f=>f.id==='dson-7');assert.equal(hash(garment.source),garment.sha256);
 const receipt={passed:false,method:'Packaged Fusion viewport screenshots at 30 deterministic camera poses per second; no interpolation or generated pixels. Cropped to viewport, downsampled to 1920x1080.',clips:[],native:{file:'native-output.png',sha256:hash(native),origin:'Verified preserved Blender Cycles render'},checks:[]};
 let app,page;

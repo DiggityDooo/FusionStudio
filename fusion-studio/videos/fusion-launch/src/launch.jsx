@@ -10,7 +10,7 @@ function Media({clip,companion=false}){
  const frame=useCurrentFrame(),asset=companion?clip.companion:clip.asset,meta=prepared.assets[asset],start=clip.sourceIn||0,end=clip.sourceOut??meta.frames,rate=(end-start)/clip.frames;
  // Orbit shots already move. Only still renders get a 1.5% camera drift.
  if(meta.kind==='image')return <Img src={staticFile(meta.file)} style={{width:'100%',height:'100%',objectFit:'cover',transform:`scale(${1+.015*frame/clip.frames})`}}/>;
- return <Video src={staticFile(meta.file)} muted trimBefore={start} trimAfter={end} playbackRate={rate} objectFit={clip.layout==='pair'?'cover':'contain'} style={{width:'100%',height:'100%'}}/>;
+ return <Video src={staticFile(meta.file)} muted trimBefore={start} trimAfter={end} playbackRate={rate} objectFit={['pair','end'].includes(clip.layout)?'cover':'contain'} style={{width:'100%',height:'100%'}}/>;
 }
 function Caption({cue,globalFrame}){
  const words=cue[2].split(' '),age=globalFrame-cue[0];
@@ -25,7 +25,7 @@ function Shot({clip,scene,preview}){
   <div className="masthead" data-qa="masthead"><span className="diamond">◈</span> FUSION <span className="sub-brand">STUDIO</span></div>
   {ui?<div className="section-label" data-qa="section">{scene.tag}<strong>{scene.title}</strong></div>:<div className="output-label" data-qa="label">{clip.label}</div>}
   {ui&&<div className="capture-note" data-qa="capture-note">ACTUAL CAPTURE{meta.waitingTimeShortened?' · WAITS CUT':''}{rate>1.08?` · ${rate.toFixed(1)}×`:''}</div>}
-  {end&&<div className="invitation" data-qa="invitation" style={{transform:`translateY(${-4*frame/clip.frames}px)`}}><div className="eyebrow">FUSION STUDIO / 0.19.0-rc.1</div><h1>Keep building.</h1><p>github.com/DiggityDooo/FusionStudio</p><div className="credit">Secret — ESPRIT 空想</div></div>}
+  {end&&<div className="invitation" data-qa="invitation" style={{transform:`translateY(${-4*frame/clip.frames}px)`}}><div className="eyebrow">FUSION STUDIO / 0.19.0-rc.1</div><h1>Keep building.</h1><p>github.com/DiggityDooo/FusionStudio</p><div className="credit">Local tools. Connected workflows.</div></div>}
   {cue&&<Caption cue={cue} globalFrame={globalFrame}/>}
   {preview&&<div className="preview">PICTURE PREVIEW / SOUNDTRACK PENDING</div>}
  </AbsoluteFill>;

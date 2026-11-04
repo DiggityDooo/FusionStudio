@@ -23,14 +23,14 @@ export const scenes=[
   {id:'daz-material',asset:'daz-preset',frames:324,layout:'ui',words:[[0,'Choose a compatible material preset.'],[90,'Apply supported color properties.'],[144,'Undo. Restore material state.'],[204,'Redo. Recover the applied preset.'],[258,'Legacy shader parity remains limited.']]}
  ]},
  {id:'edit',from:1623,to:2271,tag:'03 / GEOMETRY',title:'Edit and recover',mode:'proof',clips:[
-  {id:'sculpt-change',asset:'sculpt',frames:396,layout:'ui',words:[[0,'A real sculpt stroke changes the mesh.'],[144,'Undo restores the exact geometry.'],[216,'Redo recovers the sculpt.'],[306,'Your changes remain editable.']]},
+  {id:'sculpt-change',asset:'sculpt',frames:396,layout:'ui',words:[[0,'A real sculpt stroke changes the mesh.'],[240,'Undo restores the exact geometry.'],[300,'Redo recovers the sculpt.'],[354,'Your changes remain editable.']]},
   {id:'save-export',asset:'save',frames:252,layout:'ui',words:[[0,'Save. Reopen the same geometry.'],[126,'Export a validated GLB working copy.']]}
  ]},
  {id:'chat',from:2271,to:2595,tag:'04 / CONVERSATION',title:'Your local model',mode:'proof',clips:[
   {id:'local-chat',asset:'chat',frames:324,layout:'ui',words:[[0,'Connect your local Ollama model.'],[72,'Ask Phi-3 a question.'],[144,'A real response from your model.'],[234,'Conversational chat. Scene edits stay separate.']]}
  ]},
  {id:'mcp',from:2595,to:2991,tag:'05 / CONTROL',title:'External MCP',mode:'proof',clips:[
-  {id:'mcp-operations',asset:'mcp',frames:396,layout:'ui',words:[[0,'An authenticated client inspects the scene.'],[72,'Add a primitive through MCP.'],[144,'Set its transform.'],[234,'Undo through the same history.'],[306,'Redo. Recover the change.']]}
+  {id:'mcp-operations',asset:'mcp',frames:396,layout:'ui',words:[[0,'An authenticated client inspects the scene.'],[54,'Add a primitive through MCP.'],[126,'Set its transform.'],[198,'Undo through the same history.'],[270,'Redo. Recover the change.']]}
  ]},
  {id:'finish',from:2991,to:3600,tag:'FUSION STUDIO / 0.19.0-rc.1',title:'Keep building.',mode:'closing',clips:[
   {id:'final-geometry',asset:'sculpt-orbit',frames:144,layout:'output',label:'EDITABLE OUTPUT',words:[[0,'Import. Shape. Recover.']]},
