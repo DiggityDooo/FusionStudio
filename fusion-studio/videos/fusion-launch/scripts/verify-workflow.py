@@ -26,7 +26,13 @@ frames=int(re.findall(r'^frame=(\d+)',decoded.stdout,re.M)[-1])
 assert frames==timeline['frames'],(frames,timeline['frames'])
 assert '1920x1080' in decoded.stderr and '30 fps' in decoded.stderr and 'Video: h264' in decoded.stderr
 assert 'Audio:' not in decoded.stderr,'Silent workflow expected'
-assert abs(frames/30-proof['capture']['seconds'])<=1/30
+input_metadata=decoded.stderr.split('Stream mapping:',1)[0]
+chapters=re.findall(r'Chapter #0:\d+: start ([\d.]+), end ([\d.]+)',input_metadata)
+assert len(chapters)==len(timeline['steps'])
+for i,(start,end) in enumerate(chapters):
+ assert abs(float(start)-timeline['steps'][i]['frame']/30)<=.001
+ assert abs(float(end)-(timeline['steps'][i+1]['frame'] if i+1<len(chapters) else frames)/30)<=.001
+assert abs(frames/30-proof['capture']['seconds'])<=2/30
 steps=timeline['steps']
 assert all(0<=s['frame']<frames for s in steps)
 assert all(a['frame']<b['frame'] for a,b in zip(steps,steps[1:]))

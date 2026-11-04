@@ -1,0 +1,224 @@
+{
+  "passed": true,
+  "started": "2026-11-04T20:29:51.701Z",
+  "mode": "continuous capture",
+  "method": "Visible packaged Electron app, real UI actions paced through Playwright. Single CDP start/stop, native timestamps, normal speed. Native file picker paths supplied automatically; Explorer reveal suppressed. Gold pointer overlay only. No scene injection, simulated output, cuts or removed waits.",
+  "application": {
+    "version": "0.19.0-rc.1",
+    "exeSha256": "a4703c2b98afd46b0c74f6f0ee8a538d71a6d7e5d0811be049b18384884ee869",
+    "asarSha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8"
+  },
+  "source": {
+    "file": "SPowered Trunk.duf",
+    "sha256": "101e18ea4282a3bb2fe55015c2bfa9b1f17c57d67af06efb350e33f2996d17f4"
+  },
+  "steps": [
+    {
+      "id": "start",
+      "title": "One asset. One continuous workflow.",
+      "caption": "Fusion Studio 0.19.0-rc.1 · fresh workspace · normal playback speed",
+      "seconds": 0,
+      "frame": 0
+    },
+    {
+      "id": "import",
+      "title": "01 / Import a DAZ asset",
+      "caption": "Open SPowered Trunk.duf and review conversion limits before importing.",
+      "seconds": 2.4863247871398926,
+      "frame": 75
+    },
+    {
+      "id": "inspect",
+      "title": "02 / Inspect the editable scene",
+      "caption": "Frame the imported asset, orbit around it, then inspect its topology.",
+      "seconds": 16.720324993133545,
+      "frame": 502
+    },
+    {
+      "id": "transform",
+      "title": "03 / Make a precise edit",
+      "caption": "Select the imported root and set its Y rotation to 25 degrees.",
+      "seconds": 39.363324880599976,
+      "frame": 1181
+    },
+    {
+      "id": "history",
+      "title": "04 / Undo, then redo",
+      "caption": "Recover the original transform, then restore the edit through scene history.",
+      "seconds": 46.880324840545654,
+      "frame": 1406
+    },
+    {
+      "id": "save",
+      "title": "05 / Save a project version",
+      "caption": "Name the project Trunk Study and save its editable scene.",
+      "seconds": 55.13932490348816,
+      "frame": 1654
+    },
+    {
+      "id": "reopen",
+      "title": "06 / Reopen the saved project",
+      "caption": "Open the saved .fusion file; geometry and transforms restore from disk.",
+      "seconds": 64.00332498550415,
+      "frame": 1920
+    },
+    {
+      "id": "export",
+      "title": "07 / Export a validated GLB",
+      "caption": "Create a new interchange file; inspect the actual glTF validation result.",
+      "seconds": 70.68232488632202,
+      "frame": 2120
+    },
+    {
+      "id": "lighting",
+      "title": "08 / Light the scene",
+      "caption": "Add a three-point lighting rig and save the lit scene before rendering.",
+      "seconds": 81.6973249912262,
+      "frame": 2451
+    },
+    {
+      "id": "render",
+      "title": "09 / Render the result",
+      "caption": "Cycles · OptiX · 1920 × 1080 · 32 samples. Render wait retained.",
+      "seconds": 87.74432492256165,
+      "frame": 2632
+    },
+    {
+      "id": "complete",
+      "title": "Workflow complete.",
+      "caption": "Imported → inspected → edited → recovered → saved → reopened → exported → rendered.",
+      "seconds": 236.93032479286194,
+      "frame": 7108
+    }
+  ],
+  "checks": [
+    "Transform changes scene hash; undo and redo exactly recover both scene states; geometry unchanged",
+    "Actual File > Open restores exact canonical geometry and scene digests through a newly deserialized scene",
+    "Real Cycles image returned by the packaged app",
+    "All source bytes and packaged ASAR unchanged"
+  ],
+  "imported": {
+    "meshes": 1,
+    "vertices": 7413,
+    "triangles": 12138,
+    "bones": 0,
+    "texturedMaterialAssignments": 1,
+    "geometrySha256": "1749d59be53105bf3c605a5448fa2dac9275dfcdd752f9ad6831fba5713da24f",
+    "sceneSha256": "c65ee0d5f74cc152d34a9e2587a1fb9decd0d0fc750bcdcf80a5a4caece34066",
+    "selected": "SPowered Trunk"
+  },
+  "project": {
+    "file": "Trunk Study.fusion",
+    "bytes": 11491320,
+    "sha256": "70f6aa40c749afc5de6f89e3da22e9c0c751df9a177eadfd955ebd20d3180882"
+  },
+  "reopened": {
+    "meshes": 1,
+    "vertices": 7413,
+    "triangles": 12138,
+    "bones": 0,
+    "texturedMaterialAssignments": 1,
+    "geometrySha256": "1749d59be53105bf3c605a5448fa2dac9275dfcdd752f9ad6831fba5713da24f",
+    "sceneSha256": "2b43999e1d01d5dd0a8262994b13778438477ee03858267548a95d59c795e0ea"
+  },
+  "exportReport": "FUSION STUDIO\nGLB Export Complete\n\nglTF inspection complete · 0 errors · 1 warnings\n\n2.0.0-dev.3.10 · glTF 2.0 · 1 primitives · 0 morph targets · 1.27 MiB\n\n1 meshes · 1 materials · 1 textures · 1 images · 0 skins · 0 animations · 0 cameras · 5 nodes\n\nField\tFusion conversion\ngeometry / normals / UV / material groups\tcompatible\nConverted to evaluated triangles; validate the resulting working mesh.\nmaterials\tapproximate\nPBR translation through Blender and Three.js is approximate.\nValidation messages (1)\n\nSource SHA-256: 2e5f1799e0241db878f43034ac6ea9a489d7d37a2c01c19dde1582457143fd88\nSpecification checks do not prove mesh quality, vendor fidelity or identical appearance.\n\nShow report file\nClose",
+  "exports": [
+    {
+      "file": "Trunk Study.glb",
+      "bytes": 1328388,
+      "sha256": "2e5f1799e0241db878f43034ac6ea9a489d7d37a2c01c19dde1582457143fd88"
+    }
+  ],
+  "render": "FUSION STUDIO\nRender Result\n\n1920 × 1080 · 32 samples · CYCLES OPTIX\n\nShow image file",
+  "capture": {
+    "width": 1920,
+    "height": 960,
+    "capturedFrames": 4780,
+    "seconds": 243.61041898727416,
+    "rate": 1,
+    "continuous": true,
+    "startStopPairs": 1
+  },
+  "completed": "2026-11-04T20:34:01.314Z",
+  "film": {
+    "file": "fusion-workflow.mp4",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "frames": 7309,
+    "seconds": 243.63333333333333,
+    "renderer": "Remotion 4.0.540",
+    "audio": "Silent workflow; cinematic trailer retains music.",
+    "sourceTakeSha256": "674337dade87ef04398a9428918a8978ae5d9ce9e23d6c5ebcbdff2f9fc36b3d",
+    "timestampLogSha256": "997992988ad7597b65391536daab5f07141938304fd56f79c2b58fea87b585e9",
+    "sha256": "ca9e95e258407ba969ede194f7fe290843c9bbd5d2cb458878f75e014992ad37",
+    "chapters": [
+      {
+        "title": "One asset. One continuous workflow.",
+        "start": 0,
+        "end": 75
+      },
+      {
+        "title": "01 / Import a DAZ asset",
+        "start": 75,
+        "end": 502
+      },
+      {
+        "title": "02 / Inspect the editable scene",
+        "start": 502,
+        "end": 1181
+      },
+      {
+        "title": "03 / Make a precise edit",
+        "start": 1181,
+        "end": 1406
+      },
+      {
+        "title": "04 / Undo, then redo",
+        "start": 1406,
+        "end": 1654
+      },
+      {
+        "title": "05 / Save a project version",
+        "start": 1654,
+        "end": 1920
+      },
+      {
+        "title": "06 / Reopen the saved project",
+        "start": 1920,
+        "end": 2120
+      },
+      {
+        "title": "07 / Export a validated GLB",
+        "start": 2120,
+        "end": 2451
+      },
+      {
+        "title": "08 / Light the scene",
+        "start": 2451,
+        "end": 2632
+      },
+      {
+        "title": "09 / Render the result",
+        "start": 2632,
+        "end": 7108
+      },
+      {
+        "title": "Workflow complete.",
+        "start": 7108,
+        "end": 7309
+      }
+    ]
+  },
+  "intermediateImports": [
+    {
+      "file": "SPowered Trunk.glb",
+      "bytes": 1314572,
+      "sha256": "d28e5f8d312b97e8e57ea9dbd559cf6e7b834d1357e7129337395bbd0513b861"
+    }
+  ],
+  "companionFilm": {
+    "file": "../2026-11-03-remotion/fusion-launch.mp4",
+    "sha256": "a8ca72b48592cb9cc20493013eb6da1db08ad2fa984ffe9d70d1fe78e59bad5e"
+  }
+}

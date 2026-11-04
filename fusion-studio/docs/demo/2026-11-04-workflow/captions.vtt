@@ -1,0 +1,56 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.500
+One asset. One continuous workflow.
+Fusion Studio 0.19.0-rc.1 · fresh workspace · normal playback speed
+
+2
+00:00:02.500 --> 00:00:16.733
+01 / Import a DAZ asset
+Open SPowered Trunk.duf and review conversion limits before importing.
+
+3
+00:00:16.733 --> 00:00:39.367
+02 / Inspect the editable scene
+Frame the imported asset, orbit around it, then inspect its topology.
+
+4
+00:00:39.367 --> 00:00:46.867
+03 / Make a precise edit
+Select the imported root and set its Y rotation to 25 degrees.
+
+5
+00:00:46.867 --> 00:00:55.133
+04 / Undo, then redo
+Recover the original transform, then restore the edit through scene history.
+
+6
+00:00:55.133 --> 00:01:04.000
+05 / Save a project version
+Name the project Trunk Study and save its editable scene.
+
+7
+00:01:04.000 --> 00:01:10.667
+06 / Reopen the saved project
+Open the saved .fusion file; geometry and transforms restore from disk.
+
+8
+00:01:10.667 --> 00:01:21.700
+07 / Export a validated GLB
+Create a new interchange file; inspect the actual glTF validation result.
+
+9
+00:01:21.700 --> 00:01:27.733
+08 / Light the scene
+Add a three-point lighting rig and save the lit scene before rendering.
+
+10
+00:01:27.733 --> 00:03:56.933
+09 / Render the result
+Cycles · OptiX · 1920 × 1080 · 32 samples. Render wait retained.
+
+11
+00:03:56.933 --> 00:04:03.633
+Workflow complete.
+Imported → inspected → edited → recovered → saved → reopened → exported → rendered.

@@ -47,6 +47,9 @@ npm run capture:workflow -- --leave-open
 # Capture writes its receipt before leaving Fusion open; render in another shell:
 npm run render:workflow
 npm run verify:workflow
+npm run check:workflow-frames
+# After inspecting local/qa-workflow and recording local/qa-review-workflow.json:
+npm run finalize:workflow
 ```
 
 Requires installed `Vehicles/Steam Powered Carriage/SteamPoweredCarriage Objects/SPowered Trunk.duf` matching `src/catalogue.json`; `FUSION_DAZ_LIBRARY` overrides library root. Private sources, fresh app data, raw frames and timestamp logs remain under ignored `local/`. Rendering rejects rehearsal receipts. Failed takes retain local evidence and never become public footage. Gallery and final delivery report describe observed conversion limits; this walkthrough does not extend release certification.

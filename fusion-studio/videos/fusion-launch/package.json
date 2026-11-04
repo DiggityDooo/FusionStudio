@@ -19,8 +19,10 @@
     "capture:variety": "node scripts/capture-variety.cjs",
     "capture:catalogue": "node scripts/capture-variety.cjs --catalogue",
     "capture:workflow": "node scripts/capture-workflow.cjs",
-    "render:workflow": "node scripts/workflow.mjs",
-    "verify:workflow": "python scripts/verify-workflow.py"
+    "render:workflow": "node scripts/workflow.mjs && node scripts/chapter-workflow.mjs",
+    "verify:workflow": "python scripts/verify-workflow.py",
+    "check:workflow-frames": "node scripts/determinism-workflow.mjs",
+    "finalize:workflow": "node scripts/finalize-workflow.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.540",

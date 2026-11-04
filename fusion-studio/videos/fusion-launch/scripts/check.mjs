@@ -29,4 +29,18 @@ for(const shot of shots.filter(s=>s.camera)){
 const typing=shots.find(s=>s.id==='chat-ask'),reply=shots.find(s=>s.id==='chat-response');
 assert.ok(screenCamera(20,typing.camera).zoom>=2.8,'Prompt readable during typing');
 assert.ok(screenCamera(60,reply.camera).y<.32,'Reply stays centered on conversation');
-console.log(JSON.stringify({passed:true,frames:3600,seconds:120,scenes:scenes.length,shots:shots.length,cues:cues.length,pinnedDependencies:true}));
+const workflowTimeline=new URL('../../../docs/demo/2026-11-04-workflow/timeline.json',import.meta.url);
+let workflowFrames=null;
+if(fs.existsSync(workflowTimeline)){
+ const take=JSON.parse(fs.readFileSync(workflowTimeline));workflowFrames=take.frames;
+ assert.ok(Number.isInteger(take.frames)&&take.frames>0&&take.continuous);
+ assert.equal(take.rate,1);assert.equal(take.startStopPairs,1);
+ assert.ok(Math.abs(take.frames/30-take.seconds)<=2/30);
+ assert.equal(take.steps[0].frame,0);
+ for(const [i,step]of take.steps.entries()){
+  assert.ok(Number.isInteger(step.frame)&&step.frame>=0&&step.frame<take.frames);
+  if(i)assert.ok(step.frame>take.steps[i-1].frame);
+  assert.ok(step.title.length<=50&&step.caption.length<=115);
+ }
+}
+console.log(JSON.stringify({passed:true,frames:3600,seconds:120,scenes:scenes.length,shots:shots.length,cues:cues.length,pinnedDependencies:true,workflowFrames}));

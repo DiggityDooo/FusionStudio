@@ -1,5 +1,9 @@
 # Recorded Fusion workflows
 
+Newest addition: [Continuous packaged-app workflow](demo/2026-11-04-workflow/README.md). One normal-speed take: DAZ trunk import and compatibility review, orbit/wireframe, numeric transform, undo/redo, save/reopen, validated GLB export, lighting and actual Cycles render. Full controls and step captions stay visible; import/render waits remain. [Watch walkthrough](demo/2026-11-04-workflow/fusion-workflow.mp4).
+
+[![Watch continuous workflow](demo/2026-11-04-workflow/poster.png)](demo/2026-11-04-workflow/fusion-workflow.mp4)
+
 Current gallery: [Two-minute film — launch trailer revision](demo/2026-11-03-remotion/README.md), with 39 beat-cut shots, dragon, BMW, DAZ hair, vintage trunk, handbag and sci-fi crate views, native wireframes, large animated type, moving asset cards, split comparisons and tracked typing/reply close-ups and focused app actions, Secret by ESPRIT 空想, captions, source/package hashes, fresh capture assertions, full decoding and independent frame checks.
 
 [![Watch current demo](demo/2026-11-03-remotion/poster.png)](demo/2026-11-03-remotion/fusion-launch.mp4)

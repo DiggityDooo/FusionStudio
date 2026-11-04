@@ -1,0 +1,155 @@
+{
+  "passed": true,
+  "reviewedAt": "2026-11-04T20:59:18.527Z",
+  "videoSha256": "ca9e95e258407ba969ede194f7fe290843c9bbd5d2cb458878f75e014992ad37",
+  "reviewed": [
+    {
+      "file": "start-middle.png",
+      "sha256": "79330ec30ff03673139933a25575f029b65a26500d0fb87d35446c3d6d94f6cb"
+    },
+    {
+      "file": "start-result.png",
+      "sha256": "20c72cd9a4b1b025f8a88178dc74b1c8afa46785dfb92965df2ffed79f1dccd1"
+    },
+    {
+      "file": "import-middle.png",
+      "sha256": "f2477216fc6902ea7c709c64d2502c25b4947c1ebb768601526cc7434a065014"
+    },
+    {
+      "file": "import-result.png",
+      "sha256": "03acb1519105df92047399d40f6ba9f8a275bb44fbbd0c67b86b7ea1b3136b40"
+    },
+    {
+      "file": "inspect-middle.png",
+      "sha256": "56d8e32164a013e1c9e5443b3b3ec2a565d01943355464089b06d46a4912cfab"
+    },
+    {
+      "file": "inspect-result.png",
+      "sha256": "ada8ced04f02fc52dfdcecdcaa48e42983cbdae3c36058d7e215392c16a57b21"
+    },
+    {
+      "file": "transform-middle.png",
+      "sha256": "38d899482b775029f7c9f9828a83e9f83fba6d571c01eeba670baa38c595e56e"
+    },
+    {
+      "file": "transform-result.png",
+      "sha256": "d1fbb203940207669e0511d9b4e9b023ea5c4ac4171120d6c56af1e55a9f7235"
+    },
+    {
+      "file": "history-middle.png",
+      "sha256": "b4ba14f0c20b79c2fa3a480dee5ef8d6e89cb7bb621fb1f8bc886958bde7f713"
+    },
+    {
+      "file": "history-result.png",
+      "sha256": "46415d9d9745b6d4eca28e19b80472ca543731a0749458e673d484def9a83f83"
+    },
+    {
+      "file": "save-middle.png",
+      "sha256": "3f6fbbafc238a8e10fbcc1a2f8d0a0a5176bdae64cbcde24a655accf9ad08d04"
+    },
+    {
+      "file": "save-result.png",
+      "sha256": "112e295fa4e915721802895dc91c393a84d3ee1d46414e74440a23f5ecde623c"
+    },
+    {
+      "file": "reopen-middle.png",
+      "sha256": "b78b08aaf6355e49cdc51c970090639e30ce4435e036e40175782a4f5868bc7d"
+    },
+    {
+      "file": "reopen-result.png",
+      "sha256": "22615835fc6aed1b10a51bbfe11dbc22ccc1f7f8e95ed672128d6efa7d96405c"
+    },
+    {
+      "file": "export-middle.png",
+      "sha256": "b38e61cae1b67147d973a5e89bb1b57e8f118f5b4e45787f873b4590f77ba5ce"
+    },
+    {
+      "file": "export-result.png",
+      "sha256": "4b6601b3bbac818919bcb96af3a729650c595d2595950ff63f2d039f457d8b03"
+    },
+    {
+      "file": "lighting-middle.png",
+      "sha256": "c59ca04cfe50c9f78a1b11f310b4cbe6a677a8063d3962c8255176a6e21dd33a"
+    },
+    {
+      "file": "lighting-result.png",
+      "sha256": "35eb0d26d83a0270ab3fd6bfda3080017e0552dd546279efe19162df9c244317"
+    },
+    {
+      "file": "render-middle.png",
+      "sha256": "6b01af2c2f314ff4969705aa9f940ba592a206560d50d6696f8fb6bf81d8046b"
+    },
+    {
+      "file": "render-result.png",
+      "sha256": "dded3b1dab947f2bc057f91252bb2ba1cb1308dfad1e8dc6a9e8b827aa5c2672"
+    },
+    {
+      "file": "complete-middle.png",
+      "sha256": "ae040a445af7536a4aeebb9d71ad1e3c3a2f6195db8d4dcf19adfb5f2b2f5383"
+    },
+    {
+      "file": "complete-result.png",
+      "sha256": "48925dd32c4125cd6a9a027ddee7f8bf6f637fcb3dbcc47f60cda14422e0deda"
+    },
+    {
+      "file": "boundary-import.jpg",
+      "sha256": "cb6e1c5f9f82352bfd7a1776cf5d18fd355a80df1bd402cb5674afba0abc61a7"
+    },
+    {
+      "file": "boundary-inspect.jpg",
+      "sha256": "c46fc37aac09339010ee4aa3975d9ce225e4dcaefd1371ad699bcc6dd6887232"
+    },
+    {
+      "file": "boundary-transform.jpg",
+      "sha256": "8bbb7d6a4b72c5f22588ed3286453240c6b04d621e6448be3439aa900675c49c"
+    },
+    {
+      "file": "boundary-history.jpg",
+      "sha256": "2005eb2bf2938630d327875cae0069e47f9fa1f63459a9be54bb52f883f67300"
+    },
+    {
+      "file": "boundary-save.jpg",
+      "sha256": "873fc419755c5e67dfa5a0acd313793ae612f5f0c6aedf2c0e5240cae9123261"
+    },
+    {
+      "file": "boundary-reopen.jpg",
+      "sha256": "24c15e57b7e61cae3d75fca70b615088ec61672b778d2b156376ea8e5ec7e8a3"
+    },
+    {
+      "file": "boundary-export.jpg",
+      "sha256": "e02edc8184a848a2161718b5b643e5182c5279323f073708ab0860bfa84f8166"
+    },
+    {
+      "file": "boundary-lighting.jpg",
+      "sha256": "19aad77c30df8eeecf2b1ec0c7f3c7ee3fe70054349e2186c5f6b0228bd10e49"
+    },
+    {
+      "file": "boundary-render.jpg",
+      "sha256": "6894f7613500c5992c2a84ae19e5760d29913a6add372b036b40c57c8f871f24"
+    },
+    {
+      "file": "boundary-complete.jpg",
+      "sha256": "cfffdc155e7dc866c29fd537746bd41b606ccca4da8aeb28037b8ed3377bc275"
+    }
+  ],
+  "fullResolutionFiles": [
+    "start-middle.png",
+    "import-middle.png",
+    "inspect-middle.png",
+    "transform-result.png",
+    "history-middle.png",
+    "save-middle.png",
+    "reopen-result.png",
+    "export-middle.png",
+    "lighting-result.png",
+    "render-middle.png",
+    "complete-middle.png"
+  ],
+  "notes": [
+    "All 22 step stills reviewed in contact overview; 11 representative stills additionally inspected at full resolution.",
+    "All ten sixteen-frame caption-boundary strips inspected. Full app image remains intact; no source edits, retiming or missing controls.",
+    "Captions fit and remain readable; private paths and source files are absent from framing. Native pointer annotation and actual GLB warning remain visible.",
+    "Real import/render waits retained. Native render-result image layout settles briefly as it loads; kept as recorded.",
+    "Three independent frame pairs match exact RGBA pixels. No visual correction required."
+  ]
+}
