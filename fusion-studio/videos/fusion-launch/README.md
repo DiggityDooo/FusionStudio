@@ -26,3 +26,5 @@ Capture validates source hashes and actual operations, then records readable com
 Workflow: [demo-video-creator](https://github.com/chacha95/demo-video-creator/tree/7947a8b4ee9b18c056945b16911bd229d9606251), MIT; see ATTRIBUTION.md. Story and captions are in source manifest; output is separate from original demo. Reproduction requires local DAZ Basic Wear MuscleShirt and matching black 3Delight preset, or original installed library at recorded source locations. No DAZ asset bytes are distributed.
 
 Current edition follows measured [Pascal demo cadence](https://github.com/pascalorg/editor): nine short result shots, stable workflow proof, result recap/invitation. See SPEC.md. All 21 shot cuts and three internal wait cuts receive review strips; QA lives in local/qa-pascal.
+
+Final render and chapter remux run in separate processes to release Windows render handles before writing delivery MP4. If only chapter packaging fails, retain completed `local/remotion-render.mp4` and run `npm run render:chapters`; then verify final output before finalizing.
