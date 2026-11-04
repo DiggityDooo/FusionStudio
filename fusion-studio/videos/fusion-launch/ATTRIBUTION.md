@@ -9,3 +9,5 @@ Fusion optics and stoneware footage uses original procedural fixtures. DAZ foota
 November 4 montage adds existing BMW27 Blender benchmark scene and installed HS BBraid mesh-hair asset. Footage shows actual editable viewport and wireframe views; native shader equivalence is not claimed. Original source models/textures remain local.
 
 Flow/cadence reference: [Pascal Editor lead demo](https://github.com/pascalorg/editor), SHA-256 `95b9685bca1cb460b16a982f5c46dc627678d7c6b59c33f0722ddbf170dbfeba`. Used for timing/layout study only; no Pascal footage, narrator, graphics or audio appears in Fusion film. See SPEC.md for measurements and adaptations.
+
+Expanded library footage uses installed Millennium SubDragon LE, Steam Powered Carriage trunk, Dreamlight Tossed Handbags 08, and Polish Cyberpunk Weapon Room crate. Only captured appearance is distributed; original DAZ scene, mesh, texture and rig files remain private local inputs. Source relative paths and SHA-256 hashes are recorded for local reproduction.

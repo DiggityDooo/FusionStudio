@@ -17,6 +17,9 @@ assert.ok(shots.length>=35,'Launch cut requires varied beats and feature moments
 assert.ok(shots.filter(s=>s.scene==='hook').every(s=>s.frames<=108),'Opening holds stay brief');
 assert.ok(shots.some(s=>s.asset==='bmw-orbit')&&shots.some(s=>s.asset==='hair-orbit'),'Montage includes varied imported assets');
 assert.ok(shots.filter(s=>/wire$/.test(s.asset)).length>=2,'Montage includes real wireframe views');
+const decorative=shots.filter(s=>['hero','format','stack','end'].includes(s.layout));
+assert.ok(decorative.every(s=>!['optics-orbit','garment-orbit','sculpt-orbit'].includes(s.asset)),'Avoid repeated camera, tank top and vase filler');
+for(const id of ['dragon-orbit','dragon-wire','trunk-orbit','handbag-orbit','crate-orbit'])assert.ok(shots.some(s=>s.asset===id),'Missing new library view '+id);
 for(const shot of shots)if(shot.cards){assert.equal(shot.cards.length,3);assert.equal(new Set(shot.cards.map(c=>c[0])).size,3);}
 for(const shot of shots.filter(s=>s.camera)){
  assert.ok(shot.camera.length>=2);assert.equal(shot.camera[0].frame,0);

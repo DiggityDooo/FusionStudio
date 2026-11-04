@@ -16,7 +16,8 @@
     "verify": "python scripts/verify.py",
     "finalize": "node scripts/finalize.mjs",
     "capture:outputs": "node scripts/capture-outputs.cjs",
-    "capture:variety": "node scripts/capture-variety.cjs"
+    "capture:variety": "node scripts/capture-variety.cjs",
+    "capture:catalogue": "node scripts/capture-variety.cjs --catalogue"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.540",

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "trunk-orbit",
+    "relative": "Vehicles/Steam Powered Carriage/SteamPoweredCarriage Objects/SPowered Trunk.duf",
+    "azimuth": 0.8,
+    "elevation": 0.2,
+    "distance": 2.05,
+    "sha256": "101e18ea4282a3bb2fe55015c2bfa9b1f17c57d67af06efb350e33f2996d17f4"
+  },
+  {
+    "id": "dragon-orbit",
+    "relative": "Animals/Millennium SubDragon/SubDragon LE.duf",
+    "azimuth": 0.8,
+    "elevation": 0.2,
+    "distance": 1.9,
+    "sha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402"
+  },
+  {
+    "id": "handbag-orbit",
+    "relative": "Props/Dreamlight/Tossed Handbags/TH - Handbag 08.duf",
+    "azimuth": 0.5,
+    "elevation": 0.85,
+    "distance": 1.8,
+    "sha256": "77782b1579eb396dce1a688a7c7ec2bff4205f927cdaa9a12c65c12fca7c031d"
+  },
+  {
+    "id": "crate-orbit",
+    "relative": "Environments/Architecture/Polish/Cyberpunk Weapon Room/Props/CPW Weapon Crate.duf",
+    "azimuth": 0.6,
+    "elevation": 0.6,
+    "distance": 1.8,
+    "sha256": "bb1bc48c0eda1fc44cceb8f2ffefb54b11eb96d94e1820f0d60b66b676386aec"
+  },
+  {
+    "id": "dragon-wire",
+    "relative": "Animals/Millennium SubDragon/SubDragon LE.duf",
+    "azimuth": 1.65,
+    "elevation": 0.32,
+    "distance": 1.9,
+    "sha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+    "wire": true
+  }
+]
