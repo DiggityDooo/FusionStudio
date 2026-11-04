@@ -7,6 +7,7 @@ npm ci
 npm run check
 npm run capture
 npm run capture:outputs
+npm run capture:variety
 npm run prepare -- --capture local/capture
 npm run studio
 npm run preview:direction
@@ -21,6 +22,8 @@ npm run finalize
 ```
 
 Output capture records 450 fresh packaged-app viewport frames with deterministic orbit poses, plus verified native render and sculpt export. It uses last successful full capture, recorded in local/last-capture.json; FUSION_CAPTURE_RUN can select another verified capture folder.
+
+Variety capture adds 600 real viewport frames: BMW shaded and elevated wireframe angles, DAZ braided mesh hair rear view, and elevated optics wireframe. BMW scene floor, light cards and second car are hidden in working view only; original file remains unchanged. Mesh-hair viewport materials remain approximations. `local/variety/variety.json` records source hashes, camera settings and visibility for reproduction. `npm run capture:variety -- --preview` checks first camera poses without replacing prepared clips.
 
 Capture validates source hashes and actual operations, then records readable compatibility reviews in separate fresh session. Preparation imports footage, installed Windows fonts, captions and private music. Lifecycle markers drive trims for new captures; fallback cut windows are locked to inspected source hashes. Waiting-time edits are documented in provenance and labeled in film. `--preview` produces visibly marked picture review, with music when prepared. Final rendering rejects missing music. Assets, audio and captures stay local; only sanitized evidence and approved film exports belong in Git.
 

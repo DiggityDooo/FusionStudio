@@ -6,4 +6,6 @@ Track selected by user: [Secret — ESPRIT 空想](https://espritfantasy.bandcam
 
 Fusion optics and stoneware footage uses original procedural fixtures. DAZ footage shows installed Basic Wear MuscleShirt and matching material preset. Third-party source meshes, textures, scenes and music are not bundled with this project.
 
+November 4 montage adds existing BMW27 Blender benchmark scene and installed HS BBraid mesh-hair asset. Footage shows actual editable viewport and wireframe views; native shader equivalence is not claimed. Original source models/textures remain local.
+
 Flow/cadence reference: [Pascal Editor lead demo](https://github.com/pascalorg/editor), SHA-256 `95b9685bca1cb460b16a982f5c46dc627678d7c6b59c33f0722ddbf170dbfeba`. Used for timing/layout study only; no Pascal footage, narrator, graphics or audio appears in Fusion film. See SPEC.md for measurements and adaptations.

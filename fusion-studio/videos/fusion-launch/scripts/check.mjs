@@ -14,4 +14,7 @@ assert.equal(new Set(shots.map(s=>s.id)).size,shots.length);
 for(const shot of shots){if(shot.from)assert.equal((shot.from-3)%18,0,'Editorial cut must land on music grid');assert.ok(shot.words[0][0]===0);for(let i=1;i<shot.words.length;i++)assert.ok(shot.words[i][0]>shot.words[i-1][0]&&shot.words[i][0]<shot.frames);}
 assert.ok(shots.length>=35,'Launch cut requires varied beats and feature moments');
 assert.ok(shots.filter(s=>s.scene==='hook').every(s=>s.frames<=108),'Opening holds stay brief');
+assert.ok(shots.some(s=>s.asset==='bmw-orbit')&&shots.some(s=>s.asset==='hair-orbit'),'Montage includes varied imported assets');
+assert.ok(shots.filter(s=>/wire$/.test(s.asset)).length>=2,'Montage includes real wireframe views');
+for(const shot of shots)if(shot.cards){assert.equal(shot.cards.length,3);assert.equal(new Set(shot.cards.map(c=>c[0])).size,3);}
 console.log(JSON.stringify({passed:true,frames:3600,seconds:120,scenes:scenes.length,shots:shots.length,cues:cues.length,pinnedDependencies:true}));

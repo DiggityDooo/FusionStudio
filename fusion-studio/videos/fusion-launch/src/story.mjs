@@ -1,13 +1,13 @@
-export const film={width:1920,height:1080,fps:30,durationInFrames:3600,version:'0.19.0-rc.1',edition:'Launch trailer revision'};
+export const film={width:1920,height:1080,fps:30,durationInFrames:3600,version:'0.19.0-rc.1',edition:'Launch trailer / asset variety'};
 export const workflow={url:'https://github.com/chacha95/demo-video-creator',revision:'7947a8b4ee9b18c056945b16911bd229d9606251',renderer:'Remotion 4.0.540',adaptations:['120 seconds','music and captions, no narration','frame-driven React','output-first structure; launch-trailer energy after user feedback'],reference:{url:'https://github.com/pascalorg/editor',media:'https://github.com/user-attachments/assets/063c0891-9ae5-4173-bd08-a101d9c3352b',sha256:'95b9685bca1cb460b16a982f5c46dc627678d7c6b59c33f0722ddbf170dbfeba',seconds:163.9,fps:25}};
 // One timeline controls source ranges, beat cuts, headline choreography and captions.
 // UI excerpts retain actual source order. Punch-ins are editorial crops, never invented UI.
 export const scenes=[
  {id:'hook',from:0,to:435,tag:'IMPORT / CREATE / EXPORT',title:'Your assets. Unleashed.',clips:[
   {id:'hero',asset:'native-output',frames:75,layout:'hero',headline:['YOUR ASSETS.','UNLEASHED.'],words:[[0,'Your assets. Unleashed.']]},
-  {id:'blend-hit',asset:'optics-orbit',frames:72,sourceOut:100,layout:'format',headline:['.BLEND'],label:'BLENDER → EDITABLE GEOMETRY',words:[[0,'Bring your Blender scenes.']]},
-  {id:'daz-hit',asset:'garment-orbit',frames:36,sourceIn:35,sourceOut:95,layout:'format',headline:['.DUF'],label:'YOUR DAZ LIBRARY',words:[[0,'Your DAZ library.']]},
-  {id:'mesh-hit',asset:'sculpt-orbit',frames:36,sourceIn:35,sourceOut:95,layout:'format',headline:['.GLB'],label:'EDITABLE EXCHANGE',words:[[0,'Editable working copies.']]},
+  {id:'blend-hit',asset:'bmw-orbit',frames:72,sourceOut:100,layout:'format',headline:['.BLEND'],label:'BMW / EDITABLE VIEWPORT',words:[[0,'Bring your Blender scenes.']]},
+  {id:'daz-hit',asset:'hair-orbit',frames:36,sourceIn:35,sourceOut:95,layout:'format',headline:['.DUF'],label:'DAZ MESH HAIR / REAR VIEW',words:[[0,'Your DAZ library.']]},
+  {id:'mesh-hit',asset:'optics-wire',frames:36,sourceIn:35,sourceOut:95,layout:'format',headline:['WIREFRAME.'],label:'IMPORTED GEOMETRY / ELEVATED VIEW',words:[[0,'See the geometry underneath.']]},
   {id:'all-together',asset:'optics-orbit',frames:108,layout:'stack',headline:['BRING','IT ALL.'],words:[[0,'Different assets. One workspace.']]},
   {id:'workspace-reveal',asset:'blend-edit',frames:108,sourceIn:165,sourceOut:269,layout:'ui',headline:['ONE WORKSPACE.'],label:'REAL PACKAGED FUSION FOOTAGE',words:[[0,'Meet Fusion Studio.']]}
  ]},
@@ -50,10 +50,10 @@ export const scenes=[
   {id:'mcp-payoff',asset:'mcp',frames:72,sourceIn:360,sourceOut:424,layout:'ui',headline:['YOUR WORKFLOW.'],label:'LOCAL TOOLS / CONNECTED WORKFLOWS',focus:'viewport',words:[[0,'Your workflow, connected.']]}
  ]},
  {id:'finish',from:3063,to:3600,tag:'KEEP CREATING',title:'Keep creating',clips:[
-  {id:'results-stack',asset:'optics-orbit',frames:108,layout:'stack',headline:['IMPORT.','CREATE. REPEAT.'],words:[[0,'Import. Create. Repeat.']]},
+  {id:'results-stack',asset:'bmw-orbit',frames:108,layout:'stack',cards:[['hair-orbit','DAZ MESH HAIR'],['bmw-orbit','BMW / .BLEND'],['optics-wire','WIREFRAME']],headline:['IMPORT.','CREATE. REPEAT.'],words:[[0,'Import. Create. Repeat.']]},
   {id:'render-payoff',asset:'native-output',frames:108,layout:'hero',headline:['YOUR VISION.','IN MOTION.'],words:[[0,'Your vision. In motion.']]},
-  {id:'library-payoff',asset:'garment-orbit',frames:72,sourceIn:20,sourceOut:140,layout:'format',headline:['YOUR ASSETS.'],label:'ONE EDITABLE WORKSPACE',words:[[0,'Your assets. One workspace.']]},
-  {id:'create-payoff',asset:'sculpt-orbit',frames:72,sourceIn:20,sourceOut:140,layout:'format',headline:['NO STOPPING.'],label:'KEEP CREATING',words:[[0,'Keep creating.']]},
+  {id:'library-payoff',asset:'hair-orbit',frames:72,sourceIn:20,sourceOut:140,layout:'format',headline:['YOUR ASSETS.'],label:'DAZ MESH HAIR / REAR DETAIL',words:[[0,'Your assets. One workspace.']]},
+  {id:'create-payoff',asset:'bmw-wire',frames:72,sourceIn:20,sourceOut:140,layout:'format',headline:['NEW PERSPECTIVES.'],label:'BMW / ELEVATED WIREFRAME',words:[[0,'Explore a new perspective.']]},
   {id:'invitation',asset:'native-output',frames:177,layout:'end',headline:['FUSION','STUDIO.'],label:'WINDOWS / 0.19.0-rc.1',words:[[0,'Fusion Studio 0.19.0-rc.1.'],[105,'Music: Secret — ESPRIT 空想.']]}
  ]}
 ];
