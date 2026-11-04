@@ -23,7 +23,7 @@
     "fps": 30,
     "durationInFrames": 3600,
     "version": "0.19.0-rc.1",
-    "edition": "Launch trailer / asset variety"
+    "edition": "Launch trailer / expanded library and text focus"
   },
   "story": [
     {
@@ -35,7 +35,7 @@
       "clips": [
         {
           "id": "hero",
-          "asset": "native-output",
+          "asset": "dragon-orbit",
           "frames": 75,
           "layout": "hero",
           "headline": [
@@ -86,7 +86,7 @@
         },
         {
           "id": "mesh-hit",
-          "asset": "optics-wire",
+          "asset": "dragon-wire",
           "frames": 36,
           "sourceIn": 35,
           "sourceOut": 95,
@@ -94,7 +94,7 @@
           "headline": [
             "WIREFRAME."
           ],
-          "label": "IMPORTED GEOMETRY / ELEVATED VIEW",
+          "label": "DRAGON / TOPOLOGY VIEW",
           "words": [
             [
               0,
@@ -104,9 +104,23 @@
         },
         {
           "id": "all-together",
-          "asset": "optics-orbit",
+          "asset": "handbag-orbit",
           "frames": 108,
           "layout": "stack",
+          "cards": [
+            [
+              "handbag-orbit",
+              "DAZ / TEXTURED PROP"
+            ],
+            [
+              "bmw-orbit",
+              "BMW / .BLEND"
+            ],
+            [
+              "crate-orbit",
+              "SCI-FI / HARD SURFACE"
+            ]
+          ],
           "headline": [
             "BRING",
             "IT ALL."
@@ -147,7 +161,7 @@
       "clips": [
         {
           "id": "unlock",
-          "asset": "optics-orbit",
+          "asset": "bmw-wire",
           "frames": 36,
           "sourceIn": 50,
           "sourceOut": 110,
@@ -155,7 +169,7 @@
           "headline": [
             "UNLOCK."
           ],
-          "label": "BLENDER IMPORT",
+          "label": "BMW / BLENDER WIREFRAME",
           "words": [
             [
               0,
@@ -282,7 +296,7 @@
       "clips": [
         {
           "id": "library-hit",
-          "asset": "garment-orbit",
+          "asset": "trunk-orbit",
           "frames": 36,
           "sourceIn": 30,
           "sourceOut": 90,
@@ -290,7 +304,7 @@
           "headline": [
             "YOUR LIBRARY."
           ],
-          "label": "DAZ / .DUF",
+          "label": "VINTAGE TRUNK / .DUF",
           "words": [
             [
               0,
@@ -317,20 +331,19 @@
         },
         {
           "id": "daz-mesh",
-          "asset": "garment-orbit",
+          "asset": "handbag-orbit",
           "frames": 72,
           "sourceIn": 20,
           "sourceOut": 140,
           "layout": "format",
           "headline": [
-            "MESH.",
-            "TEXTURES. RIG."
+            "MORE TO EXPLORE."
           ],
-          "label": "VERIFIED MUSCLESHIRT IMPORT",
+          "label": "DAZ HANDBAG / TEXTURED VIEW",
           "words": [
             [
               0,
-              "Mesh, textures and rig."
+              "Explore more of your library."
             ]
           ]
         },
@@ -383,19 +396,19 @@
       "clips": [
         {
           "id": "shape-hit",
-          "asset": "sculpt-orbit",
+          "asset": "crate-orbit",
           "frames": 36,
           "sourceIn": 10,
           "sourceOut": 70,
           "layout": "format",
           "headline": [
-            "SHAPE IT."
+            "LOOK CLOSER."
           ],
-          "label": "EDITABLE GEOMETRY",
+          "label": "SCI-FI CRATE / HARD SURFACE",
           "words": [
             [
               0,
-              "Make your mark."
+              "Look closer. Then make your mark."
             ]
           ]
         },
@@ -468,7 +481,32 @@
             "SAVE IT. KEEP IT."
           ],
           "label": "SAVE / REOPEN",
-          "focus": "viewport",
+          "camera": [
+            {
+              "frame": 0,
+              "zoom": 1.8,
+              "x": 0.8,
+              "y": 0.28
+            },
+            {
+              "frame": 18,
+              "zoom": 2.7,
+              "x": 0.83,
+              "y": 0.185
+            },
+            {
+              "frame": 48,
+              "zoom": 2.7,
+              "x": 0.83,
+              "y": 0.185
+            },
+            {
+              "frame": 92,
+              "zoom": 1.1,
+              "x": 0.5,
+              "y": 0.5
+            }
+          ],
           "words": [
             [
               0,
@@ -497,7 +535,7 @@
         },
         {
           "id": "sculpt-payoff",
-          "asset": "sculpt-orbit",
+          "asset": "trunk-orbit",
           "frames": 72,
           "sourceIn": 20,
           "sourceOut": 140,
@@ -505,7 +543,7 @@
           "headline": [
             "YOURS TO BUILD."
           ],
-          "label": "SCULPTED GLB OUTPUT",
+          "label": "VINTAGE TRUNK / IMPORTED PROP",
           "words": [
             [
               0,
@@ -544,14 +582,39 @@
           "id": "chat-ask",
           "asset": "chat",
           "frames": 144,
-          "sourceIn": 0,
-          "sourceOut": 240,
+          "sourceIn": 45,
+          "sourceOut": 180,
           "layout": "ui",
           "headline": [
             "START A CONVERSATION."
           ],
           "label": "LOCAL OLLAMA / PHI-3",
-          "focus": "chat",
+          "camera": [
+            {
+              "frame": 0,
+              "zoom": 1.4,
+              "x": 0.59,
+              "y": 0.52
+            },
+            {
+              "frame": 18,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.52
+            },
+            {
+              "frame": 114,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.52
+            },
+            {
+              "frame": 143,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.29
+            }
+          ],
           "words": [
             [
               0,
@@ -563,14 +626,27 @@
           "id": "chat-response",
           "asset": "chat",
           "frames": 144,
-          "sourceIn": 240,
+          "sourceIn": 180,
           "sourceOut": 356,
           "layout": "ui",
           "headline": [
             "REAL RESPONSE."
           ],
           "label": "CONVERSATIONAL CHAT",
-          "focus": "chat",
+          "camera": [
+            {
+              "frame": 0,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.29
+            },
+            {
+              "frame": 143,
+              "zoom": 2.85,
+              "x": 0.59,
+              "y": 0.29
+            }
+          ],
           "words": [
             [
               0,
@@ -710,21 +786,21 @@
       "clips": [
         {
           "id": "results-stack",
-          "asset": "bmw-orbit",
+          "asset": "dragon-orbit",
           "frames": 108,
           "layout": "stack",
           "cards": [
             [
-              "hair-orbit",
-              "DAZ MESH HAIR"
+              "dragon-orbit",
+              "CREATURE / .DUF"
             ],
             [
-              "bmw-orbit",
-              "BMW / .BLEND"
+              "trunk-orbit",
+              "VINTAGE / .DUF"
             ],
             [
-              "optics-wire",
-              "WIREFRAME"
+              "handbag-orbit",
+              "TEXTURED PROP"
             ]
           ],
           "headline": [
@@ -740,8 +816,10 @@
         },
         {
           "id": "render-payoff",
-          "asset": "native-output",
+          "asset": "bmw-orbit",
           "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 150,
           "layout": "hero",
           "headline": [
             "YOUR VISION.",
@@ -756,7 +834,7 @@
         },
         {
           "id": "library-payoff",
-          "asset": "hair-orbit",
+          "asset": "crate-orbit",
           "frames": 72,
           "sourceIn": 20,
           "sourceOut": 140,
@@ -764,7 +842,7 @@
           "headline": [
             "YOUR ASSETS."
           ],
-          "label": "DAZ MESH HAIR / REAR DETAIL",
+          "label": "SCI-FI CRATE / IMPORTED PROP",
           "words": [
             [
               0,
@@ -774,7 +852,7 @@
         },
         {
           "id": "create-payoff",
-          "asset": "bmw-wire",
+          "asset": "dragon-wire",
           "frames": 72,
           "sourceIn": 20,
           "sourceOut": 140,
@@ -782,7 +860,7 @@
           "headline": [
             "NEW PERSPECTIVES."
           ],
-          "label": "BMW / ELEVATED WIREFRAME",
+          "label": "DRAGON / ELEVATED WIREFRAME",
           "words": [
             [
               0,
@@ -792,8 +870,10 @@
         },
         {
           "id": "invitation",
-          "asset": "native-output",
+          "asset": "dragon-orbit",
           "frames": 177,
+          "sourceIn": 0,
+          "sourceOut": 150,
           "layout": "end",
           "headline": [
             "FUSION",
@@ -817,7 +897,7 @@
   "shots": [
     {
       "id": "hero",
-      "asset": "native-output",
+      "asset": "dragon-orbit",
       "frames": 75,
       "layout": "hero",
       "headline": [
@@ -877,7 +957,7 @@
     },
     {
       "id": "mesh-hit",
-      "asset": "optics-wire",
+      "asset": "dragon-wire",
       "frames": 36,
       "sourceIn": 35,
       "sourceOut": 95,
@@ -885,7 +965,7 @@
       "headline": [
         "WIREFRAME."
       ],
-      "label": "IMPORTED GEOMETRY / ELEVATED VIEW",
+      "label": "DRAGON / TOPOLOGY VIEW",
       "words": [
         [
           0,
@@ -898,9 +978,23 @@
     },
     {
       "id": "all-together",
-      "asset": "optics-orbit",
+      "asset": "handbag-orbit",
       "frames": 108,
       "layout": "stack",
+      "cards": [
+        [
+          "handbag-orbit",
+          "DAZ / TEXTURED PROP"
+        ],
+        [
+          "bmw-orbit",
+          "BMW / .BLEND"
+        ],
+        [
+          "crate-orbit",
+          "SCI-FI / HARD SURFACE"
+        ]
+      ],
       "headline": [
         "BRING",
         "IT ALL."
@@ -938,7 +1032,7 @@
     },
     {
       "id": "unlock",
-      "asset": "optics-orbit",
+      "asset": "bmw-wire",
       "frames": 36,
       "sourceIn": 50,
       "sourceOut": 110,
@@ -946,7 +1040,7 @@
       "headline": [
         "UNLOCK."
       ],
-      "label": "BLENDER IMPORT",
+      "label": "BMW / BLENDER WIREFRAME",
       "words": [
         [
           0,
@@ -1085,7 +1179,7 @@
     },
     {
       "id": "library-hit",
-      "asset": "garment-orbit",
+      "asset": "trunk-orbit",
       "frames": 36,
       "sourceIn": 30,
       "sourceOut": 90,
@@ -1093,7 +1187,7 @@
       "headline": [
         "YOUR LIBRARY."
       ],
-      "label": "DAZ / .DUF",
+      "label": "VINTAGE TRUNK / .DUF",
       "words": [
         [
           0,
@@ -1126,20 +1220,19 @@
     },
     {
       "id": "daz-mesh",
-      "asset": "garment-orbit",
+      "asset": "handbag-orbit",
       "frames": 72,
       "sourceIn": 20,
       "sourceOut": 140,
       "layout": "format",
       "headline": [
-        "MESH.",
-        "TEXTURES. RIG."
+        "MORE TO EXPLORE."
       ],
-      "label": "VERIFIED MUSCLESHIRT IMPORT",
+      "label": "DAZ HANDBAG / TEXTURED VIEW",
       "words": [
         [
           0,
-          "Mesh, textures and rig."
+          "Explore more of your library."
         ]
       ],
       "scene": "daz",
@@ -1192,19 +1285,19 @@
     },
     {
       "id": "shape-hit",
-      "asset": "sculpt-orbit",
+      "asset": "crate-orbit",
       "frames": 36,
       "sourceIn": 10,
       "sourceOut": 70,
       "layout": "format",
       "headline": [
-        "SHAPE IT."
+        "LOOK CLOSER."
       ],
-      "label": "EDITABLE GEOMETRY",
+      "label": "SCI-FI CRATE / HARD SURFACE",
       "words": [
         [
           0,
-          "Make your mark."
+          "Look closer. Then make your mark."
         ]
       ],
       "scene": "edit",
@@ -1289,7 +1382,32 @@
         "SAVE IT. KEEP IT."
       ],
       "label": "SAVE / REOPEN",
-      "focus": "viewport",
+      "camera": [
+        {
+          "frame": 0,
+          "zoom": 1.8,
+          "x": 0.8,
+          "y": 0.28
+        },
+        {
+          "frame": 18,
+          "zoom": 2.7,
+          "x": 0.83,
+          "y": 0.185
+        },
+        {
+          "frame": 48,
+          "zoom": 2.7,
+          "x": 0.83,
+          "y": 0.185
+        },
+        {
+          "frame": 92,
+          "zoom": 1.1,
+          "x": 0.5,
+          "y": 0.5
+        }
+      ],
       "words": [
         [
           0,
@@ -1324,7 +1442,7 @@
     },
     {
       "id": "sculpt-payoff",
-      "asset": "sculpt-orbit",
+      "asset": "trunk-orbit",
       "frames": 72,
       "sourceIn": 20,
       "sourceOut": 140,
@@ -1332,7 +1450,7 @@
       "headline": [
         "YOURS TO BUILD."
       ],
-      "label": "SCULPTED GLB OUTPUT",
+      "label": "VINTAGE TRUNK / IMPORTED PROP",
       "words": [
         [
           0,
@@ -1368,14 +1486,39 @@
       "id": "chat-ask",
       "asset": "chat",
       "frames": 144,
-      "sourceIn": 0,
-      "sourceOut": 240,
+      "sourceIn": 45,
+      "sourceOut": 180,
       "layout": "ui",
       "headline": [
         "START A CONVERSATION."
       ],
       "label": "LOCAL OLLAMA / PHI-3",
-      "focus": "chat",
+      "camera": [
+        {
+          "frame": 0,
+          "zoom": 1.4,
+          "x": 0.59,
+          "y": 0.52
+        },
+        {
+          "frame": 18,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.52
+        },
+        {
+          "frame": 114,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.52
+        },
+        {
+          "frame": 143,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.29
+        }
+      ],
       "words": [
         [
           0,
@@ -1390,14 +1533,27 @@
       "id": "chat-response",
       "asset": "chat",
       "frames": 144,
-      "sourceIn": 240,
+      "sourceIn": 180,
       "sourceOut": 356,
       "layout": "ui",
       "headline": [
         "REAL RESPONSE."
       ],
       "label": "CONVERSATIONAL CHAT",
-      "focus": "chat",
+      "camera": [
+        {
+          "frame": 0,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.29
+        },
+        {
+          "frame": 143,
+          "zoom": 2.85,
+          "x": 0.59,
+          "y": 0.29
+        }
+      ],
       "words": [
         [
           0,
@@ -1540,21 +1696,21 @@
     },
     {
       "id": "results-stack",
-      "asset": "bmw-orbit",
+      "asset": "dragon-orbit",
       "frames": 108,
       "layout": "stack",
       "cards": [
         [
-          "hair-orbit",
-          "DAZ MESH HAIR"
+          "dragon-orbit",
+          "CREATURE / .DUF"
         ],
         [
-          "bmw-orbit",
-          "BMW / .BLEND"
+          "trunk-orbit",
+          "VINTAGE / .DUF"
         ],
         [
-          "optics-wire",
-          "WIREFRAME"
+          "handbag-orbit",
+          "TEXTURED PROP"
         ]
       ],
       "headline": [
@@ -1573,8 +1729,10 @@
     },
     {
       "id": "render-payoff",
-      "asset": "native-output",
+      "asset": "bmw-orbit",
       "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 150,
       "layout": "hero",
       "headline": [
         "YOUR VISION.",
@@ -1592,7 +1750,7 @@
     },
     {
       "id": "library-payoff",
-      "asset": "hair-orbit",
+      "asset": "crate-orbit",
       "frames": 72,
       "sourceIn": 20,
       "sourceOut": 140,
@@ -1600,7 +1758,7 @@
       "headline": [
         "YOUR ASSETS."
       ],
-      "label": "DAZ MESH HAIR / REAR DETAIL",
+      "label": "SCI-FI CRATE / IMPORTED PROP",
       "words": [
         [
           0,
@@ -1613,7 +1771,7 @@
     },
     {
       "id": "create-payoff",
-      "asset": "bmw-wire",
+      "asset": "dragon-wire",
       "frames": 72,
       "sourceIn": 20,
       "sourceOut": 140,
@@ -1621,7 +1779,7 @@
       "headline": [
         "NEW PERSPECTIVES."
       ],
-      "label": "BMW / ELEVATED WIREFRAME",
+      "label": "DRAGON / ELEVATED WIREFRAME",
       "words": [
         [
           0,
@@ -1634,8 +1792,10 @@
     },
     {
       "id": "invitation",
-      "asset": "native-output",
+      "asset": "dragon-orbit",
       "frames": 177,
+      "sourceIn": 0,
+      "sourceOut": 150,
       "layout": "end",
       "headline": [
         "FUSION",
@@ -1736,7 +1896,7 @@
     [
       1227,
       1299,
-      "Mesh, textures and rig."
+      "Explore more of your library."
     ],
     [
       1299,
@@ -1751,7 +1911,7 @@
     [
       1515,
       1551,
-      "Make your mark."
+      "Look closer. Then make your mark."
     ],
     [
       1551,
@@ -4111,6 +4271,266 @@
         "height": 1388
       },
       "seconds": 5
+    },
+    "trunk-orbit": {
+      "id": "trunk-orbit",
+      "file": "media/trunk-orbit.mp4",
+      "sha256": "c519863d5d24fd4fd03d890367df44b9a712e98cd6a6bdaeca575b89abe04988",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "SPowered Trunk.duf",
+      "sourceSha256": "101e18ea4282a3bb2fe55015c2bfa9b1f17c57d67af06efb350e33f2996d17f4",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.8,
+        "elevation": 0.2,
+        "distance": 1.5189110636711118,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "Spc_Trunk",
+          "vertices": 7413,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "dragon-orbit": {
+      "id": "dragon-orbit",
+      "file": "media/dragon-orbit.mp4",
+      "sha256": "32c2134c7194e4a69d6fd12dcb373464e4d1639b2f2467fac9b468f35498bfe2",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "SubDragon LE.duf",
+      "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.8,
+        "elevation": 0.2,
+        "distance": 7.8681716322898865,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "SubDragonLE_mesh",
+          "vertices": 482,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_1",
+          "vertices": 1268,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_2",
+          "vertices": 1378,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_3",
+          "vertices": 626,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_4",
+          "vertices": 7137,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_5",
+          "vertices": 594,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_6",
+          "vertices": 1188,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_7",
+          "vertices": 648,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_8",
+          "vertices": 161,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_9",
+          "vertices": 416,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_10",
+          "vertices": 1288,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_11",
+          "vertices": 855,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "handbag-orbit": {
+      "id": "handbag-orbit",
+      "file": "media/handbag-orbit.mp4",
+      "sha256": "cac58dd0fa6ed6c0c614f7c639c1023072cea0f6e5bcb5f3ab56822fd8e5ba93",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "TH - Handbag 08.duf",
+      "sourceSha256": "77782b1579eb396dce1a688a7c7ec2bff4205f927cdaa9a12c65c12fca7c031d",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.5,
+        "elevation": 0.85,
+        "distance": 0.5316924422979356,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "Handbag8",
+          "vertices": 50160,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "crate-orbit": {
+      "id": "crate-orbit",
+      "file": "media/crate-orbit.mp4",
+      "sha256": "d9257dff53ba0d5ad36bb1aa09eb844adc6e0a8f8c98cb621885e34167fd811e",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "CPW Weapon Crate.duf",
+      "sourceSha256": "bb1bc48c0eda1fc44cceb8f2ffefb54b11eb96d94e1820f0d60b66b676386aec",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.6,
+        "elevation": 0.6,
+        "distance": 1.408053195476532,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "CPW_Weapon_Crate",
+          "vertices": 6268,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "dragon-wire": {
+      "id": "dragon-wire",
+      "file": "media/dragon-wire.mp4",
+      "sha256": "ca1a181d6398019d3a3ec7375739d920a082b5bb96573d4c1a9446b75087253c",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "SubDragon LE.duf",
+      "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+      "wireframe": true,
+      "camera": {
+        "azimuth": 1.65,
+        "elevation": 0.32,
+        "distance": 7.8681716322898865,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "SubDragonLE_mesh",
+          "vertices": 482,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_1",
+          "vertices": 1268,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_2",
+          "vertices": 1378,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_3",
+          "vertices": 626,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_4",
+          "vertices": 7137,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_5",
+          "vertices": 594,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_6",
+          "vertices": 1188,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_7",
+          "vertices": 648,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_8",
+          "vertices": 161,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_9",
+          "vertices": 416,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_10",
+          "vertices": 1288,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_11",
+          "vertices": 855,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
     }
   },
   "music": {
@@ -4606,7 +5026,7 @@
       "sha256": "6c3fd894b19950b10c34bf64069ef821eaf2f58f959146306fee5b367472e501"
     }
   ],
-  "preparedSha256": "869a183fcb733da3ca021ca7f3dd0e7664bc0e4ab7bf4fae1681369871b4d472",
+  "preparedSha256": "a2deb31c8e3883f05df6543d8cc94427242171a7f5033df039e0cb4d4b846f2b",
   "varietyCapture": {
     "passed": true,
     "method": "Actual frozen packaged Fusion viewport. 150 independently rendered deterministic camera poses per clip. Native wireframe toggle, original imported materials, no generated geometry or UI.",
@@ -6662,6 +7082,275 @@
       "Four fresh imports retain visible geometry",
       "Wireframe uses actual app toggle",
       "600 distinct camera poses rendered from actual viewport"
+    ],
+    "asarSha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8"
+  },
+  "catalogueCapture": {
+    "passed": true,
+    "method": "Actual frozen packaged Fusion viewport. 150 independently rendered deterministic camera poses per clip. Native wireframe toggle, original imported materials, no generated geometry or UI.",
+    "clips": [
+      {
+        "id": "trunk-orbit",
+        "file": "trunk-orbit.mp4",
+        "sha256": "c519863d5d24fd4fd03d890367df44b9a712e98cd6a6bdaeca575b89abe04988",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "SPowered Trunk.duf",
+        "sourceSha256": "101e18ea4282a3bb2fe55015c2bfa9b1f17c57d67af06efb350e33f2996d17f4",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.8,
+          "elevation": 0.2,
+          "distance": 1.5189110636711118,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "Spc_Trunk",
+            "vertices": 7413,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "dragon-orbit",
+        "file": "dragon-orbit.mp4",
+        "sha256": "32c2134c7194e4a69d6fd12dcb373464e4d1639b2f2467fac9b468f35498bfe2",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "SubDragon LE.duf",
+        "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.8,
+          "elevation": 0.2,
+          "distance": 7.8681716322898865,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "SubDragonLE_mesh",
+            "vertices": 482,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_1",
+            "vertices": 1268,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_2",
+            "vertices": 1378,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_3",
+            "vertices": 626,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_4",
+            "vertices": 7137,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_5",
+            "vertices": 594,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_6",
+            "vertices": 1188,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_7",
+            "vertices": 648,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_8",
+            "vertices": 161,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_9",
+            "vertices": 416,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_10",
+            "vertices": 1288,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_11",
+            "vertices": 855,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "handbag-orbit",
+        "file": "handbag-orbit.mp4",
+        "sha256": "cac58dd0fa6ed6c0c614f7c639c1023072cea0f6e5bcb5f3ab56822fd8e5ba93",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "TH - Handbag 08.duf",
+        "sourceSha256": "77782b1579eb396dce1a688a7c7ec2bff4205f927cdaa9a12c65c12fca7c031d",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.5,
+          "elevation": 0.85,
+          "distance": 0.5316924422979356,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "Handbag8",
+            "vertices": 50160,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "crate-orbit",
+        "file": "crate-orbit.mp4",
+        "sha256": "d9257dff53ba0d5ad36bb1aa09eb844adc6e0a8f8c98cb621885e34167fd811e",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "CPW Weapon Crate.duf",
+        "sourceSha256": "bb1bc48c0eda1fc44cceb8f2ffefb54b11eb96d94e1820f0d60b66b676386aec",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.6,
+          "elevation": 0.6,
+          "distance": 1.408053195476532,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "CPW_Weapon_Crate",
+            "vertices": 6268,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "dragon-wire",
+        "file": "dragon-wire.mp4",
+        "sha256": "ca1a181d6398019d3a3ec7375739d920a082b5bb96573d4c1a9446b75087253c",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "SubDragon LE.duf",
+        "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+        "wireframe": true,
+        "camera": {
+          "azimuth": 1.65,
+          "elevation": 0.32,
+          "distance": 7.8681716322898865,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "SubDragonLE_mesh",
+            "vertices": 482,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_1",
+            "vertices": 1268,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_2",
+            "vertices": 1378,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_3",
+            "vertices": 626,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_4",
+            "vertices": 7137,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_5",
+            "vertices": 594,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_6",
+            "vertices": 1188,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_7",
+            "vertices": 648,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_8",
+            "vertices": 161,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_9",
+            "vertices": 416,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_10",
+            "vertices": 1288,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_11",
+            "vertices": 855,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      }
+    ],
+    "checks": [
+      "Frozen ASAR unchanged",
+      "Source hashes checked before and after capture",
+      "5 fresh imports retain visible geometry",
+      "Wireframe uses actual app toggle",
+      "750 distinct camera poses rendered from actual viewport"
     ],
     "asarSha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8"
   }

@@ -50,6 +50,9 @@ stills={}
 for scene in prepared['story']:
  for label,frame in [('start',scene['from']+18),('middle',(scene['from']+scene['to'])//2),('end',scene['to']-18)]:stills[f"{scene['id']}-{label}.png"]=frame
 for shot in prepared['shots']:stills[f"shot-{shot['id']}.png"]=(shot['from']+shot['to'])//2
+for shot_id,offset in [('save-reopen',29),('chat-ask',43)]:
+ shot=next(s for s in prepared['shots'] if s['id']==shot_id)
+ stills[f'detail-{shot_id}.png']=shot['from']+offset
 needed=sorted(set(stills.values())|{f for boundary in transitions for f in range(boundary-8,boundary+8)})
 raw=qa/'decoded';raw.mkdir(exist_ok=True)
 expression='+'.join(f'eq(n\\,{frame})' for frame in needed)

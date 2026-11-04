@@ -2,9 +2,9 @@
 
 Final film: **120.000 seconds, 3,600 decoded frames, 1920 × 1080, 30 fps, H.264 + AAC**. Decoded stereo audio: **120.000 seconds**. Integrated loudness **−14.07 LUFS**, true peak **−4.15 dBTP**. Seven MP4 container chapters and 40 English caption cues.
 
-SHA-256: `a9e1b276fa1fc86f4e341b272f9f5748d8277d686d163d69496a80c04d7fb50e`.
+SHA-256: `a8ca72b48592cb9cc20493013eb6da1db08ad2fa984ffe9d70d1fe78e59bad5e`.
 
-Visual audit covers 60 full-resolution chapter/shot stills and 40 sixteen-frame transition strips. Codex inspected all 67 new or re-encoded images; 33 exact prior reviewed SHA-256 hashes carried forward. Compatibility dialogs, output states, caption margins and intentional montage crops reviewed. Import/render waits shortened with visible labels. Captures retain actual input and output pixels; no credentials or personal file paths appeared in inspected frames. [Review hashes](qa-review.json) identify exact reviewed evidence and prior audit. [Transition strips](qa/) remain available; full stills stay in local QA folder and can be regenerated.
+Visual audit covers 62 full-resolution chapter/shot/detail stills and 40 sixteen-frame transition strips. Codex inspected all 102 images from this final encode; no prior-image carry-forward. Compatibility dialogs, output states, caption margins and intentional montage crops reviewed. Import/render waits shortened with visible labels. Captures retain actual input and output pixels; no credentials or personal file paths appeared in inspected frames. [Review hashes](qa-review.json) identify exact reviewed evidence for this encode. [Transition strips](qa/) remain available; full stills stay in local QA folder and can be regenerated.
 
 Six representative frame pairs rendered independently twice with identical decoded RGBA hashes on this Windows host. [Determinism results](determinism.json) establish same-host repeatability, not cross-platform GPU identity. Full final film decoded without errors. [Seven captured GLB files](export-validation.json), including final sculpt export, pass official glTF validator with zero errors/warnings.
 
@@ -18,4 +18,6 @@ Launch revision follows updated user request for a flashy demo: 39 shorter shots
 
 Windows chapter remux initially failed while renderer process retained handles; standalone remux after renderer exit passed. Render command now runs renderer and remux in separate processes. Final delivery decoded and verified after successful remux.
 
-November 4 asset-variety revision: five repeated short shots and closing cards replaced. Four fresh captures supply 600 viewport frames: BMW shaded and elevated wireframe views, DAZ braided mesh hair rear view, elevated optics wireframe. Native wireframe toggle used; working-view visibility isolates BMW subject. BMW and DAZ input hashes remain unchanged. Original imported material approximations retained and disclosed; native shader parity remains outside film claims. Final file: 51,669,328 bytes.
+November 4 expanded-library revision replaces decorative camera/tank-top/vase repeats across opening, chapter stings, cards and ending. Five fresh clips supply 750 viewport poses: shaded dragon, dragon wireframe, vintage trunk, handbag and sci-fi crate. BMW and braided hair add further silhouettes. Actual native wireframe toggle used; sources retain input hashes. Whole carriage scene exceeded exploratory import timeout and is excluded. New clips establish appearance only; release certification remains unchanged. Typing reaches 2.8x input-field crop, then pans to actual reply; save briefly emphasizes project name. Hero image edge receives soft mask. Six independent pairs now include new hero/cards, typed prompt, response and dragon wireframe.
+
+Final file: 37,797,026 bytes. H.264 CRF 20 keeps delivery within repository artifact limit; original capture intermediates remain local.

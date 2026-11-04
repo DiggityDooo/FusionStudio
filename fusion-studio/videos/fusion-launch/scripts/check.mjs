@@ -27,6 +27,6 @@ for(const shot of shots.filter(s=>s.camera)){
  for(let f=0;f<shot.frames;f++){const c=screenCamera(f,shot.camera);assert.ok(c.x*c.zoom>=.5-1e-8&&(1-c.x)*c.zoom>=.5-1e-8&&c.y*c.zoom>=.5-1e-8&&(1-c.y)*c.zoom>=.5-1e-8,'Camera exposes empty edge');}
 }
 const typing=shots.find(s=>s.id==='chat-ask'),reply=shots.find(s=>s.id==='chat-response');
-assert.ok(screenCamera(20,typing.camera).zoom>=2.8,'Prompt readable before typing');
+assert.ok(screenCamera(20,typing.camera).zoom>=2.8,'Prompt readable during typing');
 assert.ok(screenCamera(60,reply.camera).y<.32,'Reply stays centered on conversation');
 console.log(JSON.stringify({passed:true,frames:3600,seconds:120,scenes:scenes.length,shots:shots.length,cues:cues.length,pinnedDependencies:true}));

@@ -1,49 +1,49 @@
 {
   "passed": true,
   "manifestFile": "provenance.json",
-  "manifestSha256": "b97d2cce16aa3fa808b949f2599c5d1d37bc2767e58073bd7c7fb583abc60584",
+  "manifestSha256": "2f11b6f094c16809912f1ac9dd4a28e43c0e2ab286a802169027af15da7fb9d4",
   "seconds": 120,
   "frames": 3600,
   "media": [
     {
       "file": "fusion-launch.mp4",
-      "bytes": 51669328,
-      "sha256": "a9e1b276fa1fc86f4e341b272f9f5748d8277d686d163d69496a80c04d7fb50e"
+      "bytes": 37797026,
+      "sha256": "a8ca72b48592cb9cc20493013eb6da1db08ad2fa984ffe9d70d1fe78e59bad5e"
     },
     {
       "file": "fusion-launch.vtt",
-      "bytes": 2386,
-      "sha256": "b45a9e2a91b5fb0ab7112d3e6d38561eb1fe4ba607078df237ad2ec9ed758873"
+      "bytes": 2410,
+      "sha256": "e2f9f5c603e846e0720f18d531d2dde8700c282617b6a4287dc9e473a4b44499"
     },
     {
       "file": "poster.png",
-      "bytes": 544222,
-      "sha256": "4b50b150df384b20f51cc55408d5c5823b8646b66f72d3bbad38ee4ccdd218af"
+      "bytes": 1358578,
+      "sha256": "e3a101dd71aeba23caa1e721cefe71b3b656634f36e2b9bf1618000c27733ffc"
     },
     {
       "file": "preview.gif",
-      "bytes": 4456931,
-      "sha256": "ce057b75a62796e8b44e6a63a37e069dda589d38093ba8e17e389cddc66d3d68"
+      "bytes": 3777129,
+      "sha256": "35432361e12805a747b9456f8947beb692a95d0a3c2c34e082d9e4edf924d488"
     },
     {
       "file": "contact-sheet.jpg",
-      "bytes": 275103,
-      "sha256": "fc1ac43aff3cf7f26776a3b51fdf646846359e3cd06c2be7f58747de2d8e26f2"
+      "bytes": 268622,
+      "sha256": "e7e6c3d9d5f9811087659125f2b56b0feba1a29f7aef72c95d5c43bcc99fed9f"
     },
     {
       "file": "determinism.json",
-      "bytes": 777,
-      "sha256": "4dcb40a6a9863b58ed3b2d9100782e514cc84cccde6d32b6e306d0a8ae1fc8b2"
+      "bytes": 778,
+      "sha256": "d256d6ae28256725e5a63c89249306b590849bb7b397fe058662c850238ebb7b"
     },
     {
       "file": "verification.json",
-      "bytes": 5654,
-      "sha256": "64901c7aae606019409edba693e5c709873c04270455bfdc9c32e3fd14896466"
+      "bytes": 5793,
+      "sha256": "ee614bd0a63eaa4da7f2e4bf2d32860def39b3d2b9ee3c8c8261f316e814753c"
     },
     {
       "file": "qa-review.json",
-      "bytes": 21161,
-      "sha256": "a2b3af57151ae3c4eb4539c6d6cfa014316bf5283ccda9ae57e31d1d52d57768"
+      "bytes": 23234,
+      "sha256": "eee511220dfe700f70ea7cce14220d260af020a7195c0e621325c9c0a41a8686"
     },
     {
       "file": "export-validation.json",
@@ -52,203 +52,203 @@
     },
     {
       "file": "qa/transition-blend-hit.jpg",
-      "bytes": 346129,
-      "sha256": "55f40157c3d934099d4e38630cab7105e3162c5668bc2ce08642248cd889aa39"
+      "bytes": 291251,
+      "sha256": "6b0253edeb67d673204b41259cbc2f779cc34cda5c39abd23719e79eab3b9cef"
     },
     {
       "file": "qa/transition-daz-hit.jpg",
-      "bytes": 250191,
-      "sha256": "3d473764d4ba90ddd345ae3a1c92bc9bce53ddf5e3bdddd6e708b2a5611e2b20"
+      "bytes": 249753,
+      "sha256": "292551e5051e42f5e7f672d60e05d05a0e3a5636664efdcfd4fb4a7928097d7c"
     },
     {
       "file": "qa/transition-mesh-hit.jpg",
-      "bytes": 296975,
-      "sha256": "9a2fec8c6ebee839daccd711fda1e777b09e5b482b4eeee718248f991441948a"
+      "bytes": 267873,
+      "sha256": "ca34039400331b0a52de3985ae3fd0c9917484bae4cc2003e137dbf9884154c9"
     },
     {
       "file": "qa/transition-all-together.jpg",
-      "bytes": 304453,
-      "sha256": "e19531f3fdd65f64fb85166e2e4f89bacd1c649f77948147edfe070eff07d99f"
+      "bytes": 282710,
+      "sha256": "0644ec7bdac22b77360620e79d1d9c3cfd9bd41895e246b6b9f6e2291d4740e9"
     },
     {
       "file": "qa/transition-workspace-reveal.jpg",
-      "bytes": 371788,
-      "sha256": "32d8a2f7766f9802c92151de4153736405eb1c28cfb78333fe7e1597344b6b5d"
+      "bytes": 374723,
+      "sha256": "83e8942ef969e4f153e307f51bfc0be3a3f42417848ada889d22491bf0e4076d"
     },
     {
       "file": "qa/transition-unlock.jpg",
-      "bytes": 348225,
-      "sha256": "20af2f41b6ea6ab7a90aa7015d8ae68e19bea9a91568d4e19af582f5c7b61647"
+      "bytes": 380459,
+      "sha256": "064955a679cff4becb2afc5555483eaf75c1df8f04e9834405af56623710ea3e"
     },
     {
       "file": "qa/transition-review.jpg",
-      "bytes": 302537,
-      "sha256": "196f13822634655bf7f6d9eb3925aa532a268d97d66dae5b90f0621b4ad472e1"
+      "bytes": 318787,
+      "sha256": "05dda76c8562ee4227015171c809b358e3742c154d8943389a3506ee61cc6672"
     },
     {
       "file": "qa/transition-editable.jpg",
-      "bytes": 341467,
-      "sha256": "9abca230e62f6dc7af9caa3ac3d9d5e4f194a9841a95daad6eb760d1f14122f8"
+      "bytes": 341215,
+      "sha256": "98f3b062d8dc037ca9726338de6f40deb1aac67d48077b09aa8f08e7da6c0324"
     },
     {
       "file": "qa/transition-native-hit.jpg",
-      "bytes": 372724,
-      "sha256": "ff3fc3715dc4059abaedb6d82ab19f08cb03db935439e82dd384e21f6a301ef8"
+      "bytes": 371092,
+      "sha256": "d239ad2c5bb927fc3e6081417da84ea5f0c9e3bec102b083787cafd1e815aaef"
     },
     {
       "file": "qa/transition-native-scene.jpg",
-      "bytes": 353937,
-      "sha256": "b0a8f75d6fe5adad675f9f51b0947d9367b7226a3a02b12dd3bf6f9dc865bea6"
+      "bytes": 353050,
+      "sha256": "4df0e6fdfd156ca96817c51c7f09b25b73607bb2dadc5e61a7774aabe273bcdf"
     },
     {
       "file": "qa/transition-native-render.jpg",
-      "bytes": 355332,
-      "sha256": "f9ac7d63eab53d807c0ae6bf72db8885dc8b3e0dbff2eb420d4d657d5577b3b6"
+      "bytes": 355626,
+      "sha256": "8facb46e90aa18d4af6b5d9a8d702ffb098726fd1cad8c62475f34ec0e5f5543"
     },
     {
       "file": "qa/transition-two-modes.jpg",
-      "bytes": 326342,
-      "sha256": "df47df5d2c83d7a311735f4e55d1812d3f56cc53db281c2eb65b616a9e71c651"
+      "bytes": 326343,
+      "sha256": "270d37a2d2e4a9df09f0c1ace40498c114731ec02c0211e26a90906d4eb2926f"
     },
     {
       "file": "qa/transition-library-hit.jpg",
-      "bytes": 344914,
-      "sha256": "5e47bfb45a9c08e4db173b253d5d53ec1876f3f672f274d67657a29c35b8197a"
+      "bytes": 365996,
+      "sha256": "f6756b16d91c391314483fa70fb4c46ec67cfc667828f9cb43015b59ef5c8f6f"
     },
     {
       "file": "qa/transition-daz-import.jpg",
-      "bytes": 282979,
-      "sha256": "9363b0f03af4b14133580fee233e373c3bf7eb4efe44e3ca774c59fcc7df7ded"
+      "bytes": 300343,
+      "sha256": "d5e7372374f167b05182327c8aca81435952d5c7e86ae7ef4c6f2a0e2b171ef6"
     },
     {
       "file": "qa/transition-daz-mesh.jpg",
-      "bytes": 299033,
-      "sha256": "2420c564705b2a2e22b1bf0f12ff58ab8199f3704b1bb8e056bd280f0bc38de5"
+      "bytes": 321093,
+      "sha256": "5f07558cd9b897003c55c5ec652634de356c1a83183ca27bdf0b3b31abed98ea"
     },
     {
       "file": "qa/transition-daz-material.jpg",
-      "bytes": 333203,
-      "sha256": "4c0b5789e0c5bd2504b6509e5cabb95ed4ff3c3228d321fb336f8dca7bf04ccf"
+      "bytes": 343408,
+      "sha256": "ed00428549d308b2b01827233f5fb9726ef4e5c014ebdaeeb7bb7ff8232d4d8b"
     },
     {
       "file": "qa/transition-daz-recovery.jpg",
-      "bytes": 364825,
-      "sha256": "f392568ff274ece7b717ce884a7b6b8ba0fef516ff7ce112f39b99682a32046f"
+      "bytes": 364338,
+      "sha256": "85f40d2d36a3b0173885d366a7cf4c8500b80536645e40ee5016ffd59d6d2c90"
     },
     {
       "file": "qa/transition-shape-hit.jpg",
-      "bytes": 304473,
-      "sha256": "4ef2305df186d4d424faedc952a83ddede9b50f226ee3189faa54b4f8bf1e919"
+      "bytes": 322717,
+      "sha256": "7ace61466358a10c77ccc7a164c8d38974ba14a74617512457041272eb4ac6f7"
     },
     {
       "file": "qa/transition-sculpt-stroke.jpg",
-      "bytes": 319663,
-      "sha256": "3c33fb911c1a578625a869c8d6d0c33b3d986b09204c99c29da6c92ef5d9fa57"
+      "bytes": 343984,
+      "sha256": "e79a19442d60cc043fb9223805c2fc5e1292b1feff04820fa897e2ee3865d4db"
     },
     {
       "file": "qa/transition-sculpt-undo.jpg",
-      "bytes": 380593,
-      "sha256": "bd8a186a234d560c1338af731c2ff3fa78bf5a63c110803054ef9f35ca5509e3"
+      "bytes": 379853,
+      "sha256": "972b3662e3d7ff06b954ddbf044b5f894181c60022eea95efe3eab1c565e5af9"
     },
     {
       "file": "qa/transition-sculpt-redo.jpg",
-      "bytes": 362825,
-      "sha256": "d82ed4417f4da8c14e8025ff5159fab4473a65f2367f2729f62fa0617732db32"
+      "bytes": 362585,
+      "sha256": "e2683acea87ab79b4606f565fe5ec9d12ed070ffd5bd2f5689a3723dd4fb6d1b"
     },
     {
       "file": "qa/transition-save-reopen.jpg",
-      "bytes": 353110,
-      "sha256": "bd451092cd247e0e4b9fe45d3066d6ce38c111d532d4eff611a6752a72db5c7e"
+      "bytes": 314225,
+      "sha256": "d334ece3b5001a0dd3ae3c7f7b286f58c870589d1e25f3fccb0945f1f6cf524c"
     },
     {
       "file": "qa/transition-glb-export.jpg",
-      "bytes": 374492,
-      "sha256": "976ea75e7f4f542d6c0720b35264f24c5c34938a45b37756b976055810ed744f"
+      "bytes": 373875,
+      "sha256": "81c5acaa26571d924b33e6250d92054182ab0a6e3cb94dede8e3c24f958547ba"
     },
     {
       "file": "qa/transition-sculpt-payoff.jpg",
-      "bytes": 286786,
-      "sha256": "3deac0c17cbcbea353f113c697d8c066f51e727ce4fad4827c89985e41fefd9f"
+      "bytes": 307930,
+      "sha256": "db15c43f0c1a20882496b30d6e99b86d8f40ba0b61e7669e3ef86f49c6ce05dd"
     },
     {
       "file": "qa/transition-chat-hit.jpg",
-      "bytes": 256109,
-      "sha256": "926166f2ad8ae7902b2184977cd81afe551109a0a707c1285da9e2468c082c10"
+      "bytes": 273367,
+      "sha256": "0ed8b54ecbd1a39fd3789acf037c877b7694ed050630581f6e99cb63f2b55b4a"
     },
     {
       "file": "qa/transition-chat-ask.jpg",
-      "bytes": 290763,
-      "sha256": "54cf4d519bcd36b5755994d3e4ed0075a584077c7e11b5e01b2f50634b96e9ce"
+      "bytes": 286818,
+      "sha256": "692c4c118b2dfd3f33793da38ffcee749313119a5052ceac739793eaaaff2d88"
     },
     {
       "file": "qa/transition-chat-response.jpg",
-      "bytes": 318707,
-      "sha256": "7a3a41297244d033b2398d8ad01746a76bd2cf55da0a793203cba2add377df5a"
+      "bytes": 285714,
+      "sha256": "4bab6049767d48e51758d99ab7f5e394db5e1d357e4ae9507334deebbb222585"
     },
     {
       "file": "qa/transition-mcp-hit.jpg",
-      "bytes": 249386,
-      "sha256": "744a5a5a89e6b7883e1e4fb0b8824394a40a5e6fe0eedf03da2b57dca74abd3b"
+      "bytes": 231494,
+      "sha256": "8bcfe7810cb75ec5a357517b9ca0114b8aef6e4072b2f6dc2aa86bd19b643f69"
     },
     {
       "file": "qa/transition-mcp-add.jpg",
-      "bytes": 241299,
-      "sha256": "214ffdf773c44939ab795ef25dfb494ffd1d24b44d6031b164d05bc7ea8ef9b1"
+      "bytes": 240922,
+      "sha256": "00a9d0d7da0db3056dc2b455e2363df1db2772d7d9e2c5620a0236ebeb0dbd97"
     },
     {
       "file": "qa/transition-mcp-transform.jpg",
-      "bytes": 325056,
-      "sha256": "e8f13d3410f5423468d6a583e286ff62316f0ec51d7f77441e4f47197a2d00f1"
+      "bytes": 324536,
+      "sha256": "826c23e404066239f31da5b00f16cf0888f49e49a64829d9b7b5b5ed00961924"
     },
     {
       "file": "qa/transition-mcp-undo.jpg",
-      "bytes": 344238,
-      "sha256": "4883828e390a54cc747668862869af57709fa42d4e698c75856c7aa3c0065fa7"
+      "bytes": 344047,
+      "sha256": "c1ec33c48d6db4d180ab84914c796b5eaf07ef4653dd7f40283875f9312e20fd"
     },
     {
       "file": "qa/transition-mcp-redo.jpg",
-      "bytes": 351441,
-      "sha256": "2fcba3caf1cd0e7f00b567428acb92aca7b013dcdf4bb8455e82bdffa1c410db"
+      "bytes": 351724,
+      "sha256": "5b39aed89f14647eeef0b15fc8c142d5b4bf1fada901fd6e4d5e158ab4a66b82"
     },
     {
       "file": "qa/transition-mcp-payoff.jpg",
-      "bytes": 352108,
-      "sha256": "6a78b0466f877f7e308cd07d1aaf81d67e85e5a72a67120c3dd9f25b5107be13"
+      "bytes": 351682,
+      "sha256": "cfce8dfe43cd692a66a48c0ff6663a2586f6a442a5e9ee698a83a1a21afda0ce"
     },
     {
       "file": "qa/transition-results-stack.jpg",
-      "bytes": 322325,
-      "sha256": "9516387d1e286191124b3fd32805a32f9a064c07ce4b7dd48d6c583f3b0e1160"
+      "bytes": 323961,
+      "sha256": "4d216aba88dcf716a5f22bf59893819d323bd829ee429d4b115c31799698af72"
     },
     {
       "file": "qa/transition-render-payoff.jpg",
-      "bytes": 397526,
-      "sha256": "7820d4fceefc7c956392b2fffe9f237458df2977d37fc7bca8e128db1b212cbc"
+      "bytes": 346233,
+      "sha256": "7843756ecdbeacc0b45341f171d2a8a9c03ddd704795ab5a347fb6e7877ab64e"
     },
     {
       "file": "qa/transition-library-payoff.jpg",
-      "bytes": 360450,
-      "sha256": "b247ec211320400a5b862e25e6490615f5fb444d1f98a7dff730be28c2dc3707"
+      "bytes": 319121,
+      "sha256": "d7adef878dfb6d486f4608db9a3f00edf084c220d8aa2673ad81f3870619a759"
     },
     {
       "file": "qa/transition-create-payoff.jpg",
-      "bytes": 343000,
-      "sha256": "6ab3215a82321c4e6fe429a11de4b17604079162fc54f7956a9a600b459eaba0"
+      "bytes": 321595,
+      "sha256": "4273c6b582b04f1c1b970e1a40aac0dbb504675b48ee5808cae95d2667eaea7a"
     },
     {
       "file": "qa/transition-invitation.jpg",
-      "bytes": 327509,
-      "sha256": "2725bfa8d0288ce0264825626c1110088467c63e9b92d6e938baa3e1cb6748fa"
+      "bytes": 285884,
+      "sha256": "ba5b9470286d7077ed6a6d82be7393bdcc9fc87c9aa595ea4f08ca1456314425"
     },
     {
       "file": "qa/transition-native-scene-source-cut.jpg",
-      "bytes": 376565,
-      "sha256": "e995991cfa7642a9758d1a8ed9334fe34f47da9e5aabf9964df0b40b5248e112"
+      "bytes": 375876,
+      "sha256": "9d445b1741fdde206f33b78f277c87b54efbc5c761d7868e913544b7a0f79950"
     },
     {
       "file": "qa/transition-daz-import-source-cut.jpg",
-      "bytes": 310976,
-      "sha256": "29707dc2d00ad871a2ecf43bbd673148faec17f64c4544694ed8639cccd13711"
+      "bytes": 311069,
+      "sha256": "0c0c479e09ae983e452a730bcd71d939825ad0ede55d5924f0a73c480f633a1d"
     }
   ]
 }

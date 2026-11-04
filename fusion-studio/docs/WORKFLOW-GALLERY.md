@@ -1,6 +1,6 @@
 # Recorded Fusion workflows
 
-Current gallery: [Two-minute film — launch trailer revision](demo/2026-11-03-remotion/README.md), with 39 beat-cut shots, BMW and DAZ hair views, elevated wireframes, large animated type, moving asset cards, split comparisons and focused app actions, Secret by ESPRIT 空想, captions, source/package hashes, fresh capture assertions, full decoding and independent frame checks.
+Current gallery: [Two-minute film — launch trailer revision](demo/2026-11-03-remotion/README.md), with 39 beat-cut shots, dragon, BMW, DAZ hair, vintage trunk, handbag and sci-fi crate views, native wireframes, large animated type, moving asset cards, split comparisons and tracked typing/reply close-ups and focused app actions, Secret by ESPRIT 空想, captions, source/package hashes, fresh capture assertions, full decoding and independent frame checks.
 
 [![Watch current demo](demo/2026-11-03-remotion/poster.png)](demo/2026-11-03-remotion/fusion-launch.mp4)
 

@@ -1,522 +1,527 @@
 {
   "passed": true,
   "reviewer": "Codex",
-  "reviewedAt": "2026-11-04T08:38:31.270Z",
-  "videoSha256": "a9e1b276fa1fc86f4e341b272f9f5748d8277d686d163d69496a80c04d7fb50e",
+  "reviewedAt": "2026-11-04T19:54:53.187Z",
+  "videoSha256": "a8ca72b48592cb9cc20493013eb6da1db08ad2fa984ffe9d70d1fe78e59bad5e",
   "reviewed": [
     {
       "file": "hook-start.png",
-      "sha256": "234a3db2b51cc34c9b96e5ab5cb871ee85e8291b7c12825c35a9387f5408e8db",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "a731ea7b9f000c0396960fede38d626f1d1a9ce750c40c0af8d31fdbba2984b2",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "hook-middle.png",
-      "sha256": "52883e5da3bc58334afb8a639015dcf416a860ccd99c38daad2c9344be0c8ed3",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "e2ab327e504fcd24ee58b0898645d2f9c7d1c6455a594284862982943cb0de3c",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "hook-end.png",
-      "sha256": "826b880f0669b78c1a703240d4a45e7238be149d081f3b118ca20886b784231f",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "333c116fadd93d3ea4cd4aa5aa8c4778246a69617938f8a3d9a8320a91cb82f5",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "blender-start.png",
-      "sha256": "5a8c5aa225a7e4c7740743c15d8145c20bee179e0bbee26761be45e9dfaf364b",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "b4b62a47bcba1a6c7ecb466fe38c5257a4a163a58090ae25a913317fd252d5b9",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "blender-middle.png",
-      "sha256": "0147bc33f1b067dd40af213ed1fa5c59278a8a64a8609f93a6b683504a2c84a3",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "e4f6c3d77aa9f2487b2a36ddca2acfcf3f58ef436280776af54cbd116a6ec4b9",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "blender-end.png",
-      "sha256": "47c27f2a4a6965348bc0e3c52fe6091cf198da731efce6db2d1de6d9dc7e27fa",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "b57399f00a44e73666d666959e53b39fed89b8875b2730975e11960467a7e974",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "daz-start.png",
-      "sha256": "a32445be430a8f0aa99a5957f96f0ff56cfcbb00f21e0035957e566d72c7205d",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "a96fba98ebb4a81af2dce5d52fb3034446e41118edd4b66d25eba9bcc3f62e44",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "daz-middle.png",
-      "sha256": "28c57b85d0c493fa8ad5bd5b9a455ba10b3ca09c92734566ccc79b80085e929d",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "73330e596f2c1e9df65d0d3a3097a7c2f139737d4c1dab05c2ec2194bd990e32",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "daz-end.png",
-      "sha256": "50c2269a9cd2f00be1a0595bb9158660ce0d88148941566bb61ec3d59a80315b",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "24a9fc279d0bc15e94f69c1d1d0a4f64765fdea3f5429ec2798cf3dcf6f6340a",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "edit-start.png",
-      "sha256": "d405ef407e5148ae36c91d31b41ec017cbe0b48e306aef5284efadb49a9c477a",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "efae8ed72b535c03b8fea933b7d23f29f28bedc467af2167a1826b32db81d1e7",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "edit-middle.png",
-      "sha256": "7ed71f1bc3418569e8281989b32605b899c8567c490f2ea0d5d1b98c48c16d2b",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "b45161525c2a6a05e5dc7f75cae1cc399561b9e3a34d1dc73ff91d86d4ca7b29",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "edit-end.png",
-      "sha256": "e7eb1416445a55925994c48e2393940e6ce5744a49ac228cf82be3d70cd7941f",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "3b4289c1434f95384d81d823de265b2aa0a3e4d26cf01bdf44b46f9132f9aad5",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "chat-start.png",
-      "sha256": "1d08a2a14bb958416d41bda98c5c7ac7a187eedbe06f9d8cdd7992a62074abac",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "7a3fe89523867b1b215a190027389ed4b6025f5a9f32f92e211db116c8e6f23d",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "chat-middle.png",
-      "sha256": "3db2747c2a676afff6bba4d7f27c791e1404100532f49fefa123f6191a9b1410",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "a5fa227b97b0ac36bafb08a8527459046f6313ef8fd28ee92363c6d0498e7f51",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "chat-end.png",
-      "sha256": "f3fa1025eeba0d63e75fb2fb3d198600137f00abb830b3f99f8fdc407e7ee16f",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "6b26d75459670ae288df19d989bad3da37ba2ee208eee1f75d4a8c7b19768f03",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "mcp-start.png",
-      "sha256": "fb699e4f56728fc4fd094a8927cfed28e43f12fed64cc73c0da2cac81b0ce973",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "29dee8073d3af13c1049fe93357b21cc5ed296a71f917b379377c4fadb534494",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "mcp-middle.png",
-      "sha256": "6c4dfebd4959ce4130fb53ce187366655cd5b98e6f7a6e5af1326c798ba3851d",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "a2c5cc8e00bf05ea3c541fe73b0f6f9a1fcec9399d08fb598ee457adeefd22b9",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "mcp-end.png",
-      "sha256": "6b020b5c4880af185899815ad66cea45b093fbdbcbfd6f23b7bedf025ea47d1a",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "0b403c10a72bcc2a4d4dfd98f239ed64a2d679e638e6015cf9477d1818477799",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "finish-start.png",
-      "sha256": "f0281e83904d80ab96cdde77bee13fa1c82645455c0250693bdb4af4a47ddead",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "0bdd269de884246ece1ed9c3409594951cc2a26f68d957098744f00bb4092413",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "finish-middle.png",
-      "sha256": "7c220c16993659bf10d639e327af2c54c3f1b0bde8b0f63052e2d2bdf3589b05",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "3c5c8231ccf4e9f231665dcbcd2ff58c3db215009b2221b63f89eb82dba7b362",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "finish-end.png",
-      "sha256": "3cce9d1ded20c3eb8a432f6960fae8f41cb0ed6649c88dc63f39fd421616547a",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "599d76793768a206fbace4413bcca5137e3ee4055da042c879b4b6c9b42e1b1f",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-hero.png",
-      "sha256": "312989dd07961ef54bff60a5ef3a3d1e6068f1b3430309e92fb6b4645d3f24e9",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d9c29fd07ae3e4d6c49673ffe062fff28928023e40a816c73956f832cad5e903",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-blend-hit.png",
-      "sha256": "fd07888c7a80184ad99ee173b21196ea37ec977d435148af0a7b34e661343ee5",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "5c536e48fe2af45e0894d41a35fa08bf4affd68549eed08d890280492ac29c57",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-daz-hit.png",
-      "sha256": "363ce3c442d0fd6ff67ff49d9b19618562b3cb6a026045311cb2ce2abe04890b",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "bc9419d16edeacf6b21ab2c6b984c8e703ba680566d57e5e6bd9e0e605b25db7",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-mesh-hit.png",
-      "sha256": "7024082b1186159d8c25581d8d40f572cf7e1baf6c623ffc43b1f1d9fa46f2e6",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "dd1e485af72091d227612292f0fa02b4e0a4990a785972b9737f46837bf84e57",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-all-together.png",
-      "sha256": "c9297ef976e9a2a51698dbd1ae2b40a71ffb38afcbffd54c77b808e756569ceb",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "ea2eff9eb556c3bca45a6db88c784a80a0014ff6127560269d5b6feb265cca69",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-workspace-reveal.png",
-      "sha256": "141c803412b1144c243192aacca89c07aa7ce7bb7d507626da9d1539842f324e",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "3bf1edb3e62c36a8d89d4225656fe1632ec09d23e2b67853a3db908a404581f5",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-unlock.png",
-      "sha256": "5a8c5aa225a7e4c7740743c15d8145c20bee179e0bbee26761be45e9dfaf364b",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "b4b62a47bcba1a6c7ecb466fe38c5257a4a163a58090ae25a913317fd252d5b9",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-review.png",
-      "sha256": "42dde7c559e47d83b57a908b2e00e85000dc8d2899fac5596eb4df5a95faff85",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "698472f3de1bbe707bee5131c0ed69087fca8075c43edbba67694c158cbb41db",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-editable.png",
-      "sha256": "43be92ca8b1b7c2dc84c3409e3013e15ce89b9d620a4db57aa6ca56273a609cf",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d79d2c8848bce9144d842ab3ce71f651ae03f008cdd0f4eec7f371bb1a66bf9b",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-native-hit.png",
-      "sha256": "959fce7aabd54fdf64cad76cd04484409a5352d26a113041aa3d10569e7dcfe9",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "f77ed493e1f3e05c4b00eb6855c1018c3fc351436c1dd07d275fa501450c40f4",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-native-scene.png",
-      "sha256": "45324006c1203c785fb93b3909bab56b8c0b800d8599710aa5bd09cb860e6171",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d67bbcf04fc7e9ddfc6d00652a250a1437d5d9b3ada54e252f7dd0962b45a2fd",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-native-render.png",
-      "sha256": "de51741ce3dd93b41968ae678afd2c9d6ed6bdb4cb103fcfb7f84ae229f12cba",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "a17331ef5119aa015de6348111df0baaaf786ef7b419394fe3d4df1a2696531f",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-two-modes.png",
-      "sha256": "8f5ec4b86bbe9feab3a26f51bb4624e0b4f6aaf200bc547279ff10a1b9897c26",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "f34e841d2010442062695d8f9fd70d58865ce351a5c923e4efafbc8cd4fb5195",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-library-hit.png",
-      "sha256": "a32445be430a8f0aa99a5957f96f0ff56cfcbb00f21e0035957e566d72c7205d",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "a96fba98ebb4a81af2dce5d52fb3034446e41118edd4b66d25eba9bcc3f62e44",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-daz-import.png",
-      "sha256": "8449d354a1b468f71a015ac6510a771d1e37519233e0b26022b97c7bb166f6f7",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "db956aa4c1fdc3fbfe533627c88433f40cf6a0e69670e3fe5ec4d2876181cfb3",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-daz-mesh.png",
-      "sha256": "915ac21ac4e7dde5522d6aeb3ddcf9548d13d14e5886960c599954ff46b1c020",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "e0dc56e8287bf764485d82396f1b7729a6f7df9753f84c311b18416c1a32da6d",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-daz-material.png",
-      "sha256": "244c71604ec3c5a972816accd3efb165e706f0a582ea5138397b339b2c075d0f",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "b71eca226e75fc620c51d2d0a4ccc0cdafca6007602e1048d5525c6027c1c765",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-daz-recovery.png",
-      "sha256": "13594405630647c090be7a885c02a8d1f4d6338c68b5ff0eda7c4d63bc897d35",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "fe95baf230f587c45fd14bfa3f339e38dbfd862e248780b82c18600d7a6ea08c",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-shape-hit.png",
-      "sha256": "d405ef407e5148ae36c91d31b41ec017cbe0b48e306aef5284efadb49a9c477a",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "efae8ed72b535c03b8fea933b7d23f29f28bedc467af2167a1826b32db81d1e7",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-sculpt-stroke.png",
-      "sha256": "97c520f4373745f42c58ce9c7fbc90cca582c285285aee3af32e3b104ce65775",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "c33c3664292630e777819579d19507a0506a1df8edcc40543eaf60c9175c57f6",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-sculpt-undo.png",
-      "sha256": "09a1b0aef43c7cfab2ab8de40779af9a532a157714f30510943e9087a88fcc26",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "cb6281e97910159bd45ff6ac056d4b11d8ebde486e5b16230eedbe41f7eeef5c",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-sculpt-redo.png",
-      "sha256": "4941cb4cfa5fd58b0c0dc21d0b14cf83e662a8340f03db5fa5e3590052113888",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "2888f33146ee84f19abb23a361a931049ff211048170c1ca8c04c680a5810149",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-save-reopen.png",
-      "sha256": "9200018138dbf97f8edab31ce53a8d9eb5e5e239dcd54e67460f4445504a9113",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "088ef6c89c87cce2bcc9fcac10657ca5170039af1adfa066ed079171a39499ce",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-glb-export.png",
-      "sha256": "8c542bc887ed2596c320bc0b376cdcecdb6e0c3ab6237ba4eec32116e0ed42ae",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "e9505240c1f0e5dd6bbd2ccd024549a50f1012804e03734db6b1aee6eb09b13d",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-sculpt-payoff.png",
-      "sha256": "ead418607c9189a22e50c4f2129f271748f95acb067bc68085c19bcbbd8b12b6",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "813ce041329d435e92216198c08f840ea96742461a6a0bc94b1cd5f474ef2d65",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-chat-hit.png",
-      "sha256": "1d08a2a14bb958416d41bda98c5c7ac7a187eedbe06f9d8cdd7992a62074abac",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "7a3fe89523867b1b215a190027389ed4b6025f5a9f32f92e211db116c8e6f23d",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-chat-ask.png",
-      "sha256": "42fb09f4bc97756858263983806abf2675f226b845cf52969ed5c60a71795a9a",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "2388ea04973577d79ecae627d27ed9e0fac564c8e01a914141dc7effd4cf43a4",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-chat-response.png",
-      "sha256": "2f8561529a802c8fd5acf7fe92a604b19108cabb4b50e3bca074683192fee839",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "ccd8e82dfb282667cabbe3a51639a141b550cb35b5c2fdccdbdbd1f4dacc0113",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-mcp-hit.png",
-      "sha256": "fb699e4f56728fc4fd094a8927cfed28e43f12fed64cc73c0da2cac81b0ce973",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "29dee8073d3af13c1049fe93357b21cc5ed296a71f917b379377c4fadb534494",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-mcp-add.png",
-      "sha256": "a7385432ec7006a0cf715cbfa5e5cf654739ca58b7fec3e65ac4568f0ce49251",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "2c5a452f9737bc59ee77d7979da053692d5afe077838b14fbcc55353644eac1f",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-mcp-transform.png",
-      "sha256": "7229e2dd37e201cb5c8d897ba4e12323be451d3728c2be8ae1d20ea90bdd89aa",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "b58584efd7c629bf4ce2cec5501b2dad36c5af718b8676336f816d3d14ff7e8e",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-mcp-undo.png",
-      "sha256": "20df2469552294b91aad2d45592b967ca8a6c9135a562eee42402c45c99433a9",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "fa63aa90bfc5b49cec1f9bcc73f76dbebabf4451c7b15e95d9f6d9d69d9988dc",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-mcp-redo.png",
-      "sha256": "3278fa1171a96c7b08f7fcf417dc46494fecee7223c3ecdde3cfa270a2fe30f8",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "e6f463fc8b2d2a9b25f4c01d1cfe059fdf51fc8db692ea413edafd73c576c13d",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-mcp-payoff.png",
-      "sha256": "1830b4d8ecc57b961cbfc283027ed61d40debd1a254fe88a81e3042e12ffffdf",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "219c22cc385e17d482a9ee5b162e503df2e4db49866f49bee897e581588a7f54",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-results-stack.png",
-      "sha256": "99cfea2133391408f179943ae59ace9a286504ed273a7e178695a1f2df437939",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "35e70d422f58de640e3987ac9208c8c74cee19425b0b52693ddcefdf742d8b80",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-render-payoff.png",
-      "sha256": "d67b47df8b93f846cbe26cf503a5045ac2ef6ef3200ef7fac3d73e1f684c11e6",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d794512b2a82501316a804f25ed4621653e32f2ed53f012db4100109d10fa4bd",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-library-payoff.png",
-      "sha256": "7aabbefb8dec3ce973d749dce3ae74d152a8a96a14c4af8fd72bc85f41494a09",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "aaaafcbbd28b1e6dd97ea15602e7316068c82321c40256ece119b26a66f93bd9",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-create-payoff.png",
-      "sha256": "df8cce784af7df0b7e67ae8a6321fcd3ff864ab8d5ee995b5079f94633540397",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "50af73ff93f4e4b2a93667cf5fcdc91b436e241b63629b11c9972da6644609b5",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "shot-invitation.png",
-      "sha256": "30b1891fad9598312a032153e7370fdf9c4c17299d4b2d1d97b7e579f182c027",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "fc4d52341e1d70028599c9f74c42468925321ade5400ff09ef614142634deeb3",
+      "method": "Visually inspected full-resolution decoded final-film still"
+    },
+    {
+      "file": "detail-save-reopen.png",
+      "sha256": "1870631a3b540efd42bbe60cb83bdcc8ac66f40c0879f2a06e405b23bdea0f56",
+      "method": "Visually inspected full-resolution decoded final-film still"
+    },
+    {
+      "file": "detail-chat-ask.png",
+      "sha256": "ba7259e399625881817e2e5319d87756f19f20e3304ac995007d2a821cd3b5a5",
+      "method": "Visually inspected full-resolution decoded final-film still"
     },
     {
       "file": "transition-blend-hit.jpg",
-      "sha256": "55f40157c3d934099d4e38630cab7105e3162c5668bc2ce08642248cd889aa39",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "6b0253edeb67d673204b41259cbc2f779cc34cda5c39abd23719e79eab3b9cef",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-daz-hit.jpg",
-      "sha256": "3d473764d4ba90ddd345ae3a1c92bc9bce53ddf5e3bdddd6e708b2a5611e2b20",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "292551e5051e42f5e7f672d60e05d05a0e3a5636664efdcfd4fb4a7928097d7c",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-mesh-hit.jpg",
-      "sha256": "9a2fec8c6ebee839daccd711fda1e777b09e5b482b4eeee718248f991441948a",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "ca34039400331b0a52de3985ae3fd0c9917484bae4cc2003e137dbf9884154c9",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-all-together.jpg",
-      "sha256": "e19531f3fdd65f64fb85166e2e4f89bacd1c649f77948147edfe070eff07d99f",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "0644ec7bdac22b77360620e79d1d9c3cfd9bd41895e246b6b9f6e2291d4740e9",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-workspace-reveal.jpg",
-      "sha256": "32d8a2f7766f9802c92151de4153736405eb1c28cfb78333fe7e1597344b6b5d",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "83e8942ef969e4f153e307f51bfc0be3a3f42417848ada889d22491bf0e4076d",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-unlock.jpg",
-      "sha256": "20af2f41b6ea6ab7a90aa7015d8ae68e19bea9a91568d4e19af582f5c7b61647",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "064955a679cff4becb2afc5555483eaf75c1df8f04e9834405af56623710ea3e",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-review.jpg",
-      "sha256": "196f13822634655bf7f6d9eb3925aa532a268d97d66dae5b90f0621b4ad472e1",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "05dda76c8562ee4227015171c809b358e3742c154d8943389a3506ee61cc6672",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-editable.jpg",
-      "sha256": "9abca230e62f6dc7af9caa3ac3d9d5e4f194a9841a95daad6eb760d1f14122f8",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "98f3b062d8dc037ca9726338de6f40deb1aac67d48077b09aa8f08e7da6c0324",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-native-hit.jpg",
-      "sha256": "ff3fc3715dc4059abaedb6d82ab19f08cb03db935439e82dd384e21f6a301ef8",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d239ad2c5bb927fc3e6081417da84ea5f0c9e3bec102b083787cafd1e815aaef",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-native-scene.jpg",
-      "sha256": "b0a8f75d6fe5adad675f9f51b0947d9367b7226a3a02b12dd3bf6f9dc865bea6",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "4df0e6fdfd156ca96817c51c7f09b25b73607bb2dadc5e61a7774aabe273bcdf",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-native-render.jpg",
-      "sha256": "f9ac7d63eab53d807c0ae6bf72db8885dc8b3e0dbff2eb420d4d657d5577b3b6",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "8facb46e90aa18d4af6b5d9a8d702ffb098726fd1cad8c62475f34ec0e5f5543",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-two-modes.jpg",
-      "sha256": "df47df5d2c83d7a311735f4e55d1812d3f56cc53db281c2eb65b616a9e71c651",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "270d37a2d2e4a9df09f0c1ace40498c114731ec02c0211e26a90906d4eb2926f",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-library-hit.jpg",
-      "sha256": "5e47bfb45a9c08e4db173b253d5d53ec1876f3f672f274d67657a29c35b8197a",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "f6756b16d91c391314483fa70fb4c46ec67cfc667828f9cb43015b59ef5c8f6f",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-daz-import.jpg",
-      "sha256": "9363b0f03af4b14133580fee233e373c3bf7eb4efe44e3ca774c59fcc7df7ded",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d5e7372374f167b05182327c8aca81435952d5c7e86ae7ef4c6f2a0e2b171ef6",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-daz-mesh.jpg",
-      "sha256": "2420c564705b2a2e22b1bf0f12ff58ab8199f3704b1bb8e056bd280f0bc38de5",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "5f07558cd9b897003c55c5ec652634de356c1a83183ca27bdf0b3b31abed98ea",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-daz-material.jpg",
-      "sha256": "4c0b5789e0c5bd2504b6509e5cabb95ed4ff3c3228d321fb336f8dca7bf04ccf",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "ed00428549d308b2b01827233f5fb9726ef4e5c014ebdaeeb7bb7ff8232d4d8b",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-daz-recovery.jpg",
-      "sha256": "f392568ff274ece7b717ce884a7b6b8ba0fef516ff7ce112f39b99682a32046f",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "85f40d2d36a3b0173885d366a7cf4c8500b80536645e40ee5016ffd59d6d2c90",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-shape-hit.jpg",
-      "sha256": "4ef2305df186d4d424faedc952a83ddede9b50f226ee3189faa54b4f8bf1e919",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "7ace61466358a10c77ccc7a164c8d38974ba14a74617512457041272eb4ac6f7",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-sculpt-stroke.jpg",
-      "sha256": "3c33fb911c1a578625a869c8d6d0c33b3d986b09204c99c29da6c92ef5d9fa57",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "e79a19442d60cc043fb9223805c2fc5e1292b1feff04820fa897e2ee3865d4db",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-sculpt-undo.jpg",
-      "sha256": "bd8a186a234d560c1338af731c2ff3fa78bf5a63c110803054ef9f35ca5509e3",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "972b3662e3d7ff06b954ddbf044b5f894181c60022eea95efe3eab1c565e5af9",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-sculpt-redo.jpg",
-      "sha256": "d82ed4417f4da8c14e8025ff5159fab4473a65f2367f2729f62fa0617732db32",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "e2683acea87ab79b4606f565fe5ec9d12ed070ffd5bd2f5689a3723dd4fb6d1b",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-save-reopen.jpg",
-      "sha256": "bd451092cd247e0e4b9fe45d3066d6ce38c111d532d4eff611a6752a72db5c7e",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d334ece3b5001a0dd3ae3c7f7b286f58c870589d1e25f3fccb0945f1f6cf524c",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-glb-export.jpg",
-      "sha256": "976ea75e7f4f542d6c0720b35264f24c5c34938a45b37756b976055810ed744f",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "81c5acaa26571d924b33e6250d92054182ab0a6e3cb94dede8e3c24f958547ba",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-sculpt-payoff.jpg",
-      "sha256": "3deac0c17cbcbea353f113c697d8c066f51e727ce4fad4827c89985e41fefd9f",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "db15c43f0c1a20882496b30d6e99b86d8f40ba0b61e7669e3ef86f49c6ce05dd",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-chat-hit.jpg",
-      "sha256": "926166f2ad8ae7902b2184977cd81afe551109a0a707c1285da9e2468c082c10",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "0ed8b54ecbd1a39fd3789acf037c877b7694ed050630581f6e99cb63f2b55b4a",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-chat-ask.jpg",
-      "sha256": "54cf4d519bcd36b5755994d3e4ed0075a584077c7e11b5e01b2f50634b96e9ce",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "692c4c118b2dfd3f33793da38ffcee749313119a5052ceac739793eaaaff2d88",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-chat-response.jpg",
-      "sha256": "7a3a41297244d033b2398d8ad01746a76bd2cf55da0a793203cba2add377df5a",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "4bab6049767d48e51758d99ab7f5e394db5e1d357e4ae9507334deebbb222585",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-mcp-hit.jpg",
-      "sha256": "744a5a5a89e6b7883e1e4fb0b8824394a40a5e6fe0eedf03da2b57dca74abd3b",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "8bcfe7810cb75ec5a357517b9ca0114b8aef6e4072b2f6dc2aa86bd19b643f69",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-mcp-add.jpg",
-      "sha256": "214ffdf773c44939ab795ef25dfb494ffd1d24b44d6031b164d05bc7ea8ef9b1",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "00a9d0d7da0db3056dc2b455e2363df1db2772d7d9e2c5620a0236ebeb0dbd97",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-mcp-transform.jpg",
-      "sha256": "e8f13d3410f5423468d6a583e286ff62316f0ec51d7f77441e4f47197a2d00f1",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "826c23e404066239f31da5b00f16cf0888f49e49a64829d9b7b5b5ed00961924",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-mcp-undo.jpg",
-      "sha256": "4883828e390a54cc747668862869af57709fa42d4e698c75856c7aa3c0065fa7",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "c1ec33c48d6db4d180ab84914c796b5eaf07ef4653dd7f40283875f9312e20fd",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-mcp-redo.jpg",
-      "sha256": "2fcba3caf1cd0e7f00b567428acb92aca7b013dcdf4bb8455e82bdffa1c410db",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "5b39aed89f14647eeef0b15fc8c142d5b4bf1fada901fd6e4d5e158ab4a66b82",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-mcp-payoff.jpg",
-      "sha256": "6a78b0466f877f7e308cd07d1aaf81d67e85e5a72a67120c3dd9f25b5107be13",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "cfce8dfe43cd692a66a48c0ff6663a2586f6a442a5e9ee698a83a1a21afda0ce",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-results-stack.jpg",
-      "sha256": "9516387d1e286191124b3fd32805a32f9a064c07ce4b7dd48d6c583f3b0e1160",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "4d216aba88dcf716a5f22bf59893819d323bd829ee429d4b115c31799698af72",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-render-payoff.jpg",
-      "sha256": "7820d4fceefc7c956392b2fffe9f237458df2977d37fc7bca8e128db1b212cbc",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "7843756ecdbeacc0b45341f171d2a8a9c03ddd704795ab5a347fb6e7877ab64e",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-library-payoff.jpg",
-      "sha256": "b247ec211320400a5b862e25e6490615f5fb444d1f98a7dff730be28c2dc3707",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "d7adef878dfb6d486f4608db9a3f00edf084c220d8aa2673ad81f3870619a759",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-create-payoff.jpg",
-      "sha256": "6ab3215a82321c4e6fe429a11de4b17604079162fc54f7956a9a600b459eaba0",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "4273c6b582b04f1c1b970e1a40aac0dbb504675b48ee5808cae95d2667eaea7a",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-invitation.jpg",
-      "sha256": "2725bfa8d0288ce0264825626c1110088467c63e9b92d6e938baa3e1cb6748fa",
-      "method": "Visually inspected in asset-variety pass"
+      "sha256": "ba5b9470286d7077ed6a6d82be7393bdcc9fc87c9aa595ea4f08ca1456314425",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-native-scene-source-cut.jpg",
-      "sha256": "e995991cfa7642a9758d1a8ed9334fe34f47da9e5aabf9964df0b40b5248e112",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "9d445b1741fdde206f33b78f277c87b54efbc5c761d7868e913544b7a0f79950",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     },
     {
       "file": "transition-daz-import-source-cut.jpg",
-      "sha256": "29707dc2d00ad871a2ecf43bbd673148faec17f64c4544694ed8639cccd13711",
-      "method": "Exact SHA-256 match to prior visually reviewed evidence"
+      "sha256": "0c0c479e09ae983e452a730bcd71d939825ad0ede55d5924f0a73c480f633a1d",
+      "method": "Visually inspected all sixteen frames in decoded transition strip"
     }
   ],
-  "carryForward": {
-    "commit": "0972e0e921f36e24224a250c61f5d57cc3e0da4b",
-    "sha256": "fdd17112f4a87719f1219dbd0816915cd75d2234b97d8f5857971d187b3a2342",
-    "images": 33,
-    "method": "Exact file SHA-256 comparison to prior 100-image visual audit"
-  },
-  "newlyInspected": 67,
+  "newlyInspected": 102,
   "observations": [
-    "Inspected all 67 new or re-encoded stills and sixteen-frame strips. Carried forward 33 exact prior reviewed file hashes. Combined coverage: 60 full-resolution stills and 40 transition strips.",
-    "BMW shaded and elevated wireframe views, DAZ mesh-hair rear detail, optics wireframe and new closing cards retain readable headings and smooth camera progression.",
-    "Intentional card overlap and title reveal masks retained; no blank transition flashes or exposed personal paths observed.",
-    "Original material approximations remain visible and disclosed; native shader equivalence not claimed.",
-    "Workflow timing and before-and-after recovery states remain unchanged."
+    "All 62 full-resolution stills and 40 sixteen-frame strips inspected for final video SHA. No prior-image carry-forward.",
+    "Dragon, vintage trunk, handbag and sci-fi crate replace decorative camera, tank-top and vase repeats. Native wireframe and varied angles visible.",
+    "Typed prompt and complete model reply remain readable in tracked close-ups; project-name field and save icon visible in dedicated save detail.",
+    "Headline mask entrances, moving panel entry crops, overlapping fan-card edges/labels and short source-population frames are intentional. No unintended text clipping or blank transition frames found.",
+    "Blender editable/native distinction, actual preset/sculpt/history/save/export actions and external MCP changes retain authentic source order and caption limits.",
+    "No exposed credentials or personal filesystem paths in reviewed images. Imported material approximations remain visible and documented."
   ]
 }

@@ -23,9 +23,9 @@
   "decodedAudioSeconds": 120,
   "captionCues": 40,
   "transitionStrips": 40,
-  "shotStills": 60,
+  "shotStills": 62,
   "textBounds": "DOM overflow and composition-bound checks run on rendered frames",
-  "visualReview": "Codex inspected 67 new or re-encoded images; 33 exact prior reviewed SHA-256 hashes carried forward. Combined coverage: 60 full-resolution stills and 40 sixteen-frame strips.",
+  "visualReview": "Codex inspected 62 full-resolution stills and 40 sixteen-frame transition strips",
   "deterministicFrames": {
     "passed": true,
     "independentPairs": 6
@@ -40,14 +40,19 @@
     "External official SDK client: inspect/add/transform/undo/redo with revision checks",
     "Separate fresh Blender compatibility reviews captured at readable duration"
   ],
-  "sha256": "a9e1b276fa1fc86f4e341b272f9f5748d8277d686d163d69496a80c04d7fb50e",
-  "completed": "2026-11-04T08:38:38.183Z",
+  "sha256": "a8ca72b48592cb9cc20493013eb6da1db08ad2fa984ffe9d70d1fe78e59bad5e",
+  "completed": "2026-11-04T19:55:30.275Z",
   "additionalCaptureChecks": [
     "Frozen ASAR unchanged",
     "BMW and DAZ source hashes match acceptance inventory",
     "Four fresh imports retain visible geometry",
     "Wireframe uses actual app toggle",
-    "600 distinct camera poses rendered from actual viewport"
+    "600 distinct camera poses rendered from actual viewport",
+    "Frozen ASAR unchanged",
+    "Source hashes checked before and after capture",
+    "5 fresh imports retain visible geometry",
+    "Wireframe uses actual app toggle",
+    "750 distinct camera poses rendered from actual viewport"
   ],
   "containerChapters": 7,
   "musicCutChecks": [

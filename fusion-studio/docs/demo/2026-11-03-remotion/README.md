@@ -8,19 +8,19 @@
 
 | Section | Demonstration |
 |---|---|
-| Opening | Preserved optics render, BMW .blend bodywork, DAZ braided mesh hair, elevated optics wireframe and asset cards |
+| Opening | Dragon hero, BMW .blend bodywork, DAZ braided hair, dragon topology and handbag/car/crate cards |
 | Blender | Compatibility review; editable interchange and preserved native rendering identified separately |
-| DAZ | Actual MuscleShirt .duf mesh/rig; compatible black 3Delight preset; undo/redo |
+| DAZ | Vintage trunk and handbag views; actual MuscleShirt import, compatible black 3Delight preset and undo/redo |
 | Edit | Pointer-driven sculpt; exact geometry recovery; save/reopen and GLB export |
-| Chat | Actual Phi-3 response through local Ollama; conversational chat only |
+| Chat | Close-up on actual typed prompt, pan to Phi-3 reply through local Ollama; conversational chat only |
 | MCP | Separate external official SDK client; inspect/add/transform/undo/redo |
-| Finish | New asset cards, mesh-hair rear detail, BMW wireframe, RC version, repository address, music credit |
+| Finish | Creature/vintage/handbag cards, BMW orbit, sci-fi crate, dragon wireframe, RC version, repository address, music credit |
 
 ![Short preview](preview.gif)
 
 Rebuilt after user feedback as a launch trailer: 39 shots, 38 music-grid cuts, oversized masked headings, fan-out asset cards, diagonal light sweeps, native/editable comparisons and focused app punch-ins. English VTT captions supply context; short on-screen phrases keep visual momentum. Detail crops and capture speed are labeled. Source/package hashes, decoded texture checks and exact recovery measurements remain recorded. Original [Pascal reference](https://github.com/pascalorg/editor) study stays in provenance; current trailer energy follows updated user direction.
 
-November 4 variety pass replaces five repeated short shots and closing cards with four fresh packaged-app captures: BMW shaded/wireframe viewpoints, DAZ braided mesh hair rear view, and elevated optics wireframe. Native viewport toggle supplies topology views. Working-view visibility isolates BMW subject; source files remain unchanged. Car and hair viewport materials retain conversion approximations; film does not claim native shader parity.
+November 4 expanded-library pass replaces repeated decorative camera, tank-top and vase shots throughout opening, stings, cards and ending. Five fresh clips add 750 real viewport poses: shaded dragon, dragon wireframe, vintage trunk, handbag and sci-fi crate. BMW and braided hair remain for broader variety. Typing zooms to message field at 2.8× and pans to actual reply; save briefly isolates project name. Core workflow footage stays intact. Carriage scene exceeded exploratory import timeout and is excluded. New appearance clips do not extend release certification; viewport shader approximations remain.
 
 **DAZ material limit:** this black 3Delight preset exposes supported color channel through current reader. Legacy black-texture shader channels are not reconstructed; original texture remains. Footage certifies supported transaction and recovery, not full 3Delight appearance parity. Texture pixels recover exactly; measured linear-color roundtrip drift is 1.017e-6 against capture bound 1e-5. Mesh, rig, source files and texture assets are not distributed here.
 
