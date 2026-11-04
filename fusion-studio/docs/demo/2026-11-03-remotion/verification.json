@@ -21,10 +21,11 @@
     "target_offset": "-1.16"
   },
   "decodedAudioSeconds": 120,
-  "captionCues": 17,
-  "transitionStrips": 6,
-  "shotStills": 21,
-  "visualReview": "Codex inspected 21 full-resolution shot stills and six 16-frame transition strips",
+  "captionCues": 40,
+  "transitionStrips": 24,
+  "shotStills": 43,
+  "textBounds": "DOM overflow and composition-bound checks run on rendered frames",
+  "visualReview": "Codex inspected 43 full-resolution stills and 24 sixteen-frame transition strips",
   "deterministicFrames": {
     "passed": true,
     "independentPairs": 6
@@ -39,38 +40,113 @@
     "External official SDK client: inspect/add/transform/undo/redo with revision checks",
     "Separate fresh Blender compatibility reviews captured at readable duration"
   ],
-  "sha256": "e059d2518827c7dde67a7bcb62d9645d1ae0a41f0fad080fc93ad2b36ee8b0d4",
-  "completed": "2026-11-03T19:10:06.951Z",
+  "sha256": "e7e207a9514ca338ce829dc067e4525ee526b9dd979138dbef2874b73746d4e2",
+  "completed": "2026-11-04T00:46:45.356Z",
   "containerChapters": 7,
   "musicCutChecks": [
     {
-      "scene": "blender",
-      "frame": 183,
+      "shot": "optics-open",
+      "frame": 75,
       "beatErrorFrames": 0
     },
     {
-      "scene": "daz",
-      "frame": 831,
+      "shot": "garment-open",
+      "frame": 147,
       "beatErrorFrames": 0
     },
     {
-      "scene": "edit",
-      "frame": 1551,
+      "shot": "sculpt-open",
+      "frame": 219,
       "beatErrorFrames": 0
     },
     {
-      "scene": "chat",
-      "frame": 2343,
+      "shot": "optics-return",
+      "frame": 291,
       "beatErrorFrames": 0
     },
     {
-      "scene": "mcp",
-      "frame": 2811,
+      "shot": "outputs-pair",
+      "frame": 363,
       "beatErrorFrames": 0
     },
     {
-      "scene": "finish",
-      "frame": 3351,
+      "shot": "native-return",
+      "frame": 435,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "working-copy",
+      "frame": 507,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "opener-payoff",
+      "frame": 579,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "blender-edit",
+      "frame": 651,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "blender-preserve",
+      "frame": 867,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "blender-render",
+      "frame": 975,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "daz-load",
+      "frame": 1083,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "daz-material",
+      "frame": 1299,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "sculpt-change",
+      "frame": 1623,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "save-export",
+      "frame": 2019,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "local-chat",
+      "frame": 2271,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "mcp-operations",
+      "frame": 2595,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "final-geometry",
+      "frame": 2991,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "final-library",
+      "frame": 3135,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "final-render",
+      "frame": 3279,
+      "beatErrorFrames": 0
+    },
+    {
+      "shot": "invitation",
+      "frame": 3423,
       "beatErrorFrames": 0
     }
   ],

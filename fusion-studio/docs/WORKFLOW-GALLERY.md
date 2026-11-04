@@ -1,6 +1,6 @@
 # Recorded Fusion workflows
 
-Current gallery: [Two-minute Remotion film](demo/2026-11-03-remotion/README.md), with Secret by ESPRIT 空想, captions, source/package hashes, fresh capture assertions, full decoding and independent frame checks.
+Current gallery: [Two-minute film — Pascal cadence revision](demo/2026-11-03-remotion/README.md), with a full-frame result montage, steady workflow walkthrough, Secret by ESPRIT 空想, captions, source/package hashes, fresh capture assertions, full decoding and independent frame checks.
 
 [![Watch current demo](demo/2026-11-03-remotion/poster.png)](demo/2026-11-03-remotion/fusion-launch.mp4)
 

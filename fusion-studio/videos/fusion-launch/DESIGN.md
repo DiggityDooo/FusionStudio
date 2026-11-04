@@ -1,5 +1,7 @@
-# Fusion / retained
+# Fusion / in motion
 
-1920 × 1080, 30 fps, 3,600 frames. Graphite `#161715`, paper `#eae6dc`, warm gold `#dfb870`. One sans family: installed Segoe UI, copied locally for deterministic Windows rendering; font binaries remain untracked. Fixed 80-pixel left margin. Heading 56px, bookends 88px, explanatory captions 22px. Whole app frames remain inside contained rounded cards. Real output crops are confined to bookend montage.
+1920×1080, 30 fps, 3600 frames. Near-black #090a0b, warm gold #dfb870, paper-white #f4f2eb. Installed Segoe UI remains local and hash-verified. Clean, screen-locked brand at 38px left margin; compact top section labels; 28px bottom captions. Major workflow canvas uses whole 1920×960 capture scaled down to 1856×928, with no cropping of controls. Compatibility reviews retain their actual content.
 
-Restrained exponential arrivals, continuous 1.8% pushes, 12-frame exits. Busy product footage gets calm camera movement. Screen-locked titles. No flash/shake effects. Captions follow visible actions, with imported limits distinguished from native rendering. Music remains one continuous excerpt at original speed.
+Output-first opening: full-frame native render and live viewport orbits, then comparison. Body follows source → asset → geometry → conversation → external control. Closing returns to results and repository invitation. No chapter-card layout, ornamental footer, progress bar, repeated slogan or light/dark card alternation. Readable phrase captions carry explanation while product occupies frame.
+
+Live output orbits supply continuous motion. Stable workflow framing protects small controls; native still gets only a 1.5% push. Cuts follow supplied song grid and captions follow actual visible actions. Hard scene cuts match measured Pascal reference; no fade-through-black. Caption emphasis settles in ten frames. Final typography remains on screen until exact endpoint.

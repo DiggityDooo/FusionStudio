@@ -34,7 +34,7 @@ Keeping an original beside an edited mesh is useful preservation; it does not ma
 
 ## Watch real workflows
 
-**Two-minute Remotion film, recorded November 3, 2026.** [Watch 1080p demo with ESPRIT’s “Secret”](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4), or read [chapters, limits and verification](fusion-studio/docs/demo/2026-11-03-remotion/README.md). Actual packaged Blender/DAZ imports, sculpt/history/save, local model chat and external MCP. Private DAZ source files and original music input remain local.
+**Two-minute Remotion film — Pascal cadence revision, November 3, 2026.** [Watch 1080p demo with ESPRIT’s “Secret”](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4), or read [chapters, limits and verification](fusion-studio/docs/demo/2026-11-03-remotion/README.md). Actual packaged Blender/DAZ imports, sculpt/history/save, local model chat and external MCP. Private DAZ source files and original music input remain local.
 
 ![Short preview of Remotion film](fusion-studio/docs/demo/2026-11-03-remotion/preview.gif)
 
