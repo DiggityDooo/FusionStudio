@@ -19,3 +19,7 @@ Final picture review fixes: sculpt undo/redo captions aligned to source frames 3
 - Windows remux: final render completed but in-process chapter output open failed. Standalone remux after renderer exit passed. Package render command now sequences separate Node processes; render:chapters supports recovery without re-rendering frames.
 
 - User rejected previous cut as insufficiently flashy. Rebuilt as 39-shot launch trailer with masked large type, fan-out asset cards, diagonal light reveals, native/editable split comparisons, focused UI push-ins and paper-white undo accents. Real footage and operation order retained; 120-second soundtrack scope unchanged. Pascal proportions no longer control opening duration after explicit user feedback.
+
+- Initial full render review found empty background at UI entrance boundaries. Removed UI entrance opacity fade, retained visible sliding surface, and kept asset-card pixels partially visible while cards enter. Unfocused workspace reveal now retains complete frame rather than applying unlabeled punch-in. Re-render required before final evidence.
+
+- Corrected launch film completed: 3,600 decoded frames, 120-second stereo audio, 60 full-resolution stills and 40 sixteen-frame strips reviewed. All UI entrance surfaces remain visible; six independent frame pairs match. Final SHA-256 ae3c84719a1abaec8b76627eeb0f7fa54f23ce8cf176f3404e0fe23de5447b8a; frozen app, original 86-second demo and pre-existing notes retain baseline hashes.

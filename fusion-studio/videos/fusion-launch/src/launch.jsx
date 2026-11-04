@@ -20,13 +20,13 @@ function Backdrop({frame,light=false}){
  return <><div className={`ambient ${light?'pale':''}`}/><div className="trailer-grid"/><div className="orbit-ring" style={{transform:`translate(-50%,-50%) rotate(${-18+frame*.025}deg)`}}/><div className="beam" style={{opacity:interpolate(frame,[0,5,19],[0,.7,0],clamp),transform:`translateX(${ramp(frame,0,19,-800,2100)}px) skewX(-23deg)`}}/></>;
 }
 function Stack({clip,frame}){
- return <div className="asset-stack">{['garment-orbit','optics-orbit','sculpt-orbit'].map((asset,i)=>{const entry=ramp(frame,i*5,24+i*5,0,1),d=frame/clip.frames;return <div key={asset} className={`asset-card card-${i}`} style={{transform:`translateY(${(1-entry)*330+Math.sin(i*2)*d*16}px) rotate(${[-9,2,10][i]}deg) scale(${.9+.1*entry})`,opacity:entry}}><Media asset={asset} clip={{...clip,sourceIn:0,sourceOut:150}}/><div className="asset-card-label">{['DAZ / .DUF','BLENDER / .BLEND','EDITABLE / .GLB'][i]}</div></div>;})}</div>;
+ return <div className="asset-stack">{['garment-orbit','optics-orbit','sculpt-orbit'].map((asset,i)=>{const entry=ramp(frame,i*5,24+i*5,0,1),d=frame/clip.frames;return <div key={asset} className={`asset-card card-${i}`} style={{transform:`translateY(${(1-entry)*330+Math.sin(i*2)*d*16}px) rotate(${[-9,2,10][i]}deg) scale(${.9+.1*entry})`,opacity:.4+.6*entry}}><Media asset={asset} clip={{...clip,sourceIn:0,sourceOut:150}}/><div className="asset-card-label">{['DAZ / .DUF','BLENDER / .BLEND','EDITABLE / .GLB'][i]}</div></div>;})}</div>;
 }
 function Screen({clip,frame}){
  const meta=prepared.assets[clip.asset],rate=((clip.sourceOut??meta.frames)-(clip.sourceIn||0))/clip.frames;
- const zoom=clip.focus==='chat'?1.25:clip.focus==='dialog'?1.12:1.1;
+ const zoom=clip.focus==='chat'?1.25:clip.focus==='dialog'?1.12:clip.focus?1.1:1;
  const focus=ramp(frame,18,Math.min(clip.frames-3,60),1,zoom),entry=ramp(frame,0,20,0,1);
- return <><div className="screen" style={{transform:`translateY(${(1-entry)*95}px) scale(${.96+.04*entry})`,opacity:entry}}><div className="screen-rail"><i/><i/><i/><span>FUSION STUDIO</span><b>ACTUAL CAPTURE{rate>1.08?` / ${rate.toFixed(1)}×`:''}</b></div><div className="screen-content"><div className="screen-zoom" style={{transform:`scale(${focus})`,transformOrigin:clip.focus==='chat'?'52% 38%':'52% 48%'}}><Media clip={clip} fit="contain"/></div></div></div><div className="action-label" data-qa="action-label"><span className="live-dot"/>{clip.label}{clip.focus?' / DETAIL CROP':''}</div></>;
+ return <><div className="screen" style={{transform:`translateY(${(1-entry)*95}px) scale(${.96+.04*entry})`,opacity:1}}><div className="screen-rail"><i/><i/><i/><span>FUSION STUDIO</span><b>ACTUAL CAPTURE{rate>1.08?` / ${rate.toFixed(1)}×`:''}</b></div><div className="screen-content"><div className="screen-zoom" style={{transform:`scale(${focus})`,transformOrigin:clip.focus==='chat'?'52% 38%':'52% 48%'}}><Media clip={clip} fit="contain"/></div></div></div><div className="action-label" data-qa="action-label"><span className="live-dot"/>{clip.label}{clip.focus?' / DETAIL CROP':''}</div></>;
 }
 function Shot({clip,scene,preview}){
  const frame=useCurrentFrame(),globalFrame=clip.from+frame,cue=prepared.cues.find(([a,b])=>globalFrame>=a&&globalFrame<b),type=clip.layout;

@@ -7,7 +7,7 @@
       "120 seconds",
       "music and captions, no narration",
       "frame-driven React",
-      "Pascal results / explanation / invitation cadence"
+      "output-first structure; launch-trailer energy after user feedback"
     ],
     "reference": {
       "url": "https://github.com/pascalorg/editor",
@@ -23,143 +23,116 @@
     "fps": 30,
     "durationInFrames": 3600,
     "version": "0.19.0-rc.1",
-    "edition": "Pascal cadence revision"
+    "edition": "Launch trailer revision"
   },
   "story": [
     {
       "id": "hook",
       "from": 0,
-      "to": 651,
-      "tag": "FUSION STUDIO",
-      "title": "Your assets. In motion.",
-      "mode": "outputs",
+      "to": 435,
+      "tag": "IMPORT / CREATE / EXPORT",
+      "title": "Your assets. Unleashed.",
       "clips": [
         {
-          "id": "native-open",
+          "id": "hero",
           "asset": "native-output",
           "frames": 75,
-          "layout": "output",
-          "label": "NATIVE BLENDER RENDER",
+          "layout": "hero",
+          "headline": [
+            "YOUR ASSETS.",
+            "UNLEASHED."
+          ],
           "words": [
             [
               0,
-              "This is Fusion Studio."
+              "Your assets. Unleashed."
             ]
           ]
         },
         {
-          "id": "optics-open",
+          "id": "blend-hit",
           "asset": "optics-orbit",
           "frames": 72,
-          "sourceOut": 72,
-          "layout": "output",
-          "label": "EDITABLE BLENDER IMPORT",
+          "sourceOut": 100,
+          "layout": "format",
+          "headline": [
+            ".BLEND"
+          ],
+          "label": "BLENDER → EDITABLE GEOMETRY",
           "words": [
             [
               0,
-              "Start with your own assets."
+              "Bring your Blender scenes."
             ]
           ]
         },
         {
-          "id": "garment-open",
+          "id": "daz-hit",
           "asset": "garment-orbit",
-          "frames": 72,
-          "sourceOut": 72,
-          "layout": "output",
-          "label": "DAZ MUSCLESHIRT / .DUF",
+          "frames": 36,
+          "sourceIn": 35,
+          "sourceOut": 95,
+          "layout": "format",
+          "headline": [
+            ".DUF"
+          ],
+          "label": "YOUR DAZ LIBRARY",
           "words": [
             [
               0,
-              "Bring your DAZ library."
+              "Your DAZ library."
             ]
           ]
         },
         {
-          "id": "sculpt-open",
+          "id": "mesh-hit",
           "asset": "sculpt-orbit",
-          "frames": 72,
-          "sourceOut": 72,
-          "layout": "output",
-          "label": "SCULPTED GLB OUTPUT",
+          "frames": 36,
+          "sourceIn": 35,
+          "sourceOut": 95,
+          "layout": "format",
+          "headline": [
+            ".GLB"
+          ],
+          "label": "EDITABLE EXCHANGE",
           "words": [
             [
               0,
-              "Shape it in Fusion."
+              "Editable working copies."
             ]
           ]
         },
         {
-          "id": "optics-return",
+          "id": "all-together",
           "asset": "optics-orbit",
-          "frames": 72,
-          "sourceIn": 72,
-          "sourceOut": 144,
-          "layout": "output",
-          "label": "REAL IMPORTED GEOMETRY",
+          "frames": 108,
+          "layout": "stack",
+          "headline": [
+            "BRING",
+            "IT ALL."
+          ],
           "words": [
             [
               0,
-              "Different sources."
+              "Different assets. One workspace."
             ]
           ]
         },
         {
-          "id": "outputs-pair",
-          "asset": "garment-orbit",
-          "companion": "sculpt-orbit",
-          "frames": 72,
-          "sourceIn": 72,
-          "sourceOut": 144,
-          "layout": "pair",
-          "label": "TWO ASSETS / ONE WORKSPACE",
-          "words": [
-            [
-              0,
-              "One editable workspace."
-            ]
-          ]
-        },
-        {
-          "id": "native-return",
-          "asset": "native-output",
-          "frames": 72,
-          "layout": "output",
-          "label": "ORIGINAL CAMERA / SHADERS / LIGHTS",
-          "words": [
-            [
-              0,
-              "Keep native rendering."
-            ]
-          ]
-        },
-        {
-          "id": "working-copy",
+          "id": "workspace-reveal",
           "asset": "blend-edit",
-          "frames": 72,
+          "frames": 108,
           "sourceIn": 165,
-          "sourceOut": 237,
+          "sourceOut": 269,
           "layout": "ui",
-          "label": "EDITABLE WORKING COPY",
+          "headline": [
+            "ONE WORKSPACE."
+          ],
+          "label": "REAL PACKAGED FUSION FOOTAGE",
           "words": [
             [
               0,
-              "Keep control of the geometry."
-            ]
-          ]
-        },
-        {
-          "id": "opener-payoff",
-          "asset": "sculpt-orbit",
-          "frames": 72,
-          "sourceIn": 36,
-          "sourceOut": 108,
-          "layout": "output",
-          "label": "IMPORT → EDIT → EXPORT",
-          "words": [
-            [
-              0,
-              "Here is how it works."
+              "Meet Fusion Studio."
             ]
           ]
         }
@@ -167,51 +140,134 @@
     },
     {
       "id": "blender",
-      "from": 651,
+      "from": 435,
       "to": 1083,
-      "tag": "01 / SOURCE",
-      "title": "Blender",
-      "mode": "proof",
+      "tag": "01 / BLENDER",
+      "title": "Unlock your scene",
       "clips": [
         {
-          "id": "blender-edit",
+          "id": "unlock",
+          "asset": "optics-orbit",
+          "frames": 36,
+          "sourceIn": 50,
+          "sourceOut": 110,
+          "layout": "format",
+          "headline": [
+            "UNLOCK."
+          ],
+          "label": "BLENDER IMPORT",
+          "words": [
+            [
+              0,
+              "Unlock your scene."
+            ]
+          ]
+        },
+        {
+          "id": "review",
           "asset": "blend-edit",
-          "frames": 216,
+          "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 138,
           "layout": "ui",
+          "headline": [
+            "CHECK. THEN CREATE."
+          ],
+          "label": "REVIEW CONVERSION LIMITS",
+          "focus": "dialog",
           "words": [
             [
               0,
               "Review conversion limits first."
-            ],
+            ]
+          ]
+        },
+        {
+          "id": "editable",
+          "asset": "blend-edit",
+          "frames": 108,
+          "sourceIn": 138,
+          "sourceOut": 269,
+          "layout": "ui",
+          "headline": [
+            "MAKE IT EDITABLE."
+          ],
+          "label": "BLENDER / INTERCHANGE",
+          "focus": "viewport",
+          "words": [
             [
-              126,
+              0,
               "Import an editable working copy."
             ]
           ]
         },
         {
-          "id": "blender-preserve",
-          "asset": "blend-preserve",
-          "frames": 108,
-          "layout": "ui",
+          "id": "native-hit",
+          "asset": "native-output",
+          "frames": 36,
+          "layout": "hero",
+          "headline": [
+            "KEEP",
+            "THE ORIGINAL."
+          ],
           "words": [
             [
               0,
-              "Or preserve the native scene."
+              "Keep the original."
             ]
           ]
         },
         {
-          "id": "blender-render",
-          "asset": "native-render",
+          "id": "native-scene",
+          "asset": "blend-preserve",
           "frames": 108,
-          "sourceIn": 60,
-          "sourceOut": 204,
+          "sourceIn": 45,
+          "sourceOut": 185,
           "layout": "ui",
+          "headline": [
+            "NATIVE STAYS NATIVE."
+          ],
+          "label": "PRESERVED BLENDER SCENE",
+          "focus": "viewport",
           "words": [
             [
               0,
-              "Render with its original camera and shaders."
+              "Preserve the native render scene."
+            ]
+          ]
+        },
+        {
+          "id": "native-render",
+          "asset": "native-render",
+          "frames": 108,
+          "sourceIn": 45,
+          "sourceOut": 260,
+          "layout": "ui",
+          "headline": [
+            "LIGHT IT UP."
+          ],
+          "label": "ACTUAL CYCLES RENDER / WAITS CUT",
+          "focus": "dialog",
+          "words": [
+            [
+              0,
+              "Render through Blender."
+            ]
+          ]
+        },
+        {
+          "id": "two-modes",
+          "asset": "optics-orbit",
+          "frames": 144,
+          "layout": "compare",
+          "headline": [
+            "TWO MODES.",
+            "ONE SOURCE."
+          ],
+          "words": [
+            [
+              0,
+              "Editable working copy. Preserved native rendering."
             ]
           ]
         }
@@ -220,52 +276,99 @@
     {
       "id": "daz",
       "from": 1083,
-      "to": 1623,
-      "tag": "02 / ASSET",
-      "title": "DAZ",
-      "mode": "proof",
+      "to": 1515,
+      "tag": "02 / DAZ",
+      "title": "Bring your library",
       "clips": [
         {
-          "id": "daz-load",
-          "asset": "daz-import",
-          "frames": 216,
-          "layout": "ui",
+          "id": "library-hit",
+          "asset": "garment-orbit",
+          "frames": 36,
+          "sourceIn": 30,
+          "sourceOut": 90,
+          "layout": "format",
+          "headline": [
+            "YOUR LIBRARY."
+          ],
+          "label": "DAZ / .DUF",
           "words": [
             [
               0,
-              "Import a real MuscleShirt .duf."
-            ],
+              "Bring your library."
+            ]
+          ]
+        },
+        {
+          "id": "daz-import",
+          "asset": "daz-import",
+          "frames": 108,
+          "layout": "ui",
+          "headline": [
+            "BRING IT IN."
+          ],
+          "label": "MUSCLESHIRT / .DUF",
+          "focus": "viewport",
+          "words": [
             [
-              108,
-              "Mesh, textures and rig come through."
+              0,
+              "Import a real DAZ garment."
+            ]
+          ]
+        },
+        {
+          "id": "daz-mesh",
+          "asset": "garment-orbit",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "MESH.",
+            "TEXTURES. RIG."
+          ],
+          "label": "VERIFIED MUSCLESHIRT IMPORT",
+          "words": [
+            [
+              0,
+              "Mesh, textures and rig."
             ]
           ]
         },
         {
           "id": "daz-material",
           "asset": "daz-preset",
-          "frames": 324,
+          "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 240,
           "layout": "ui",
+          "headline": [
+            "MAKE A CHANGE."
+          ],
+          "label": "SUPPORTED MATERIAL PROPERTIES",
+          "focus": "viewport",
           "words": [
             [
               0,
-              "Choose a compatible material preset."
-            ],
+              "Apply supported preset properties."
+            ]
+          ]
+        },
+        {
+          "id": "daz-recovery",
+          "asset": "daz-preset",
+          "frames": 108,
+          "sourceIn": 240,
+          "sourceOut": 521,
+          "layout": "ui",
+          "headline": [
+            "STAY IN CONTROL."
+          ],
+          "label": "UNDO / REDO",
+          "focus": "viewport",
+          "words": [
             [
-              90,
-              "Apply supported color properties."
-            ],
-            [
-              144,
-              "Undo. Restore material state."
-            ],
-            [
-              204,
-              "Redo. Recover the applied preset."
-            ],
-            [
-              258,
-              "Legacy shader parity remains limited."
+              0,
+              "Undo and redo. Legacy shader parity remains limited."
             ]
           ]
         }
@@ -273,49 +376,140 @@
     },
     {
       "id": "edit",
-      "from": 1623,
+      "from": 1515,
       "to": 2271,
-      "tag": "03 / GEOMETRY",
-      "title": "Edit and recover",
-      "mode": "proof",
+      "tag": "03 / CREATE",
+      "title": "Make your mark",
       "clips": [
         {
-          "id": "sculpt-change",
-          "asset": "sculpt",
-          "frames": 396,
-          "layout": "ui",
+          "id": "shape-hit",
+          "asset": "sculpt-orbit",
+          "frames": 36,
+          "sourceIn": 10,
+          "sourceOut": 70,
+          "layout": "format",
+          "headline": [
+            "SHAPE IT."
+          ],
+          "label": "EDITABLE GEOMETRY",
           "words": [
             [
               0,
-              "A real sculpt stroke changes the mesh."
-            ],
-            [
-              240,
-              "Undo restores the exact geometry."
-            ],
-            [
-              300,
-              "Redo recovers the sculpt."
-            ],
-            [
-              354,
-              "Your changes remain editable."
+              "Make your mark."
             ]
           ]
         },
         {
-          "id": "save-export",
-          "asset": "save",
-          "frames": 252,
+          "id": "sculpt-stroke",
+          "asset": "sculpt",
+          "frames": 216,
+          "sourceIn": 0,
+          "sourceOut": 329,
           "layout": "ui",
+          "headline": [
+            "MAKE YOUR MARK."
+          ],
+          "label": "REAL SCULPT STROKE",
+          "focus": "viewport",
+          "words": [
+            [
+              0,
+              "A real stroke. Changed geometry."
+            ]
+          ]
+        },
+        {
+          "id": "sculpt-undo",
+          "asset": "sculpt",
+          "frames": 72,
+          "sourceIn": 310,
+          "sourceOut": 398,
+          "layout": "ui",
+          "headline": [
+            "UNDO."
+          ],
+          "label": "EXACT GEOMETRY RECOVERY",
+          "focus": "viewport",
+          "light": true,
+          "words": [
+            [
+              0,
+              "Undo. Exact geometry restored."
+            ]
+          ]
+        },
+        {
+          "id": "sculpt-redo",
+          "asset": "sculpt",
+          "frames": 72,
+          "sourceIn": 385,
+          "sourceOut": 493,
+          "layout": "ui",
+          "headline": [
+            "REDO."
+          ],
+          "label": "RECOVER THE SCULPT",
+          "focus": "viewport",
+          "words": [
+            [
+              0,
+              "Redo. Recover the sculpt."
+            ]
+          ]
+        },
+        {
+          "id": "save-reopen",
+          "asset": "save",
+          "frames": 144,
+          "sourceIn": 0,
+          "sourceOut": 180,
+          "layout": "ui",
+          "headline": [
+            "SAVE IT. KEEP IT."
+          ],
+          "label": "SAVE / REOPEN",
+          "focus": "viewport",
           "words": [
             [
               0,
               "Save. Reopen the same geometry."
-            ],
+            ]
+          ]
+        },
+        {
+          "id": "glb-export",
+          "asset": "save",
+          "frames": 144,
+          "sourceIn": 180,
+          "sourceOut": 361,
+          "layout": "ui",
+          "headline": [
+            "TAKE IT WITH YOU."
+          ],
+          "label": "VALIDATED GLB EXPORT",
+          "focus": "dialog",
+          "words": [
             [
-              126,
-              "Export a validated GLB working copy."
+              0,
+              "Export your editable GLB working copy."
+            ]
+          ]
+        },
+        {
+          "id": "sculpt-payoff",
+          "asset": "sculpt-orbit",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "YOURS TO BUILD."
+          ],
+          "label": "SCULPTED GLB OUTPUT",
+          "words": [
+            [
+              0,
+              "Yours to build."
             ]
           ]
         }
@@ -325,31 +519,62 @@
       "id": "chat",
       "from": 2271,
       "to": 2595,
-      "tag": "04 / CONVERSATION",
+      "tag": "04 / CONNECT",
       "title": "Your local model",
-      "mode": "proof",
       "clips": [
         {
-          "id": "local-chat",
+          "id": "chat-hit",
           "asset": "chat",
-          "frames": 324,
-          "layout": "ui",
+          "frames": 36,
+          "sourceIn": 170,
+          "sourceOut": 220,
+          "layout": "type",
+          "headline": [
+            "YOUR MODEL.",
+            "YOUR MACHINE."
+          ],
           "words": [
             [
               0,
-              "Connect your local Ollama model."
-            ],
+              "Your model. Your machine."
+            ]
+          ]
+        },
+        {
+          "id": "chat-ask",
+          "asset": "chat",
+          "frames": 144,
+          "sourceIn": 0,
+          "sourceOut": 240,
+          "layout": "ui",
+          "headline": [
+            "START A CONVERSATION."
+          ],
+          "label": "LOCAL OLLAMA / PHI-3",
+          "focus": "chat",
+          "words": [
             [
-              72,
-              "Ask Phi-3 a question."
-            ],
+              0,
+              "Chat with your local Ollama model."
+            ]
+          ]
+        },
+        {
+          "id": "chat-response",
+          "asset": "chat",
+          "frames": 144,
+          "sourceIn": 240,
+          "sourceOut": 356,
+          "layout": "ui",
+          "headline": [
+            "REAL RESPONSE."
+          ],
+          "label": "CONVERSATIONAL CHAT",
+          "focus": "chat",
+          "words": [
             [
-              144,
-              "A real response from your model."
-            ],
-            [
-              234,
-              "Conversational chat. Scene edits stay separate."
+              0,
+              "A real response. Conversational chat."
             ]
           ]
         }
@@ -358,36 +583,119 @@
     {
       "id": "mcp",
       "from": 2595,
-      "to": 2991,
+      "to": 3063,
       "tag": "05 / CONTROL",
-      "title": "External MCP",
-      "mode": "proof",
+      "title": "Connected workflows",
       "clips": [
         {
-          "id": "mcp-operations",
+          "id": "mcp-hit",
           "asset": "mcp",
-          "frames": 396,
-          "layout": "ui",
+          "frames": 36,
+          "sourceOut": 66,
+          "layout": "type",
+          "headline": [
+            "CONNECTED."
+          ],
           "words": [
             [
               0,
-              "An authenticated client inspects the scene."
-            ],
+              "Connect external tools through MCP."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-add",
+          "asset": "mcp",
+          "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 140,
+          "layout": "ui",
+          "headline": [
+            "ADD."
+          ],
+          "label": "EXTERNAL MCP CLIENT / ACTUAL APP",
+          "focus": "viewport",
+          "words": [
             [
-              54,
-              "Add a primitive through MCP."
-            ],
+              0,
+              "Inspect. Add a primitive."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-transform",
+          "asset": "mcp",
+          "frames": 108,
+          "sourceIn": 120,
+          "sourceOut": 214,
+          "layout": "ui",
+          "headline": [
+            "MOVE."
+          ],
+          "label": "REVISION-CHECKED TRANSFORM",
+          "focus": "viewport",
+          "words": [
             [
-              126,
+              0,
               "Set its transform."
-            ],
+            ]
+          ]
+        },
+        {
+          "id": "mcp-undo",
+          "asset": "mcp",
+          "frames": 72,
+          "sourceIn": 194,
+          "sourceOut": 287,
+          "layout": "ui",
+          "headline": [
+            "UNDO."
+          ],
+          "label": "SHARED OPERATOR HISTORY",
+          "focus": "viewport",
+          "light": true,
+          "words": [
             [
-              198,
-              "Undo through the same history."
-            ],
+              0,
+              "Undo through Fusion history."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-redo",
+          "asset": "mcp",
+          "frames": 72,
+          "sourceIn": 267,
+          "sourceOut": 360,
+          "layout": "ui",
+          "headline": [
+            "RECOVER."
+          ],
+          "label": "EXTERNAL CONTROL / BUILT-IN RECOVERY",
+          "focus": "viewport",
+          "words": [
             [
-              270,
+              0,
               "Redo. Recover the change."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-payoff",
+          "asset": "mcp",
+          "frames": 72,
+          "sourceIn": 360,
+          "sourceOut": 424,
+          "layout": "ui",
+          "headline": [
+            "YOUR WORKFLOW."
+          ],
+          "label": "LOCAL TOOLS / CONNECTED WORKFLOWS",
+          "focus": "viewport",
+          "words": [
+            [
+              0,
+              "Your workflow, connected."
             ]
           ]
         }
@@ -395,64 +703,96 @@
     },
     {
       "id": "finish",
-      "from": 2991,
+      "from": 3063,
       "to": 3600,
-      "tag": "FUSION STUDIO / 0.19.0-rc.1",
-      "title": "Keep building.",
-      "mode": "closing",
+      "tag": "KEEP CREATING",
+      "title": "Keep creating",
       "clips": [
         {
-          "id": "final-geometry",
-          "asset": "sculpt-orbit",
-          "frames": 144,
-          "layout": "output",
-          "label": "EDITABLE OUTPUT",
+          "id": "results-stack",
+          "asset": "optics-orbit",
+          "frames": 108,
+          "layout": "stack",
+          "headline": [
+            "IMPORT.",
+            "CREATE. REPEAT."
+          ],
           "words": [
             [
               0,
-              "Import. Shape. Recover."
+              "Import. Create. Repeat."
             ]
           ]
         },
         {
-          "id": "final-library",
-          "asset": "garment-orbit",
-          "frames": 144,
-          "layout": "output",
-          "label": "YOUR LIBRARY, CONNECTED",
-          "words": [
-            [
-              0,
-              "Your assets can stay with you."
-            ]
-          ]
-        },
-        {
-          "id": "final-render",
+          "id": "render-payoff",
           "asset": "native-output",
-          "frames": 144,
-          "layout": "output",
-          "label": "PRESERVED NATIVE RENDER",
+          "frames": 108,
+          "layout": "hero",
+          "headline": [
+            "YOUR VISION.",
+            "IN MOTION."
+          ],
           "words": [
             [
               0,
-              "And the original stays intact."
+              "Your vision. In motion."
+            ]
+          ]
+        },
+        {
+          "id": "library-payoff",
+          "asset": "garment-orbit",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "YOUR ASSETS."
+          ],
+          "label": "ONE EDITABLE WORKSPACE",
+          "words": [
+            [
+              0,
+              "Your assets. One workspace."
+            ]
+          ]
+        },
+        {
+          "id": "create-payoff",
+          "asset": "sculpt-orbit",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "NO STOPPING."
+          ],
+          "label": "KEEP CREATING",
+          "words": [
+            [
+              0,
+              "Keep creating."
             ]
           ]
         },
         {
           "id": "invitation",
-          "asset": "optics-orbit",
+          "asset": "native-output",
           "frames": 177,
           "layout": "end",
-          "label": "WINDOWS RELEASE CANDIDATE",
+          "headline": [
+            "FUSION",
+            "STUDIO."
+          ],
+          "label": "WINDOWS / 0.19.0-rc.1",
           "words": [
             [
               0,
               "Fusion Studio 0.19.0-rc.1."
             ],
             [
-              90,
+              105,
               "Music: Secret — ESPRIT 空想."
             ]
           ]
@@ -462,15 +802,18 @@
   ],
   "shots": [
     {
-      "id": "native-open",
+      "id": "hero",
       "asset": "native-output",
       "frames": 75,
-      "layout": "output",
-      "label": "NATIVE BLENDER RENDER",
+      "layout": "hero",
+      "headline": [
+        "YOUR ASSETS.",
+        "UNLEASHED."
+      ],
       "words": [
         [
           0,
-          "This is Fusion Studio."
+          "Your assets. Unleashed."
         ]
       ],
       "scene": "hook",
@@ -478,16 +821,19 @@
       "to": 75
     },
     {
-      "id": "optics-open",
+      "id": "blend-hit",
       "asset": "optics-orbit",
       "frames": 72,
-      "sourceOut": 72,
-      "layout": "output",
-      "label": "EDITABLE BLENDER IMPORT",
+      "sourceOut": 100,
+      "layout": "format",
+      "headline": [
+        ".BLEND"
+      ],
+      "label": "BLENDER → EDITABLE GEOMETRY",
       "words": [
         [
           0,
-          "Start with your own assets."
+          "Bring your Blender scenes."
         ]
       ],
       "scene": "hook",
@@ -495,394 +841,786 @@
       "to": 147
     },
     {
-      "id": "garment-open",
+      "id": "daz-hit",
       "asset": "garment-orbit",
-      "frames": 72,
-      "sourceOut": 72,
-      "layout": "output",
-      "label": "DAZ MUSCLESHIRT / .DUF",
+      "frames": 36,
+      "sourceIn": 35,
+      "sourceOut": 95,
+      "layout": "format",
+      "headline": [
+        ".DUF"
+      ],
+      "label": "YOUR DAZ LIBRARY",
       "words": [
         [
           0,
-          "Bring your DAZ library."
+          "Your DAZ library."
         ]
       ],
       "scene": "hook",
       "from": 147,
-      "to": 219
+      "to": 183
     },
     {
-      "id": "sculpt-open",
+      "id": "mesh-hit",
       "asset": "sculpt-orbit",
-      "frames": 72,
-      "sourceOut": 72,
-      "layout": "output",
-      "label": "SCULPTED GLB OUTPUT",
+      "frames": 36,
+      "sourceIn": 35,
+      "sourceOut": 95,
+      "layout": "format",
+      "headline": [
+        ".GLB"
+      ],
+      "label": "EDITABLE EXCHANGE",
       "words": [
         [
           0,
-          "Shape it in Fusion."
+          "Editable working copies."
+        ]
+      ],
+      "scene": "hook",
+      "from": 183,
+      "to": 219
+    },
+    {
+      "id": "all-together",
+      "asset": "optics-orbit",
+      "frames": 108,
+      "layout": "stack",
+      "headline": [
+        "BRING",
+        "IT ALL."
+      ],
+      "words": [
+        [
+          0,
+          "Different assets. One workspace."
         ]
       ],
       "scene": "hook",
       "from": 219,
-      "to": 291
+      "to": 327
     },
     {
-      "id": "optics-return",
-      "asset": "optics-orbit",
-      "frames": 72,
-      "sourceIn": 72,
-      "sourceOut": 144,
-      "layout": "output",
-      "label": "REAL IMPORTED GEOMETRY",
+      "id": "workspace-reveal",
+      "asset": "blend-edit",
+      "frames": 108,
+      "sourceIn": 165,
+      "sourceOut": 269,
+      "layout": "ui",
+      "headline": [
+        "ONE WORKSPACE."
+      ],
+      "label": "REAL PACKAGED FUSION FOOTAGE",
       "words": [
         [
           0,
-          "Different sources."
+          "Meet Fusion Studio."
         ]
       ],
       "scene": "hook",
-      "from": 291,
-      "to": 363
-    },
-    {
-      "id": "outputs-pair",
-      "asset": "garment-orbit",
-      "companion": "sculpt-orbit",
-      "frames": 72,
-      "sourceIn": 72,
-      "sourceOut": 144,
-      "layout": "pair",
-      "label": "TWO ASSETS / ONE WORKSPACE",
-      "words": [
-        [
-          0,
-          "One editable workspace."
-        ]
-      ],
-      "scene": "hook",
-      "from": 363,
+      "from": 327,
       "to": 435
     },
     {
-      "id": "native-return",
-      "asset": "native-output",
-      "frames": 72,
-      "layout": "output",
-      "label": "ORIGINAL CAMERA / SHADERS / LIGHTS",
+      "id": "unlock",
+      "asset": "optics-orbit",
+      "frames": 36,
+      "sourceIn": 50,
+      "sourceOut": 110,
+      "layout": "format",
+      "headline": [
+        "UNLOCK."
+      ],
+      "label": "BLENDER IMPORT",
       "words": [
         [
           0,
-          "Keep native rendering."
+          "Unlock your scene."
         ]
       ],
-      "scene": "hook",
+      "scene": "blender",
       "from": 435,
-      "to": 507
+      "to": 471
     },
     {
-      "id": "working-copy",
+      "id": "review",
       "asset": "blend-edit",
-      "frames": 72,
-      "sourceIn": 165,
-      "sourceOut": 237,
+      "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 138,
       "layout": "ui",
-      "label": "EDITABLE WORKING COPY",
-      "words": [
-        [
-          0,
-          "Keep control of the geometry."
-        ]
+      "headline": [
+        "CHECK. THEN CREATE."
       ],
-      "scene": "hook",
-      "from": 507,
-      "to": 579
-    },
-    {
-      "id": "opener-payoff",
-      "asset": "sculpt-orbit",
-      "frames": 72,
-      "sourceIn": 36,
-      "sourceOut": 108,
-      "layout": "output",
-      "label": "IMPORT → EDIT → EXPORT",
-      "words": [
-        [
-          0,
-          "Here is how it works."
-        ]
-      ],
-      "scene": "hook",
-      "from": 579,
-      "to": 651
-    },
-    {
-      "id": "blender-edit",
-      "asset": "blend-edit",
-      "frames": 216,
-      "layout": "ui",
+      "label": "REVIEW CONVERSION LIMITS",
+      "focus": "dialog",
       "words": [
         [
           0,
           "Review conversion limits first."
-        ],
+        ]
+      ],
+      "scene": "blender",
+      "from": 471,
+      "to": 579
+    },
+    {
+      "id": "editable",
+      "asset": "blend-edit",
+      "frames": 108,
+      "sourceIn": 138,
+      "sourceOut": 269,
+      "layout": "ui",
+      "headline": [
+        "MAKE IT EDITABLE."
+      ],
+      "label": "BLENDER / INTERCHANGE",
+      "focus": "viewport",
+      "words": [
         [
-          126,
+          0,
           "Import an editable working copy."
         ]
       ],
       "scene": "blender",
-      "from": 651,
-      "to": 867
+      "from": 579,
+      "to": 687
     },
     {
-      "id": "blender-preserve",
+      "id": "native-hit",
+      "asset": "native-output",
+      "frames": 36,
+      "layout": "hero",
+      "headline": [
+        "KEEP",
+        "THE ORIGINAL."
+      ],
+      "words": [
+        [
+          0,
+          "Keep the original."
+        ]
+      ],
+      "scene": "blender",
+      "from": 687,
+      "to": 723
+    },
+    {
+      "id": "native-scene",
       "asset": "blend-preserve",
       "frames": 108,
+      "sourceIn": 45,
+      "sourceOut": 185,
       "layout": "ui",
+      "headline": [
+        "NATIVE STAYS NATIVE."
+      ],
+      "label": "PRESERVED BLENDER SCENE",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "Or preserve the native scene."
+          "Preserve the native render scene."
         ]
       ],
       "scene": "blender",
-      "from": 867,
-      "to": 975
+      "from": 723,
+      "to": 831
     },
     {
-      "id": "blender-render",
+      "id": "native-render",
       "asset": "native-render",
       "frames": 108,
-      "sourceIn": 60,
-      "sourceOut": 204,
+      "sourceIn": 45,
+      "sourceOut": 260,
       "layout": "ui",
+      "headline": [
+        "LIGHT IT UP."
+      ],
+      "label": "ACTUAL CYCLES RENDER / WAITS CUT",
+      "focus": "dialog",
       "words": [
         [
           0,
-          "Render with its original camera and shaders."
+          "Render through Blender."
         ]
       ],
       "scene": "blender",
-      "from": 975,
+      "from": 831,
+      "to": 939
+    },
+    {
+      "id": "two-modes",
+      "asset": "optics-orbit",
+      "frames": 144,
+      "layout": "compare",
+      "headline": [
+        "TWO MODES.",
+        "ONE SOURCE."
+      ],
+      "words": [
+        [
+          0,
+          "Editable working copy. Preserved native rendering."
+        ]
+      ],
+      "scene": "blender",
+      "from": 939,
       "to": 1083
     },
     {
-      "id": "daz-load",
-      "asset": "daz-import",
-      "frames": 216,
-      "layout": "ui",
+      "id": "library-hit",
+      "asset": "garment-orbit",
+      "frames": 36,
+      "sourceIn": 30,
+      "sourceOut": 90,
+      "layout": "format",
+      "headline": [
+        "YOUR LIBRARY."
+      ],
+      "label": "DAZ / .DUF",
       "words": [
         [
           0,
-          "Import a real MuscleShirt .duf."
-        ],
-        [
-          108,
-          "Mesh, textures and rig come through."
+          "Bring your library."
         ]
       ],
       "scene": "daz",
       "from": 1083,
+      "to": 1119
+    },
+    {
+      "id": "daz-import",
+      "asset": "daz-import",
+      "frames": 108,
+      "layout": "ui",
+      "headline": [
+        "BRING IT IN."
+      ],
+      "label": "MUSCLESHIRT / .DUF",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Import a real DAZ garment."
+        ]
+      ],
+      "scene": "daz",
+      "from": 1119,
+      "to": 1227
+    },
+    {
+      "id": "daz-mesh",
+      "asset": "garment-orbit",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "MESH.",
+        "TEXTURES. RIG."
+      ],
+      "label": "VERIFIED MUSCLESHIRT IMPORT",
+      "words": [
+        [
+          0,
+          "Mesh, textures and rig."
+        ]
+      ],
+      "scene": "daz",
+      "from": 1227,
       "to": 1299
     },
     {
       "id": "daz-material",
       "asset": "daz-preset",
-      "frames": 324,
+      "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 240,
       "layout": "ui",
+      "headline": [
+        "MAKE A CHANGE."
+      ],
+      "label": "SUPPORTED MATERIAL PROPERTIES",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "Choose a compatible material preset."
-        ],
-        [
-          90,
-          "Apply supported color properties."
-        ],
-        [
-          144,
-          "Undo. Restore material state."
-        ],
-        [
-          204,
-          "Redo. Recover the applied preset."
-        ],
-        [
-          258,
-          "Legacy shader parity remains limited."
+          "Apply supported preset properties."
         ]
       ],
       "scene": "daz",
       "from": 1299,
-      "to": 1623
+      "to": 1407
     },
     {
-      "id": "sculpt-change",
-      "asset": "sculpt",
-      "frames": 396,
+      "id": "daz-recovery",
+      "asset": "daz-preset",
+      "frames": 108,
+      "sourceIn": 240,
+      "sourceOut": 521,
       "layout": "ui",
+      "headline": [
+        "STAY IN CONTROL."
+      ],
+      "label": "UNDO / REDO",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "A real sculpt stroke changes the mesh."
-        ],
+          "Undo and redo. Legacy shader parity remains limited."
+        ]
+      ],
+      "scene": "daz",
+      "from": 1407,
+      "to": 1515
+    },
+    {
+      "id": "shape-hit",
+      "asset": "sculpt-orbit",
+      "frames": 36,
+      "sourceIn": 10,
+      "sourceOut": 70,
+      "layout": "format",
+      "headline": [
+        "SHAPE IT."
+      ],
+      "label": "EDITABLE GEOMETRY",
+      "words": [
         [
-          240,
-          "Undo restores the exact geometry."
-        ],
-        [
-          300,
-          "Redo recovers the sculpt."
-        ],
-        [
-          354,
-          "Your changes remain editable."
+          0,
+          "Make your mark."
         ]
       ],
       "scene": "edit",
-      "from": 1623,
-      "to": 2019
+      "from": 1515,
+      "to": 1551
     },
     {
-      "id": "save-export",
-      "asset": "save",
-      "frames": 252,
+      "id": "sculpt-stroke",
+      "asset": "sculpt",
+      "frames": 216,
+      "sourceIn": 0,
+      "sourceOut": 329,
       "layout": "ui",
+      "headline": [
+        "MAKE YOUR MARK."
+      ],
+      "label": "REAL SCULPT STROKE",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "A real stroke. Changed geometry."
+        ]
+      ],
+      "scene": "edit",
+      "from": 1551,
+      "to": 1767
+    },
+    {
+      "id": "sculpt-undo",
+      "asset": "sculpt",
+      "frames": 72,
+      "sourceIn": 310,
+      "sourceOut": 398,
+      "layout": "ui",
+      "headline": [
+        "UNDO."
+      ],
+      "label": "EXACT GEOMETRY RECOVERY",
+      "focus": "viewport",
+      "light": true,
+      "words": [
+        [
+          0,
+          "Undo. Exact geometry restored."
+        ]
+      ],
+      "scene": "edit",
+      "from": 1767,
+      "to": 1839
+    },
+    {
+      "id": "sculpt-redo",
+      "asset": "sculpt",
+      "frames": 72,
+      "sourceIn": 385,
+      "sourceOut": 493,
+      "layout": "ui",
+      "headline": [
+        "REDO."
+      ],
+      "label": "RECOVER THE SCULPT",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Redo. Recover the sculpt."
+        ]
+      ],
+      "scene": "edit",
+      "from": 1839,
+      "to": 1911
+    },
+    {
+      "id": "save-reopen",
+      "asset": "save",
+      "frames": 144,
+      "sourceIn": 0,
+      "sourceOut": 180,
+      "layout": "ui",
+      "headline": [
+        "SAVE IT. KEEP IT."
+      ],
+      "label": "SAVE / REOPEN",
+      "focus": "viewport",
       "words": [
         [
           0,
           "Save. Reopen the same geometry."
-        ],
-        [
-          126,
-          "Export a validated GLB working copy."
         ]
       ],
       "scene": "edit",
-      "from": 2019,
-      "to": 2271
+      "from": 1911,
+      "to": 2055
     },
     {
-      "id": "local-chat",
-      "asset": "chat",
-      "frames": 324,
+      "id": "glb-export",
+      "asset": "save",
+      "frames": 144,
+      "sourceIn": 180,
+      "sourceOut": 361,
       "layout": "ui",
+      "headline": [
+        "TAKE IT WITH YOU."
+      ],
+      "label": "VALIDATED GLB EXPORT",
+      "focus": "dialog",
       "words": [
         [
           0,
-          "Connect your local Ollama model."
-        ],
+          "Export your editable GLB working copy."
+        ]
+      ],
+      "scene": "edit",
+      "from": 2055,
+      "to": 2199
+    },
+    {
+      "id": "sculpt-payoff",
+      "asset": "sculpt-orbit",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "YOURS TO BUILD."
+      ],
+      "label": "SCULPTED GLB OUTPUT",
+      "words": [
         [
-          72,
-          "Ask Phi-3 a question."
-        ],
+          0,
+          "Yours to build."
+        ]
+      ],
+      "scene": "edit",
+      "from": 2199,
+      "to": 2271
+    },
+    {
+      "id": "chat-hit",
+      "asset": "chat",
+      "frames": 36,
+      "sourceIn": 170,
+      "sourceOut": 220,
+      "layout": "type",
+      "headline": [
+        "YOUR MODEL.",
+        "YOUR MACHINE."
+      ],
+      "words": [
         [
-          144,
-          "A real response from your model."
-        ],
-        [
-          234,
-          "Conversational chat. Scene edits stay separate."
+          0,
+          "Your model. Your machine."
         ]
       ],
       "scene": "chat",
       "from": 2271,
-      "to": 2595
+      "to": 2307
     },
     {
-      "id": "mcp-operations",
-      "asset": "mcp",
-      "frames": 396,
+      "id": "chat-ask",
+      "asset": "chat",
+      "frames": 144,
+      "sourceIn": 0,
+      "sourceOut": 240,
       "layout": "ui",
+      "headline": [
+        "START A CONVERSATION."
+      ],
+      "label": "LOCAL OLLAMA / PHI-3",
+      "focus": "chat",
       "words": [
         [
           0,
-          "An authenticated client inspects the scene."
-        ],
+          "Chat with your local Ollama model."
+        ]
+      ],
+      "scene": "chat",
+      "from": 2307,
+      "to": 2451
+    },
+    {
+      "id": "chat-response",
+      "asset": "chat",
+      "frames": 144,
+      "sourceIn": 240,
+      "sourceOut": 356,
+      "layout": "ui",
+      "headline": [
+        "REAL RESPONSE."
+      ],
+      "label": "CONVERSATIONAL CHAT",
+      "focus": "chat",
+      "words": [
         [
-          54,
-          "Add a primitive through MCP."
-        ],
+          0,
+          "A real response. Conversational chat."
+        ]
+      ],
+      "scene": "chat",
+      "from": 2451,
+      "to": 2595
+    },
+    {
+      "id": "mcp-hit",
+      "asset": "mcp",
+      "frames": 36,
+      "sourceOut": 66,
+      "layout": "type",
+      "headline": [
+        "CONNECTED."
+      ],
+      "words": [
         [
-          126,
-          "Set its transform."
-        ],
-        [
-          198,
-          "Undo through the same history."
-        ],
-        [
-          270,
-          "Redo. Recover the change."
+          0,
+          "Connect external tools through MCP."
         ]
       ],
       "scene": "mcp",
       "from": 2595,
+      "to": 2631
+    },
+    {
+      "id": "mcp-add",
+      "asset": "mcp",
+      "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 140,
+      "layout": "ui",
+      "headline": [
+        "ADD."
+      ],
+      "label": "EXTERNAL MCP CLIENT / ACTUAL APP",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Inspect. Add a primitive."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2631,
+      "to": 2739
+    },
+    {
+      "id": "mcp-transform",
+      "asset": "mcp",
+      "frames": 108,
+      "sourceIn": 120,
+      "sourceOut": 214,
+      "layout": "ui",
+      "headline": [
+        "MOVE."
+      ],
+      "label": "REVISION-CHECKED TRANSFORM",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Set its transform."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2739,
+      "to": 2847
+    },
+    {
+      "id": "mcp-undo",
+      "asset": "mcp",
+      "frames": 72,
+      "sourceIn": 194,
+      "sourceOut": 287,
+      "layout": "ui",
+      "headline": [
+        "UNDO."
+      ],
+      "label": "SHARED OPERATOR HISTORY",
+      "focus": "viewport",
+      "light": true,
+      "words": [
+        [
+          0,
+          "Undo through Fusion history."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2847,
+      "to": 2919
+    },
+    {
+      "id": "mcp-redo",
+      "asset": "mcp",
+      "frames": 72,
+      "sourceIn": 267,
+      "sourceOut": 360,
+      "layout": "ui",
+      "headline": [
+        "RECOVER."
+      ],
+      "label": "EXTERNAL CONTROL / BUILT-IN RECOVERY",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Redo. Recover the change."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2919,
       "to": 2991
     },
     {
-      "id": "final-geometry",
-      "asset": "sculpt-orbit",
-      "frames": 144,
-      "layout": "output",
-      "label": "EDITABLE OUTPUT",
+      "id": "mcp-payoff",
+      "asset": "mcp",
+      "frames": 72,
+      "sourceIn": 360,
+      "sourceOut": 424,
+      "layout": "ui",
+      "headline": [
+        "YOUR WORKFLOW."
+      ],
+      "label": "LOCAL TOOLS / CONNECTED WORKFLOWS",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "Import. Shape. Recover."
+          "Your workflow, connected."
         ]
       ],
-      "scene": "finish",
+      "scene": "mcp",
       "from": 2991,
-      "to": 3135
+      "to": 3063
     },
     {
-      "id": "final-library",
-      "asset": "garment-orbit",
-      "frames": 144,
-      "layout": "output",
-      "label": "YOUR LIBRARY, CONNECTED",
+      "id": "results-stack",
+      "asset": "optics-orbit",
+      "frames": 108,
+      "layout": "stack",
+      "headline": [
+        "IMPORT.",
+        "CREATE. REPEAT."
+      ],
       "words": [
         [
           0,
-          "Your assets can stay with you."
+          "Import. Create. Repeat."
         ]
       ],
       "scene": "finish",
-      "from": 3135,
+      "from": 3063,
+      "to": 3171
+    },
+    {
+      "id": "render-payoff",
+      "asset": "native-output",
+      "frames": 108,
+      "layout": "hero",
+      "headline": [
+        "YOUR VISION.",
+        "IN MOTION."
+      ],
+      "words": [
+        [
+          0,
+          "Your vision. In motion."
+        ]
+      ],
+      "scene": "finish",
+      "from": 3171,
       "to": 3279
     },
     {
-      "id": "final-render",
-      "asset": "native-output",
-      "frames": 144,
-      "layout": "output",
-      "label": "PRESERVED NATIVE RENDER",
+      "id": "library-payoff",
+      "asset": "garment-orbit",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "YOUR ASSETS."
+      ],
+      "label": "ONE EDITABLE WORKSPACE",
       "words": [
         [
           0,
-          "And the original stays intact."
+          "Your assets. One workspace."
         ]
       ],
       "scene": "finish",
       "from": 3279,
+      "to": 3351
+    },
+    {
+      "id": "create-payoff",
+      "asset": "sculpt-orbit",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "NO STOPPING."
+      ],
+      "label": "KEEP CREATING",
+      "words": [
+        [
+          0,
+          "Keep creating."
+        ]
+      ],
+      "scene": "finish",
+      "from": 3351,
       "to": 3423
     },
     {
       "id": "invitation",
-      "asset": "optics-orbit",
+      "asset": "native-output",
       "frames": 177,
       "layout": "end",
-      "label": "WINDOWS RELEASE CANDIDATE",
+      "headline": [
+        "FUSION",
+        "STUDIO."
+      ],
+      "label": "WINDOWS / 0.19.0-rc.1",
       "words": [
         [
           0,
           "Fusion Studio 0.19.0-rc.1."
         ],
         [
-          90,
+          105,
           "Music: Secret — ESPRIT 空想."
         ]
       ],
@@ -895,200 +1633,200 @@
     [
       0,
       75,
-      "This is Fusion Studio."
+      "Your assets. Unleashed."
     ],
     [
       75,
       147,
-      "Start with your own assets."
+      "Bring your Blender scenes."
     ],
     [
       147,
+      183,
+      "Your DAZ library."
+    ],
+    [
+      183,
       219,
-      "Bring your DAZ library."
+      "Editable working copies."
     ],
     [
       219,
-      291,
-      "Shape it in Fusion."
+      327,
+      "Different assets. One workspace."
     ],
     [
-      291,
-      363,
-      "Different sources."
-    ],
-    [
-      363,
+      327,
       435,
-      "One editable workspace."
+      "Meet Fusion Studio."
     ],
     [
       435,
-      507,
-      "Keep native rendering."
+      471,
+      "Unlock your scene."
     ],
     [
-      507,
+      471,
       579,
-      "Keep control of the geometry."
-    ],
-    [
-      579,
-      651,
-      "Here is how it works."
-    ],
-    [
-      651,
-      777,
       "Review conversion limits first."
     ],
     [
-      777,
-      867,
+      579,
+      687,
       "Import an editable working copy."
     ],
     [
-      867,
-      975,
-      "Or preserve the native scene."
+      687,
+      723,
+      "Keep the original."
     ],
     [
-      975,
+      723,
+      831,
+      "Preserve the native render scene."
+    ],
+    [
+      831,
+      939,
+      "Render through Blender."
+    ],
+    [
+      939,
       1083,
-      "Render with its original camera and shaders."
+      "Editable working copy. Preserved native rendering."
     ],
     [
       1083,
-      1191,
-      "Import a real MuscleShirt .duf."
+      1119,
+      "Bring your library."
     ],
     [
-      1191,
+      1119,
+      1227,
+      "Import a real DAZ garment."
+    ],
+    [
+      1227,
       1299,
-      "Mesh, textures and rig come through."
+      "Mesh, textures and rig."
     ],
     [
       1299,
-      1389,
-      "Choose a compatible material preset."
+      1407,
+      "Apply supported preset properties."
     ],
     [
-      1389,
-      1443,
-      "Apply supported color properties."
+      1407,
+      1515,
+      "Undo and redo. Legacy shader parity remains limited."
     ],
     [
-      1443,
-      1503,
-      "Undo. Restore material state."
+      1515,
+      1551,
+      "Make your mark."
     ],
     [
-      1503,
-      1557,
-      "Redo. Recover the applied preset."
+      1551,
+      1767,
+      "A real stroke. Changed geometry."
     ],
     [
-      1557,
-      1623,
-      "Legacy shader parity remains limited."
+      1767,
+      1839,
+      "Undo. Exact geometry restored."
     ],
     [
-      1623,
-      1863,
-      "A real sculpt stroke changes the mesh."
+      1839,
+      1911,
+      "Redo. Recover the sculpt."
     ],
     [
-      1863,
-      1923,
-      "Undo restores the exact geometry."
-    ],
-    [
-      1923,
-      1977,
-      "Redo recovers the sculpt."
-    ],
-    [
-      1977,
-      2019,
-      "Your changes remain editable."
-    ],
-    [
-      2019,
-      2145,
+      1911,
+      2055,
       "Save. Reopen the same geometry."
     ],
     [
-      2145,
+      2055,
+      2199,
+      "Export your editable GLB working copy."
+    ],
+    [
+      2199,
       2271,
-      "Export a validated GLB working copy."
+      "Yours to build."
     ],
     [
       2271,
-      2343,
-      "Connect your local Ollama model."
+      2307,
+      "Your model. Your machine."
     ],
     [
-      2343,
-      2415,
-      "Ask Phi-3 a question."
+      2307,
+      2451,
+      "Chat with your local Ollama model."
     ],
     [
-      2415,
-      2505,
-      "A real response from your model."
-    ],
-    [
-      2505,
+      2451,
       2595,
-      "Conversational chat. Scene edits stay separate."
+      "A real response. Conversational chat."
     ],
     [
       2595,
-      2649,
-      "An authenticated client inspects the scene."
+      2631,
+      "Connect external tools through MCP."
     ],
     [
-      2649,
-      2721,
-      "Add a primitive through MCP."
+      2631,
+      2739,
+      "Inspect. Add a primitive."
     ],
     [
-      2721,
-      2793,
+      2739,
+      2847,
       "Set its transform."
     ],
     [
-      2793,
-      2865,
-      "Undo through the same history."
+      2847,
+      2919,
+      "Undo through Fusion history."
     ],
     [
-      2865,
+      2919,
       2991,
       "Redo. Recover the change."
     ],
     [
       2991,
-      3135,
-      "Import. Shape. Recover."
+      3063,
+      "Your workflow, connected."
     ],
     [
-      3135,
+      3063,
+      3171,
+      "Import. Create. Repeat."
+    ],
+    [
+      3171,
       3279,
-      "Your assets can stay with you."
+      "Your vision. In motion."
     ],
     [
       3279,
+      3351,
+      "Your assets. One workspace."
+    ],
+    [
+      3351,
       3423,
-      "And the original stays intact."
+      "Keep creating."
     ],
     [
       3423,
-      3513,
+      3528,
       "Fusion Studio 0.19.0-rc.1."
     ],
     [
-      3513,
+      3528,
       3600,
       "Music: Secret — ESPRIT 空想."
     ]
@@ -1301,7 +2039,7 @@
   },
   "music": {
     "title": "Secret",
-    "artist": "ESPRIT ç©ºæƒ³",
+    "artist": "ESPRIT 空想",
     "sourceSha256": "d8c606d4c8e6b6cf7f32fc7527665a3b8957193557d246ace91e3b3973fce312",
     "masterSha256": "54b444882be870abb750ce5419c0859d699baa55c17398261c1b0779e8015bcf",
     "excerpt": {
@@ -1792,5 +2530,5 @@
       "sha256": "6c3fd894b19950b10c34bf64069ef821eaf2f58f959146306fee5b367472e501"
     }
   ],
-  "preparedSha256": "1ef03db1e3b12d529f6d9549a2cf2cdb74ded6773bec5f408e18f2b678d303d3"
+  "preparedSha256": "e1832fb1174956765031efb329c255920e678c98ffcaabc4694769253a840a86"
 }

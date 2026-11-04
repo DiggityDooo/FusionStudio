@@ -1,4 +1,4 @@
-# Fusion Studio — Pascal cadence revision
+# Fusion Studio — launch trailer revision
 
 [![Watch Fusion launch film](poster.png)](fusion-launch.mp4)
 
@@ -18,7 +18,7 @@
 
 ![Short preview](preview.gif)
 
-Revised around [Pascal Editor demo](https://github.com/pascalorg/editor): nine short full-frame result shots, stable explanatory workflow canvas, then result recap and invitation. New packaged-app orbits replace opening cards; 40 concise English caption phrases explain visible actions. Exact frames are in provenance and seven container chapters. Playback-rate badges identify sped-up captures; raw timestamps stay local. Automated input drives real app workflows. Only file-picker paths are stubbed. No simulated UI or model responses. Source/package hashes, decoded texture checks and recovery measurements are recorded.
+Rebuilt after user feedback as a launch trailer: 39 shots, 38 music-grid cuts, oversized masked headings, fan-out asset cards, diagonal light sweeps, native/editable comparisons and focused app punch-ins. English VTT captions supply context; short on-screen phrases keep visual momentum. Detail crops and capture speed are labeled. Source/package hashes, decoded texture checks and exact recovery measurements remain recorded. Original [Pascal reference](https://github.com/pascalorg/editor) study stays in provenance; current trailer energy follows updated user direction.
 
 **DAZ material limit:** this black 3Delight preset exposes supported color channel through current reader. Legacy black-texture shader channels are not reconstructed; original texture remains. Footage certifies supported transaction and recovery, not full 3Delight appearance parity. Texture pixels recover exactly; measured linear-color roundtrip drift is 1.017e-6 against capture bound 1e-5. Mesh, rig, source files and texture assets are not distributed here.
 

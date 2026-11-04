@@ -1,121 +1,121 @@
 WEBVTT
 
 00:00:00.000 --> 00:00:02.500
-This is Fusion Studio.
+Your assets. Unleashed.
 
 00:00:02.500 --> 00:00:04.900
-Start with your own assets.
+Bring your Blender scenes.
 
-00:00:04.900 --> 00:00:07.300
-Bring your DAZ library.
+00:00:04.900 --> 00:00:06.100
+Your DAZ library.
 
-00:00:07.300 --> 00:00:09.700
-Shape it in Fusion.
+00:00:06.100 --> 00:00:07.300
+Editable working copies.
 
-00:00:09.700 --> 00:00:12.100
-Different sources.
+00:00:07.300 --> 00:00:10.900
+Different assets. One workspace.
 
-00:00:12.100 --> 00:00:14.500
-One editable workspace.
+00:00:10.900 --> 00:00:14.500
+Meet Fusion Studio.
 
-00:00:14.500 --> 00:00:16.900
-Keep native rendering.
+00:00:14.500 --> 00:00:15.700
+Unlock your scene.
 
-00:00:16.900 --> 00:00:19.300
-Keep control of the geometry.
-
-00:00:19.300 --> 00:00:21.700
-Here is how it works.
-
-00:00:21.700 --> 00:00:25.900
+00:00:15.700 --> 00:00:19.300
 Review conversion limits first.
 
-00:00:25.900 --> 00:00:28.900
+00:00:19.300 --> 00:00:22.900
 Import an editable working copy.
 
-00:00:28.900 --> 00:00:32.500
-Or preserve the native scene.
+00:00:22.900 --> 00:00:24.100
+Keep the original.
 
-00:00:32.500 --> 00:00:36.100
-Render with its original camera and shaders.
+00:00:24.100 --> 00:00:27.700
+Preserve the native render scene.
 
-00:00:36.100 --> 00:00:39.700
-Import a real MuscleShirt .duf.
+00:00:27.700 --> 00:00:31.300
+Render through Blender.
 
-00:00:39.700 --> 00:00:43.300
-Mesh, textures and rig come through.
+00:00:31.300 --> 00:00:36.100
+Editable working copy. Preserved native rendering.
 
-00:00:43.300 --> 00:00:46.300
-Choose a compatible material preset.
+00:00:36.100 --> 00:00:37.300
+Bring your library.
 
-00:00:46.300 --> 00:00:48.100
-Apply supported color properties.
+00:00:37.300 --> 00:00:40.900
+Import a real DAZ garment.
 
-00:00:48.100 --> 00:00:50.100
-Undo. Restore material state.
+00:00:40.900 --> 00:00:43.300
+Mesh, textures and rig.
 
-00:00:50.100 --> 00:00:51.900
-Redo. Recover the applied preset.
+00:00:43.300 --> 00:00:46.900
+Apply supported preset properties.
 
-00:00:51.900 --> 00:00:54.100
-Legacy shader parity remains limited.
+00:00:46.900 --> 00:00:50.500
+Undo and redo. Legacy shader parity remains limited.
 
-00:00:54.100 --> 00:01:02.100
-A real sculpt stroke changes the mesh.
+00:00:50.500 --> 00:00:51.700
+Make your mark.
 
-00:01:02.100 --> 00:01:04.100
-Undo restores the exact geometry.
+00:00:51.700 --> 00:00:58.900
+A real stroke. Changed geometry.
 
-00:01:04.100 --> 00:01:05.900
-Redo recovers the sculpt.
+00:00:58.900 --> 00:01:01.300
+Undo. Exact geometry restored.
 
-00:01:05.900 --> 00:01:07.300
-Your changes remain editable.
+00:01:01.300 --> 00:01:03.700
+Redo. Recover the sculpt.
 
-00:01:07.300 --> 00:01:11.500
+00:01:03.700 --> 00:01:08.500
 Save. Reopen the same geometry.
 
-00:01:11.500 --> 00:01:15.700
-Export a validated GLB working copy.
+00:01:08.500 --> 00:01:13.300
+Export your editable GLB working copy.
 
-00:01:15.700 --> 00:01:18.100
-Connect your local Ollama model.
+00:01:13.300 --> 00:01:15.700
+Yours to build.
 
-00:01:18.100 --> 00:01:20.500
-Ask Phi-3 a question.
+00:01:15.700 --> 00:01:16.900
+Your model. Your machine.
 
-00:01:20.500 --> 00:01:23.500
-A real response from your model.
+00:01:16.900 --> 00:01:21.700
+Chat with your local Ollama model.
 
-00:01:23.500 --> 00:01:26.500
-Conversational chat. Scene edits stay separate.
+00:01:21.700 --> 00:01:26.500
+A real response. Conversational chat.
 
-00:01:26.500 --> 00:01:28.300
-An authenticated client inspects the scene.
+00:01:26.500 --> 00:01:27.700
+Connect external tools through MCP.
 
-00:01:28.300 --> 00:01:30.700
-Add a primitive through MCP.
+00:01:27.700 --> 00:01:31.300
+Inspect. Add a primitive.
 
-00:01:30.700 --> 00:01:33.100
+00:01:31.300 --> 00:01:34.900
 Set its transform.
 
-00:01:33.100 --> 00:01:35.500
-Undo through the same history.
+00:01:34.900 --> 00:01:37.300
+Undo through Fusion history.
 
-00:01:35.500 --> 00:01:39.700
+00:01:37.300 --> 00:01:39.700
 Redo. Recover the change.
 
-00:01:39.700 --> 00:01:44.500
-Import. Shape. Recover.
+00:01:39.700 --> 00:01:42.100
+Your workflow, connected.
 
-00:01:44.500 --> 00:01:49.300
-Your assets can stay with you.
+00:01:42.100 --> 00:01:45.700
+Import. Create. Repeat.
 
-00:01:49.300 --> 00:01:54.100
-And the original stays intact.
+00:01:45.700 --> 00:01:49.300
+Your vision. In motion.
 
-00:01:54.100 --> 00:01:57.100
+00:01:49.300 --> 00:01:51.700
+Your assets. One workspace.
+
+00:01:51.700 --> 00:01:54.100
+Keep creating.
+
+00:01:54.100 --> 00:01:57.600
 Fusion Studio 0.19.0-rc.1.
 
-00:01:57.100 --> 00:02:00.000
+00:01:57.600 --> 00:02:00.000
 Music: Secret — ESPRIT 空想.
