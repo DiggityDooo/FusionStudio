@@ -20,7 +20,7 @@ The long-term goal is a dependable middle workspace for many 3D applications. Th
 
 ### Cinematic trailer · 2 minutes
 
-[![Watch cinematic trailer](fusion-studio/docs/demo/2026-11-03-remotion/poster.png)](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4)
+https://github.com/user-attachments/assets/6c05d526-a2cc-405f-bc73-deb9227bbce4
 
 [Watch / download cinematic MP4](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4) · [Captions](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.vtt) · [Chapters and verification](fusion-studio/docs/demo/2026-11-03-remotion/README.md)
 
@@ -28,7 +28,7 @@ Actual packaged-app footage: Blender and DAZ imports, native rendering, sculpt/h
 
 ### Continuous walkthrough · 4 minutes 4 seconds
 
-[![Watch continuous Fusion workflow](fusion-studio/docs/demo/2026-11-04-workflow/poster.png)](fusion-studio/docs/demo/2026-11-04-workflow/fusion-workflow.mp4)
+https://github.com/user-attachments/assets/10bd8a73-af85-4be2-91e1-a55c0b7332e4
 
 [Watch / download workflow MP4](fusion-studio/docs/demo/2026-11-04-workflow/fusion-workflow.mp4) · [Captions](fusion-studio/docs/demo/2026-11-04-workflow/captions.vtt) · [11 chapters and verification](fusion-studio/docs/demo/2026-11-04-workflow/README.md)
 
