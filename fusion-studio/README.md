@@ -6,11 +6,11 @@
 
 ## Watch Fusion
 
-[![Cinematic trailer — 2 minutes](docs/demo/2026-11-03-remotion/poster.png)](docs/demo/2026-11-03-remotion/fusion-launch.mp4)
+https://github.com/user-attachments/assets/6c05d526-a2cc-405f-bc73-deb9227bbce4
 
 [Cinematic trailer MP4](docs/demo/2026-11-03-remotion/fusion-launch.mp4) · [Captions and evidence](docs/demo/2026-11-03-remotion/README.md)
 
-[![Continuous workflow — 4 minutes 4 seconds](docs/demo/2026-11-04-workflow/poster.png)](docs/demo/2026-11-04-workflow/fusion-workflow.mp4)
+https://github.com/user-attachments/assets/10bd8a73-af85-4be2-91e1-a55c0b7332e4
 
 [Continuous workflow MP4](docs/demo/2026-11-04-workflow/fusion-workflow.mp4) · [Captions, chapters and evidence](docs/demo/2026-11-04-workflow/README.md)
 
