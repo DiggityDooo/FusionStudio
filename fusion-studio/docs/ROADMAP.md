@@ -2,7 +2,7 @@
 
 ## Standing product priority
 
-`../CODEX-UNIFIED-EXCELLENCE-PROMPT.md` supersedes historical requests for exhaustive cloning. Strengthen the shared character↔garment↔render workflow in this order: character joint/weight/dependency/pose controls; garment quality/contact/grading/animated collision; deeper modeling/UV/sculpt tools and stack coverage; render controls/sequences; measured interchange. Use Own, Bridge or Interchange per capability, and report Exact / Compatible / Inspired fidelity. Completion requires user-visible behavior, numeric/visual fixtures, source preservation and private-research exclusion from packages.
+Strengthen the shared character↔garment↔render workflow in this order: character joint/weight/dependency/pose controls; garment quality/contact/grading/animated collision; deeper modeling/UV/sculpt tools and stack coverage; render controls/sequences; measured interchange. Use Own, Bridge or Interchange per capability, and report Exact / Compatible / Inspired fidelity. Completion requires user-visible behavior, numeric/visual fixtures, source preservation and private-research exclusion from packages.
 
 ## Current development: physical fabric and measured contact work (v0.0)
 

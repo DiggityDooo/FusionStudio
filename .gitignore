@@ -33,3 +33,15 @@
 # Per-PC Fusion display choice; excluded from distributable project settings.
 /fusion-studio/window-placement.local.json
 /fusion-studio/release-hackathon-*/
+
+# Local planning, agent prompts and machine-specific research stay private.
+/FUSION_STUDIO_WORK_LOG.md
+/CONTRIBUTING.md
+/CODEX-UNIFIED-EXCELLENCE-PROMPT.md
+/plan.md
+/CursorWork/
+/fusion-studio/research/*.json
+/AGENTS.md
+/CLAUDE.md
+/.claude/
+/.remotion/

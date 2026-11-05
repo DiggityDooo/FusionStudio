@@ -4,7 +4,7 @@ Current package/source snapshot: **0.1.0**, following the October 26 Muse implem
 
 Every item of the [industry feature and controls reference](../3d-software-features-and-controls.md) is tracked in `docs/feature-ledger.json` (status `done` / `partial` / `open` with test evidence); `node scripts/feature-ledger.mjs` prints the totals and `tests/feature-ledger.test.mjs` rejects untracked items or missing evidence. Keymap presets (Fusion, Blender, Maya, 3ds Max, Cinema 4D, ZBrush, Houdini, Unreal/Unity, Substance, Industry Compatible), their navigation schemes, a searchable rebinding editor with conflict reports and JSON import/export live in Edit › Preferences (`src/keymap.js`, `tests/keymap-ui.cjs`).
 
-The standing brief is `../CODEX-UNIFIED-EXCELLENCE-PROMPT.md`: one original workspace that excels at the character → garment → accessory → render pipeline. The aim is capability quality and integration, rather than recreating every vendor feature. **The unified excellence goal remains in progress.**
+Fusion prioritizes one original workspace that excels at the character → garment → accessory → render pipeline. The aim is capability quality and integration, rather than recreating every vendor feature. **The unified excellence goal remains in progress.**
 
 | Fidelity | Current measured scope | Evidence and practical limit |
 | --- | --- | --- |

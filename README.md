@@ -8,15 +8,33 @@ The long-term goal is a dependable middle workspace for many 3D applications. Th
 
 **November 3 candidate — `0.19.0-rc.1`:** supported editable imports, static DAZ presets, shared edit/history/save workflows, user model chat and authenticated local MCP. [Release report](fusion-studio/docs/releases/2026-11-03-rc-report.md) records **1,191 default parallel passes**, **47 native passes** (two opt-in diagnostics ignored), and **44 packaged import cases across 42 source files**. Candidate is verified for documented subsets; full native parity and broader roadmap remain unfinished.
 
+[**Download Fusion Studio 0.19.0-rc.1 for Windows x64**](https://github.com/DiggityDooo/FusionStudio/releases/tag/v0.19.0-rc.1) · [Setup guide](fusion-studio/docs/releases/2026-11-03-rc-guide.md)
+
 **Current snapshot:** `0.19.0-rc.1` · Windows x64 · Electron / Three.js / Rust · installed Blender 5.2
 
 **Live connections verified:** actual local `phi3:mini` replies through native Ollama and compatible API; official MCP Inspector invokes all seven tools against packaged app. Cancellation, app restart, missing-model errors, authentication and Origin rejection pass. [Connections guide](fusion-studio/docs/CONNECTIONS.md) states scope; cloud providers remain unverified. Internal chat is conversational; external MCP clients can perform explicitly enabled scene edits.
 
-[Recorded demo](#watch-real-workflows) · [Quickstart](fusion-studio/docs/releases/2026-11-03-rc-guide.md) · [File support](#file-support-and-fidelity) · [Connections](fusion-studio/docs/CONNECTIONS.md) · [Tests](fusion-studio/docs/TESTING.md) · [Contributing](CONTRIBUTING.md)
+[Recorded demo](#watch-real-workflows) · [Quickstart](fusion-studio/docs/releases/2026-11-03-rc-guide.md) · [File support](#file-support-and-fidelity) · [Connections](fusion-studio/docs/CONNECTIONS.md) · [Tests](fusion-studio/docs/TESTING.md) · [Windows download](https://github.com/DiggityDooo/FusionStudio/releases/tag/v0.19.0-rc.1)
 
-![Fusion Studio: preserved Blender scene of an original optical instrument](fusion-studio/docs/demo/2026-11-03/native-workspace.png)
+## Watch real workflows
 
-*A detailed, original optical instrument imported from Blender. The viewport is an evaluated representation; the native scene is retained separately for supported rendering. Screenshot from the actual application.*
+### Cinematic trailer · 2 minutes
+
+[![Watch cinematic trailer](fusion-studio/docs/demo/2026-11-03-remotion/poster.png)](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4)
+
+[Watch / download cinematic MP4](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4) · [Captions](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.vtt) · [Chapters and verification](fusion-studio/docs/demo/2026-11-03-remotion/README.md)
+
+Actual packaged-app footage: Blender and DAZ imports, native rendering, sculpt/history/save, local model chat and external MCP. Remotion 4.0.540; soundtrack **Secret — ESPRIT 空想**. Private source assets and original music input stay local.
+
+### Continuous walkthrough · 4 minutes 4 seconds
+
+[![Watch continuous Fusion workflow](fusion-studio/docs/demo/2026-11-04-workflow/poster.png)](fusion-studio/docs/demo/2026-11-04-workflow/fusion-workflow.mp4)
+
+[Watch / download workflow MP4](fusion-studio/docs/demo/2026-11-04-workflow/fusion-workflow.mp4) · [Captions](fusion-studio/docs/demo/2026-11-04-workflow/captions.vtt) · [11 chapters and verification](fusion-studio/docs/demo/2026-11-04-workflow/README.md)
+
+One normal-speed take in Fusion 0.19.0-rc.1: DAZ trunk import and compatibility review → orbit/wireframe → numeric edit → undo/redo → save/reopen → validated GLB export → lighting → actual Cycles render. Silent, captioned, with full controls and real import/render waits retained. Documented static-prop scope; import limits remain visible.
+
+[Full workflow gallery](fusion-studio/docs/WORKFLOW-GALLERY.md) · [Earlier 86-second verification demo](fusion-studio/docs/demo/2026-11-03/README.md) · [Release acceptance](fusion-studio/docs/releases/2026-11-03-rc-report.md)
 
 ## What Fusion is for
 
@@ -31,24 +49,6 @@ Fusion treats those concerns separately:
 - **Keep a way back.** Shared undo, versioned Fusion projects, cancellation, and revision checks help keep interrupted or failed work recoverable.
 
 Keeping an original beside an edited mesh is useful preservation; it does not make that mesh a lossless native roundtrip. Fusion's interface and documentation make that distinction explicit.
-
-## Watch real workflows
-
-**Two-minute Remotion film — launch trailer revision, November 3, 2026.** [Watch 1080p demo with ESPRIT’s “Secret”](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4), or read [chapters, limits and verification](fusion-studio/docs/demo/2026-11-03-remotion/README.md). Actual packaged Blender/DAZ imports, sculpt/history/save, local model chat and external MCP. Private DAZ source files and original music input remain local.
-
-![Short preview of Remotion film](fusion-studio/docs/demo/2026-11-03-remotion/preview.gif)
-
-[Original 86-second silent verification demo](fusion-studio/docs/demo/2026-11-03/README.md) remains available with original evidence.
-
-[![Watch current Fusion Studio demo](fusion-studio/docs/demo/2026-11-03/native-render.png)](fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.mp4)
-
-1. Import original optical-instrument .blend, review compatibility, retain native scene and render through Cycles OptiX. Source SHA-256 stays unchanged.
-2. Sculpt original **156,672-triangle** stoneware mesh through actual pointer gestures. Undo/redo restore checked numeric geometry.
-3. Save/reopen editable project and export real validated GLB.
-4. Chat with installed local Phi-3 through Ollama; no automatic scene-agent claim.
-5. Use external MCP client to inspect, add cube, transform, undo and redo through Fusion operators.
-
-[English captions](fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.vtt) · [Gallery index](fusion-studio/docs/WORKFLOW-GALLERY.md). Chapter banners sit outside unchanged app pixels; UI input and OS file-picker paths are automated. Replies and renders are real. [Release evidence](fusion-studio/docs/releases/2026-11-03-rc-report.md) separately covers male/female character → garment → pose → save/reopen → render. Video demonstrates specific paths; it does not certify every tool or universal lossless conversion.
 
 ## Work inside one scene
 
@@ -81,7 +81,7 @@ The current catalog includes:
 
 Mesh filters include smoothing, sharpening, relaxation, and a volume-preserving smoothing option. Dyntopo includes bounded refinement and local edge collapse with protected boundary/mask checks. Voxel remeshing estimates its grid budget before launching. Multires working copies retain their source and reject a level change that would discard intervening sculpt work.
 
-The full requested tool specification and remaining acceptance work live in [plan.md](plan.md). Line/polygon annotation modes, exact vendor brush equivalence, full native multires transfer, and large-mesh interaction should not be inferred from the catalog alone.
+Remaining acceptance work is tracked in the [roadmap](fusion-studio/docs/ROADMAP.md). Line/polygon annotation modes, exact vendor brush equivalence, full native multires transfer, and large-mesh interaction should not be inferred from the catalog alone.
 
 ### Character authoring without flattening the recipe
 
@@ -113,7 +113,7 @@ The adapter registry is versioned, but dependency discovery and portable source-
 
 ## Run from source
 
-Verified desktop environment uses **Windows x64, Node.js 22.23.2, Python 3, and Blender 5.2.0 LTS**. Blender supplies background conversion, modifier, UV, and rendering jobs. Rust/native features require matching built native module. Browser mode provides editor canvas without desktop file/engine access. See [quickstart](fusion-studio/docs/releases/2026-11-03-rc-guide.md) and [contributing](CONTRIBUTING.md).
+Verified desktop environment uses **Windows x64, Node.js 22.23.2, Python 3, and Blender 5.2.0 LTS**. Blender supplies background conversion, modifier, UV, and rendering jobs. Rust/native features require matching built native module. Browser mode provides editor canvas without desktop file/engine access. See [quickstart](fusion-studio/docs/releases/2026-11-03-rc-guide.md) and [dependency requirements](fusion-studio/docs/DEPENDENCIES.md).
 
 ```powershell
 cd fusion-studio
@@ -185,7 +185,7 @@ Current demo has [machine-readable capture evidence](fusion-studio/docs/demo/202
 
 ## Development status
 
-Current `0.19.0-rc.1` is a local Windows candidate for documented subsets. [Release report](fusion-studio/docs/releases/2026-11-03-rc-report.md) includes executable/ASAR hashes, gates, original-file preservation and limits. Portable build remains local; no binary release publication or hackathon submission is implied by source updates. Earlier builds remain preserved; Fusion project schema stays at version 2.
+Current `0.19.0-rc.1` is a Windows prerelease for documented subsets. [Release report](fusion-studio/docs/releases/2026-11-03-rc-report.md) includes executable/ASAR hashes, gates, original-file preservation and limits. [Download Windows x64 prerelease](https://github.com/DiggityDooo/FusionStudio/releases/tag/v0.19.0-rc.1). Keep the complete extracted folder together and install Blender separately. Earlier builds remain preserved; Fusion project schema stays at version 2.
 
 Active priorities include:
 
@@ -204,4 +204,4 @@ Original Fusion Studio code is [MIT-licensed](fusion-studio/LICENSE). Third-part
 
 Blender is an external installed processing dependency. Fusion is independently developed and is not endorsed by Blender, DAZ, Reallusion, Marvelous Designer, or Maxon. Review [DEPENDENCIES.md](fusion-studio/docs/DEPENDENCIES.md) and the recorded native/runtime notice limitations before distributing a build.
 
-[Repository license](LICENSE) · [Security/data boundaries](SECURITY.md) · [Contribution workflow](CONTRIBUTING.md). Source lives in `fusion-studio/src` and `fusion-studio/electron`; tests/evidence in `fusion-studio/tests` and `fusion-studio/docs`. `CursorWork` holds separate research utilities outside app package.
+[Repository license](LICENSE) · [Security/data boundaries](SECURITY.md). Source lives in `fusion-studio/src` and `fusion-studio/electron`; tests/evidence in `fusion-studio/tests` and `fusion-studio/docs`.

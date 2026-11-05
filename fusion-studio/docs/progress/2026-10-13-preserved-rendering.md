@@ -13,9 +13,9 @@ The evaluated viewport uses approximate materials and a static imported pose. Wh
 - bmw27_cpu.blend: CPU, mean absolute byte difference 0.00003762.
 - bmw27_gpu.blend: OPTIX, mean absolute byte difference 0.00003617.
 
-![bmw27_cpu.blend preserved render](<C:/Users/Sean/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791925807613/jobs/render-2026-10-13T21-10-16-605Z-d89a6f/BMW cpu preserved.png>)
+![bmw27_cpu.blend preserved render](<<user-profile>/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791925807613/jobs/render-2026-10-13T21-10-16-605Z-d89a6f/BMW cpu preserved.png>)
 
-![bmw27_gpu.blend preserved render](<C:/Users/Sean/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791925807613/jobs/render-2026-10-13T21-10-26-992Z-0e8ad9/BMW gpu preserved.png>)
+![bmw27_gpu.blend preserved render](<<user-profile>/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791925807613/jobs/render-2026-10-13T21-10-26-992Z-0e8ad9/BMW gpu preserved.png>)
 
 
 The file-picker import dialog also retains an editable mesh/rig interchange mode. That route preserves supported rig data through the earlier adapter with generic shading; it does not embed the native scene. Preserved mode uses the evaluated proxy and snapshot.

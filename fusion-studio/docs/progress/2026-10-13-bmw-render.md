@@ -15,13 +15,13 @@ The test uses **640×360, 16 samples and denoising** for both references and con
 
 ## Native scene reference
 
-![BMW native CPU reference](<C:/Users/Sean/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791910083153/bmw-cpu-reference.png>)
+![BMW native CPU reference](<<user-profile>/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791910083153/bmw-cpu-reference.png>)
 
 The original scene camera, world, lights and shader nodes are retained in the native reference. Blender 5.2 loads the legacy scene, so this is not a historical Blender 2.7 pixel-perfect baseline.
 
 ## Current Fusion conversion
 
-![BMW current Fusion render](<C:/Users/Sean/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791910083153/jobs/render-2026-10-13T16-48-09-133Z-5d5814/BMW cpu Fusion render.png>)
+![BMW current Fusion render](<<user-profile>/Documents/ChatGPT/Ultimate 3D software/fusion-studio/test-output/bmw-render-1791910083153/jobs/render-2026-10-13T16-48-09-133Z-5d5814/BMW cpu Fusion render.png>)
 
 The legacy car-paint shader becomes nearly white; glazing and visible surface appearance differ. The current adapter imports objects through glTF, then adds Fusion's studio lights/floor/world and AgX view transform. It does not preserve original shader graphs, full scene presentation or all modifier semantics. These differences are **not accepted as rendering parity**. The `.blend` conversion dialog now warns before processing.
 

@@ -68,10 +68,10 @@ Observed by exact registry values plus directory/file inventory. No asset conten
 | CC5 custom library | `C:/Users/Public/Documents/Reallusion/Custom/Character Creator 5 Custom` — same registry key, value `Custom Data` |
 | Template characters | `C:/Users/Public/Documents/Reallusion/Reallusion Templates/Actor/Character` |
 | Template projects | `C:/Users/Public/Documents/Reallusion/Reallusion Templates/Project/CC Project` |
-| DataLink exchange | `C:/Users/Sean/Documents/Reallusion/DataLink` — current plugin config `datalink_folder` |
+| DataLink exchange | `<user-profile>/Documents/Reallusion/DataLink` — current plugin config `datalink_folder` |
 | Plugin config file | `C:/Users/Public/Documents/Reallusion/Custom/Character Creator 5 Custom/ccic_blender_pipeline_plugin.txt` — current `auto_start_service=false`; `blender_path=C:/Program Files/Blender Foundation/Blender 5.2/blender-launcher.exe` |
-| Local application cache/settings | `C:/Users/Sean/AppData/Local/Reallusion/Character Creator/5.0` — directory observed; nested `5.0`, `cache`, `QtWebEngine` |
-| Temp/cache | HKCU key of same CC5 version: `Temp Folder=C:/Users/Sean/AppData/Local/Temp/`, `Cache Path` and `Motion Cache Path=C:/Users/Sean/AppData/Local/Temp/RLCache/` |
+| Local application cache/settings | `<user-profile>/AppData/Local/Reallusion/Character Creator/5.0` — directory observed; nested `5.0`, `cache`, `QtWebEngine` |
+| Temp/cache | HKCU key of same CC5 version: `Temp Folder=<user-profile>/AppData/Local/Temp/`, `Cache Path` and `Motion Cache Path=<user-profile>/AppData/Local/Temp/RLCache/` |
 | Installed default project | `C:/Program Files/Reallusion/Character Creator 5/Program/Default/DefProject.iProject` — HKLM value `Default Project` |
 
 The configured template root contains Actor, ActorMIXER, Animation, Avatar Preset, Cloth, Hair, Makeup, Media, Others, Project, Props, Set, Skin, Stage and Accessory folders. The bounded Actor inventory contains **54 `.ccAvatar`/`.iAvatar` files**. The Project/CC Project inventory contains **11 `.ccProject` files**. The template root includes **2,278 `.ccSlider`**, **137 `.ccCloth`**, **188 `.ccMixerPreset`**, **169 `.ccSkinGenPreset`**, plus native materials, cameras, poses, motion and skin assets. Native file presence does not prove export authorization or format compatibility. No .fbx/.obj/.blend exports were found in the inspected DataLink folder; it was empty. The configured CC5 custom root currently contained one plugin config `.txt` file and an empty Media subfolder; no user-created native characters/projects were observed within that bounded root. Other user-selected project directories were not searched.
