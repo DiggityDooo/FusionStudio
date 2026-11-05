@@ -8,7 +8,7 @@ The long-term goal is a dependable middle workspace for many 3D applications. Th
 
 **November 3 candidate — `0.19.0-rc.1`:** supported editable imports, static DAZ presets, shared edit/history/save workflows, user model chat and authenticated local MCP. [Release report](fusion-studio/docs/releases/2026-11-03-rc-report.md) records **1,191 default parallel passes**, **47 native passes** (two opt-in diagnostics ignored), and **44 packaged import cases across 42 source files**. Candidate is verified for documented subsets; full native parity and broader roadmap remain unfinished.
 
-[**Download Fusion Studio 0.19.0-rc.1 for Windows x64**](https://github.com/DiggityDooo/FusionStudio/releases/tag/v0.19.0-rc.1) · [Setup guide](fusion-studio/docs/releases/2026-11-03-rc-guide.md)
+[**Download Fusion Studio 0.19.0-rc.1 for Windows x64**](https://github.com/DiggityDooo/FusionStudio/releases/tag/v0.19.0-rc.1) · [Setup guide](fusion-studio/docs/releases/2026-11-03-rc-guide.md) · [Release notes](fusion-studio/docs/releases/2026-11-04-public-rc1.md)
 
 **Current snapshot:** `0.19.0-rc.1` · Windows x64 · Electron / Three.js / Rust · installed Blender 5.2
 
