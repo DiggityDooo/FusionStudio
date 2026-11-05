@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/6c05d526-a2cc-405f-bc73-deb9227bbce4
 
 [Watch / download cinematic MP4](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.mp4) · [Captions](fusion-studio/docs/demo/2026-11-03-remotion/fusion-launch.vtt) · [Chapters and verification](fusion-studio/docs/demo/2026-11-03-remotion/README.md)
 
-Actual packaged-app footage: Blender and DAZ imports, native rendering, sculpt/history/save, local model chat and external MCP. Remotion 4.0.540; soundtrack **Secret — ESPRIT 空想**. Private source assets and original music input stay local.
+Actual packaged-app footage: Blender and DAZ imports, native rendering, sculpt/history/save, local model chat and external MCP. Remotion 4.0.540; soundtrack **Secret — ESPRIT 空想**.
 
 ### Continuous walkthrough · 4 minutes 4 seconds
 
@@ -202,6 +202,6 @@ See the [implementation ledger](fusion-studio/docs/muse-implementation-status.md
 
 Original Fusion Studio code is [MIT-licensed](fusion-studio/LICENSE). Third-party components retain their own licenses and notices. Verified CC0 starter assets have separate provenance; commercial runtimes, proprietary decompiler output, private characters, and paid assets are not part of that license or the application distribution.
 
-Blender is an external installed processing dependency. Fusion is independently developed and is not endorsed by Blender, DAZ, Reallusion, Marvelous Designer, or Maxon. Review [DEPENDENCIES.md](fusion-studio/docs/DEPENDENCIES.md) and the recorded native/runtime notice limitations before distributing a build.
+Blender is an external installed processing dependency. Fusion is independently developed and is not endorsed by Blender, DAZ, Reallusion, Marvelous Designer, Maxon or any other team. Review [DEPENDENCIES.md](fusion-studio/docs/DEPENDENCIES.md) and the recorded native/runtime notice limitations before distributing a build.
 
 [Repository license](LICENSE) · [Security/data boundaries](SECURITY.md). Source lives in `fusion-studio/src` and `fusion-studio/electron`; tests/evidence in `fusion-studio/tests` and `fusion-studio/docs`.
