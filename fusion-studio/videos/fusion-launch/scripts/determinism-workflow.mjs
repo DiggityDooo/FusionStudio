@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {bundle} from '@remotion/bundler';
+import {renderStill,selectComposition} from '@remotion/renderer';
+const workspace=path.resolve(import.meta.dirname,'..'),out=path.resolve(workspace,'../../docs/demo/2026-11-04-workflow');
+const timeline=JSON.parse(fs.readFileSync(path.join(out,'timeline.json'))),frames=['transform','save','complete'].map(id=>timeline.steps.find(s=>s.id===id).frame+60);
+const serveUrl=await bundle({entryPoint:path.join(workspace,'src/workflow-index.jsx'),publicDir:path.join(workspace,'public')}),composition=await selectComposition({serveUrl,id:'FusionWorkflow'});
+const dir=path.join(workspace,'local/determinism-workflow');fs.mkdirSync(dir,{recursive:true});
+for(const frame of frames)for(const repeat of ['a','b'])await renderStill({serveUrl,composition,frame,output:path.join(dir,`${frame}-${repeat}.png`),chromiumOptions:{gl:'angle'}});
+const checked=spawnSync('python',['-c',"from PIL import Image;from pathlib import Path;import hashlib,json,sys;d=Path(sys.argv[1]);rows=[]\nfor f in sys.argv[2].split(','):\n a=Image.open(d/(f+'-a.png')).convert('RGBA').tobytes();b=Image.open(d/(f+'-b.png')).convert('RGBA').tobytes();assert a==b,f;rows.append({'frame':int(f),'pixelSha256':hashlib.sha256(a).hexdigest()})\nprint(json.dumps({'passed':True,'independentPairs':rows}))",dir,frames.join(',')],{encoding:'utf8',windowsHide:true});
+if(checked.status)throw Error(checked.stderr);fs.writeFileSync(path.join(out,'determinism.json'),JSON.stringify(JSON.parse(checked.stdout),null,2)+'\n');console.log(checked.stdout);

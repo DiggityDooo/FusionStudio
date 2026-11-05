@@ -1,0 +1,89 @@
+{
+  "width": 1920,
+  "height": 960,
+  "capturedFrames": 4780,
+  "seconds": 243.61041898727416,
+  "rate": 1,
+  "continuous": true,
+  "startStopPairs": 1,
+  "frames": 7309,
+  "steps": [
+    {
+      "id": "start",
+      "title": "One asset. One continuous workflow.",
+      "caption": "Fusion Studio 0.19.0-rc.1 · fresh workspace · normal playback speed",
+      "seconds": 0,
+      "frame": 0
+    },
+    {
+      "id": "import",
+      "title": "01 / Import a DAZ asset",
+      "caption": "Open SPowered Trunk.duf and review conversion limits before importing.",
+      "seconds": 2.4863247871398926,
+      "frame": 75
+    },
+    {
+      "id": "inspect",
+      "title": "02 / Inspect the editable scene",
+      "caption": "Frame the imported asset, orbit around it, then inspect its topology.",
+      "seconds": 16.720324993133545,
+      "frame": 502
+    },
+    {
+      "id": "transform",
+      "title": "03 / Make a precise edit",
+      "caption": "Select the imported root and set its Y rotation to 25 degrees.",
+      "seconds": 39.363324880599976,
+      "frame": 1181
+    },
+    {
+      "id": "history",
+      "title": "04 / Undo, then redo",
+      "caption": "Recover the original transform, then restore the edit through scene history.",
+      "seconds": 46.880324840545654,
+      "frame": 1406
+    },
+    {
+      "id": "save",
+      "title": "05 / Save a project version",
+      "caption": "Name the project Trunk Study and save its editable scene.",
+      "seconds": 55.13932490348816,
+      "frame": 1654
+    },
+    {
+      "id": "reopen",
+      "title": "06 / Reopen the saved project",
+      "caption": "Open the saved .fusion file; geometry and transforms restore from disk.",
+      "seconds": 64.00332498550415,
+      "frame": 1920
+    },
+    {
+      "id": "export",
+      "title": "07 / Export a validated GLB",
+      "caption": "Create a new interchange file; inspect the actual glTF validation result.",
+      "seconds": 70.68232488632202,
+      "frame": 2120
+    },
+    {
+      "id": "lighting",
+      "title": "08 / Light the scene",
+      "caption": "Add a three-point lighting rig and save the lit scene before rendering.",
+      "seconds": 81.6973249912262,
+      "frame": 2451
+    },
+    {
+      "id": "render",
+      "title": "09 / Render the result",
+      "caption": "Cycles · OptiX · 1920 × 1080 · 32 samples. Render wait retained.",
+      "seconds": 87.74432492256165,
+      "frame": 2632
+    },
+    {
+      "id": "complete",
+      "title": "Workflow complete.",
+      "caption": "Imported → inspected → edited → recovered → saved → reopened → exported → rendered.",
+      "seconds": 236.93032479286194,
+      "frame": 7108
+    }
+  ]
+}

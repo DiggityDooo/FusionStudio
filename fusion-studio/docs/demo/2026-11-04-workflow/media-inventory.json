@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "manifestFile": "provenance.json",
+  "manifestSha256": "9c2a8de26c67193030418ab5a368825d0157f307b2bd4459e52857d3f8842297",
+  "seconds": 243.63333333333333,
+  "frames": 7309,
+  "media": [
+    {
+      "file": "fusion-workflow.mp4",
+      "bytes": 8256609,
+      "sha256": "ca9e95e258407ba969ede194f7fe290843c9bbd5d2cb458878f75e014992ad37"
+    },
+    {
+      "file": "captions.vtt",
+      "bytes": 1453,
+      "sha256": "8ae1fa3c39968e8c58956e6580943d3a6f92b9d13483feac6346c5d7591fbf67"
+    },
+    {
+      "file": "poster.png",
+      "bytes": 456523,
+      "sha256": "f68beb26c08b5e56d452dd787ae99f0f7046fd9fcbb91c37681396c1f610a663"
+    },
+    {
+      "file": "contact-sheet.jpg",
+      "bytes": 543069,
+      "sha256": "8635247982b4453f892dd4de9e4294e24369f2630128d48754c561a86b4f5e02"
+    },
+    {
+      "file": "timeline.json",
+      "bytes": 2677,
+      "sha256": "143e6aacbe2be0b702dd3639aadf5ec7dce02f2cde32a8f8aeef4bdd2a534ccf"
+    },
+    {
+      "file": "verification.json",
+      "bytes": 1680,
+      "sha256": "b5c4220e31d5443f08ea38b646b5267c8cbd3c203eb1fb6dd8671fe008e00041"
+    },
+    {
+      "file": "determinism.json",
+      "bytes": 415,
+      "sha256": "e48eb650b0ae01abfa5211673ff652e7aa3682615a132ef530c0d3e87b353113"
+    },
+    {
+      "file": "export-validation.json",
+      "bytes": 786,
+      "sha256": "9c3f176cf0b233c6d0e52ea15aaf00a6ba1324a553658ccb862adf129c0f3bba"
+    },
+    {
+      "file": "preservation.json",
+      "bytes": 1125,
+      "sha256": "d917e40ee6033c9bc65f70aa63cf197df3724f7038bc2da3afb9ee20e57fc3f4"
+    },
+    {
+      "file": "qa-review.json",
+      "bytes": 5374,
+      "sha256": "c1716671e95481c7ed2b40cb7b9d2020e6c2e7e034324274b4b955fa19ec25fc"
+    },
+    {
+      "file": "FINISH.md",
+      "bytes": 1276,
+      "sha256": "51bd26bf83c521e0cbd6c2c546c2504c7143dc70dbd22e95d235659e25ff3c7c"
+    },
+    {
+      "file": "qa/boundary-import.jpg",
+      "bytes": 301144,
+      "sha256": "cb6e1c5f9f82352bfd7a1776cf5d18fd355a80df1bd402cb5674afba0abc61a7"
+    },
+    {
+      "file": "qa/boundary-inspect.jpg",
+      "bytes": 423076,
+      "sha256": "c46fc37aac09339010ee4aa3975d9ce225e4dcaefd1371ad699bcc6dd6887232"
+    },
+    {
+      "file": "qa/boundary-transform.jpg",
+      "bytes": 394258,
+      "sha256": "8bbb7d6a4b72c5f22588ed3286453240c6b04d621e6448be3439aa900675c49c"
+    },
+    {
+      "file": "qa/boundary-history.jpg",
+      "bytes": 407914,
+      "sha256": "2005eb2bf2938630d327875cae0069e47f9fa1f63459a9be54bb52f883f67300"
+    },
+    {
+      "file": "qa/boundary-save.jpg",
+      "bytes": 408459,
+      "sha256": "873fc419755c5e67dfa5a0acd313793ae612f5f0c6aedf2c0e5240cae9123261"
+    },
+    {
+      "file": "qa/boundary-reopen.jpg",
+      "bytes": 414955,
+      "sha256": "24c15e57b7e61cae3d75fca70b615088ec61672b778d2b156376ea8e5ec7e8a3"
+    },
+    {
+      "file": "qa/boundary-export.jpg",
+      "bytes": 348463,
+      "sha256": "e02edc8184a848a2161718b5b643e5182c5279323f073708ab0860bfa84f8166"
+    },
+    {
+      "file": "qa/boundary-lighting.jpg",
+      "bytes": 343703,
+      "sha256": "19aad77c30df8eeecf2b1ec0c7f3c7ee3fe70054349e2186c5f6b0228bd10e49"
+    },
+    {
+      "file": "qa/boundary-render.jpg",
+      "bytes": 415291,
+      "sha256": "6894f7613500c5992c2a84ae19e5760d29913a6add372b036b40c57c8f871f24"
+    },
+    {
+      "file": "qa/boundary-complete.jpg",
+      "bytes": 245697,
+      "sha256": "cfffdc155e7dc866c29fd537746bd41b606ccca4da8aeb28037b8ed3377bc275"
+    }
+  ]
+}

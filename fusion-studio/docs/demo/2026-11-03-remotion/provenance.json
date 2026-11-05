@@ -7,7 +7,7 @@
       "120 seconds",
       "music and captions, no narration",
       "frame-driven React",
-      "Pascal results / explanation / invitation cadence"
+      "output-first structure; launch-trailer energy after user feedback"
     ],
     "reference": {
       "url": "https://github.com/pascalorg/editor",
@@ -23,143 +23,130 @@
     "fps": 30,
     "durationInFrames": 3600,
     "version": "0.19.0-rc.1",
-    "edition": "Pascal cadence revision"
+    "edition": "Launch trailer / expanded library and text focus"
   },
   "story": [
     {
       "id": "hook",
       "from": 0,
-      "to": 651,
-      "tag": "FUSION STUDIO",
-      "title": "Your assets. In motion.",
-      "mode": "outputs",
+      "to": 435,
+      "tag": "IMPORT / CREATE / EXPORT",
+      "title": "Your assets. Unleashed.",
       "clips": [
         {
-          "id": "native-open",
-          "asset": "native-output",
+          "id": "hero",
+          "asset": "dragon-orbit",
           "frames": 75,
-          "layout": "output",
-          "label": "NATIVE BLENDER RENDER",
+          "layout": "hero",
+          "headline": [
+            "YOUR ASSETS.",
+            "UNLEASHED."
+          ],
           "words": [
             [
               0,
-              "This is Fusion Studio."
+              "Your assets. Unleashed."
             ]
           ]
         },
         {
-          "id": "optics-open",
-          "asset": "optics-orbit",
+          "id": "blend-hit",
+          "asset": "bmw-orbit",
           "frames": 72,
-          "sourceOut": 72,
-          "layout": "output",
-          "label": "EDITABLE BLENDER IMPORT",
+          "sourceOut": 100,
+          "layout": "format",
+          "headline": [
+            ".BLEND"
+          ],
+          "label": "BMW / EDITABLE VIEWPORT",
           "words": [
             [
               0,
-              "Start with your own assets."
+              "Bring your Blender scenes."
             ]
           ]
         },
         {
-          "id": "garment-open",
-          "asset": "garment-orbit",
-          "frames": 72,
-          "sourceOut": 72,
-          "layout": "output",
-          "label": "DAZ MUSCLESHIRT / .DUF",
+          "id": "daz-hit",
+          "asset": "hair-orbit",
+          "frames": 36,
+          "sourceIn": 35,
+          "sourceOut": 95,
+          "layout": "format",
+          "headline": [
+            ".DUF"
+          ],
+          "label": "DAZ MESH HAIR / REAR VIEW",
           "words": [
             [
               0,
-              "Bring your DAZ library."
+              "Your DAZ library."
             ]
           ]
         },
         {
-          "id": "sculpt-open",
-          "asset": "sculpt-orbit",
-          "frames": 72,
-          "sourceOut": 72,
-          "layout": "output",
-          "label": "SCULPTED GLB OUTPUT",
+          "id": "mesh-hit",
+          "asset": "dragon-wire",
+          "frames": 36,
+          "sourceIn": 35,
+          "sourceOut": 95,
+          "layout": "format",
+          "headline": [
+            "WIREFRAME."
+          ],
+          "label": "DRAGON / TOPOLOGY VIEW",
           "words": [
             [
               0,
-              "Shape it in Fusion."
+              "See the geometry underneath."
             ]
           ]
         },
         {
-          "id": "optics-return",
-          "asset": "optics-orbit",
-          "frames": 72,
-          "sourceIn": 72,
-          "sourceOut": 144,
-          "layout": "output",
-          "label": "REAL IMPORTED GEOMETRY",
+          "id": "all-together",
+          "asset": "handbag-orbit",
+          "frames": 108,
+          "layout": "stack",
+          "cards": [
+            [
+              "handbag-orbit",
+              "DAZ / TEXTURED PROP"
+            ],
+            [
+              "bmw-orbit",
+              "BMW / .BLEND"
+            ],
+            [
+              "crate-orbit",
+              "SCI-FI / HARD SURFACE"
+            ]
+          ],
+          "headline": [
+            "BRING",
+            "IT ALL."
+          ],
           "words": [
             [
               0,
-              "Different sources."
+              "Different assets. One workspace."
             ]
           ]
         },
         {
-          "id": "outputs-pair",
-          "asset": "garment-orbit",
-          "companion": "sculpt-orbit",
-          "frames": 72,
-          "sourceIn": 72,
-          "sourceOut": 144,
-          "layout": "pair",
-          "label": "TWO ASSETS / ONE WORKSPACE",
-          "words": [
-            [
-              0,
-              "One editable workspace."
-            ]
-          ]
-        },
-        {
-          "id": "native-return",
-          "asset": "native-output",
-          "frames": 72,
-          "layout": "output",
-          "label": "ORIGINAL CAMERA / SHADERS / LIGHTS",
-          "words": [
-            [
-              0,
-              "Keep native rendering."
-            ]
-          ]
-        },
-        {
-          "id": "working-copy",
+          "id": "workspace-reveal",
           "asset": "blend-edit",
-          "frames": 72,
+          "frames": 108,
           "sourceIn": 165,
-          "sourceOut": 237,
+          "sourceOut": 269,
           "layout": "ui",
-          "label": "EDITABLE WORKING COPY",
+          "headline": [
+            "ONE WORKSPACE."
+          ],
+          "label": "REAL PACKAGED FUSION FOOTAGE",
           "words": [
             [
               0,
-              "Keep control of the geometry."
-            ]
-          ]
-        },
-        {
-          "id": "opener-payoff",
-          "asset": "sculpt-orbit",
-          "frames": 72,
-          "sourceIn": 36,
-          "sourceOut": 108,
-          "layout": "output",
-          "label": "IMPORT → EDIT → EXPORT",
-          "words": [
-            [
-              0,
-              "Here is how it works."
+              "Meet Fusion Studio."
             ]
           ]
         }
@@ -167,51 +154,134 @@
     },
     {
       "id": "blender",
-      "from": 651,
+      "from": 435,
       "to": 1083,
-      "tag": "01 / SOURCE",
-      "title": "Blender",
-      "mode": "proof",
+      "tag": "01 / BLENDER",
+      "title": "Unlock your scene",
       "clips": [
         {
-          "id": "blender-edit",
+          "id": "unlock",
+          "asset": "bmw-wire",
+          "frames": 36,
+          "sourceIn": 50,
+          "sourceOut": 110,
+          "layout": "format",
+          "headline": [
+            "UNLOCK."
+          ],
+          "label": "BMW / BLENDER WIREFRAME",
+          "words": [
+            [
+              0,
+              "Unlock your scene."
+            ]
+          ]
+        },
+        {
+          "id": "review",
           "asset": "blend-edit",
-          "frames": 216,
+          "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 138,
           "layout": "ui",
+          "headline": [
+            "CHECK. THEN CREATE."
+          ],
+          "label": "REVIEW CONVERSION LIMITS",
+          "focus": "dialog",
           "words": [
             [
               0,
               "Review conversion limits first."
-            ],
+            ]
+          ]
+        },
+        {
+          "id": "editable",
+          "asset": "blend-edit",
+          "frames": 108,
+          "sourceIn": 138,
+          "sourceOut": 269,
+          "layout": "ui",
+          "headline": [
+            "MAKE IT EDITABLE."
+          ],
+          "label": "BLENDER / INTERCHANGE",
+          "focus": "viewport",
+          "words": [
             [
-              126,
+              0,
               "Import an editable working copy."
             ]
           ]
         },
         {
-          "id": "blender-preserve",
-          "asset": "blend-preserve",
-          "frames": 108,
-          "layout": "ui",
+          "id": "native-hit",
+          "asset": "native-output",
+          "frames": 36,
+          "layout": "hero",
+          "headline": [
+            "KEEP",
+            "THE ORIGINAL."
+          ],
           "words": [
             [
               0,
-              "Or preserve the native scene."
+              "Keep the original."
             ]
           ]
         },
         {
-          "id": "blender-render",
-          "asset": "native-render",
+          "id": "native-scene",
+          "asset": "blend-preserve",
           "frames": 108,
-          "sourceIn": 60,
-          "sourceOut": 204,
+          "sourceIn": 45,
+          "sourceOut": 185,
           "layout": "ui",
+          "headline": [
+            "NATIVE STAYS NATIVE."
+          ],
+          "label": "PRESERVED BLENDER SCENE",
+          "focus": "viewport",
           "words": [
             [
               0,
-              "Render with its original camera and shaders."
+              "Preserve the native render scene."
+            ]
+          ]
+        },
+        {
+          "id": "native-render",
+          "asset": "native-render",
+          "frames": 108,
+          "sourceIn": 45,
+          "sourceOut": 260,
+          "layout": "ui",
+          "headline": [
+            "LIGHT IT UP."
+          ],
+          "label": "ACTUAL CYCLES RENDER / WAITS CUT",
+          "focus": "dialog",
+          "words": [
+            [
+              0,
+              "Render through Blender."
+            ]
+          ]
+        },
+        {
+          "id": "two-modes",
+          "asset": "optics-orbit",
+          "frames": 144,
+          "layout": "compare",
+          "headline": [
+            "TWO MODES.",
+            "ONE SOURCE."
+          ],
+          "words": [
+            [
+              0,
+              "Editable working copy. Preserved native rendering."
             ]
           ]
         }
@@ -220,52 +290,98 @@
     {
       "id": "daz",
       "from": 1083,
-      "to": 1623,
-      "tag": "02 / ASSET",
-      "title": "DAZ",
-      "mode": "proof",
+      "to": 1515,
+      "tag": "02 / DAZ",
+      "title": "Bring your library",
       "clips": [
         {
-          "id": "daz-load",
-          "asset": "daz-import",
-          "frames": 216,
-          "layout": "ui",
+          "id": "library-hit",
+          "asset": "trunk-orbit",
+          "frames": 36,
+          "sourceIn": 30,
+          "sourceOut": 90,
+          "layout": "format",
+          "headline": [
+            "YOUR LIBRARY."
+          ],
+          "label": "VINTAGE TRUNK / .DUF",
           "words": [
             [
               0,
-              "Import a real MuscleShirt .duf."
-            ],
+              "Bring your library."
+            ]
+          ]
+        },
+        {
+          "id": "daz-import",
+          "asset": "daz-import",
+          "frames": 108,
+          "layout": "ui",
+          "headline": [
+            "BRING IT IN."
+          ],
+          "label": "MUSCLESHIRT / .DUF",
+          "focus": "viewport",
+          "words": [
             [
-              108,
-              "Mesh, textures and rig come through."
+              0,
+              "Import a real DAZ garment."
+            ]
+          ]
+        },
+        {
+          "id": "daz-mesh",
+          "asset": "handbag-orbit",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "MORE TO EXPLORE."
+          ],
+          "label": "DAZ HANDBAG / TEXTURED VIEW",
+          "words": [
+            [
+              0,
+              "Explore more of your library."
             ]
           ]
         },
         {
           "id": "daz-material",
           "asset": "daz-preset",
-          "frames": 324,
+          "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 240,
           "layout": "ui",
+          "headline": [
+            "MAKE A CHANGE."
+          ],
+          "label": "SUPPORTED MATERIAL PROPERTIES",
+          "focus": "viewport",
           "words": [
             [
               0,
-              "Choose a compatible material preset."
-            ],
+              "Apply supported preset properties."
+            ]
+          ]
+        },
+        {
+          "id": "daz-recovery",
+          "asset": "daz-preset",
+          "frames": 108,
+          "sourceIn": 240,
+          "sourceOut": 521,
+          "layout": "ui",
+          "headline": [
+            "STAY IN CONTROL."
+          ],
+          "label": "UNDO / REDO",
+          "focus": "viewport",
+          "words": [
             [
-              90,
-              "Apply supported color properties."
-            ],
-            [
-              144,
-              "Undo. Restore material state."
-            ],
-            [
-              204,
-              "Redo. Recover the applied preset."
-            ],
-            [
-              258,
-              "Legacy shader parity remains limited."
+              0,
+              "Undo and redo. Legacy shader parity remains limited."
             ]
           ]
         }
@@ -273,49 +389,165 @@
     },
     {
       "id": "edit",
-      "from": 1623,
+      "from": 1515,
       "to": 2271,
-      "tag": "03 / GEOMETRY",
-      "title": "Edit and recover",
-      "mode": "proof",
+      "tag": "03 / CREATE",
+      "title": "Make your mark",
       "clips": [
         {
-          "id": "sculpt-change",
-          "asset": "sculpt",
-          "frames": 396,
-          "layout": "ui",
+          "id": "shape-hit",
+          "asset": "crate-orbit",
+          "frames": 36,
+          "sourceIn": 10,
+          "sourceOut": 70,
+          "layout": "format",
+          "headline": [
+            "LOOK CLOSER."
+          ],
+          "label": "SCI-FI CRATE / HARD SURFACE",
           "words": [
             [
               0,
-              "A real sculpt stroke changes the mesh."
-            ],
-            [
-              240,
-              "Undo restores the exact geometry."
-            ],
-            [
-              300,
-              "Redo recovers the sculpt."
-            ],
-            [
-              354,
-              "Your changes remain editable."
+              "Look closer. Then make your mark."
             ]
           ]
         },
         {
-          "id": "save-export",
-          "asset": "save",
-          "frames": 252,
+          "id": "sculpt-stroke",
+          "asset": "sculpt",
+          "frames": 216,
+          "sourceIn": 0,
+          "sourceOut": 329,
           "layout": "ui",
+          "headline": [
+            "MAKE YOUR MARK."
+          ],
+          "label": "REAL SCULPT STROKE",
+          "focus": "viewport",
+          "words": [
+            [
+              0,
+              "A real stroke. Changed geometry."
+            ]
+          ]
+        },
+        {
+          "id": "sculpt-undo",
+          "asset": "sculpt",
+          "frames": 72,
+          "sourceIn": 310,
+          "sourceOut": 398,
+          "layout": "ui",
+          "headline": [
+            "UNDO."
+          ],
+          "label": "EXACT GEOMETRY RECOVERY",
+          "focus": "viewport",
+          "light": true,
+          "words": [
+            [
+              0,
+              "Undo. Exact geometry restored."
+            ]
+          ]
+        },
+        {
+          "id": "sculpt-redo",
+          "asset": "sculpt",
+          "frames": 72,
+          "sourceIn": 385,
+          "sourceOut": 493,
+          "layout": "ui",
+          "headline": [
+            "REDO."
+          ],
+          "label": "RECOVER THE SCULPT",
+          "focus": "viewport",
+          "words": [
+            [
+              0,
+              "Redo. Recover the sculpt."
+            ]
+          ]
+        },
+        {
+          "id": "save-reopen",
+          "asset": "save",
+          "frames": 144,
+          "sourceIn": 0,
+          "sourceOut": 180,
+          "layout": "ui",
+          "headline": [
+            "SAVE IT. KEEP IT."
+          ],
+          "label": "SAVE / REOPEN",
+          "camera": [
+            {
+              "frame": 0,
+              "zoom": 1.8,
+              "x": 0.8,
+              "y": 0.28
+            },
+            {
+              "frame": 18,
+              "zoom": 2.7,
+              "x": 0.83,
+              "y": 0.185
+            },
+            {
+              "frame": 48,
+              "zoom": 2.7,
+              "x": 0.83,
+              "y": 0.185
+            },
+            {
+              "frame": 92,
+              "zoom": 1.1,
+              "x": 0.5,
+              "y": 0.5
+            }
+          ],
           "words": [
             [
               0,
               "Save. Reopen the same geometry."
-            ],
+            ]
+          ]
+        },
+        {
+          "id": "glb-export",
+          "asset": "save",
+          "frames": 144,
+          "sourceIn": 180,
+          "sourceOut": 361,
+          "layout": "ui",
+          "headline": [
+            "TAKE IT WITH YOU."
+          ],
+          "label": "VALIDATED GLB EXPORT",
+          "focus": "dialog",
+          "words": [
             [
-              126,
-              "Export a validated GLB working copy."
+              0,
+              "Export your editable GLB working copy."
+            ]
+          ]
+        },
+        {
+          "id": "sculpt-payoff",
+          "asset": "trunk-orbit",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "YOURS TO BUILD."
+          ],
+          "label": "VINTAGE TRUNK / IMPORTED PROP",
+          "words": [
+            [
+              0,
+              "Yours to build."
             ]
           ]
         }
@@ -325,31 +557,100 @@
       "id": "chat",
       "from": 2271,
       "to": 2595,
-      "tag": "04 / CONVERSATION",
+      "tag": "04 / CONNECT",
       "title": "Your local model",
-      "mode": "proof",
       "clips": [
         {
-          "id": "local-chat",
+          "id": "chat-hit",
           "asset": "chat",
-          "frames": 324,
-          "layout": "ui",
+          "frames": 36,
+          "sourceIn": 170,
+          "sourceOut": 220,
+          "layout": "type",
+          "headline": [
+            "YOUR MODEL.",
+            "YOUR MACHINE."
+          ],
           "words": [
             [
               0,
-              "Connect your local Ollama model."
-            ],
+              "Your model. Your machine."
+            ]
+          ]
+        },
+        {
+          "id": "chat-ask",
+          "asset": "chat",
+          "frames": 144,
+          "sourceIn": 45,
+          "sourceOut": 180,
+          "layout": "ui",
+          "headline": [
+            "START A CONVERSATION."
+          ],
+          "label": "LOCAL OLLAMA / PHI-3",
+          "camera": [
+            {
+              "frame": 0,
+              "zoom": 1.4,
+              "x": 0.59,
+              "y": 0.52
+            },
+            {
+              "frame": 18,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.52
+            },
+            {
+              "frame": 114,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.52
+            },
+            {
+              "frame": 143,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.29
+            }
+          ],
+          "words": [
             [
-              72,
-              "Ask Phi-3 a question."
-            ],
+              0,
+              "Chat with your local Ollama model."
+            ]
+          ]
+        },
+        {
+          "id": "chat-response",
+          "asset": "chat",
+          "frames": 144,
+          "sourceIn": 180,
+          "sourceOut": 356,
+          "layout": "ui",
+          "headline": [
+            "REAL RESPONSE."
+          ],
+          "label": "CONVERSATIONAL CHAT",
+          "camera": [
+            {
+              "frame": 0,
+              "zoom": 2.8,
+              "x": 0.59,
+              "y": 0.29
+            },
+            {
+              "frame": 143,
+              "zoom": 2.85,
+              "x": 0.59,
+              "y": 0.29
+            }
+          ],
+          "words": [
             [
-              144,
-              "A real response from your model."
-            ],
-            [
-              234,
-              "Conversational chat. Scene edits stay separate."
+              0,
+              "A real response. Conversational chat."
             ]
           ]
         }
@@ -358,36 +659,119 @@
     {
       "id": "mcp",
       "from": 2595,
-      "to": 2991,
+      "to": 3063,
       "tag": "05 / CONTROL",
-      "title": "External MCP",
-      "mode": "proof",
+      "title": "Connected workflows",
       "clips": [
         {
-          "id": "mcp-operations",
+          "id": "mcp-hit",
           "asset": "mcp",
-          "frames": 396,
-          "layout": "ui",
+          "frames": 36,
+          "sourceOut": 66,
+          "layout": "type",
+          "headline": [
+            "CONNECTED."
+          ],
           "words": [
             [
               0,
-              "An authenticated client inspects the scene."
-            ],
+              "Connect external tools through MCP."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-add",
+          "asset": "mcp",
+          "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 140,
+          "layout": "ui",
+          "headline": [
+            "ADD."
+          ],
+          "label": "EXTERNAL MCP CLIENT / ACTUAL APP",
+          "focus": "viewport",
+          "words": [
             [
-              54,
-              "Add a primitive through MCP."
-            ],
+              0,
+              "Inspect. Add a primitive."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-transform",
+          "asset": "mcp",
+          "frames": 108,
+          "sourceIn": 120,
+          "sourceOut": 214,
+          "layout": "ui",
+          "headline": [
+            "MOVE."
+          ],
+          "label": "REVISION-CHECKED TRANSFORM",
+          "focus": "viewport",
+          "words": [
             [
-              126,
+              0,
               "Set its transform."
-            ],
+            ]
+          ]
+        },
+        {
+          "id": "mcp-undo",
+          "asset": "mcp",
+          "frames": 72,
+          "sourceIn": 194,
+          "sourceOut": 287,
+          "layout": "ui",
+          "headline": [
+            "UNDO."
+          ],
+          "label": "SHARED OPERATOR HISTORY",
+          "focus": "viewport",
+          "light": true,
+          "words": [
             [
-              198,
-              "Undo through the same history."
-            ],
+              0,
+              "Undo through Fusion history."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-redo",
+          "asset": "mcp",
+          "frames": 72,
+          "sourceIn": 267,
+          "sourceOut": 360,
+          "layout": "ui",
+          "headline": [
+            "RECOVER."
+          ],
+          "label": "EXTERNAL CONTROL / BUILT-IN RECOVERY",
+          "focus": "viewport",
+          "words": [
             [
-              270,
+              0,
               "Redo. Recover the change."
+            ]
+          ]
+        },
+        {
+          "id": "mcp-payoff",
+          "asset": "mcp",
+          "frames": 72,
+          "sourceIn": 360,
+          "sourceOut": 424,
+          "layout": "ui",
+          "headline": [
+            "YOUR WORKFLOW."
+          ],
+          "label": "LOCAL TOOLS / CONNECTED WORKFLOWS",
+          "focus": "viewport",
+          "words": [
+            [
+              0,
+              "Your workflow, connected."
             ]
           ]
         }
@@ -395,64 +779,114 @@
     },
     {
       "id": "finish",
-      "from": 2991,
+      "from": 3063,
       "to": 3600,
-      "tag": "FUSION STUDIO / 0.19.0-rc.1",
-      "title": "Keep building.",
-      "mode": "closing",
+      "tag": "KEEP CREATING",
+      "title": "Keep creating",
       "clips": [
         {
-          "id": "final-geometry",
-          "asset": "sculpt-orbit",
-          "frames": 144,
-          "layout": "output",
-          "label": "EDITABLE OUTPUT",
+          "id": "results-stack",
+          "asset": "dragon-orbit",
+          "frames": 108,
+          "layout": "stack",
+          "cards": [
+            [
+              "dragon-orbit",
+              "CREATURE / .DUF"
+            ],
+            [
+              "trunk-orbit",
+              "VINTAGE / .DUF"
+            ],
+            [
+              "handbag-orbit",
+              "TEXTURED PROP"
+            ]
+          ],
+          "headline": [
+            "IMPORT.",
+            "CREATE. REPEAT."
+          ],
           "words": [
             [
               0,
-              "Import. Shape. Recover."
+              "Import. Create. Repeat."
             ]
           ]
         },
         {
-          "id": "final-library",
-          "asset": "garment-orbit",
-          "frames": 144,
-          "layout": "output",
-          "label": "YOUR LIBRARY, CONNECTED",
+          "id": "render-payoff",
+          "asset": "bmw-orbit",
+          "frames": 108,
+          "sourceIn": 0,
+          "sourceOut": 150,
+          "layout": "hero",
+          "headline": [
+            "YOUR VISION.",
+            "IN MOTION."
+          ],
           "words": [
             [
               0,
-              "Your assets can stay with you."
+              "Your vision. In motion."
             ]
           ]
         },
         {
-          "id": "final-render",
-          "asset": "native-output",
-          "frames": 144,
-          "layout": "output",
-          "label": "PRESERVED NATIVE RENDER",
+          "id": "library-payoff",
+          "asset": "crate-orbit",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "YOUR ASSETS."
+          ],
+          "label": "SCI-FI CRATE / IMPORTED PROP",
           "words": [
             [
               0,
-              "And the original stays intact."
+              "Your assets. One workspace."
+            ]
+          ]
+        },
+        {
+          "id": "create-payoff",
+          "asset": "dragon-wire",
+          "frames": 72,
+          "sourceIn": 20,
+          "sourceOut": 140,
+          "layout": "format",
+          "headline": [
+            "NEW PERSPECTIVES."
+          ],
+          "label": "DRAGON / ELEVATED WIREFRAME",
+          "words": [
+            [
+              0,
+              "Explore a new perspective."
             ]
           ]
         },
         {
           "id": "invitation",
-          "asset": "optics-orbit",
+          "asset": "dragon-orbit",
           "frames": 177,
+          "sourceIn": 0,
+          "sourceOut": 150,
           "layout": "end",
-          "label": "WINDOWS RELEASE CANDIDATE",
+          "headline": [
+            "FUSION",
+            "STUDIO."
+          ],
+          "label": "WINDOWS / 0.19.0-rc.1",
           "words": [
             [
               0,
               "Fusion Studio 0.19.0-rc.1."
             ],
             [
-              90,
+              105,
               "Music: Secret — ESPRIT 空想."
             ]
           ]
@@ -462,15 +896,18 @@
   ],
   "shots": [
     {
-      "id": "native-open",
-      "asset": "native-output",
+      "id": "hero",
+      "asset": "dragon-orbit",
       "frames": 75,
-      "layout": "output",
-      "label": "NATIVE BLENDER RENDER",
+      "layout": "hero",
+      "headline": [
+        "YOUR ASSETS.",
+        "UNLEASHED."
+      ],
       "words": [
         [
           0,
-          "This is Fusion Studio."
+          "Your assets. Unleashed."
         ]
       ],
       "scene": "hook",
@@ -478,16 +915,19 @@
       "to": 75
     },
     {
-      "id": "optics-open",
-      "asset": "optics-orbit",
+      "id": "blend-hit",
+      "asset": "bmw-orbit",
       "frames": 72,
-      "sourceOut": 72,
-      "layout": "output",
-      "label": "EDITABLE BLENDER IMPORT",
+      "sourceOut": 100,
+      "layout": "format",
+      "headline": [
+        ".BLEND"
+      ],
+      "label": "BMW / EDITABLE VIEWPORT",
       "words": [
         [
           0,
-          "Start with your own assets."
+          "Bring your Blender scenes."
         ]
       ],
       "scene": "hook",
@@ -495,394 +935,880 @@
       "to": 147
     },
     {
-      "id": "garment-open",
-      "asset": "garment-orbit",
-      "frames": 72,
-      "sourceOut": 72,
-      "layout": "output",
-      "label": "DAZ MUSCLESHIRT / .DUF",
+      "id": "daz-hit",
+      "asset": "hair-orbit",
+      "frames": 36,
+      "sourceIn": 35,
+      "sourceOut": 95,
+      "layout": "format",
+      "headline": [
+        ".DUF"
+      ],
+      "label": "DAZ MESH HAIR / REAR VIEW",
       "words": [
         [
           0,
-          "Bring your DAZ library."
+          "Your DAZ library."
         ]
       ],
       "scene": "hook",
       "from": 147,
-      "to": 219
+      "to": 183
     },
     {
-      "id": "sculpt-open",
-      "asset": "sculpt-orbit",
-      "frames": 72,
-      "sourceOut": 72,
-      "layout": "output",
-      "label": "SCULPTED GLB OUTPUT",
+      "id": "mesh-hit",
+      "asset": "dragon-wire",
+      "frames": 36,
+      "sourceIn": 35,
+      "sourceOut": 95,
+      "layout": "format",
+      "headline": [
+        "WIREFRAME."
+      ],
+      "label": "DRAGON / TOPOLOGY VIEW",
       "words": [
         [
           0,
-          "Shape it in Fusion."
+          "See the geometry underneath."
+        ]
+      ],
+      "scene": "hook",
+      "from": 183,
+      "to": 219
+    },
+    {
+      "id": "all-together",
+      "asset": "handbag-orbit",
+      "frames": 108,
+      "layout": "stack",
+      "cards": [
+        [
+          "handbag-orbit",
+          "DAZ / TEXTURED PROP"
+        ],
+        [
+          "bmw-orbit",
+          "BMW / .BLEND"
+        ],
+        [
+          "crate-orbit",
+          "SCI-FI / HARD SURFACE"
+        ]
+      ],
+      "headline": [
+        "BRING",
+        "IT ALL."
+      ],
+      "words": [
+        [
+          0,
+          "Different assets. One workspace."
         ]
       ],
       "scene": "hook",
       "from": 219,
-      "to": 291
+      "to": 327
     },
     {
-      "id": "optics-return",
-      "asset": "optics-orbit",
-      "frames": 72,
-      "sourceIn": 72,
-      "sourceOut": 144,
-      "layout": "output",
-      "label": "REAL IMPORTED GEOMETRY",
+      "id": "workspace-reveal",
+      "asset": "blend-edit",
+      "frames": 108,
+      "sourceIn": 165,
+      "sourceOut": 269,
+      "layout": "ui",
+      "headline": [
+        "ONE WORKSPACE."
+      ],
+      "label": "REAL PACKAGED FUSION FOOTAGE",
       "words": [
         [
           0,
-          "Different sources."
+          "Meet Fusion Studio."
         ]
       ],
       "scene": "hook",
-      "from": 291,
-      "to": 363
-    },
-    {
-      "id": "outputs-pair",
-      "asset": "garment-orbit",
-      "companion": "sculpt-orbit",
-      "frames": 72,
-      "sourceIn": 72,
-      "sourceOut": 144,
-      "layout": "pair",
-      "label": "TWO ASSETS / ONE WORKSPACE",
-      "words": [
-        [
-          0,
-          "One editable workspace."
-        ]
-      ],
-      "scene": "hook",
-      "from": 363,
+      "from": 327,
       "to": 435
     },
     {
-      "id": "native-return",
-      "asset": "native-output",
-      "frames": 72,
-      "layout": "output",
-      "label": "ORIGINAL CAMERA / SHADERS / LIGHTS",
+      "id": "unlock",
+      "asset": "bmw-wire",
+      "frames": 36,
+      "sourceIn": 50,
+      "sourceOut": 110,
+      "layout": "format",
+      "headline": [
+        "UNLOCK."
+      ],
+      "label": "BMW / BLENDER WIREFRAME",
       "words": [
         [
           0,
-          "Keep native rendering."
+          "Unlock your scene."
         ]
       ],
-      "scene": "hook",
+      "scene": "blender",
       "from": 435,
-      "to": 507
+      "to": 471
     },
     {
-      "id": "working-copy",
+      "id": "review",
       "asset": "blend-edit",
-      "frames": 72,
-      "sourceIn": 165,
-      "sourceOut": 237,
+      "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 138,
       "layout": "ui",
-      "label": "EDITABLE WORKING COPY",
-      "words": [
-        [
-          0,
-          "Keep control of the geometry."
-        ]
+      "headline": [
+        "CHECK. THEN CREATE."
       ],
-      "scene": "hook",
-      "from": 507,
-      "to": 579
-    },
-    {
-      "id": "opener-payoff",
-      "asset": "sculpt-orbit",
-      "frames": 72,
-      "sourceIn": 36,
-      "sourceOut": 108,
-      "layout": "output",
-      "label": "IMPORT → EDIT → EXPORT",
-      "words": [
-        [
-          0,
-          "Here is how it works."
-        ]
-      ],
-      "scene": "hook",
-      "from": 579,
-      "to": 651
-    },
-    {
-      "id": "blender-edit",
-      "asset": "blend-edit",
-      "frames": 216,
-      "layout": "ui",
+      "label": "REVIEW CONVERSION LIMITS",
+      "focus": "dialog",
       "words": [
         [
           0,
           "Review conversion limits first."
-        ],
+        ]
+      ],
+      "scene": "blender",
+      "from": 471,
+      "to": 579
+    },
+    {
+      "id": "editable",
+      "asset": "blend-edit",
+      "frames": 108,
+      "sourceIn": 138,
+      "sourceOut": 269,
+      "layout": "ui",
+      "headline": [
+        "MAKE IT EDITABLE."
+      ],
+      "label": "BLENDER / INTERCHANGE",
+      "focus": "viewport",
+      "words": [
         [
-          126,
+          0,
           "Import an editable working copy."
         ]
       ],
       "scene": "blender",
-      "from": 651,
-      "to": 867
+      "from": 579,
+      "to": 687
     },
     {
-      "id": "blender-preserve",
+      "id": "native-hit",
+      "asset": "native-output",
+      "frames": 36,
+      "layout": "hero",
+      "headline": [
+        "KEEP",
+        "THE ORIGINAL."
+      ],
+      "words": [
+        [
+          0,
+          "Keep the original."
+        ]
+      ],
+      "scene": "blender",
+      "from": 687,
+      "to": 723
+    },
+    {
+      "id": "native-scene",
       "asset": "blend-preserve",
       "frames": 108,
+      "sourceIn": 45,
+      "sourceOut": 185,
       "layout": "ui",
+      "headline": [
+        "NATIVE STAYS NATIVE."
+      ],
+      "label": "PRESERVED BLENDER SCENE",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "Or preserve the native scene."
+          "Preserve the native render scene."
         ]
       ],
       "scene": "blender",
-      "from": 867,
-      "to": 975
+      "from": 723,
+      "to": 831
     },
     {
-      "id": "blender-render",
+      "id": "native-render",
       "asset": "native-render",
       "frames": 108,
-      "sourceIn": 60,
-      "sourceOut": 204,
+      "sourceIn": 45,
+      "sourceOut": 260,
       "layout": "ui",
+      "headline": [
+        "LIGHT IT UP."
+      ],
+      "label": "ACTUAL CYCLES RENDER / WAITS CUT",
+      "focus": "dialog",
       "words": [
         [
           0,
-          "Render with its original camera and shaders."
+          "Render through Blender."
         ]
       ],
       "scene": "blender",
-      "from": 975,
+      "from": 831,
+      "to": 939
+    },
+    {
+      "id": "two-modes",
+      "asset": "optics-orbit",
+      "frames": 144,
+      "layout": "compare",
+      "headline": [
+        "TWO MODES.",
+        "ONE SOURCE."
+      ],
+      "words": [
+        [
+          0,
+          "Editable working copy. Preserved native rendering."
+        ]
+      ],
+      "scene": "blender",
+      "from": 939,
       "to": 1083
     },
     {
-      "id": "daz-load",
-      "asset": "daz-import",
-      "frames": 216,
-      "layout": "ui",
+      "id": "library-hit",
+      "asset": "trunk-orbit",
+      "frames": 36,
+      "sourceIn": 30,
+      "sourceOut": 90,
+      "layout": "format",
+      "headline": [
+        "YOUR LIBRARY."
+      ],
+      "label": "VINTAGE TRUNK / .DUF",
       "words": [
         [
           0,
-          "Import a real MuscleShirt .duf."
-        ],
-        [
-          108,
-          "Mesh, textures and rig come through."
+          "Bring your library."
         ]
       ],
       "scene": "daz",
       "from": 1083,
+      "to": 1119
+    },
+    {
+      "id": "daz-import",
+      "asset": "daz-import",
+      "frames": 108,
+      "layout": "ui",
+      "headline": [
+        "BRING IT IN."
+      ],
+      "label": "MUSCLESHIRT / .DUF",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Import a real DAZ garment."
+        ]
+      ],
+      "scene": "daz",
+      "from": 1119,
+      "to": 1227
+    },
+    {
+      "id": "daz-mesh",
+      "asset": "handbag-orbit",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "MORE TO EXPLORE."
+      ],
+      "label": "DAZ HANDBAG / TEXTURED VIEW",
+      "words": [
+        [
+          0,
+          "Explore more of your library."
+        ]
+      ],
+      "scene": "daz",
+      "from": 1227,
       "to": 1299
     },
     {
       "id": "daz-material",
       "asset": "daz-preset",
-      "frames": 324,
+      "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 240,
       "layout": "ui",
+      "headline": [
+        "MAKE A CHANGE."
+      ],
+      "label": "SUPPORTED MATERIAL PROPERTIES",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "Choose a compatible material preset."
-        ],
-        [
-          90,
-          "Apply supported color properties."
-        ],
-        [
-          144,
-          "Undo. Restore material state."
-        ],
-        [
-          204,
-          "Redo. Recover the applied preset."
-        ],
-        [
-          258,
-          "Legacy shader parity remains limited."
+          "Apply supported preset properties."
         ]
       ],
       "scene": "daz",
       "from": 1299,
-      "to": 1623
+      "to": 1407
     },
     {
-      "id": "sculpt-change",
-      "asset": "sculpt",
-      "frames": 396,
+      "id": "daz-recovery",
+      "asset": "daz-preset",
+      "frames": 108,
+      "sourceIn": 240,
+      "sourceOut": 521,
       "layout": "ui",
+      "headline": [
+        "STAY IN CONTROL."
+      ],
+      "label": "UNDO / REDO",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "A real sculpt stroke changes the mesh."
-        ],
+          "Undo and redo. Legacy shader parity remains limited."
+        ]
+      ],
+      "scene": "daz",
+      "from": 1407,
+      "to": 1515
+    },
+    {
+      "id": "shape-hit",
+      "asset": "crate-orbit",
+      "frames": 36,
+      "sourceIn": 10,
+      "sourceOut": 70,
+      "layout": "format",
+      "headline": [
+        "LOOK CLOSER."
+      ],
+      "label": "SCI-FI CRATE / HARD SURFACE",
+      "words": [
         [
-          240,
-          "Undo restores the exact geometry."
-        ],
-        [
-          300,
-          "Redo recovers the sculpt."
-        ],
-        [
-          354,
-          "Your changes remain editable."
+          0,
+          "Look closer. Then make your mark."
         ]
       ],
       "scene": "edit",
-      "from": 1623,
-      "to": 2019
+      "from": 1515,
+      "to": 1551
     },
     {
-      "id": "save-export",
-      "asset": "save",
-      "frames": 252,
+      "id": "sculpt-stroke",
+      "asset": "sculpt",
+      "frames": 216,
+      "sourceIn": 0,
+      "sourceOut": 329,
       "layout": "ui",
+      "headline": [
+        "MAKE YOUR MARK."
+      ],
+      "label": "REAL SCULPT STROKE",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "A real stroke. Changed geometry."
+        ]
+      ],
+      "scene": "edit",
+      "from": 1551,
+      "to": 1767
+    },
+    {
+      "id": "sculpt-undo",
+      "asset": "sculpt",
+      "frames": 72,
+      "sourceIn": 310,
+      "sourceOut": 398,
+      "layout": "ui",
+      "headline": [
+        "UNDO."
+      ],
+      "label": "EXACT GEOMETRY RECOVERY",
+      "focus": "viewport",
+      "light": true,
+      "words": [
+        [
+          0,
+          "Undo. Exact geometry restored."
+        ]
+      ],
+      "scene": "edit",
+      "from": 1767,
+      "to": 1839
+    },
+    {
+      "id": "sculpt-redo",
+      "asset": "sculpt",
+      "frames": 72,
+      "sourceIn": 385,
+      "sourceOut": 493,
+      "layout": "ui",
+      "headline": [
+        "REDO."
+      ],
+      "label": "RECOVER THE SCULPT",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Redo. Recover the sculpt."
+        ]
+      ],
+      "scene": "edit",
+      "from": 1839,
+      "to": 1911
+    },
+    {
+      "id": "save-reopen",
+      "asset": "save",
+      "frames": 144,
+      "sourceIn": 0,
+      "sourceOut": 180,
+      "layout": "ui",
+      "headline": [
+        "SAVE IT. KEEP IT."
+      ],
+      "label": "SAVE / REOPEN",
+      "camera": [
+        {
+          "frame": 0,
+          "zoom": 1.8,
+          "x": 0.8,
+          "y": 0.28
+        },
+        {
+          "frame": 18,
+          "zoom": 2.7,
+          "x": 0.83,
+          "y": 0.185
+        },
+        {
+          "frame": 48,
+          "zoom": 2.7,
+          "x": 0.83,
+          "y": 0.185
+        },
+        {
+          "frame": 92,
+          "zoom": 1.1,
+          "x": 0.5,
+          "y": 0.5
+        }
+      ],
       "words": [
         [
           0,
           "Save. Reopen the same geometry."
-        ],
-        [
-          126,
-          "Export a validated GLB working copy."
         ]
       ],
       "scene": "edit",
-      "from": 2019,
-      "to": 2271
+      "from": 1911,
+      "to": 2055
     },
     {
-      "id": "local-chat",
-      "asset": "chat",
-      "frames": 324,
+      "id": "glb-export",
+      "asset": "save",
+      "frames": 144,
+      "sourceIn": 180,
+      "sourceOut": 361,
       "layout": "ui",
+      "headline": [
+        "TAKE IT WITH YOU."
+      ],
+      "label": "VALIDATED GLB EXPORT",
+      "focus": "dialog",
       "words": [
         [
           0,
-          "Connect your local Ollama model."
-        ],
+          "Export your editable GLB working copy."
+        ]
+      ],
+      "scene": "edit",
+      "from": 2055,
+      "to": 2199
+    },
+    {
+      "id": "sculpt-payoff",
+      "asset": "trunk-orbit",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "YOURS TO BUILD."
+      ],
+      "label": "VINTAGE TRUNK / IMPORTED PROP",
+      "words": [
         [
-          72,
-          "Ask Phi-3 a question."
-        ],
+          0,
+          "Yours to build."
+        ]
+      ],
+      "scene": "edit",
+      "from": 2199,
+      "to": 2271
+    },
+    {
+      "id": "chat-hit",
+      "asset": "chat",
+      "frames": 36,
+      "sourceIn": 170,
+      "sourceOut": 220,
+      "layout": "type",
+      "headline": [
+        "YOUR MODEL.",
+        "YOUR MACHINE."
+      ],
+      "words": [
         [
-          144,
-          "A real response from your model."
-        ],
-        [
-          234,
-          "Conversational chat. Scene edits stay separate."
+          0,
+          "Your model. Your machine."
         ]
       ],
       "scene": "chat",
       "from": 2271,
-      "to": 2595
+      "to": 2307
     },
     {
-      "id": "mcp-operations",
-      "asset": "mcp",
-      "frames": 396,
+      "id": "chat-ask",
+      "asset": "chat",
+      "frames": 144,
+      "sourceIn": 45,
+      "sourceOut": 180,
       "layout": "ui",
+      "headline": [
+        "START A CONVERSATION."
+      ],
+      "label": "LOCAL OLLAMA / PHI-3",
+      "camera": [
+        {
+          "frame": 0,
+          "zoom": 1.4,
+          "x": 0.59,
+          "y": 0.52
+        },
+        {
+          "frame": 18,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.52
+        },
+        {
+          "frame": 114,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.52
+        },
+        {
+          "frame": 143,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.29
+        }
+      ],
       "words": [
         [
           0,
-          "An authenticated client inspects the scene."
-        ],
+          "Chat with your local Ollama model."
+        ]
+      ],
+      "scene": "chat",
+      "from": 2307,
+      "to": 2451
+    },
+    {
+      "id": "chat-response",
+      "asset": "chat",
+      "frames": 144,
+      "sourceIn": 180,
+      "sourceOut": 356,
+      "layout": "ui",
+      "headline": [
+        "REAL RESPONSE."
+      ],
+      "label": "CONVERSATIONAL CHAT",
+      "camera": [
+        {
+          "frame": 0,
+          "zoom": 2.8,
+          "x": 0.59,
+          "y": 0.29
+        },
+        {
+          "frame": 143,
+          "zoom": 2.85,
+          "x": 0.59,
+          "y": 0.29
+        }
+      ],
+      "words": [
         [
-          54,
-          "Add a primitive through MCP."
-        ],
+          0,
+          "A real response. Conversational chat."
+        ]
+      ],
+      "scene": "chat",
+      "from": 2451,
+      "to": 2595
+    },
+    {
+      "id": "mcp-hit",
+      "asset": "mcp",
+      "frames": 36,
+      "sourceOut": 66,
+      "layout": "type",
+      "headline": [
+        "CONNECTED."
+      ],
+      "words": [
         [
-          126,
-          "Set its transform."
-        ],
-        [
-          198,
-          "Undo through the same history."
-        ],
-        [
-          270,
-          "Redo. Recover the change."
+          0,
+          "Connect external tools through MCP."
         ]
       ],
       "scene": "mcp",
       "from": 2595,
+      "to": 2631
+    },
+    {
+      "id": "mcp-add",
+      "asset": "mcp",
+      "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 140,
+      "layout": "ui",
+      "headline": [
+        "ADD."
+      ],
+      "label": "EXTERNAL MCP CLIENT / ACTUAL APP",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Inspect. Add a primitive."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2631,
+      "to": 2739
+    },
+    {
+      "id": "mcp-transform",
+      "asset": "mcp",
+      "frames": 108,
+      "sourceIn": 120,
+      "sourceOut": 214,
+      "layout": "ui",
+      "headline": [
+        "MOVE."
+      ],
+      "label": "REVISION-CHECKED TRANSFORM",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Set its transform."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2739,
+      "to": 2847
+    },
+    {
+      "id": "mcp-undo",
+      "asset": "mcp",
+      "frames": 72,
+      "sourceIn": 194,
+      "sourceOut": 287,
+      "layout": "ui",
+      "headline": [
+        "UNDO."
+      ],
+      "label": "SHARED OPERATOR HISTORY",
+      "focus": "viewport",
+      "light": true,
+      "words": [
+        [
+          0,
+          "Undo through Fusion history."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2847,
+      "to": 2919
+    },
+    {
+      "id": "mcp-redo",
+      "asset": "mcp",
+      "frames": 72,
+      "sourceIn": 267,
+      "sourceOut": 360,
+      "layout": "ui",
+      "headline": [
+        "RECOVER."
+      ],
+      "label": "EXTERNAL CONTROL / BUILT-IN RECOVERY",
+      "focus": "viewport",
+      "words": [
+        [
+          0,
+          "Redo. Recover the change."
+        ]
+      ],
+      "scene": "mcp",
+      "from": 2919,
       "to": 2991
     },
     {
-      "id": "final-geometry",
-      "asset": "sculpt-orbit",
-      "frames": 144,
-      "layout": "output",
-      "label": "EDITABLE OUTPUT",
+      "id": "mcp-payoff",
+      "asset": "mcp",
+      "frames": 72,
+      "sourceIn": 360,
+      "sourceOut": 424,
+      "layout": "ui",
+      "headline": [
+        "YOUR WORKFLOW."
+      ],
+      "label": "LOCAL TOOLS / CONNECTED WORKFLOWS",
+      "focus": "viewport",
       "words": [
         [
           0,
-          "Import. Shape. Recover."
+          "Your workflow, connected."
         ]
       ],
-      "scene": "finish",
+      "scene": "mcp",
       "from": 2991,
-      "to": 3135
+      "to": 3063
     },
     {
-      "id": "final-library",
-      "asset": "garment-orbit",
-      "frames": 144,
-      "layout": "output",
-      "label": "YOUR LIBRARY, CONNECTED",
+      "id": "results-stack",
+      "asset": "dragon-orbit",
+      "frames": 108,
+      "layout": "stack",
+      "cards": [
+        [
+          "dragon-orbit",
+          "CREATURE / .DUF"
+        ],
+        [
+          "trunk-orbit",
+          "VINTAGE / .DUF"
+        ],
+        [
+          "handbag-orbit",
+          "TEXTURED PROP"
+        ]
+      ],
+      "headline": [
+        "IMPORT.",
+        "CREATE. REPEAT."
+      ],
       "words": [
         [
           0,
-          "Your assets can stay with you."
+          "Import. Create. Repeat."
         ]
       ],
       "scene": "finish",
-      "from": 3135,
+      "from": 3063,
+      "to": 3171
+    },
+    {
+      "id": "render-payoff",
+      "asset": "bmw-orbit",
+      "frames": 108,
+      "sourceIn": 0,
+      "sourceOut": 150,
+      "layout": "hero",
+      "headline": [
+        "YOUR VISION.",
+        "IN MOTION."
+      ],
+      "words": [
+        [
+          0,
+          "Your vision. In motion."
+        ]
+      ],
+      "scene": "finish",
+      "from": 3171,
       "to": 3279
     },
     {
-      "id": "final-render",
-      "asset": "native-output",
-      "frames": 144,
-      "layout": "output",
-      "label": "PRESERVED NATIVE RENDER",
+      "id": "library-payoff",
+      "asset": "crate-orbit",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "YOUR ASSETS."
+      ],
+      "label": "SCI-FI CRATE / IMPORTED PROP",
       "words": [
         [
           0,
-          "And the original stays intact."
+          "Your assets. One workspace."
         ]
       ],
       "scene": "finish",
       "from": 3279,
+      "to": 3351
+    },
+    {
+      "id": "create-payoff",
+      "asset": "dragon-wire",
+      "frames": 72,
+      "sourceIn": 20,
+      "sourceOut": 140,
+      "layout": "format",
+      "headline": [
+        "NEW PERSPECTIVES."
+      ],
+      "label": "DRAGON / ELEVATED WIREFRAME",
+      "words": [
+        [
+          0,
+          "Explore a new perspective."
+        ]
+      ],
+      "scene": "finish",
+      "from": 3351,
       "to": 3423
     },
     {
       "id": "invitation",
-      "asset": "optics-orbit",
+      "asset": "dragon-orbit",
       "frames": 177,
+      "sourceIn": 0,
+      "sourceOut": 150,
       "layout": "end",
-      "label": "WINDOWS RELEASE CANDIDATE",
+      "headline": [
+        "FUSION",
+        "STUDIO."
+      ],
+      "label": "WINDOWS / 0.19.0-rc.1",
       "words": [
         [
           0,
           "Fusion Studio 0.19.0-rc.1."
         ],
         [
-          90,
+          105,
           "Music: Secret — ESPRIT 空想."
         ]
       ],
@@ -895,200 +1821,200 @@
     [
       0,
       75,
-      "This is Fusion Studio."
+      "Your assets. Unleashed."
     ],
     [
       75,
       147,
-      "Start with your own assets."
+      "Bring your Blender scenes."
     ],
     [
       147,
+      183,
+      "Your DAZ library."
+    ],
+    [
+      183,
       219,
-      "Bring your DAZ library."
+      "See the geometry underneath."
     ],
     [
       219,
-      291,
-      "Shape it in Fusion."
+      327,
+      "Different assets. One workspace."
     ],
     [
-      291,
-      363,
-      "Different sources."
-    ],
-    [
-      363,
+      327,
       435,
-      "One editable workspace."
+      "Meet Fusion Studio."
     ],
     [
       435,
-      507,
-      "Keep native rendering."
+      471,
+      "Unlock your scene."
     ],
     [
-      507,
+      471,
       579,
-      "Keep control of the geometry."
-    ],
-    [
-      579,
-      651,
-      "Here is how it works."
-    ],
-    [
-      651,
-      777,
       "Review conversion limits first."
     ],
     [
-      777,
-      867,
+      579,
+      687,
       "Import an editable working copy."
     ],
     [
-      867,
-      975,
-      "Or preserve the native scene."
+      687,
+      723,
+      "Keep the original."
     ],
     [
-      975,
+      723,
+      831,
+      "Preserve the native render scene."
+    ],
+    [
+      831,
+      939,
+      "Render through Blender."
+    ],
+    [
+      939,
       1083,
-      "Render with its original camera and shaders."
+      "Editable working copy. Preserved native rendering."
     ],
     [
       1083,
-      1191,
-      "Import a real MuscleShirt .duf."
+      1119,
+      "Bring your library."
     ],
     [
-      1191,
+      1119,
+      1227,
+      "Import a real DAZ garment."
+    ],
+    [
+      1227,
       1299,
-      "Mesh, textures and rig come through."
+      "Explore more of your library."
     ],
     [
       1299,
-      1389,
-      "Choose a compatible material preset."
+      1407,
+      "Apply supported preset properties."
     ],
     [
-      1389,
-      1443,
-      "Apply supported color properties."
+      1407,
+      1515,
+      "Undo and redo. Legacy shader parity remains limited."
     ],
     [
-      1443,
-      1503,
-      "Undo. Restore material state."
+      1515,
+      1551,
+      "Look closer. Then make your mark."
     ],
     [
-      1503,
-      1557,
-      "Redo. Recover the applied preset."
+      1551,
+      1767,
+      "A real stroke. Changed geometry."
     ],
     [
-      1557,
-      1623,
-      "Legacy shader parity remains limited."
+      1767,
+      1839,
+      "Undo. Exact geometry restored."
     ],
     [
-      1623,
-      1863,
-      "A real sculpt stroke changes the mesh."
+      1839,
+      1911,
+      "Redo. Recover the sculpt."
     ],
     [
-      1863,
-      1923,
-      "Undo restores the exact geometry."
-    ],
-    [
-      1923,
-      1977,
-      "Redo recovers the sculpt."
-    ],
-    [
-      1977,
-      2019,
-      "Your changes remain editable."
-    ],
-    [
-      2019,
-      2145,
+      1911,
+      2055,
       "Save. Reopen the same geometry."
     ],
     [
-      2145,
+      2055,
+      2199,
+      "Export your editable GLB working copy."
+    ],
+    [
+      2199,
       2271,
-      "Export a validated GLB working copy."
+      "Yours to build."
     ],
     [
       2271,
-      2343,
-      "Connect your local Ollama model."
+      2307,
+      "Your model. Your machine."
     ],
     [
-      2343,
-      2415,
-      "Ask Phi-3 a question."
+      2307,
+      2451,
+      "Chat with your local Ollama model."
     ],
     [
-      2415,
-      2505,
-      "A real response from your model."
-    ],
-    [
-      2505,
+      2451,
       2595,
-      "Conversational chat. Scene edits stay separate."
+      "A real response. Conversational chat."
     ],
     [
       2595,
-      2649,
-      "An authenticated client inspects the scene."
+      2631,
+      "Connect external tools through MCP."
     ],
     [
-      2649,
-      2721,
-      "Add a primitive through MCP."
+      2631,
+      2739,
+      "Inspect. Add a primitive."
     ],
     [
-      2721,
-      2793,
+      2739,
+      2847,
       "Set its transform."
     ],
     [
-      2793,
-      2865,
-      "Undo through the same history."
+      2847,
+      2919,
+      "Undo through Fusion history."
     ],
     [
-      2865,
+      2919,
       2991,
       "Redo. Recover the change."
     ],
     [
       2991,
-      3135,
-      "Import. Shape. Recover."
+      3063,
+      "Your workflow, connected."
     ],
     [
-      3135,
+      3063,
+      3171,
+      "Import. Create. Repeat."
+    ],
+    [
+      3171,
       3279,
-      "Your assets can stay with you."
+      "Your vision. In motion."
     ],
     [
       3279,
+      3351,
+      "Your assets. One workspace."
+    ],
+    [
+      3351,
       3423,
-      "And the original stays intact."
+      "Explore a new perspective."
     ],
     [
       3423,
-      3513,
+      3528,
       "Fusion Studio 0.19.0-rc.1."
     ],
     [
-      3513,
+      3528,
       3600,
       "Music: Secret — ESPRIT 空想."
     ]
@@ -1297,11 +2223,2319 @@
       "sha256": "4e5cdebd9764fde531cd6857be0df079d64c20c2a1593e4efab2e8e9d2c743da",
       "width": 1920,
       "height": 1080
+    },
+    "bmw-orbit": {
+      "id": "bmw-orbit",
+      "file": "media/bmw-orbit.mp4",
+      "sha256": "09f0b570aa33779347243d75a41b2ad4575e99aa5a5227b0b6c25882f158f098",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "bmw27_cpu.blend",
+      "sourceSha256": "4f0a12eee016342507a672b66c3c0d317925ecef493d42250191c16864878ea9",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 2.35,
+        "elevation": 0.28,
+        "distance": 10.348802833457775,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [
+        "Floor",
+        "Light"
+      ],
+      "geometry": [
+        {
+          "name": "carShell",
+          "vertices": 62572,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_1",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube_1",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_2",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube_2",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_3",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube_3",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "carShell001",
+          "vertices": 350,
+          "visible": true
+        },
+        {
+          "name": "exhaust",
+          "vertices": 631,
+          "visible": true
+        },
+        {
+          "name": "Interior",
+          "vertices": 7878,
+          "visible": true
+        },
+        {
+          "name": "kidneyBars",
+          "vertices": 1944,
+          "visible": true
+        },
+        {
+          "name": "kidneyChrome",
+          "vertices": 420,
+          "visible": true
+        },
+        {
+          "name": "lightsAngelEyes",
+          "vertices": 1792,
+          "visible": true
+        },
+        {
+          "name": "lightsBulb",
+          "vertices": 226,
+          "visible": true
+        },
+        {
+          "name": "lightsGlass",
+          "vertices": 372,
+          "visible": true
+        },
+        {
+          "name": "lightsInterior",
+          "vertices": 476,
+          "visible": true
+        },
+        {
+          "name": "lightsInterior2",
+          "vertices": 1340,
+          "visible": true
+        },
+        {
+          "name": "lightsLid",
+          "vertices": 1026,
+          "visible": true
+        },
+        {
+          "name": "lightsOutline",
+          "vertices": 420,
+          "visible": true
+        },
+        {
+          "name": "lightsReflector",
+          "vertices": 10496,
+          "visible": true
+        },
+        {
+          "name": "lightsSeparator",
+          "vertices": 436,
+          "visible": true
+        },
+        {
+          "name": "LowerIntake",
+          "vertices": 20044,
+          "visible": true
+        },
+        {
+          "name": "lowerIntake",
+          "vertices": 792,
+          "visible": true
+        },
+        {
+          "name": "MStreak",
+          "vertices": 772,
+          "visible": true
+        },
+        {
+          "name": "Cube004",
+          "vertices": 126,
+          "visible": true
+        },
+        {
+          "name": "Cube004_1",
+          "vertices": 150,
+          "visible": true
+        },
+        {
+          "name": "Platform",
+          "vertices": 151,
+          "visible": true
+        },
+        {
+          "name": "rearDiffuser",
+          "vertices": 1329,
+          "visible": true
+        },
+        {
+          "name": "Mesh006",
+          "vertices": 7936,
+          "visible": true
+        },
+        {
+          "name": "Mesh006_1",
+          "vertices": 823,
+          "visible": true
+        },
+        {
+          "name": "Mesh006_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh006_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh007",
+          "vertices": 8602,
+          "visible": true
+        },
+        {
+          "name": "Mesh007_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh007_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh007_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "SideMirror",
+          "vertices": 256,
+          "visible": true
+        },
+        {
+          "name": "taillight",
+          "vertices": 4514,
+          "visible": true
+        },
+        {
+          "name": "TireBolts",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "TireBolts_1",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim_1",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber_1",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "TireBolts_2",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim_2",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber_2",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "TireBolts_3",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim_3",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber_3",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "trimming",
+          "vertices": 1146,
+          "visible": true
+        },
+        {
+          "name": "Window",
+          "vertices": 1331,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_4",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "carShell_1",
+          "vertices": 62572,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_5",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_4",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_6",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_5",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_7",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_6",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_8",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_7",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "carShell001_1",
+          "vertices": 350,
+          "visible": false
+        },
+        {
+          "name": "exhaust_1",
+          "vertices": 631,
+          "visible": false
+        },
+        {
+          "name": "Interior_1",
+          "vertices": 7878,
+          "visible": false
+        },
+        {
+          "name": "kidneyBars_1",
+          "vertices": 1944,
+          "visible": false
+        },
+        {
+          "name": "kidneyChrome_1",
+          "vertices": 420,
+          "visible": false
+        },
+        {
+          "name": "lightsAngelEyes_1",
+          "vertices": 1792,
+          "visible": false
+        },
+        {
+          "name": "lightsBulb_1",
+          "vertices": 226,
+          "visible": false
+        },
+        {
+          "name": "lightsGlass_1",
+          "vertices": 372,
+          "visible": false
+        },
+        {
+          "name": "lightsInterior_1",
+          "vertices": 476,
+          "visible": false
+        },
+        {
+          "name": "lightsInterior2_1",
+          "vertices": 1340,
+          "visible": false
+        },
+        {
+          "name": "lightsLid_1",
+          "vertices": 1026,
+          "visible": false
+        },
+        {
+          "name": "lightsOutline_1",
+          "vertices": 420,
+          "visible": false
+        },
+        {
+          "name": "lightsReflector_1",
+          "vertices": 10496,
+          "visible": false
+        },
+        {
+          "name": "lightsSeparator_1",
+          "vertices": 436,
+          "visible": false
+        },
+        {
+          "name": "LowerIntake_1",
+          "vertices": 20044,
+          "visible": false
+        },
+        {
+          "name": "lowerIntake_1",
+          "vertices": 792,
+          "visible": false
+        },
+        {
+          "name": "MStreak_1",
+          "vertices": 772,
+          "visible": false
+        },
+        {
+          "name": "Cube004",
+          "vertices": 126,
+          "visible": false
+        },
+        {
+          "name": "Cube004_1",
+          "vertices": 150,
+          "visible": false
+        },
+        {
+          "name": "Platform_1",
+          "vertices": 151,
+          "visible": false
+        },
+        {
+          "name": "rearDiffuser_1",
+          "vertices": 1329,
+          "visible": false
+        },
+        {
+          "name": "Mesh006",
+          "vertices": 7936,
+          "visible": false
+        },
+        {
+          "name": "Mesh006_1",
+          "vertices": 823,
+          "visible": false
+        },
+        {
+          "name": "Mesh006_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh006_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh007",
+          "vertices": 8602,
+          "visible": false
+        },
+        {
+          "name": "Mesh007_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh007_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh007_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "SideMirror_1",
+          "vertices": 256,
+          "visible": false
+        },
+        {
+          "name": "taillight_1",
+          "vertices": 4514,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_4",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_4",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_4",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_5",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_5",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_5",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_6",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_6",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_6",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_7",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_7",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_7",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "trimming_1",
+          "vertices": 1146,
+          "visible": false
+        },
+        {
+          "name": "Window_1",
+          "vertices": 1331,
+          "visible": false
+        },
+        {
+          "name": "Cube_8",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "Floor",
+          "vertices": 16,
+          "visible": false
+        },
+        {
+          "name": "Light",
+          "vertices": 4,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_8",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_8",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_8",
+          "vertices": 8957,
+          "visible": false
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "bmw-wire": {
+      "id": "bmw-wire",
+      "file": "media/bmw-wire.mp4",
+      "sha256": "23ac8caee32f28a1bac17c2855f8efd876015215aa2cc4f46bf4d72b3c3045ab",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "bmw27_cpu.blend",
+      "sourceSha256": "4f0a12eee016342507a672b66c3c0d317925ecef493d42250191c16864878ea9",
+      "wireframe": true,
+      "camera": {
+        "azimuth": 1.2,
+        "elevation": 0.55,
+        "distance": 10.348802833457775,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [
+        "Floor",
+        "Light"
+      ],
+      "geometry": [
+        {
+          "name": "carShell",
+          "vertices": 62572,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_1",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube_1",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_2",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube_2",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_3",
+          "vertices": 288,
+          "visible": true
+        },
+        {
+          "name": "Cube_3",
+          "vertices": 224,
+          "visible": true
+        },
+        {
+          "name": "carShell001",
+          "vertices": 350,
+          "visible": true
+        },
+        {
+          "name": "exhaust",
+          "vertices": 631,
+          "visible": true
+        },
+        {
+          "name": "Interior",
+          "vertices": 7878,
+          "visible": true
+        },
+        {
+          "name": "kidneyBars",
+          "vertices": 1944,
+          "visible": true
+        },
+        {
+          "name": "kidneyChrome",
+          "vertices": 420,
+          "visible": true
+        },
+        {
+          "name": "lightsAngelEyes",
+          "vertices": 1792,
+          "visible": true
+        },
+        {
+          "name": "lightsBulb",
+          "vertices": 226,
+          "visible": true
+        },
+        {
+          "name": "lightsGlass",
+          "vertices": 372,
+          "visible": true
+        },
+        {
+          "name": "lightsInterior",
+          "vertices": 476,
+          "visible": true
+        },
+        {
+          "name": "lightsInterior2",
+          "vertices": 1340,
+          "visible": true
+        },
+        {
+          "name": "lightsLid",
+          "vertices": 1026,
+          "visible": true
+        },
+        {
+          "name": "lightsOutline",
+          "vertices": 420,
+          "visible": true
+        },
+        {
+          "name": "lightsReflector",
+          "vertices": 10496,
+          "visible": true
+        },
+        {
+          "name": "lightsSeparator",
+          "vertices": 436,
+          "visible": true
+        },
+        {
+          "name": "LowerIntake",
+          "vertices": 20044,
+          "visible": true
+        },
+        {
+          "name": "lowerIntake",
+          "vertices": 792,
+          "visible": true
+        },
+        {
+          "name": "MStreak",
+          "vertices": 772,
+          "visible": true
+        },
+        {
+          "name": "Cube004",
+          "vertices": 126,
+          "visible": true
+        },
+        {
+          "name": "Cube004_1",
+          "vertices": 150,
+          "visible": true
+        },
+        {
+          "name": "Platform",
+          "vertices": 151,
+          "visible": true
+        },
+        {
+          "name": "rearDiffuser",
+          "vertices": 1329,
+          "visible": true
+        },
+        {
+          "name": "Mesh006",
+          "vertices": 7936,
+          "visible": true
+        },
+        {
+          "name": "Mesh006_1",
+          "vertices": 823,
+          "visible": true
+        },
+        {
+          "name": "Mesh006_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh006_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh007",
+          "vertices": 8602,
+          "visible": true
+        },
+        {
+          "name": "Mesh007_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh007_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh007_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "SideMirror",
+          "vertices": 256,
+          "visible": true
+        },
+        {
+          "name": "taillight",
+          "vertices": 4514,
+          "visible": true
+        },
+        {
+          "name": "TireBolts",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "TireBolts_1",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim_1",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber_1",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "TireBolts_2",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim_2",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber_2",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "TireBolts_3",
+          "vertices": 2250,
+          "visible": true
+        },
+        {
+          "name": "TireRim_3",
+          "vertices": 7024,
+          "visible": true
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": true
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": true
+        },
+        {
+          "name": "TireRubber_3",
+          "vertices": 8957,
+          "visible": true
+        },
+        {
+          "name": "trimming",
+          "vertices": 1146,
+          "visible": true
+        },
+        {
+          "name": "Window",
+          "vertices": 1331,
+          "visible": true
+        },
+        {
+          "name": "brakeAssembly_4",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "carShell_1",
+          "vertices": 62572,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_5",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_4",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_6",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_5",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_7",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_6",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "brakeAssembly_8",
+          "vertices": 288,
+          "visible": false
+        },
+        {
+          "name": "Cube_7",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "carShell001_1",
+          "vertices": 350,
+          "visible": false
+        },
+        {
+          "name": "exhaust_1",
+          "vertices": 631,
+          "visible": false
+        },
+        {
+          "name": "Interior_1",
+          "vertices": 7878,
+          "visible": false
+        },
+        {
+          "name": "kidneyBars_1",
+          "vertices": 1944,
+          "visible": false
+        },
+        {
+          "name": "kidneyChrome_1",
+          "vertices": 420,
+          "visible": false
+        },
+        {
+          "name": "lightsAngelEyes_1",
+          "vertices": 1792,
+          "visible": false
+        },
+        {
+          "name": "lightsBulb_1",
+          "vertices": 226,
+          "visible": false
+        },
+        {
+          "name": "lightsGlass_1",
+          "vertices": 372,
+          "visible": false
+        },
+        {
+          "name": "lightsInterior_1",
+          "vertices": 476,
+          "visible": false
+        },
+        {
+          "name": "lightsInterior2_1",
+          "vertices": 1340,
+          "visible": false
+        },
+        {
+          "name": "lightsLid_1",
+          "vertices": 1026,
+          "visible": false
+        },
+        {
+          "name": "lightsOutline_1",
+          "vertices": 420,
+          "visible": false
+        },
+        {
+          "name": "lightsReflector_1",
+          "vertices": 10496,
+          "visible": false
+        },
+        {
+          "name": "lightsSeparator_1",
+          "vertices": 436,
+          "visible": false
+        },
+        {
+          "name": "LowerIntake_1",
+          "vertices": 20044,
+          "visible": false
+        },
+        {
+          "name": "lowerIntake_1",
+          "vertices": 792,
+          "visible": false
+        },
+        {
+          "name": "MStreak_1",
+          "vertices": 772,
+          "visible": false
+        },
+        {
+          "name": "Cube004",
+          "vertices": 126,
+          "visible": false
+        },
+        {
+          "name": "Cube004_1",
+          "vertices": 150,
+          "visible": false
+        },
+        {
+          "name": "Platform_1",
+          "vertices": 151,
+          "visible": false
+        },
+        {
+          "name": "rearDiffuser_1",
+          "vertices": 1329,
+          "visible": false
+        },
+        {
+          "name": "Mesh006",
+          "vertices": 7936,
+          "visible": false
+        },
+        {
+          "name": "Mesh006_1",
+          "vertices": 823,
+          "visible": false
+        },
+        {
+          "name": "Mesh006_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh006_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh007",
+          "vertices": 8602,
+          "visible": false
+        },
+        {
+          "name": "Mesh007_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh007_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh007_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "SideMirror_1",
+          "vertices": 256,
+          "visible": false
+        },
+        {
+          "name": "taillight_1",
+          "vertices": 4514,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_4",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_4",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_4",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_5",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_5",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_5",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_6",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_6",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_6",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_7",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_7",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_7",
+          "vertices": 8957,
+          "visible": false
+        },
+        {
+          "name": "trimming_1",
+          "vertices": 1146,
+          "visible": false
+        },
+        {
+          "name": "Window_1",
+          "vertices": 1331,
+          "visible": false
+        },
+        {
+          "name": "Cube_8",
+          "vertices": 224,
+          "visible": false
+        },
+        {
+          "name": "Floor",
+          "vertices": 16,
+          "visible": false
+        },
+        {
+          "name": "Light",
+          "vertices": 4,
+          "visible": false
+        },
+        {
+          "name": "TireBolts_8",
+          "vertices": 2250,
+          "visible": false
+        },
+        {
+          "name": "TireRim_8",
+          "vertices": 7024,
+          "visible": false
+        },
+        {
+          "name": "Mesh019",
+          "vertices": 8615,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_1",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_2",
+          "vertices": 192,
+          "visible": false
+        },
+        {
+          "name": "Mesh019_3",
+          "vertices": 176,
+          "visible": false
+        },
+        {
+          "name": "TireRubber_8",
+          "vertices": 8957,
+          "visible": false
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "hair-orbit": {
+      "id": "hair-orbit",
+      "file": "media/hair-orbit.mp4",
+      "sha256": "e4932f6366e7dc23428ed5087edd004dcd7643752aa96bcdbd577e4f90cee584",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "HS BBraid Hair G8F.duf",
+      "sourceSha256": "b7df23feae7e59860557c526ac8a2e066ca1a1f1a2a21e8120fb3f1a26dd7492",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 2.65,
+        "elevation": 0.05,
+        "distance": 1.0789968252182007,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "HS_BBraid_Hair_G8F_mesh",
+          "vertices": 523,
+          "visible": true
+        },
+        {
+          "name": "HS_BBraid_Hair_G8F_mesh_1",
+          "vertices": 8438,
+          "visible": true
+        },
+        {
+          "name": "HS_BBraid_Hair_G8F_mesh_2",
+          "vertices": 4832,
+          "visible": true
+        },
+        {
+          "name": "HS_BBraid_Hair_G8F_mesh_3",
+          "vertices": 8350,
+          "visible": true
+        },
+        {
+          "name": "HS_BBraid_Hair_G8F_mesh_4",
+          "vertices": 1110,
+          "visible": true
+        },
+        {
+          "name": "HS_BBraid_Hair_G8F_mesh_5",
+          "vertices": 1020,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "optics-wire": {
+      "id": "optics-wire",
+      "file": "media/optics-wire.mp4",
+      "sha256": "a2bf9bfb353baf12afb549ffb28cad498cd3d7b1bcdd15ab344bd44a4ef5ada4",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "fusion-optical-instrument.blend",
+      "sourceSha256": "f0658b660b15451ab32b7c1dd8877caab03fdd9c7a5de3c7b1cc51f06f440450",
+      "wireframe": true,
+      "camera": {
+        "azimuth": -0.65,
+        "elevation": 0.62,
+        "distance": 7.2599998950958256,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [
+        "Studio_floor"
+      ],
+      "geometry": [
+        {
+          "name": "Collar_grip_00",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_01",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_02",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_03",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_04",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_05",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_06",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_07",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_08",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_09",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_10",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_11",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_12",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_13",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_14",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_15",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_16",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_17",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_18",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_19",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_20",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_21",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_22",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_23",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_24",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_25",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_26",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_27",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_28",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_29",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_30",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_31",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_32",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_33",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_34",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Collar_grip_35",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_01",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_02",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_03",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_04",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_05",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_06",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_07",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_08",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_09",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_10",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_11",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_12",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Cooling_fin_13",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Display_plinth",
+          "vertices": 2310,
+          "visible": true
+        },
+        {
+          "name": "Fastener_recess",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Fastener_recess001",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Fastener_recess002",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Fastener_recess003",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Front_fastener",
+          "vertices": 390,
+          "visible": true
+        },
+        {
+          "name": "Front_fastener001",
+          "vertices": 390,
+          "visible": true
+        },
+        {
+          "name": "Front_fastener002",
+          "vertices": 390,
+          "visible": true
+        },
+        {
+          "name": "Front_fastener003",
+          "vertices": 390,
+          "visible": true
+        },
+        {
+          "name": "Lens_barrel",
+          "vertices": 1542,
+          "visible": true
+        },
+        {
+          "name": "Main_chassis",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Mounting_foot",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Mounting_stem",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Optical_collar_-059",
+          "vertices": 4825,
+          "visible": true
+        },
+        {
+          "name": "Optical_collar_-079",
+          "vertices": 4825,
+          "visible": true
+        },
+        {
+          "name": "Optical_collar_-099",
+          "vertices": 4825,
+          "visible": true
+        },
+        {
+          "name": "Optical_collar_-104",
+          "vertices": 4825,
+          "visible": true
+        },
+        {
+          "name": "Optical_face",
+          "vertices": 1542,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_00",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_01",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_02",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_03",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_04",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_05",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_06",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rail_slot_07",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Rear_heat_spreader",
+          "vertices": 178,
+          "visible": true
+        },
+        {
+          "name": "Side_adjuster",
+          "vertices": 774,
+          "visible": true
+        },
+        {
+          "name": "Side_adjuster001",
+          "vertices": 774,
+          "visible": true
+        },
+        {
+          "name": "Studio_floor",
+          "vertices": 14,
+          "visible": false
+        },
+        {
+          "name": "Top_service_rail",
+          "vertices": 178,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "trunk-orbit": {
+      "id": "trunk-orbit",
+      "file": "media/trunk-orbit.mp4",
+      "sha256": "c519863d5d24fd4fd03d890367df44b9a712e98cd6a6bdaeca575b89abe04988",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "SPowered Trunk.duf",
+      "sourceSha256": "101e18ea4282a3bb2fe55015c2bfa9b1f17c57d67af06efb350e33f2996d17f4",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.8,
+        "elevation": 0.2,
+        "distance": 1.5189110636711118,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "Spc_Trunk",
+          "vertices": 7413,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "dragon-orbit": {
+      "id": "dragon-orbit",
+      "file": "media/dragon-orbit.mp4",
+      "sha256": "32c2134c7194e4a69d6fd12dcb373464e4d1639b2f2467fac9b468f35498bfe2",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "SubDragon LE.duf",
+      "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.8,
+        "elevation": 0.2,
+        "distance": 7.8681716322898865,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "SubDragonLE_mesh",
+          "vertices": 482,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_1",
+          "vertices": 1268,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_2",
+          "vertices": 1378,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_3",
+          "vertices": 626,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_4",
+          "vertices": 7137,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_5",
+          "vertices": 594,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_6",
+          "vertices": 1188,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_7",
+          "vertices": 648,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_8",
+          "vertices": 161,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_9",
+          "vertices": 416,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_10",
+          "vertices": 1288,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_11",
+          "vertices": 855,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "handbag-orbit": {
+      "id": "handbag-orbit",
+      "file": "media/handbag-orbit.mp4",
+      "sha256": "cac58dd0fa6ed6c0c614f7c639c1023072cea0f6e5bcb5f3ab56822fd8e5ba93",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "TH - Handbag 08.duf",
+      "sourceSha256": "77782b1579eb396dce1a688a7c7ec2bff4205f927cdaa9a12c65c12fca7c031d",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.5,
+        "elevation": 0.85,
+        "distance": 0.5316924422979356,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "Handbag8",
+          "vertices": 50160,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "crate-orbit": {
+      "id": "crate-orbit",
+      "file": "media/crate-orbit.mp4",
+      "sha256": "d9257dff53ba0d5ad36bb1aa09eb844adc6e0a8f8c98cb621885e34167fd811e",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "CPW Weapon Crate.duf",
+      "sourceSha256": "bb1bc48c0eda1fc44cceb8f2ffefb54b11eb96d94e1820f0d60b66b676386aec",
+      "wireframe": false,
+      "camera": {
+        "azimuth": 0.6,
+        "elevation": 0.6,
+        "distance": 1.408053195476532,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "CPW_Weapon_Crate",
+          "vertices": 6268,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
+    },
+    "dragon-wire": {
+      "id": "dragon-wire",
+      "file": "media/dragon-wire.mp4",
+      "sha256": "ca1a181d6398019d3a3ec7375739d920a082b5bb96573d4c1a9446b75087253c",
+      "frames": 150,
+      "width": 1920,
+      "height": 1080,
+      "sourceFile": "SubDragon LE.duf",
+      "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+      "wireframe": true,
+      "camera": {
+        "azimuth": 1.65,
+        "elevation": 0.32,
+        "distance": 7.8681716322898865,
+        "sweepRadians": 0.6
+      },
+      "hiddenSceneObjects": [],
+      "geometry": [
+        {
+          "name": "SubDragonLE_mesh",
+          "vertices": 482,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_1",
+          "vertices": 1268,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_2",
+          "vertices": 1378,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_3",
+          "vertices": 626,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_4",
+          "vertices": 7137,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_5",
+          "vertices": 594,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_6",
+          "vertices": 1188,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_7",
+          "vertices": 648,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_8",
+          "vertices": 161,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_9",
+          "vertices": 416,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_10",
+          "vertices": 1288,
+          "visible": true
+        },
+        {
+          "name": "SubDragonLE_mesh_11",
+          "vertices": 855,
+          "visible": true
+        }
+      ],
+      "capturedViewport": {
+        "width": 2332,
+        "height": 1388
+      },
+      "seconds": 5
     }
   },
   "music": {
     "title": "Secret",
-    "artist": "ESPRIT ç©ºæƒ³",
+    "artist": "ESPRIT 空想",
     "sourceSha256": "d8c606d4c8e6b6cf7f32fc7527665a3b8957193557d246ace91e3b3973fce312",
     "masterSha256": "54b444882be870abb750ce5419c0859d699baa55c17398261c1b0779e8015bcf",
     "excerpt": {
@@ -1792,5 +5026,2332 @@
       "sha256": "6c3fd894b19950b10c34bf64069ef821eaf2f58f959146306fee5b367472e501"
     }
   ],
-  "preparedSha256": "1ef03db1e3b12d529f6d9549a2cf2cdb74ded6773bec5f408e18f2b678d303d3"
+  "preparedSha256": "a2deb31c8e3883f05df6543d8cc94427242171a7f5033df039e0cb4d4b846f2b",
+  "varietyCapture": {
+    "passed": true,
+    "method": "Actual frozen packaged Fusion viewport. 150 independently rendered deterministic camera poses per clip. Native wireframe toggle, original imported materials, no generated geometry or UI.",
+    "clips": [
+      {
+        "id": "bmw-orbit",
+        "file": "bmw-orbit.mp4",
+        "sha256": "09f0b570aa33779347243d75a41b2ad4575e99aa5a5227b0b6c25882f158f098",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "bmw27_cpu.blend",
+        "sourceSha256": "4f0a12eee016342507a672b66c3c0d317925ecef493d42250191c16864878ea9",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 2.35,
+          "elevation": 0.28,
+          "distance": 10.348802833457775,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [
+          "Floor",
+          "Light"
+        ],
+        "geometry": [
+          {
+            "name": "carShell",
+            "vertices": 62572,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_1",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube_1",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_2",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube_2",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_3",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube_3",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "carShell001",
+            "vertices": 350,
+            "visible": true
+          },
+          {
+            "name": "exhaust",
+            "vertices": 631,
+            "visible": true
+          },
+          {
+            "name": "Interior",
+            "vertices": 7878,
+            "visible": true
+          },
+          {
+            "name": "kidneyBars",
+            "vertices": 1944,
+            "visible": true
+          },
+          {
+            "name": "kidneyChrome",
+            "vertices": 420,
+            "visible": true
+          },
+          {
+            "name": "lightsAngelEyes",
+            "vertices": 1792,
+            "visible": true
+          },
+          {
+            "name": "lightsBulb",
+            "vertices": 226,
+            "visible": true
+          },
+          {
+            "name": "lightsGlass",
+            "vertices": 372,
+            "visible": true
+          },
+          {
+            "name": "lightsInterior",
+            "vertices": 476,
+            "visible": true
+          },
+          {
+            "name": "lightsInterior2",
+            "vertices": 1340,
+            "visible": true
+          },
+          {
+            "name": "lightsLid",
+            "vertices": 1026,
+            "visible": true
+          },
+          {
+            "name": "lightsOutline",
+            "vertices": 420,
+            "visible": true
+          },
+          {
+            "name": "lightsReflector",
+            "vertices": 10496,
+            "visible": true
+          },
+          {
+            "name": "lightsSeparator",
+            "vertices": 436,
+            "visible": true
+          },
+          {
+            "name": "LowerIntake",
+            "vertices": 20044,
+            "visible": true
+          },
+          {
+            "name": "lowerIntake",
+            "vertices": 792,
+            "visible": true
+          },
+          {
+            "name": "MStreak",
+            "vertices": 772,
+            "visible": true
+          },
+          {
+            "name": "Cube004",
+            "vertices": 126,
+            "visible": true
+          },
+          {
+            "name": "Cube004_1",
+            "vertices": 150,
+            "visible": true
+          },
+          {
+            "name": "Platform",
+            "vertices": 151,
+            "visible": true
+          },
+          {
+            "name": "rearDiffuser",
+            "vertices": 1329,
+            "visible": true
+          },
+          {
+            "name": "Mesh006",
+            "vertices": 7936,
+            "visible": true
+          },
+          {
+            "name": "Mesh006_1",
+            "vertices": 823,
+            "visible": true
+          },
+          {
+            "name": "Mesh006_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh006_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh007",
+            "vertices": 8602,
+            "visible": true
+          },
+          {
+            "name": "Mesh007_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh007_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh007_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "SideMirror",
+            "vertices": 256,
+            "visible": true
+          },
+          {
+            "name": "taillight",
+            "vertices": 4514,
+            "visible": true
+          },
+          {
+            "name": "TireBolts",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "TireBolts_1",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim_1",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber_1",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "TireBolts_2",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim_2",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber_2",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "TireBolts_3",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim_3",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber_3",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "trimming",
+            "vertices": 1146,
+            "visible": true
+          },
+          {
+            "name": "Window",
+            "vertices": 1331,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_4",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "carShell_1",
+            "vertices": 62572,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_5",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_4",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_6",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_5",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_7",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_6",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_8",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_7",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "carShell001_1",
+            "vertices": 350,
+            "visible": false
+          },
+          {
+            "name": "exhaust_1",
+            "vertices": 631,
+            "visible": false
+          },
+          {
+            "name": "Interior_1",
+            "vertices": 7878,
+            "visible": false
+          },
+          {
+            "name": "kidneyBars_1",
+            "vertices": 1944,
+            "visible": false
+          },
+          {
+            "name": "kidneyChrome_1",
+            "vertices": 420,
+            "visible": false
+          },
+          {
+            "name": "lightsAngelEyes_1",
+            "vertices": 1792,
+            "visible": false
+          },
+          {
+            "name": "lightsBulb_1",
+            "vertices": 226,
+            "visible": false
+          },
+          {
+            "name": "lightsGlass_1",
+            "vertices": 372,
+            "visible": false
+          },
+          {
+            "name": "lightsInterior_1",
+            "vertices": 476,
+            "visible": false
+          },
+          {
+            "name": "lightsInterior2_1",
+            "vertices": 1340,
+            "visible": false
+          },
+          {
+            "name": "lightsLid_1",
+            "vertices": 1026,
+            "visible": false
+          },
+          {
+            "name": "lightsOutline_1",
+            "vertices": 420,
+            "visible": false
+          },
+          {
+            "name": "lightsReflector_1",
+            "vertices": 10496,
+            "visible": false
+          },
+          {
+            "name": "lightsSeparator_1",
+            "vertices": 436,
+            "visible": false
+          },
+          {
+            "name": "LowerIntake_1",
+            "vertices": 20044,
+            "visible": false
+          },
+          {
+            "name": "lowerIntake_1",
+            "vertices": 792,
+            "visible": false
+          },
+          {
+            "name": "MStreak_1",
+            "vertices": 772,
+            "visible": false
+          },
+          {
+            "name": "Cube004",
+            "vertices": 126,
+            "visible": false
+          },
+          {
+            "name": "Cube004_1",
+            "vertices": 150,
+            "visible": false
+          },
+          {
+            "name": "Platform_1",
+            "vertices": 151,
+            "visible": false
+          },
+          {
+            "name": "rearDiffuser_1",
+            "vertices": 1329,
+            "visible": false
+          },
+          {
+            "name": "Mesh006",
+            "vertices": 7936,
+            "visible": false
+          },
+          {
+            "name": "Mesh006_1",
+            "vertices": 823,
+            "visible": false
+          },
+          {
+            "name": "Mesh006_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh006_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh007",
+            "vertices": 8602,
+            "visible": false
+          },
+          {
+            "name": "Mesh007_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh007_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh007_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "SideMirror_1",
+            "vertices": 256,
+            "visible": false
+          },
+          {
+            "name": "taillight_1",
+            "vertices": 4514,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_4",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_4",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_4",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_5",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_5",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_5",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_6",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_6",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_6",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_7",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_7",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_7",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "trimming_1",
+            "vertices": 1146,
+            "visible": false
+          },
+          {
+            "name": "Window_1",
+            "vertices": 1331,
+            "visible": false
+          },
+          {
+            "name": "Cube_8",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "Floor",
+            "vertices": 16,
+            "visible": false
+          },
+          {
+            "name": "Light",
+            "vertices": 4,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_8",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_8",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_8",
+            "vertices": 8957,
+            "visible": false
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "bmw-wire",
+        "file": "bmw-wire.mp4",
+        "sha256": "23ac8caee32f28a1bac17c2855f8efd876015215aa2cc4f46bf4d72b3c3045ab",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "bmw27_cpu.blend",
+        "sourceSha256": "4f0a12eee016342507a672b66c3c0d317925ecef493d42250191c16864878ea9",
+        "wireframe": true,
+        "camera": {
+          "azimuth": 1.2,
+          "elevation": 0.55,
+          "distance": 10.348802833457775,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [
+          "Floor",
+          "Light"
+        ],
+        "geometry": [
+          {
+            "name": "carShell",
+            "vertices": 62572,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_1",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube_1",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_2",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube_2",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_3",
+            "vertices": 288,
+            "visible": true
+          },
+          {
+            "name": "Cube_3",
+            "vertices": 224,
+            "visible": true
+          },
+          {
+            "name": "carShell001",
+            "vertices": 350,
+            "visible": true
+          },
+          {
+            "name": "exhaust",
+            "vertices": 631,
+            "visible": true
+          },
+          {
+            "name": "Interior",
+            "vertices": 7878,
+            "visible": true
+          },
+          {
+            "name": "kidneyBars",
+            "vertices": 1944,
+            "visible": true
+          },
+          {
+            "name": "kidneyChrome",
+            "vertices": 420,
+            "visible": true
+          },
+          {
+            "name": "lightsAngelEyes",
+            "vertices": 1792,
+            "visible": true
+          },
+          {
+            "name": "lightsBulb",
+            "vertices": 226,
+            "visible": true
+          },
+          {
+            "name": "lightsGlass",
+            "vertices": 372,
+            "visible": true
+          },
+          {
+            "name": "lightsInterior",
+            "vertices": 476,
+            "visible": true
+          },
+          {
+            "name": "lightsInterior2",
+            "vertices": 1340,
+            "visible": true
+          },
+          {
+            "name": "lightsLid",
+            "vertices": 1026,
+            "visible": true
+          },
+          {
+            "name": "lightsOutline",
+            "vertices": 420,
+            "visible": true
+          },
+          {
+            "name": "lightsReflector",
+            "vertices": 10496,
+            "visible": true
+          },
+          {
+            "name": "lightsSeparator",
+            "vertices": 436,
+            "visible": true
+          },
+          {
+            "name": "LowerIntake",
+            "vertices": 20044,
+            "visible": true
+          },
+          {
+            "name": "lowerIntake",
+            "vertices": 792,
+            "visible": true
+          },
+          {
+            "name": "MStreak",
+            "vertices": 772,
+            "visible": true
+          },
+          {
+            "name": "Cube004",
+            "vertices": 126,
+            "visible": true
+          },
+          {
+            "name": "Cube004_1",
+            "vertices": 150,
+            "visible": true
+          },
+          {
+            "name": "Platform",
+            "vertices": 151,
+            "visible": true
+          },
+          {
+            "name": "rearDiffuser",
+            "vertices": 1329,
+            "visible": true
+          },
+          {
+            "name": "Mesh006",
+            "vertices": 7936,
+            "visible": true
+          },
+          {
+            "name": "Mesh006_1",
+            "vertices": 823,
+            "visible": true
+          },
+          {
+            "name": "Mesh006_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh006_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh007",
+            "vertices": 8602,
+            "visible": true
+          },
+          {
+            "name": "Mesh007_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh007_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh007_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "SideMirror",
+            "vertices": 256,
+            "visible": true
+          },
+          {
+            "name": "taillight",
+            "vertices": 4514,
+            "visible": true
+          },
+          {
+            "name": "TireBolts",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "TireBolts_1",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim_1",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber_1",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "TireBolts_2",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim_2",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber_2",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "TireBolts_3",
+            "vertices": 2250,
+            "visible": true
+          },
+          {
+            "name": "TireRim_3",
+            "vertices": 7024,
+            "visible": true
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": true
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": true
+          },
+          {
+            "name": "TireRubber_3",
+            "vertices": 8957,
+            "visible": true
+          },
+          {
+            "name": "trimming",
+            "vertices": 1146,
+            "visible": true
+          },
+          {
+            "name": "Window",
+            "vertices": 1331,
+            "visible": true
+          },
+          {
+            "name": "brakeAssembly_4",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "carShell_1",
+            "vertices": 62572,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_5",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_4",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_6",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_5",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_7",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_6",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "brakeAssembly_8",
+            "vertices": 288,
+            "visible": false
+          },
+          {
+            "name": "Cube_7",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "carShell001_1",
+            "vertices": 350,
+            "visible": false
+          },
+          {
+            "name": "exhaust_1",
+            "vertices": 631,
+            "visible": false
+          },
+          {
+            "name": "Interior_1",
+            "vertices": 7878,
+            "visible": false
+          },
+          {
+            "name": "kidneyBars_1",
+            "vertices": 1944,
+            "visible": false
+          },
+          {
+            "name": "kidneyChrome_1",
+            "vertices": 420,
+            "visible": false
+          },
+          {
+            "name": "lightsAngelEyes_1",
+            "vertices": 1792,
+            "visible": false
+          },
+          {
+            "name": "lightsBulb_1",
+            "vertices": 226,
+            "visible": false
+          },
+          {
+            "name": "lightsGlass_1",
+            "vertices": 372,
+            "visible": false
+          },
+          {
+            "name": "lightsInterior_1",
+            "vertices": 476,
+            "visible": false
+          },
+          {
+            "name": "lightsInterior2_1",
+            "vertices": 1340,
+            "visible": false
+          },
+          {
+            "name": "lightsLid_1",
+            "vertices": 1026,
+            "visible": false
+          },
+          {
+            "name": "lightsOutline_1",
+            "vertices": 420,
+            "visible": false
+          },
+          {
+            "name": "lightsReflector_1",
+            "vertices": 10496,
+            "visible": false
+          },
+          {
+            "name": "lightsSeparator_1",
+            "vertices": 436,
+            "visible": false
+          },
+          {
+            "name": "LowerIntake_1",
+            "vertices": 20044,
+            "visible": false
+          },
+          {
+            "name": "lowerIntake_1",
+            "vertices": 792,
+            "visible": false
+          },
+          {
+            "name": "MStreak_1",
+            "vertices": 772,
+            "visible": false
+          },
+          {
+            "name": "Cube004",
+            "vertices": 126,
+            "visible": false
+          },
+          {
+            "name": "Cube004_1",
+            "vertices": 150,
+            "visible": false
+          },
+          {
+            "name": "Platform_1",
+            "vertices": 151,
+            "visible": false
+          },
+          {
+            "name": "rearDiffuser_1",
+            "vertices": 1329,
+            "visible": false
+          },
+          {
+            "name": "Mesh006",
+            "vertices": 7936,
+            "visible": false
+          },
+          {
+            "name": "Mesh006_1",
+            "vertices": 823,
+            "visible": false
+          },
+          {
+            "name": "Mesh006_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh006_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh007",
+            "vertices": 8602,
+            "visible": false
+          },
+          {
+            "name": "Mesh007_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh007_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh007_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "SideMirror_1",
+            "vertices": 256,
+            "visible": false
+          },
+          {
+            "name": "taillight_1",
+            "vertices": 4514,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_4",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_4",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_4",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_5",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_5",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_5",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_6",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_6",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_6",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_7",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_7",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_7",
+            "vertices": 8957,
+            "visible": false
+          },
+          {
+            "name": "trimming_1",
+            "vertices": 1146,
+            "visible": false
+          },
+          {
+            "name": "Window_1",
+            "vertices": 1331,
+            "visible": false
+          },
+          {
+            "name": "Cube_8",
+            "vertices": 224,
+            "visible": false
+          },
+          {
+            "name": "Floor",
+            "vertices": 16,
+            "visible": false
+          },
+          {
+            "name": "Light",
+            "vertices": 4,
+            "visible": false
+          },
+          {
+            "name": "TireBolts_8",
+            "vertices": 2250,
+            "visible": false
+          },
+          {
+            "name": "TireRim_8",
+            "vertices": 7024,
+            "visible": false
+          },
+          {
+            "name": "Mesh019",
+            "vertices": 8615,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_1",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_2",
+            "vertices": 192,
+            "visible": false
+          },
+          {
+            "name": "Mesh019_3",
+            "vertices": 176,
+            "visible": false
+          },
+          {
+            "name": "TireRubber_8",
+            "vertices": 8957,
+            "visible": false
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "hair-orbit",
+        "file": "hair-orbit.mp4",
+        "sha256": "e4932f6366e7dc23428ed5087edd004dcd7643752aa96bcdbd577e4f90cee584",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "HS BBraid Hair G8F.duf",
+        "sourceSha256": "b7df23feae7e59860557c526ac8a2e066ca1a1f1a2a21e8120fb3f1a26dd7492",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 2.65,
+          "elevation": 0.05,
+          "distance": 1.0789968252182007,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "HS_BBraid_Hair_G8F_mesh",
+            "vertices": 523,
+            "visible": true
+          },
+          {
+            "name": "HS_BBraid_Hair_G8F_mesh_1",
+            "vertices": 8438,
+            "visible": true
+          },
+          {
+            "name": "HS_BBraid_Hair_G8F_mesh_2",
+            "vertices": 4832,
+            "visible": true
+          },
+          {
+            "name": "HS_BBraid_Hair_G8F_mesh_3",
+            "vertices": 8350,
+            "visible": true
+          },
+          {
+            "name": "HS_BBraid_Hair_G8F_mesh_4",
+            "vertices": 1110,
+            "visible": true
+          },
+          {
+            "name": "HS_BBraid_Hair_G8F_mesh_5",
+            "vertices": 1020,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "optics-wire",
+        "file": "optics-wire.mp4",
+        "sha256": "a2bf9bfb353baf12afb549ffb28cad498cd3d7b1bcdd15ab344bd44a4ef5ada4",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "fusion-optical-instrument.blend",
+        "sourceSha256": "f0658b660b15451ab32b7c1dd8877caab03fdd9c7a5de3c7b1cc51f06f440450",
+        "wireframe": true,
+        "camera": {
+          "azimuth": -0.65,
+          "elevation": 0.62,
+          "distance": 7.2599998950958256,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [
+          "Studio_floor"
+        ],
+        "geometry": [
+          {
+            "name": "Collar_grip_00",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_01",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_02",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_03",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_04",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_05",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_06",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_07",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_08",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_09",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_10",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_11",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_12",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_13",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_14",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_15",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_16",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_17",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_18",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_19",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_20",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_21",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_22",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_23",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_24",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_25",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_26",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_27",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_28",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_29",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_30",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_31",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_32",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_33",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_34",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Collar_grip_35",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_01",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_02",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_03",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_04",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_05",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_06",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_07",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_08",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_09",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_10",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_11",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_12",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Cooling_fin_13",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Display_plinth",
+            "vertices": 2310,
+            "visible": true
+          },
+          {
+            "name": "Fastener_recess",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Fastener_recess001",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Fastener_recess002",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Fastener_recess003",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Front_fastener",
+            "vertices": 390,
+            "visible": true
+          },
+          {
+            "name": "Front_fastener001",
+            "vertices": 390,
+            "visible": true
+          },
+          {
+            "name": "Front_fastener002",
+            "vertices": 390,
+            "visible": true
+          },
+          {
+            "name": "Front_fastener003",
+            "vertices": 390,
+            "visible": true
+          },
+          {
+            "name": "Lens_barrel",
+            "vertices": 1542,
+            "visible": true
+          },
+          {
+            "name": "Main_chassis",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Mounting_foot",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Mounting_stem",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Optical_collar_-059",
+            "vertices": 4825,
+            "visible": true
+          },
+          {
+            "name": "Optical_collar_-079",
+            "vertices": 4825,
+            "visible": true
+          },
+          {
+            "name": "Optical_collar_-099",
+            "vertices": 4825,
+            "visible": true
+          },
+          {
+            "name": "Optical_collar_-104",
+            "vertices": 4825,
+            "visible": true
+          },
+          {
+            "name": "Optical_face",
+            "vertices": 1542,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_00",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_01",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_02",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_03",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_04",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_05",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_06",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rail_slot_07",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Rear_heat_spreader",
+            "vertices": 178,
+            "visible": true
+          },
+          {
+            "name": "Side_adjuster",
+            "vertices": 774,
+            "visible": true
+          },
+          {
+            "name": "Side_adjuster001",
+            "vertices": 774,
+            "visible": true
+          },
+          {
+            "name": "Studio_floor",
+            "vertices": 14,
+            "visible": false
+          },
+          {
+            "name": "Top_service_rail",
+            "vertices": 178,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      }
+    ],
+    "checks": [
+      "Frozen ASAR unchanged",
+      "BMW and DAZ source hashes match acceptance inventory",
+      "Four fresh imports retain visible geometry",
+      "Wireframe uses actual app toggle",
+      "600 distinct camera poses rendered from actual viewport"
+    ],
+    "asarSha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8"
+  },
+  "catalogueCapture": {
+    "passed": true,
+    "method": "Actual frozen packaged Fusion viewport. 150 independently rendered deterministic camera poses per clip. Native wireframe toggle, original imported materials, no generated geometry or UI.",
+    "clips": [
+      {
+        "id": "trunk-orbit",
+        "file": "trunk-orbit.mp4",
+        "sha256": "c519863d5d24fd4fd03d890367df44b9a712e98cd6a6bdaeca575b89abe04988",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "SPowered Trunk.duf",
+        "sourceSha256": "101e18ea4282a3bb2fe55015c2bfa9b1f17c57d67af06efb350e33f2996d17f4",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.8,
+          "elevation": 0.2,
+          "distance": 1.5189110636711118,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "Spc_Trunk",
+            "vertices": 7413,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "dragon-orbit",
+        "file": "dragon-orbit.mp4",
+        "sha256": "32c2134c7194e4a69d6fd12dcb373464e4d1639b2f2467fac9b468f35498bfe2",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "SubDragon LE.duf",
+        "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.8,
+          "elevation": 0.2,
+          "distance": 7.8681716322898865,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "SubDragonLE_mesh",
+            "vertices": 482,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_1",
+            "vertices": 1268,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_2",
+            "vertices": 1378,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_3",
+            "vertices": 626,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_4",
+            "vertices": 7137,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_5",
+            "vertices": 594,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_6",
+            "vertices": 1188,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_7",
+            "vertices": 648,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_8",
+            "vertices": 161,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_9",
+            "vertices": 416,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_10",
+            "vertices": 1288,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_11",
+            "vertices": 855,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "handbag-orbit",
+        "file": "handbag-orbit.mp4",
+        "sha256": "cac58dd0fa6ed6c0c614f7c639c1023072cea0f6e5bcb5f3ab56822fd8e5ba93",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "TH - Handbag 08.duf",
+        "sourceSha256": "77782b1579eb396dce1a688a7c7ec2bff4205f927cdaa9a12c65c12fca7c031d",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.5,
+          "elevation": 0.85,
+          "distance": 0.5316924422979356,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "Handbag8",
+            "vertices": 50160,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "crate-orbit",
+        "file": "crate-orbit.mp4",
+        "sha256": "d9257dff53ba0d5ad36bb1aa09eb844adc6e0a8f8c98cb621885e34167fd811e",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "CPW Weapon Crate.duf",
+        "sourceSha256": "bb1bc48c0eda1fc44cceb8f2ffefb54b11eb96d94e1820f0d60b66b676386aec",
+        "wireframe": false,
+        "camera": {
+          "azimuth": 0.6,
+          "elevation": 0.6,
+          "distance": 1.408053195476532,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "CPW_Weapon_Crate",
+            "vertices": 6268,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      },
+      {
+        "id": "dragon-wire",
+        "file": "dragon-wire.mp4",
+        "sha256": "ca1a181d6398019d3a3ec7375739d920a082b5bb96573d4c1a9446b75087253c",
+        "frames": 150,
+        "width": 1920,
+        "height": 1080,
+        "sourceFile": "SubDragon LE.duf",
+        "sourceSha256": "c080d03296630a6d6892c6eea74ad4e9c90c0e49ca1195ba84d68b1d598e4402",
+        "wireframe": true,
+        "camera": {
+          "azimuth": 1.65,
+          "elevation": 0.32,
+          "distance": 7.8681716322898865,
+          "sweepRadians": 0.6
+        },
+        "hiddenSceneObjects": [],
+        "geometry": [
+          {
+            "name": "SubDragonLE_mesh",
+            "vertices": 482,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_1",
+            "vertices": 1268,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_2",
+            "vertices": 1378,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_3",
+            "vertices": 626,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_4",
+            "vertices": 7137,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_5",
+            "vertices": 594,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_6",
+            "vertices": 1188,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_7",
+            "vertices": 648,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_8",
+            "vertices": 161,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_9",
+            "vertices": 416,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_10",
+            "vertices": 1288,
+            "visible": true
+          },
+          {
+            "name": "SubDragonLE_mesh_11",
+            "vertices": 855,
+            "visible": true
+          }
+        ],
+        "capturedViewport": {
+          "width": 2332,
+          "height": 1388
+        }
+      }
+    ],
+    "checks": [
+      "Frozen ASAR unchanged",
+      "Source hashes checked before and after capture",
+      "5 fresh imports retain visible geometry",
+      "Wireframe uses actual app toggle",
+      "750 distinct camera poses rendered from actual viewport"
+    ],
+    "asarSha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8"
+  }
 }

@@ -2,28 +2,28 @@
   "passed": true,
   "independentPairs": [
     {
-      "frame": 1400,
-      "pixelSha256": "63616a80f46ad51082fa0add548abaaa3f016636d8473d39cdfce65ba8229c0e"
+      "frame": 35,
+      "pixelSha256": "fd58fc559cb9de4913472eb86aaccfd3f32fd1dbab9c0972344793c7a99b1776"
     },
     {
-      "frame": 1850,
-      "pixelSha256": "20901a2362740566491bb120d907e21d5c648559c90a64e4811152d971d11c6b"
+      "frame": 250,
+      "pixelSha256": "bee9511b8dd6e7725a6df275d8e1c517e46a8b48b5adcae7394fffb12ca33262"
     },
     {
-      "frame": 2630,
-      "pixelSha256": "78187d793580b8543d0435f967b3eae16512df1dac573464f862a59e99ea382e"
+      "frame": 1430,
+      "pixelSha256": "35c976e62809b58a90e2ca23c3aaaca80c1132e1a2b813084e9f5bf31a5584d6"
     },
     {
-      "frame": 3200,
-      "pixelSha256": "ad4b878c2f1bb7c58d5cce02829148858948bdc609786e9cfb4ce28cdc680b75"
+      "frame": 2350,
+      "pixelSha256": "72a181e50d6e05b668d476bf9f09d74fa14810a8414acbdc4b4ed3c6f57b1333"
     },
     {
-      "frame": 700,
-      "pixelSha256": "8661ec31108e04536b488c130ba29f4922f173b53f0d7a02ddcd52372bbe9a3e"
+      "frame": 2510,
+      "pixelSha256": "739dd4e2a5740b70d0c283a354ce8255b7f51610a926cf7694c074f9034f4974"
     },
     {
-      "frame": 95,
-      "pixelSha256": "0895af95bcfce0d52b772fe1fe42499f92160dfe1b9b3c6875d3a566804673ef"
+      "frame": 3380,
+      "pixelSha256": "59985c4bc837645e3beab2f1f22cd9d1ff5b61bde47d0c56057892b543d3dd79"
     }
   ]
 }

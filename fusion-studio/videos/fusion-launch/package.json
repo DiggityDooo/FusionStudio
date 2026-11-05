@@ -6,14 +6,23 @@
   "scripts": {
     "capture": "node scripts/capture-all.cjs",
     "prepare": "node scripts/prepare.mjs",
+    "prepare:edit": "node scripts/sync-edit.mjs",
     "studio": "remotion studio src/index.jsx",
     "preview": "node scripts/render.mjs --preview",
+    "preview:direction": "node scripts/render.mjs --teaser",
     "render": "node scripts/render.mjs && node scripts/chapter.mjs",
     "render:chapters": "node scripts/chapter.mjs",
     "check": "node scripts/check.mjs",
     "verify": "python scripts/verify.py",
     "finalize": "node scripts/finalize.mjs",
-    "capture:outputs": "node scripts/capture-outputs.cjs"
+    "capture:outputs": "node scripts/capture-outputs.cjs",
+    "capture:variety": "node scripts/capture-variety.cjs",
+    "capture:catalogue": "node scripts/capture-variety.cjs --catalogue",
+    "capture:workflow": "node scripts/capture-workflow.cjs",
+    "render:workflow": "node scripts/workflow.mjs && node scripts/chapter-workflow.mjs",
+    "verify:workflow": "python scripts/verify-workflow.py",
+    "check:workflow-frames": "node scripts/determinism-workflow.mjs",
+    "finalize:workflow": "node scripts/finalize-workflow.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.540",

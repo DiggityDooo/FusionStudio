@@ -3,6 +3,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {workspace,appRoot,output,hash,json,run,details,duration} from './common.mjs';
 import {scenes,cues,film,workflow} from '../src/story.mjs';
+import {prepareVariety,prepareCatalogue} from './variety.mjs';
 const args=process.argv.slice(2),option=n=>{const i=args.indexOf(n);return i>=0?args[i+1]:null;};
 const capture=path.resolve(option('--capture')||path.join(workspace,'local/capture'));
 const receipt=JSON.parse(fs.readFileSync(path.join(capture,'capture.json')));
@@ -27,6 +28,8 @@ const outputCapture=path.join(workspace,'local/outputs'),outputReceipt=JSON.pars
 assert.ok(outputReceipt.passed);assert.equal(outputReceipt.asarSha256,receipt.asarSha256);
 for(const row of outputReceipt.clips){const file=path.join(outputCapture,row.file);assert.equal(hash(file),row.sha256);fs.copyFileSync(file,path.join(pub,'media',row.file));assets[row.id]={...row,file:'media/'+row.file,seconds:row.frames/30};}
 const native=path.join(outputCapture,outputReceipt.native.file);assert.equal(hash(native),outputReceipt.native.sha256);fs.copyFileSync(native,path.join(pub,'media/native-output.png'));assets['native-output']={kind:'image',file:'media/native-output.png',sha256:hash(native),width:1920,height:1080};
+const varietyCapture=prepareVariety(assets,receipt.asarSha256);
+const catalogueCapture=prepareCatalogue(assets,receipt.asarSha256);
 let music=null,beats=[];
 const musicArg=option('--music'),previous=path.join(workspace,'local/music-input.json');
 const input=musicArg||(fs.existsSync(previous)?JSON.parse(fs.readFileSync(previous)).path:null);
@@ -45,7 +48,7 @@ if(input){
  for(let lag=12;lag<=30;lag+=.05){let score=0;for(let i=31;i<flux.length;i++){const p=i-lag,j=Math.floor(p),v=flux[j]+(flux[j+1]-flux[j])*(p-j);score+=flux[i]*v;}if(score>best.score)best={score,period:lag,phase:0};}
  let phaseScore=-Infinity;for(let phase=0;phase<best.period;phase+=.25){let sum=0;for(let p=phase;p<3600-1;p+=best.period){const j=Math.round(p);sum+=flux[j];}if(sum>phaseScore){phaseScore=sum;best.phase=phase;}}
  for(let p=best.phase;p<3600;p+=best.period)beats.push(Math.round(p));
- music={title:'Secret',artist:'ESPRIT ç©ºæƒ³',sourceSha256:hash(source),masterSha256:hash(master),excerpt:{startSeconds:0,seconds:120,playbackRate:1,fadeInSeconds:1,fadeOutSeconds:3},analysis:{estimatedBpm:1800/best.period,periodFrames:best.period,phaseFrames:best.phase,method:'PCM energy-onset autocorrelation; constant beat grid',beats}};
+ music={title:'Secret',artist:'ESPRIT 空想',sourceSha256:hash(source),masterSha256:hash(master),excerpt:{startSeconds:0,seconds:120,playbackRate:1,fadeInSeconds:1,fadeOutSeconds:3},analysis:{estimatedBpm:1800/best.period,periodFrames:best.period,phaseFrames:best.phase,method:'PCM energy-onset autocorrelation; constant beat grid',beats}};
  json(previous,{path:source});
 }
 const story=structuredClone(scenes),captions=structuredClone(cues);
@@ -53,10 +56,11 @@ for(let i=1;i<story.length;i++){const nominal=scenes[i].from,nearest=beats.reduc
 for(let i=0;i<story.length;i++){const s=story[i],original=scenes[i],ratio=(s.to-s.from)/(original.to-original.from);let n=0;for(const [j,c]of s.clips.entries()){c.frames=j===s.clips.length-1?s.to-s.from-n:Math.round(c.frames*ratio);n+=c.frames;}}
 for(let i=0;i<cues.length;i++){const [a,b,t]=cues[i],index=scenes.findIndex(s=>a>=s.from&&a<s.to),s=story[index],old=scenes[index],ratio=(s.to-s.from)/(old.to-old.from);captions[i]=[s.from+Math.round((a-old.from)*ratio),s.from+Math.round((b-old.from)*ratio),t];}
 const shots=story.flatMap(scene=>{let from=scene.from;return scene.clips.map(clip=>{const shot={...clip,scene:scene.id,from,to:from+clip.frames};from+=clip.frames;return shot;});});
+for(const shot of shots)for(const [asset]of shot.cards||[])assert.ok(assets[asset]?.frames>=150,'Missing card capture '+asset);
 for(const shot of shots)for(const asset of [shot.asset,shot.companion].filter(Boolean)){const a=assets[asset];assert.ok(a,'Missing '+asset);if(a.kind!=='image'){assert.ok((shot.sourceIn||0)<(shot.sourceOut??a.frames));assert.ok((shot.sourceOut??a.frames)<=a.frames);}}
-const prepared={film,workflow,assets,music,story,shots,cues:captions,capture:receipt,outputCapture:outputReceipt};json(path.join(pub,'prepared.json'),prepared);
+const prepared={film,workflow,assets,music,story,shots,cues:captions,capture:receipt,outputCapture:outputReceipt,varietyCapture,catalogueCapture};json(path.join(pub,'prepared.json'),prepared);
 fs.mkdirSync(output,{recursive:true});
 const stamp=f=>{let ms=Math.round(f/30*1000),h=Math.floor(ms/3600000);ms%=3600000;const m=Math.floor(ms/60000);ms%=60000;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(Math.floor(ms/1000)).padStart(2,'0')}.${String(ms%1000).padStart(3,'0')}`;};
 fs.writeFileSync(path.join(output,'fusion-launch.vtt'),'WEBVTT\n\n'+captions.map(([a,b,t])=>`${stamp(a)} --> ${stamp(b)}\n${t}\n`).join('\n'));
-json(path.join(output,'provenance.json'),{workflow,film,story,shots,captions,assets,music:music?{...music,masterSha256:music.masterSha256}:null,capture:receipt,outputCapture:outputReceipt,fontHashes:fs.readdirSync(path.join(pub,'fonts')).map(file=>({file,sha256:hash(path.join(pub,'fonts',file))})),preparedSha256:hash(path.join(pub,'prepared.json'))});
+json(path.join(output,'provenance.json'),{workflow,film,story,shots,captions,assets,music:music?{...music,masterSha256:music.masterSha256}:null,capture:receipt,outputCapture:outputReceipt,varietyCapture,catalogueCapture,fontHashes:fs.readdirSync(path.join(pub,'fonts')).map(file=>({file,sha256:hash(path.join(pub,'fonts',file))})),preparedSha256:hash(path.join(pub,'prepared.json'))});
 console.log(JSON.stringify({prepared:true,clips:Object.keys(assets).length,musicReady:!!music,seconds:120,estimatedBpm:music?.analysis.estimatedBpm,output}));

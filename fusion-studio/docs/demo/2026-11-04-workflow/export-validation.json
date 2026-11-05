@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "file": "Trunk Study.glb",
+  "sha256": "2e5f1799e0241db878f43034ac6ea9a489d7d37a2c01c19dde1582457143fd88",
+  "bytes": 1328388,
+  "independentValidator": "2.0.0-dev.3.10",
+  "issues": {
+    "numErrors": 0,
+    "numWarnings": 1,
+    "numInfos": 0,
+    "numHints": 0,
+    "messages": [
+      {
+        "code": "NODE_SKINNED_MESH_WITHOUT_SKIN",
+        "message": "Node uses skinned mesh, but has no skin defined.",
+        "severity": 1,
+        "pointer": "/nodes/1"
+      }
+    ],
+    "truncated": false
+  },
+  "geometry": {
+    "meshes": 1,
+    "vertices": 7413,
+    "triangles": 12138,
+    "materials": 1,
+    "textures": 1,
+    "skins": 0,
+    "animations": 0
+  },
+  "scope": "Static prop geometry and specification check, not rig or cross-renderer fidelity."
+}

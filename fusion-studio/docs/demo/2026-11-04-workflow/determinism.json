@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "independentPairs": [
+    {
+      "frame": 1241,
+      "pixelSha256": "be4201e111a1fd53da6d5d3773d5df789c4a195304a2dc7bacdae5df9d631e08"
+    },
+    {
+      "frame": 1714,
+      "pixelSha256": "dac982b0e03bcffd1cc2db383b5d9ef406523dd9efa3b63f84b0c9d4feb64a36"
+    },
+    {
+      "frame": 7168,
+      "pixelSha256": "cb8eda209ffcb04d4a1229ef631812d8e6e95db85950ac7f138e079177d2a70f"
+    }
+  ]
+}

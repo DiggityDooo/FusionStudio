@@ -1,7 +1,11 @@
-# Fusion / in motion
+# Fusion launch trailer
 
-1920×1080, 30 fps, 3600 frames. Near-black #090a0b, warm gold #dfb870, paper-white #f4f2eb. Installed Segoe UI remains local and hash-verified. Clean, screen-locked brand at 38px left margin; compact top section labels; 28px bottom captions. Major workflow canvas uses whole 1920×960 capture scaled down to 1856×928, with no cropping of controls. Compatibility reviews retain their actual content.
+User feedback: previous technical walkthrough felt flat. New priority is a flashy product demo: bold type, visibly moving panels, short format hits, native/editable comparisons and punch-ins on actual actions. Existing 120-second film length, Secret soundtrack, real app evidence, no narration, private inputs and frozen app remain requirements.
 
-Output-first opening: full-frame native render and live viewport orbits, then comparison. Body follows source → asset → geometry → conversation → external control. Closing returns to results and repository invitation. No chapter-card layout, ornamental footer, progress bar, repeated slogan or light/dark card alternation. Readable phrase captions carry explanation while product occupies frame.
+Near-black and gold foundation; paper-white undo accents. Hero imagery fills frame with large two-line headlines. Fonts enter through masks in 18–24 frames with cubic ease-out. Three cards fan into place; diagonal light sweep follows each reveal. Moving orbit imagery carries source-format hits. UI panels enter in 20 frames, then push toward relevant controls; typing gets a 2.8x tracked close-up; detail crops and playback rates are labeled. Long instructional captions become short headline phrases, with English VTT context.
 
-Live output orbits supply continuous motion. Stable workflow framing protects small controls; native still gets only a 1.5% push. Cuts follow supplied song grid and captions follow actual visible actions. Hard scene cuts match measured Pascal reference; no fade-through-black. Caption emphasis settles in ten frames. Final typography remains on screen until exact endpoint.
+39 shots, 38 beat-aligned cuts. Opening 14.5 seconds introduces output, formats and workspace; workflow proof occupies 87.6 seconds; closing recap/invitation 17.9 seconds. Selected action ranges include visible before/after states for sculpt and MCP history. No invented UI, model responses or animation data. Gold lighting and panel animation are editorial motion graphics.
+
+November 4 asset-variety pass replaces five short shots and closing cards with BMW bodywork, DAZ braided mesh hair and elevated wireframes. New viewpoints rotate through actual viewport poses, keeping source topology and imported material limits visible. Longer workflow proof retains approved pacing.
+
+Expanded library pass removes decorative camera/tank-top/vase repetition. Dragon shaded/topology views, vintage trunk, handbag, sci-fi crate, BMW and hair vary silhouettes, materials and angles. Keep camera, garment and vase where they establish verified workflow actions. Chat pans from typed field to response; save isolates project name before returning to viewport.

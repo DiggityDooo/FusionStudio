@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "files": [
+    {
+      "path": "FUSION_STUDIO_WORK_LOG.md",
+      "sha256": "b1400194e481b27091081206e06430de74fe86e8ab9cb26bbc38d7384b399870"
+    },
+    {
+      "path": "fusion-studio/docs/feature-ledger.json",
+      "sha256": "79278cab8ffb2c4138713ed80215fccac00f0af52bd43a53c47473f1e98231e6"
+    },
+    {
+      "path": "fusion-studio/docs/progress/STATUS-implemented-vs-remaining.md",
+      "sha256": "df39877d7c090c8008c2c7a1101c22657ddf255305ef6f3c28e70a462f8b8184"
+    },
+    {
+      "path": "fusion-studio/docs/demo/2026-11-03/fusion-studio-rc1-demo.mp4",
+      "sha256": "a164f93562387b15e755f39b08722105d1afd9fcbd9003b11bbca9adfff49ba4"
+    },
+    {
+      "path": "fusion-studio/release-hackathon-20261103-rc1-final/win-unpacked/resources/app.asar",
+      "sha256": "49f10f486e9e118d73e8b1af3ef76c585ae0a399b2e9a1aa501e4b33ac5a12f8"
+    }
+  ],
+  "cinematicTrailerSha256": "a8ca72b48592cb9cc20493013eb6da1db08ad2fa984ffe9d70d1fe78e59bad5e",
+  "render": {
+    "file": "Trunk Study.png",
+    "sha256": "b27fbca05101105a9b21776d8f2b00f99ddecacacce06a8fc04529810dbb3758",
+    "bytes": 1878373
+  }
+}

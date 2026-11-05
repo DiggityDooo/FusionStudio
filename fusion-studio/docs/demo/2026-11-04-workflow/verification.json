@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "technicalChecksPassed": true,
+  "videoSha256": "ca9e95e258407ba969ede194f7fe290843c9bbd5d2cb458878f75e014992ad37",
+  "decodedFrames": 7309,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "seconds": 243.63333333333333,
+  "codec": "H.264",
+  "audio": "silent",
+  "continuous": true,
+  "playbackRate": 1,
+  "singleSourceTake": true,
+  "steps": 11,
+  "stepStills": 22,
+  "captionBoundaryStrips": 10,
+  "bytes": 8256609,
+  "captureChecks": [
+    "Transform changes scene hash; undo and redo exactly recover both scene states; geometry unchanged",
+    "Actual File > Open restores exact canonical geometry and scene digests through a newly deserialized scene",
+    "Real Cycles image returned by the packaged app",
+    "All source bytes and packaged ASAR unchanged"
+  ],
+  "visualReview": {
+    "passed": true,
+    "images": 32,
+    "notes": [
+      "All 22 step stills reviewed in contact overview; 11 representative stills additionally inspected at full resolution.",
+      "All ten sixteen-frame caption-boundary strips inspected. Full app image remains intact; no source edits, retiming or missing controls.",
+      "Captions fit and remain readable; private paths and source files are absent from framing. Native pointer annotation and actual GLB warning remain visible.",
+      "Real import/render waits retained. Native render-result image layout settles briefly as it loads; kept as recorded.",
+      "Three independent frame pairs match exact RGBA pixels. No visual correction required."
+    ]
+  },
+  "independentFramePairs": 3,
+  "containerChapters": 11,
+  "exportValidation": {
+    "errors": 0,
+    "warnings": 1
+  },
+  "preservationPassed": true
+}
